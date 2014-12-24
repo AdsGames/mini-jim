@@ -202,11 +202,11 @@ void Game::update(){
 
   // End turn
   if((player1.getDead() || player2.getDead())){
-    if( player1.getDead()){
+    if( player1.getDead() && !player1.getFinished()){
       player1.setDead( false);
       player1.spawncommand(tile_map);
     }
-    else if( player2.getDead()){
+    else if( player2.getDead() && !player2.getFinished()){
       player2.setDead( false);
       player2.spawncommand(tile_map2);
     }
@@ -354,15 +354,15 @@ void Game::draw(){
   if( player1.getFinished() && player2.getFinished()){
     set_alpha_blender();
     draw_trans_sprite( buffer, results, 0, 0);
-    textprintf_ex(buffer,cooper,560,410,makecol(255,255,255),-1,"%i", totalTime[0]/100);
-    textprintf_ex(buffer,cooper,560,470,makecol(255,255,255),-1,"%i", totalTime[1]/100);
+    textprintf_ex(buffer,cooper,560,406,makecol(255,255,255),-1,"%i", totalTime[0]/100);
+    textprintf_ex(buffer,cooper,560,462,makecol(255,255,255),-1,"%i", totalTime[1]/100);
     if( totalTime[0] < totalTime[1]){
-      textprintf_ex(buffer,cooper,433,520,makecol(255,255,255),-1,"%i", 1);
-      textprintf_ex(buffer,cooper,610,520,makecol(255,255,255),-1,"%i", (totalTime[1] - totalTime[1])/100);
+      textprintf_ex(buffer,cooper,440,518,makecol(255,255,255),-1,"%i", 1);
+      textprintf_ex(buffer,cooper,615,518,makecol(255,255,255),-1,"%i", (totalTime[1] - totalTime[0])/100);
     }
     else if( totalTime[0] > totalTime[1]){
-      textprintf_ex(buffer,cooper,433,520,makecol(255,255,255),-1,"%i", 2);
-      textprintf_ex(buffer,cooper,610,520,makecol(255,255,255),-1,"%i", (totalTime[0] - totalTime[1])/100);
+      textprintf_ex(buffer,cooper,440,518,makecol(255,255,255),-1,"%i", 2);
+      textprintf_ex(buffer,cooper,615,518,makecol(255,255,255),-1,"%i", (totalTime[0] - totalTime[1])/100);
     }
   }
 

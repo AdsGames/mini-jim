@@ -164,7 +164,7 @@ int player::getY(){
 
 // Get finished
 bool player::getFinished(){
-    return finished;
+  return finished;
 }
 
 // Dead?
