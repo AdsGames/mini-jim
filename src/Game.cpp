@@ -18,6 +18,9 @@ Game::Game()
 
   lightingEnabled = false;
 
+  if( levelOn == 4)
+    lightingEnabled = true;
+
   // Player
   player1.load_images(1);
   player1.load_sounds();
@@ -276,11 +279,12 @@ void Game::draw(){
   player2.draw(screen2, tile_map2 -> x, tile_map2 -> y);
 
 
-  /*// Lighting
+  // Lighting
   if( lightingEnabled){
     set_alpha_blender();
     draw_sprite( darkness, darkness_old, 0, 0);
 
+    // Player 1
     for(int i = 0; i < tile_map -> mapTiles.size(); i++){
       if((tile_map -> mapTiles.at(i).getX() >= tile_map -> x - tile_map -> mapTiles.at(i).getWidth()) && (tile_map -> mapTiles.at(i).getX() < tile_map -> x + 1280) &&
          (tile_map -> mapTiles.at(i).getY() >= tile_map -> y - tile_map -> mapTiles.at(i).getHeight()) && (tile_map -> mapTiles.at(i).getY() < tile_map -> y + 960)){
@@ -291,17 +295,23 @@ void Game::draw(){
         }
       }
     }
+    draw_sprite(darkness, spotlight, player1.getX() - tile_map -> x + 32 - (spotlight->w/2), player1.getY() - tile_map -> y + 32 - (spotlight->h/2));
+    draw_trans_sprite(screen1, darkness, 0, 0);
 
-    if( turnOne){
-      draw_trans_sprite(screen2, darkness, 0, 0);
-      draw_sprite(darkness, spotlight, player1.getX() - tile_map -> x + 32 - (spotlight->w/2), player1.getY() - tile_map -> y + 32 - (spotlight->h/2));
-      draw_trans_sprite(screen1, darkness, 0, 0);
-
-      draw_trans_sprite(screen1, darkness, 0, 0);
-      draw_sprite(darkness, spotlight, player2.getX() - tile_map -> x + 32 - (spotlight->w/2), player2.getY() - tile_map -> y + 32 - (spotlight->h/2));
-      draw_trans_sprite(screen2, darkness, 0, 0);
+    // Player 2
+    for(int i = 0; i < tile_map2 -> mapTiles.size(); i++){
+      if((tile_map2 -> mapTiles.at(i).getX() >= tile_map2 -> x - tile_map2 -> mapTiles.at(i).getWidth()) && (tile_map2 -> mapTiles.at(i).getX() < tile_map2 -> x + 1280) &&
+         (tile_map2 -> mapTiles.at(i).getY() >= tile_map2 -> y - tile_map2 -> mapTiles.at(i).getHeight()) && (tile_map2 -> mapTiles.at(i).getY() < tile_map2 -> y + 960)){
+        if(tile_map2 -> mapTiles.at(i).containsAttribute(light)){
+          stretch_sprite(darkness, spotlight, tile_map2 -> mapTiles.at(i).getX() - tile_map2 -> x + 32 - (tile_map2 -> mapTiles.at(i).getWidth() * 3),
+            tile_map2 -> mapTiles.at(i).getY() - tile_map2 -> y + 32 - (tile_map2 -> mapTiles.at(i).getHeight() * 3), tile_map2 -> mapTiles.at(i).getWidth() * 6,
+            tile_map2 -> mapTiles.at(i).getHeight() * 6);
+        }
+      }
     }
-  }*/
+    draw_sprite(darkness, spotlight, player2.getX() - tile_map2 -> x + 32 - (spotlight->w/2), player2.getY() - tile_map2 -> y + 32 - (spotlight->h/2));
+    draw_trans_sprite(screen2, darkness, 0, 0);
+  }
 
   // Draw split screens
   // Screens
