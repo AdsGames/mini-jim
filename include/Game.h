@@ -43,11 +43,8 @@ class Game : public GameState
     // Variables
     int animationFrame;
     static volatile int timer1;
-    int finished;
     bool gameBegin;
-    bool controlReady;
     int totalTime[2];
-    int lastTime[2];
 
     // Lighting effects
     COLOR_MAP light_table;
