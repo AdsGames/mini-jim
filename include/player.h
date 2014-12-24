@@ -32,9 +32,9 @@ class player{
 
     void setFinished( bool newFinished);
     void setDead(bool newDead);
-    void spawncommand(tileMap *newMap);
+    void spawncommand(tileMap *fullMap);
 
-    void update(tileMap *newMap);
+    void update(tileMap *fullMap);
     void draw(BITMAP* temp, int tile_map_x, int tile_map_y);
 
   private:
@@ -69,6 +69,7 @@ class player{
     int joyNumber;
 
     vector<projectile> bullets;
+    tileMap *newMap;
 
     // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27
     BITMAP* player_images[28];

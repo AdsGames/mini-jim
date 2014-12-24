@@ -27,6 +27,8 @@ player::player(){
 
   checkpointPosition[0] = 0;
   checkpointPosition[1] = 0;
+
+  newMap = new tileMap("blank");
 }
 
 // 0-3 left, 4-7 right, 8-11 up
@@ -217,23 +219,23 @@ void player::draw(BITMAP* temp, int tile_map_x, int tile_map_y){
 }
 
 // Spawn
-void player::spawncommand(tileMap *newMap){
+void player::spawncommand(tileMap *fullMap){
   if( checkpointPosition[0] != 0 && checkpointPosition[1] != 0){
     x = checkpointPosition[0];
     y = checkpointPosition[1];
   }
   else{
-    for(int i = 0; i < newMap -> mapTiles.size(); i++){
-      if(newMap -> mapTiles.at(i).getType() == 199){
-        x = newMap -> mapTiles.at(i).getX();
-        y = newMap -> mapTiles.at(i).getY();
+    for(int i = 0; i < fullMap -> mapTiles.size(); i++){
+      if(fullMap -> mapTiles.at(i).getType() == 199){
+        x = fullMap -> mapTiles.at(i).getX();
+        y = fullMap -> mapTiles.at(i).getY();
       }
     }
   }
 }
 
 //Movement
-void player::update(tileMap *newMap){
+void player::update(tileMap *fullMap){
   //Collision stuff
   bool canMoveLeft = true;
   bool canMoveRight = true;
@@ -245,66 +247,78 @@ void player::update(tileMap *newMap){
   bool canJumpUp = true;
   bool inLiquid = false;
 
+
+  newMap -> mapTiles.clear();
+  newMap -> width = fullMap -> width;
+  newMap -> height = fullMap -> height;
+
+  // Add close elements
+  for(int i = 0; i < fullMap -> mapTiles.size(); i++){
+    if(collisionAny(x - 140, x + 140, fullMap -> mapTiles.at(i).getX(), fullMap -> mapTiles.at(i).getX() +  fullMap -> mapTiles.at(i).getWidth(), y - 140, y + 140, fullMap -> mapTiles.at(i).getY(), fullMap -> mapTiles.at(i).getY() + fullMap -> mapTiles.at(i).getHeight())){
+      //if(fullMap -> mapTiles.at(i).){
+         newMap -> mapTiles.push_back( fullMap -> mapTiles.at(i));
+      //}
+    }
+  }
+
   //Check for collision
   for(int i = 0; i < newMap -> mapTiles.size(); i++){
-    if(collisionAny(x - 64*2, x + 64*2, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 64*2, y + 64*2, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-      // Check moving LEFT
-      if(newMap -> mapTiles.at(i).containsAttribute(solid)){
-        if(collisionAny(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
-           collisionLeft(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
-          canMoveLeft = false;
-        }
+    // Check moving LEFT
+    if(newMap -> mapTiles.at(i).containsAttribute(solid)){
+      if(collisionAny(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+         collisionLeft(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
+        canMoveLeft = false;
       }
-      // Check moving RIGHT
-      if(newMap -> mapTiles.at(i).containsAttribute(solid)){
-        if(collisionAny(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
-           collisionRight(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
-          canMoveRight = false;
-        }
+    }
+    // Check moving RIGHT
+    if(newMap -> mapTiles.at(i).containsAttribute(solid)){
+      if(collisionAny(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+         collisionRight(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
+        canMoveRight = false;
       }
-      // Check 2 for climbing up
-      if(newMap -> mapTiles.at(i).containsAttribute(climb)){
-        if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-          canClimbUp2 = true;
-        }
+    }
+    // Check 2 for climbing up
+    if(newMap -> mapTiles.at(i).containsAttribute(climb)){
+      if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+        canClimbUp2 = true;
       }
-      // Check 2 for climbing down
-      if(newMap -> mapTiles.at(i).containsAttribute(climb)){
-        if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 72, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-          canClimbDown2 = true;
-        }
+    }
+    // Check 2 for climbing down
+    if(newMap -> mapTiles.at(i).containsAttribute(climb)){
+      if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 72, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+        canClimbDown2 = true;
       }
-      // Check 1 for climbing up
-      if(newMap -> mapTiles.at(i).containsAttribute(solid)){
-        if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 16, y, newMap -> mapTiles.at(i).getY(),newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-          canClimbUp = false;
-        }
+    }
+    // Check 1 for climbing up
+    if(newMap -> mapTiles.at(i).containsAttribute(solid)){
+      if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 16, y, newMap -> mapTiles.at(i).getY(),newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+        canClimbUp = false;
       }
-      // Check 2 for climbing down
-      if(newMap -> mapTiles.at(i).containsAttribute(solid)){
-        if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 72, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-          canClimbDown = false;
-        }
+    }
+    // Check 2 for climbing down
+    if(newMap -> mapTiles.at(i).containsAttribute(solid)){
+      if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 72, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+        canClimbDown = false;
       }
-      // Check jump
-      if(!(newMap -> mapTiles.at(i).containsAttribute(gas)) && newMap -> mapTiles.at(i).containsAttribute(liquid)){
-        if(collisionAny(x + 18, x + 44, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-          canJump = false;
-        }
+    }
+    // Check jump
+    if(!(newMap -> mapTiles.at(i).containsAttribute(gas)) && newMap -> mapTiles.at(i).containsAttribute(liquid)){
+      if(collisionAny(x + 18, x + 44, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+        canJump = false;
       }
-      // Can if you will not hit your head
-      if(!(newMap -> mapTiles.at(i).containsAttribute(gas)) || newMap -> mapTiles.at(i).containsAttribute(liquid)){
-        if(collisionAny(x + 18, x + 44, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight() + 1) &&
-        collisionTop(newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight(), y - yVelocity, y + 64 - yVelocity)){
-          canJumpUp = false;
-        }
+    }
+    // Can if you will not hit your head
+    if(!(newMap -> mapTiles.at(i).containsAttribute(gas)) || newMap -> mapTiles.at(i).containsAttribute(liquid)){
+      if(collisionAny(x + 18, x + 44, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight() + 1) &&
+      collisionTop(newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight(), y - yVelocity, y + 64 - yVelocity)){
+        canJumpUp = false;
       }
+    }
 
-      // If you are swimming
-      if(newMap -> mapTiles.at(i).containsAttribute(liquid)){
-        if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y-16, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-          inLiquid = true;
-        }
+    // If you are swimming
+    if(newMap -> mapTiles.at(i).containsAttribute(liquid)){
+      if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y-16, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+        inLiquid = true;
       }
     }
   }
@@ -452,22 +466,20 @@ void player::update(tileMap *newMap){
 
   //Falling (calculated separately to ensure collision accurate)
   for(int i = 0; i < newMap -> mapTiles.size(); i++){
-    if(collisionAny(x - 64*2, x + 64*2, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 64*2, y + 64*2, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-      if(newMap -> mapTiles.at(i).containsAttribute(solid) || newMap -> mapTiles.at(i).containsAttribute(climb)){
-        if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 96, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
-           collisionTop(y, y + 96, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-          canFall = false;
-          if(!collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 65, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
-           !collisionTop(y, y + 65, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-            smoothFall = true;
-            instalFallDistance = 1;
-            if(!collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 69, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
-             !collisionTop(y, y + 69, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-              instalFallDistance = 4;
-              if(!collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 73, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
-               !collisionTop(y, y + 73, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-                instalFallDistance = 8;
-              }
+    if(newMap -> mapTiles.at(i).containsAttribute(solid) || newMap -> mapTiles.at(i).containsAttribute(climb)){
+      if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 96, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+         collisionTop(y, y + 96, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+        canFall = false;
+        if(!collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 65, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+         !collisionTop(y, y + 65, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+          smoothFall = true;
+          instalFallDistance = 1;
+          if(!collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 69, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+           !collisionTop(y, y + 69, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+            instalFallDistance = 4;
+            if(!collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 73, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+             !collisionTop(y, y + 73, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
+              instalFallDistance = 8;
             }
           }
         }

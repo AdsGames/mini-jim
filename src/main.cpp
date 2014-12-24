@@ -18,7 +18,7 @@ bool closeGame;
 
 // FPS System
 volatile int ticks = 0;
-const int updates_per_second = 100;
+const int updates_per_second = 60;
 volatile int game_time = 0;
 
 int fps;
