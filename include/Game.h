@@ -44,8 +44,6 @@ class Game : public GameState
     int animationFrame;
     static volatile int timer1;
     int finished;
-    bool spawning1;
-    bool spawning2;
     bool gameBegin;
     bool controlReady;
     int totalTime[2];
