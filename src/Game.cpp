@@ -132,6 +132,15 @@ void Game::init(){
     tile_map -> load( "data/basement");
     tile_map2 -> load( "data/basement");
   }
+  else if( levelOn == 3){
+    tile_map -> load( "data/workshop");
+    tile_map2 -> load( "data/workshop");
+  }
+  else if( levelOn == 4){
+    tile_map -> load( "data/sullysface_old");
+    tile_map2 -> load( "data/sullysface_old");
+  }
+
 
   totalTime[0] = 0;
   totalTime[1] = 0;
@@ -181,8 +190,14 @@ void Game::update(){
   }
   else{
     poll_joystick();
-    player1.update(tile_map);
-    player2.update(tile_map2);
+
+    // Stop from moving once done
+    if( !player1.getFinished()){
+      player1.update(tile_map);
+    }
+    if( !player2.getFinished()){
+      player2.update(tile_map2);
+    }
   }
 
   // End turn
@@ -233,6 +248,14 @@ void Game::update(){
   }
   if(player2.getX() - tile_map2 -> x > 480 && tile_map2 -> x < tile_map2 -> width * 64 - 1280){
     tile_map2 -> x += 12;
+  }
+
+  // Change time
+  if( !player1.getFinished()){
+    totalTime[0] = timer1;
+  }
+  if( !player2.getFinished()){
+    totalTime[1] = timer1;
   }
 
   // Back to menu
@@ -302,12 +325,10 @@ void Game::draw(){
 
     // Draw timer to screen
     string player1TotalTime = convertIntToString(totalTime[0]/10);
-    player1TotalTime = convertIntToString(totalTime[0]/10 + timer1/10);
     player1TotalTime.insert((player1TotalTime.length() - 1), ".");
     textprintf_ex(buffer,cooper,40,40,makecol(255,255,255),-1,((string)(("Time: " + player1TotalTime))).c_str());
 
     string player2TotalTime = convertIntToString(totalTime[1]/10);
-    player2TotalTime = convertIntToString(totalTime[1]/10 + timer1/10);
     player2TotalTime.insert((player2TotalTime.length() - 1), ".");
     textprintf_ex(buffer,cooper,40,520,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
   }

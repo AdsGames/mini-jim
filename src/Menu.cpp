@@ -169,7 +169,7 @@ void Menu::update()
         levelOn--;
       }
       else{
-        levelOn = 2;
+        levelOn = 4;
       }
       if( levelOn == 0){
         tile_map -> load( "data/bedroom");
@@ -180,12 +180,18 @@ void Menu::update()
       else if( levelOn == 2){
         tile_map -> load( "data/basement");
       }
+      else if( levelOn == 3){
+        tile_map -> load( "data/workshop");
+      }
+      else if( levelOn == 4){
+        tile_map -> load( "data/sullysface_old");
+      }
       while( mouse_b & 1){}
     }
     // level select right
     else if(collisionAny(mouseX(),mouseX(),1200,1240,mouseY(),mouseY(), 80, 120)){
       play_sample(click,255,125,1000,0);
-      if( levelOn < 2){
+      if( levelOn < 4){
         levelOn++;
       }
       else{
@@ -199,6 +205,12 @@ void Menu::update()
       }
       else if( levelOn == 2){
         tile_map -> load( "data/basement");
+      }
+      else if( levelOn == 3){
+        tile_map -> load( "data/workshop");
+      }
+      else if( levelOn == 4){
+        tile_map -> load( "data/sullysface_old");
       }
       while( mouse_b & 1){}
     }
