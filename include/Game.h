@@ -44,7 +44,9 @@ class Game : public GameState
     int animationFrame;
     static volatile int timer1;
     int finished;
-    bool spawning;
+    bool spawning1;
+    bool spawning2;
+    bool gameBegin;
     bool controlReady;
     int totalTime[2];
     int lastTime[2];
@@ -60,11 +62,10 @@ class Game : public GameState
     player player2;
     player *currentPlayer;
 
-    bool turnOne;
     bool deathFrame;
 
     tileMap *tile_map;
-    tileMap *newTileMap;
+    tileMap *tile_map2;
 
     static void gameTicker();
 
