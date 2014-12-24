@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Tojam" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="build/Mini Jim" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="build" />
+				<Option object_output="output" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-lalpng" />
+					<Add option="-lalleg" />
+					<Add option="-lfmod" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+				</Linker>
+			</Target>
+		</Build>
+		<Linker>
+			<Add library="alleg" />
+			<Add library="fmod" />
+		</Linker>
+		<Unit filename="include/Editor.h" />
+		<Unit filename="include/Game.h" />
+		<Unit filename="include/GameState.h" />
+		<Unit filename="include/Init.h" />
+		<Unit filename="include/Intro.h" />
+		<Unit filename="include/Menu.h" />
+		<Unit filename="include/globals.h" />
+		<Unit filename="include/player.h" />
+		<Unit filename="include/projectile.h" />
+		<Unit filename="include/tile.h" />
+		<Unit filename="include/tileMap.h" />
+		<Unit filename="include/tools.h" />
+		<Unit filename="res/resources.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="src/Editor.cpp" />
+		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/GameState.cpp" />
+		<Unit filename="src/Init.cpp" />
+		<Unit filename="src/Intro.cpp" />
+		<Unit filename="src/Menu.cpp" />
+		<Unit filename="src/globals.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/player.cpp" />
+		<Unit filename="src/projectile.cpp" />
+		<Unit filename="src/tile.cpp" />
+		<Unit filename="src/tileMap.cpp" />
+		<Unit filename="src/tools.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
