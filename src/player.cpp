@@ -352,7 +352,6 @@ void player::update(tileMap *newMap){
     if(newMap -> mapTiles.at(i).getType() == tile_finish){
       if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 16, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
         play_sample(win,255,125,1000,0);
-        dead = true;
         finished = true;
       }
     }
@@ -569,7 +568,6 @@ void player::update(tileMap *newMap){
 
 player::~player(){
   bullets.clear();
-
   for(int i = 0; i < 26; i++){
 		if(player_images[i]){
 			destroy_bitmap(player_images[i]);
