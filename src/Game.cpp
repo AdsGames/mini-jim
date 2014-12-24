@@ -126,11 +126,11 @@ void Game::init(){
   }
   else if( levelOn == 1){
     tile_map -> load( "data/kitchen");
-    tile_map2 -> load( "data/bedroom");
+    tile_map2 -> load( "data/kitchen");
   }
   else if( levelOn == 2){
     tile_map -> load( "data/basement");
-    tile_map2 -> load( "data/bedroom");
+    tile_map2 -> load( "data/basement");
   }
 
   totalTime[0] = 0;
@@ -159,8 +159,6 @@ void Game::init(){
   tile_map -> draw_map(screen1);
 
   // Player ones turn
-  spawning1 = false;
-  spawning2 = false;
   gameBegin = true;
 }
 
@@ -216,40 +214,30 @@ void Game::update(){
 
   // Scroll map
   if(player1.getY() - tile_map -> y < 200 && tile_map -> y > 0){
-    tile_map -> y -= 8;
+    tile_map -> y -= 12;
   }
   if(player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  480){
-    tile_map -> y += 8;
+    tile_map -> y += 12;
   }
   if(player1.getX() - tile_map -> x < 500 && tile_map -> x > 0){
-    tile_map -> x -= 8;
+    tile_map -> x -= 12;
   }
   if(player1.getX() - tile_map -> x > 480 && tile_map -> x < tile_map -> width * 64 - 1280){
-    tile_map -> x += 8;
+    tile_map -> x += 12;
   }
 
   //Map 2
   if(player2.getY() - tile_map2 -> y < 200 && tile_map2 -> y > 0){
-    tile_map2 -> y -= 8;
+    tile_map2 -> y -= 12;
   }
-  if(player2.getY() - tile_map2 -> y > 275 && tile_map -> y < tile_map2 -> height * 64 -  480){
-    tile_map2 -> y += 8;
+  if(player2.getY() - tile_map2 -> y > 275 && tile_map2 -> y < tile_map2 -> height * 64 -  480){
+    tile_map2 -> y += 12;
   }
   if(player2.getX() - tile_map2 -> x < 500 && tile_map2 -> x > 0){
-    tile_map2 -> x -= 8;
+    tile_map2 -> x -= 12;
   }
   if(player2.getX() - tile_map2 -> x > 480 && tile_map2 -> x < tile_map2 -> width * 64 - 1280){
-    tile_map2 -> x += 8;
-  }
-
-  // Quick move
-  if( spawning1){
-    tile_map -> y = player1.getY() - 200;
-    tile_map -> x = player1.getX() - 50;
-  }
-  else if( spawning2){
-    tile_map2 -> y = player2.getY() - 200;
-    tile_map2 -> x = player2.getX() - 50;
+    tile_map2 -> x += 12;
   }
 
   // Back to menu
@@ -319,37 +307,33 @@ void Game::draw(){
   }
 
   // Draw split screens
+  // Screens
   stretch_sprite( buffer, screen1, 0, 0, 1280, 960/2);
   stretch_sprite( buffer, screen2, 0, 960/2, 1280, 960/2);
 
+  // Divider
   rectfill( buffer, 0, 480 - 8,  1280, 480 + 8, makecol( 0,0,0));
 
+  // Frame
   rectfill( buffer, 0, 0, 1280, 16, makecol( 0,0,0));
   rectfill( buffer, 0, 0, 16, 960, makecol( 0,0,0));
   rectfill( buffer, 1264, 0, 1280, 960, makecol( 0,0,0));
   rectfill( buffer, 0, 944, 1280, 960, makecol( 0,0,0));
 
-  rectfill( buffer, 20, 20, 320, 140, makecol( 0,0,0));
-  rectfill( buffer, 20, 500, 320, 620, makecol( 0,0,0));
-
-
-  if( controlReady){
-    // Draw timer to screen
-    string newTime = convertDoubleToString(timer1/10);
-    newTime.insert((newTime.length() - 1), ".");
-    //textprintf_ex(buffer,cooper,40,!turnOne * 480 + 80 ,makecol(255,255,255),-1,((string)(("Timer: " + newTime))).c_str());
-  }
+  // Timers
+  rectfill( buffer, 20, 20, 320, 90, makecol( 0,0,0));
+  rectfill( buffer, 20, 500, 320, 570, makecol( 0,0,0));
 
   // Draw timer to screen
   string player1TotalTime = convertIntToString(totalTime[0]/10);
   player1TotalTime = convertIntToString(totalTime[0]/10 + timer1/10);
   player1TotalTime.insert((player1TotalTime.length() - 1), ".");
-  textprintf_ex(buffer,cooper,40,40,makecol(255,255,255),-1,((string)(("Total Time: " + player1TotalTime))).c_str());
+  textprintf_ex(buffer,cooper,40,40,makecol(255,255,255),-1,((string)(("Time: " + player1TotalTime))).c_str());
 
   string player2TotalTime = convertIntToString(totalTime[1]/10);
   player2TotalTime = convertIntToString(totalTime[1]/10 + timer1/10);
   player2TotalTime.insert((player2TotalTime.length() - 1), ".");
-  textprintf_ex(buffer,cooper,40,520,makecol(255,255,255),-1,((string)(("Total Time: " + player2TotalTime))).c_str());
+  textprintf_ex(buffer,cooper,40,520,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
 
 
   // Change level when both are done
