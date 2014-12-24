@@ -158,15 +158,13 @@ void Game::init(){
   tile_map -> x = player1.getX() - 50;
   tile_map -> draw_map(screen1);
 
-  // Player ones turn
+  // Start game
   gameBegin = true;
+  timer1 = 0;
+  play_sample( countdown, 255, 125, 1000, 0);
 }
 
 void Game::update(){
-  poll_joystick();
-  player1.update(tile_map);
-  player2.update(tile_map2);
-
   // Starting countdown
   if( gameBegin){
     // Mute full song, play waiting song
@@ -181,6 +179,11 @@ void Game::update(){
       gameBegin = false;
     }
   }
+  else{
+    poll_joystick();
+    player1.update(tile_map);
+    player2.update(tile_map2);
+  }
 
   // End turn
   if((player1.getDead() || player2.getDead())){
@@ -194,14 +197,6 @@ void Game::update(){
     }
   }
 
-  // Finish
-  if( player1.getFinished() && !player2.getFinished()){
-    totalTime[0] += timer1;
-  }
-  if( player2.getFinished() && !player1.getFinished()){
-    totalTime[1] += timer1;
-  }
-
   // Change level when both are done
   if( player1.getFinished() && player2.getFinished()){
     if( key[KEY_ENTER]){
@@ -212,7 +207,7 @@ void Game::update(){
     timer1 = 0;
   }
 
-  // Scroll map
+  // Scroll map scroll
   if(player1.getY() - tile_map -> y < 200 && tile_map -> y > 0){
     tile_map -> y -= 12;
   }
@@ -226,7 +221,7 @@ void Game::update(){
     tile_map -> x += 12;
   }
 
-  //Map 2
+  //Map 2 scroll
   if(player2.getY() - tile_map2 -> y < 200 && tile_map2 -> y > 0){
     tile_map2 -> y -= 12;
   }
@@ -285,27 +280,6 @@ void Game::draw(){
     }
   }*/
 
-  // Starting countdown
-  if( gameBegin){
-    // Mute full song, play waiting song
-    FSOUND_SetVolume (0, 255-(timer1*0.85));
-    FSOUND_SetVolume (1, (timer1*0.85));
-
-    // Timer 3..2..1..GO!
-    if( timer1 <= 33){
-      masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18, 570, 400, 140, 180);
-    }
-    else if( timer1 <= 66){
-      masked_stretch_blit(countdownImage, buffer, 19, 0, 14, 18, 570, 400, 140, 180);
-    }
-    else if( timer1 <= 80){
-      masked_stretch_blit(countdownImage, buffer, 39, 0, 14, 18, 570, 400, 140, 180);
-    }
-    else if( timer1 <= 100){
-      masked_stretch_blit(countdownImage, buffer, 57, 0, 40, 18, 440, 400, 400, 180);
-    }
-  }
-
   // Draw split screens
   // Screens
   stretch_sprite( buffer, screen1, 0, 0, 1280, 960/2);
@@ -320,21 +294,40 @@ void Game::draw(){
   rectfill( buffer, 1264, 0, 1280, 960, makecol( 0,0,0));
   rectfill( buffer, 0, 944, 1280, 960, makecol( 0,0,0));
 
-  // Timers
-  rectfill( buffer, 20, 20, 320, 90, makecol( 0,0,0));
-  rectfill( buffer, 20, 500, 320, 570, makecol( 0,0,0));
+  // Only draw timer once game has begun
+  if( !gameBegin){
+    // Timers
+    rectfill( buffer, 20, 20, 320, 90, makecol( 0,0,0));
+    rectfill( buffer, 20, 500, 320, 570, makecol( 0,0,0));
 
-  // Draw timer to screen
-  string player1TotalTime = convertIntToString(totalTime[0]/10);
-  player1TotalTime = convertIntToString(totalTime[0]/10 + timer1/10);
-  player1TotalTime.insert((player1TotalTime.length() - 1), ".");
-  textprintf_ex(buffer,cooper,40,40,makecol(255,255,255),-1,((string)(("Time: " + player1TotalTime))).c_str());
+    // Draw timer to screen
+    string player1TotalTime = convertIntToString(totalTime[0]/10);
+    player1TotalTime = convertIntToString(totalTime[0]/10 + timer1/10);
+    player1TotalTime.insert((player1TotalTime.length() - 1), ".");
+    textprintf_ex(buffer,cooper,40,40,makecol(255,255,255),-1,((string)(("Time: " + player1TotalTime))).c_str());
 
-  string player2TotalTime = convertIntToString(totalTime[1]/10);
-  player2TotalTime = convertIntToString(totalTime[1]/10 + timer1/10);
-  player2TotalTime.insert((player2TotalTime.length() - 1), ".");
-  textprintf_ex(buffer,cooper,40,520,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
+    string player2TotalTime = convertIntToString(totalTime[1]/10);
+    player2TotalTime = convertIntToString(totalTime[1]/10 + timer1/10);
+    player2TotalTime.insert((player2TotalTime.length() - 1), ".");
+    textprintf_ex(buffer,cooper,40,520,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
+  }
 
+  // Starting countdown
+  if( gameBegin){
+    // Timer 3..2..1..GO!
+    if( timer1 <= 33){
+      masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18, 570, 400, 140, 180);
+    }
+    else if( timer1 <= 66){
+      masked_stretch_blit(countdownImage, buffer, 19, 0, 14, 18, 570, 400, 140, 180);
+    }
+    else if( timer1 <= 80){
+      masked_stretch_blit(countdownImage, buffer, 39, 0, 14, 18, 570, 400, 140, 180);
+    }
+    else if( timer1 <= 100){
+      masked_stretch_blit(countdownImage, buffer, 57, 0, 40, 18, 440, 400, 400, 180);
+    }
+  }
 
   // Change level when both are done
   if( player1.getFinished() && player2.getFinished()){
