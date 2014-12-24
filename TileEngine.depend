@@ -787,7 +787,7 @@
 1419455636 source:e:\allans programming\games indev\minijim\src\menu.cpp
 	"Menu.h"
 
-1398631382 source:e:\allans programming\games indev\minijim\src\player.cpp
+1419457125 source:e:\allans programming\games indev\minijim\src\player.cpp
 	"player.h"
 
 1398520054 source:e:\allans programming\games indev\minijim\src\projectile.cpp
@@ -803,6 +803,6 @@
 	"tools.h"
 	"globals.h"
 
-1419456223 source:e:\allans programming\games indev\minijim\src\game.cpp
+1419457206 source:e:\allans programming\games indev\minijim\src\game.cpp
 	"Game.h"
 
