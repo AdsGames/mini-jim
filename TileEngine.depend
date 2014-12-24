@@ -1,0 +1,494 @@
+# depslib dependency file v1.0
+1398575480 source:c:\users\allan\dropbox\assets for tojam\tojam\res\resources.rc
+
+1398627687 source:c:\users\allan\dropbox\assets for tojam\tojam\src\editor.cpp
+	"Editor.h"
+
+1396730824 c:\users\allan\dropbox\assets for tojam\tojam\include\editor.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"tileMap.h"
+	"tile.h"
+	"globals.h"
+	"tools.h"
+
+1396672756 c:\users\allan\dropbox\assets for tojam\tojam\include\gamestate.h
+
+1398564378 c:\users\allan\dropbox\assets for tojam\tojam\include\tilemap.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<iostream>
+	<sstream>
+	<fstream>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tile.h"
+
+1398631742 c:\users\allan\dropbox\assets for tojam\tojam\include\globals.h
+	<allegro.h>
+
+1398448490 c:\users\allan\dropbox\assets for tojam\tojam\include\tools.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<iostream>
+	<sstream>
+	<fstream>
+
+1398564468 c:\users\allan\dropbox\assets for tojam\tojam\include\tile.h
+	<allegro.h>
+	<alpng.h>
+	<vector>
+	<iostream>
+	<algorithm>
+	<iterator>
+	"globals.h"
+	"tools.h"
+
+1398457553 source:c:\users\allan\dropbox\assets for tojam\tojam\src\enemy.cpp
+	"enemy.h"
+
+1397359210 c:\users\allan\dropbox\assets for tojam\tojam\include\enemy.h
+	<allegro.h>
+	<alpng.h>
+	<vector>
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+	"projectile.h"
+	"player.h"
+
+1397358850 c:\users\allan\dropbox\assets for tojam\tojam\include\projectile.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+
+1398633089 c:\users\allan\dropbox\assets for tojam\tojam\include\player.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"projectile.h"
+	"tileMap.h"
+
+1398646102 source:c:\users\allan\dropbox\assets for tojam\tojam\src\game.cpp
+	"Game.h"
+
+1398641093 c:\users\allan\dropbox\assets for tojam\tojam\include\game.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+	"player.h"
+
+1396665024 source:c:\users\allan\dropbox\assets for tojam\tojam\src\gamestate.cpp
+
+1398634897 source:c:\users\allan\dropbox\assets for tojam\tojam\src\globals.cpp
+	"globals.h"
+
+1398645378 source:c:\users\allan\dropbox\assets for tojam\tojam\src\init.cpp
+	"Init.h"
+
+1396724532 c:\users\allan\dropbox\assets for tojam\tojam\include\init.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"globals.h"
+	"tools.h"
+
+1398638192 source:c:\users\allan\dropbox\assets for tojam\tojam\src\intro.cpp
+	"Intro.h"
+
+1398617836 c:\users\allan\dropbox\assets for tojam\tojam\include\intro.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<string>
+	"globals.h"
+	"tools.h"
+
+1396729896 source:c:\users\allan\dropbox\assets for tojam\tojam\src\main.cpp
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"GameState.h"
+	"Init.h"
+	"Intro.h"
+	"Menu.h"
+	"Editor.h"
+	"Game.h"
+
+1398640347 c:\users\allan\dropbox\assets for tojam\tojam\include\menu.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"tilemap.h"
+	"globals.h"
+	"tools.h"
+
+1398642378 source:c:\users\allan\dropbox\assets for tojam\tojam\src\menu.cpp
+	"Menu.h"
+
+1398634982 source:c:\users\allan\dropbox\assets for tojam\tojam\src\player.cpp
+	"player.h"
+
+1398523654 source:c:\users\allan\dropbox\assets for tojam\tojam\src\projectile.cpp
+	"projectile.h"
+
+1398640919 source:c:\users\allan\dropbox\assets for tojam\tojam\src\tile.cpp
+	"tile.h"
+
+1398640954 source:c:\users\allan\dropbox\assets for tojam\tojam\src\tilemap.cpp
+	"tileMap.h"
+
+1398448481 source:c:\users\allan\dropbox\assets for tojam\tojam\src\tools.cpp
+	"tools.h"
+	"globals.h"
+
+1396674214 source:c:\users\danward\dropbox\assets for tojam\tojam\res\resources.rc
+
+1398457726 source:c:\users\danward\dropbox\assets for tojam\tojam\src\editor.cpp
+	"Editor.h"
+
+1396730824 c:\users\danward\dropbox\assets for tojam\tojam\include\editor.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"tileMap.h"
+	"tile.h"
+	"globals.h"
+	"tools.h"
+
+1396672756 c:\users\danward\dropbox\assets for tojam\tojam\include\gamestate.h
+
+1398471731 c:\users\danward\dropbox\assets for tojam\tojam\include\tilemap.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<iostream>
+	<sstream>
+	<fstream>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tile.h"
+
+1398487969 c:\users\danward\dropbox\assets for tojam\tojam\include\globals.h
+	<allegro.h>
+
+1398448490 c:\users\danward\dropbox\assets for tojam\tojam\include\tools.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<iostream>
+	<sstream>
+	<fstream>
+
+1398471697 c:\users\danward\dropbox\assets for tojam\tojam\include\tile.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+
+1398457553 source:c:\users\danward\dropbox\assets for tojam\tojam\src\enemy.cpp
+	"enemy.h"
+
+1397359212 c:\users\danward\dropbox\assets for tojam\tojam\include\enemy.h
+	<allegro.h>
+	<alpng.h>
+	<vector>
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+	"projectile.h"
+	"player.h"
+
+1397358850 c:\users\danward\dropbox\assets for tojam\tojam\include\projectile.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+
+1398491360 c:\users\danward\dropbox\assets for tojam\tojam\include\player.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"projectile.h"
+	"tileMap.h"
+
+1398491950 source:c:\users\danward\dropbox\assets for tojam\tojam\src\game.cpp
+	"Game.h"
+
+1398488003 c:\users\danward\dropbox\assets for tojam\tojam\include\game.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+	"player.h"
+	"enemy.h"
+
+1396665024 source:c:\users\danward\dropbox\assets for tojam\tojam\src\gamestate.cpp
+
+1396724132 source:c:\users\danward\dropbox\assets for tojam\tojam\src\globals.cpp
+	"globals.h"
+
+1396728918 source:c:\users\danward\dropbox\assets for tojam\tojam\src\init.cpp
+	"Init.h"
+
+1396724532 c:\users\danward\dropbox\assets for tojam\tojam\include\init.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"globals.h"
+	"tools.h"
+
+1396733588 source:c:\users\danward\dropbox\assets for tojam\tojam\src\intro.cpp
+	"Intro.h"
+
+1396724538 c:\users\danward\dropbox\assets for tojam\tojam\include\intro.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"globals.h"
+	"tools.h"
+
+1396729896 source:c:\users\danward\dropbox\assets for tojam\tojam\src\main.cpp
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"GameState.h"
+	"Init.h"
+	"Intro.h"
+	"Menu.h"
+	"Editor.h"
+	"Game.h"
+
+1398488316 c:\users\danward\dropbox\assets for tojam\tojam\include\menu.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"tilemap.h"
+	"globals.h"
+	"tools.h"
+
+1398488046 source:c:\users\danward\dropbox\assets for tojam\tojam\src\menu.cpp
+	"Menu.h"
+
+1398491906 source:c:\users\danward\dropbox\assets for tojam\tojam\src\player.cpp
+	"player.h"
+
+1379029310 source:c:\users\danward\dropbox\assets for tojam\tojam\src\projectile.cpp
+	"projectile.h"
+
+1398487969 source:c:\users\danward\dropbox\assets for tojam\tojam\src\tile.cpp
+	"tile.h"
+
+1398487969 source:c:\users\danward\dropbox\assets for tojam\tojam\src\tilemap.cpp
+	"tileMap.h"
+
+1398448481 source:c:\users\danward\dropbox\assets for tojam\tojam\src\tools.cpp
+	"tools.h"
+	"globals.h"
+
+1398575480 source:e:\allans programming\games indev\mini jim\res\resources.rc
+
+1398627687 source:e:\allans programming\games indev\mini jim\src\editor.cpp
+	"Editor.h"
+
+1396730824 e:\allans programming\games indev\mini jim\include\editor.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"tileMap.h"
+	"tile.h"
+	"globals.h"
+	"tools.h"
+
+1396672756 e:\allans programming\games indev\mini jim\include\gamestate.h
+
+1398564378 e:\allans programming\games indev\mini jim\include\tilemap.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<iostream>
+	<sstream>
+	<fstream>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tile.h"
+
+1398631742 e:\allans programming\games indev\mini jim\include\globals.h
+	<allegro.h>
+
+1398448490 e:\allans programming\games indev\mini jim\include\tools.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<iostream>
+	<sstream>
+	<fstream>
+
+1398564468 e:\allans programming\games indev\mini jim\include\tile.h
+	<allegro.h>
+	<alpng.h>
+	<vector>
+	<iostream>
+	<algorithm>
+	<iterator>
+	"globals.h"
+	"tools.h"
+
+1399743204 source:e:\allans programming\games indev\mini jim\src\game.cpp
+	"Game.h"
+
+1398641093 e:\allans programming\games indev\mini jim\include\game.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+	"player.h"
+
+1398633089 e:\allans programming\games indev\mini jim\include\player.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"projectile.h"
+	"tileMap.h"
+
+1397358850 e:\allans programming\games indev\mini jim\include\projectile.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+
+1396665024 source:e:\allans programming\games indev\mini jim\src\gamestate.cpp
+
+1398634897 source:e:\allans programming\games indev\mini jim\src\globals.cpp
+	"globals.h"
+
+1399741483 source:e:\allans programming\games indev\mini jim\src\init.cpp
+	"Init.h"
+
+1396724532 e:\allans programming\games indev\mini jim\include\init.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"globals.h"
+	"tools.h"
+
+1398638192 source:e:\allans programming\games indev\mini jim\src\intro.cpp
+	"Intro.h"
+
+1398617836 e:\allans programming\games indev\mini jim\include\intro.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<string>
+	"globals.h"
+	"tools.h"
+
+1396729896 source:e:\allans programming\games indev\mini jim\src\main.cpp
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"GameState.h"
+	"Init.h"
+	"Intro.h"
+	"Menu.h"
+	"Editor.h"
+	"Game.h"
+
+1398640347 e:\allans programming\games indev\mini jim\include\menu.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"tilemap.h"
+	"globals.h"
+	"tools.h"
+
+1398642378 source:e:\allans programming\games indev\mini jim\src\menu.cpp
+	"Menu.h"
+
+1398634982 source:e:\allans programming\games indev\mini jim\src\player.cpp
+	"player.h"
+
+1398523654 source:e:\allans programming\games indev\mini jim\src\projectile.cpp
+	"projectile.h"
+
+1398640919 source:e:\allans programming\games indev\mini jim\src\tile.cpp
+	"tile.h"
+
+1398640954 source:e:\allans programming\games indev\mini jim\src\tilemap.cpp
+	"tileMap.h"
+
+1398448481 source:e:\allans programming\games indev\mini jim\src\tools.cpp
+	"tools.h"
+	"globals.h"
+
