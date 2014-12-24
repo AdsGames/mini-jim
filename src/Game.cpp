@@ -118,23 +118,19 @@ void Game::init(){
 
   // Create map
   tile_map = new tileMap("blank");
+  tile_map2 = new tileMap("blank");
+
   if( levelOn == 0){
     tile_map -> load( "data/bedroom");
+    tile_map2 -> load( "data/bedroom");
   }
   else if( levelOn == 1){
     tile_map -> load( "data/kitchen");
+    tile_map2 -> load( "data/bedroom");
   }
   else if( levelOn == 2){
     tile_map -> load( "data/basement");
-  }
-
-  //Create duplicate map with only solids for updating enemies
-  newTileMap = new tileMap("blank");
-
-  for(int i = 0; i < tile_map -> mapTiles.size(); i++){
-    if(!tile_map -> mapTiles.at(i).containsAttribute(gas)){
-      newTileMap -> mapTiles.push_back(tile_map -> mapTiles.at(i));
-    }
+    tile_map2 -> load( "data/bedroom");
   }
 
   totalTime[0] = 0;
@@ -150,12 +146,12 @@ void Game::init(){
   FSOUND_SetVolume (1, 0);
 
   player1.spawncommand( tile_map);
-  player2.spawncommand( tile_map);
+  player2.spawncommand( tile_map2);
 
   // Draw player two screen initial
-  tile_map -> y = player2.getY() - 200;
-  tile_map -> x = player2.getX() - 50;
-  tile_map -> draw_map(screen2);
+  tile_map2 -> y = player2.getY() - 200;
+  tile_map2 -> x = player2.getX() - 50;
+  tile_map2 -> draw_map(screen2);
 
   // Draw player one screen initial
   tile_map -> y = player1.getY() - 200;
@@ -163,69 +159,49 @@ void Game::init(){
   tile_map -> draw_map(screen1);
 
   // Player ones turn
-  turnOne = true;
-  spawning = false;
-  controlReady = false;
+  spawning1 = false;
+  spawning2 = false;
+  gameBegin = true;
 }
 
 void Game::update(){
   poll_joystick();
+  player1.update(tile_map);
+  player2.update(tile_map2);
 
-    player1.update(tile_map);
-    player2.update(tile_map);
-  if(!spawning){
+  // Starting countdown
+  if( gameBegin){
+    // Mute full song, play waiting song
+    FSOUND_SetVolume (0, 255-(timer1*0.85));
+    FSOUND_SetVolume (1, (timer1*0.85));
 
-    // Spawn time
-    if( !controlReady){
-      if((key[KEY_SPACE] || joy[!turnOne].button[0].b) && !player1.getFinished() && !player2.getFinished()){
-        play_sample( countdown, 255, 125, 1000, 0);
-        spawning = true;
-        timer1 = 0;
-      }
-    }
-    else{
-      // Character movements (runs only every 2nd loop)
-      if(frames_done % 2 == 0){
-        // Update if its their turn
-
-
-
-      }
+    // Start round
+    if( timer1 > 100){
+      FSOUND_SetVolume (0, 0);
+      FSOUND_SetVolume (1, 255);
+      timer1 = 0;
+      gameBegin = false;
     }
   }
 
   // End turn
   if((player1.getDead() || player2.getDead())){
-    FSOUND_SetVolume (0, 255);
-    FSOUND_SetVolume (1, 0);
-    totalTime[!turnOne] += 1000;
-
-    if( turnOne && player2.getFinished() || !turnOne && player1.getFinished()){
-
-    }
-    else{
-      turnOne = !turnOne;
-    }
-
     if( player1.getDead()){
       player1.setDead( false);
       player1.spawncommand(tile_map);
     }
     else if( player2.getDead()){
       player2.setDead( false);
-      player2.spawncommand(tile_map);
+      player2.spawncommand(tile_map2);
     }
-    controlReady = false;
   }
 
   // Finish
-  if( player1.getFinished() && !player2.getFinished() && turnOne){
+  if( player1.getFinished() && !player2.getFinished()){
     totalTime[0] += timer1;
-    turnOne = false;
   }
-  if( player2.getFinished() && !player1.getFinished() && !turnOne){
+  if( player2.getFinished() && !player1.getFinished()){
     totalTime[1] += timer1;
-    turnOne = true;
   }
 
   // Change level when both are done
@@ -238,65 +214,42 @@ void Game::update(){
     timer1 = 0;
   }
 
-  // Spawn character
-  if( spawning){
-    // Mute full song, play waiting song
-    FSOUND_SetVolume (0, 255-(timer1*0.85));
-    FSOUND_SetVolume (1, (timer1*0.85));
-
-    // Start round
-    if( timer1 > 100){
-      FSOUND_SetVolume (0, 0);
-      FSOUND_SetVolume (1, 255);
-      spawning = false;
-      controlReady = true;
-      timer1 = 0;
-    }
-  }
-  // Time limit per turn
-  else if( controlReady){
-    /*if( timer1 > 1000 && !(player1.getFinished() || player2.getFinished())){
-      play_sample( timeout, 255, 128, 1000, 0);
-      FSOUND_SetVolume (0, 255);
-      FSOUND_SetVolume (1, 0);
-      controlReady = false;
-      totalTime[!turnOne] += 1000;
-      timer1 = 0;
-      if( turnOne && player2.getFinished() || !turnOne && player1.getFinished()){
-
-      }
-      else{
-        turnOne = !turnOne;
-      }
-    }*/
-  }
-
-  // Scroll Map
-  if( turnOne){
-    currentPlayer = &player1;
-  }
-  else{
-    currentPlayer = &player2;
-  }
-
   // Scroll map
-  if(currentPlayer -> getY() - tile_map -> y < 200 && tile_map -> y > 0){
+  if(player1.getY() - tile_map -> y < 200 && tile_map -> y > 0){
     tile_map -> y -= 8;
   }
-  if(currentPlayer -> getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  480){
+  if(player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  480){
     tile_map -> y += 8;
   }
-  if(currentPlayer -> getX() - tile_map -> x < 500 && tile_map -> x > 0){
+  if(player1.getX() - tile_map -> x < 500 && tile_map -> x > 0){
     tile_map -> x -= 8;
   }
-  if(currentPlayer -> getX() - tile_map -> x > 480 && tile_map -> x < tile_map -> width * 64 - 1280){
+  if(player1.getX() - tile_map -> x > 480 && tile_map -> x < tile_map -> width * 64 - 1280){
     tile_map -> x += 8;
   }
 
+  //Map 2
+  if(player2.getY() - tile_map2 -> y < 200 && tile_map2 -> y > 0){
+    tile_map2 -> y -= 8;
+  }
+  if(player2.getY() - tile_map2 -> y > 275 && tile_map -> y < tile_map2 -> height * 64 -  480){
+    tile_map2 -> y += 8;
+  }
+  if(player2.getX() - tile_map2 -> x < 500 && tile_map2 -> x > 0){
+    tile_map2 -> x -= 8;
+  }
+  if(player2.getX() - tile_map2 -> x > 480 && tile_map2 -> x < tile_map2 -> width * 64 - 1280){
+    tile_map2 -> x += 8;
+  }
+
   // Quick move
-  if( spawning){
-    tile_map -> y = currentPlayer -> getY() - 200;
-    tile_map -> x = currentPlayer -> getX() - 50;
+  if( spawning1){
+    tile_map -> y = player1.getY() - 200;
+    tile_map -> x = player1.getX() - 50;
+  }
+  else if( spawning2){
+    tile_map2 -> y = player2.getY() - 200;
+    tile_map2 -> x = player2.getX() - 50;
   }
 
   // Back to menu
@@ -310,15 +263,14 @@ void Game::draw(){
   rectfill( buffer, 0, 0, 1280, 960, makecol(0,0,0));
 
   // Draw tiles and characters
+  tile_map -> draw_map(screen1);
+  player1.draw(screen1, tile_map -> x, tile_map -> y);
 
-    tile_map -> draw_map(screen1);
-    player1.draw(screen1, tile_map -> x, tile_map -> y);
-
-    tile_map -> draw_map(screen2);
-    player2.draw(screen2, tile_map -> x, tile_map -> y);
+  tile_map2 -> draw_map(screen2);
+  player2.draw(screen2, tile_map2 -> x, tile_map2 -> y);
 
 
-  // Lighting
+  /*// Lighting
   if( lightingEnabled){
     set_alpha_blender();
     draw_sprite( darkness, darkness_old, 0, 0);
@@ -343,6 +295,27 @@ void Game::draw(){
       draw_sprite(darkness, spotlight, player2.getX() - tile_map -> x + 32 - (spotlight->w/2), player2.getY() - tile_map -> y + 32 - (spotlight->h/2));
       draw_trans_sprite(screen2, darkness, 0, 0);
     }
+  }*/
+
+  // Starting countdown
+  if( gameBegin){
+    // Mute full song, play waiting song
+    FSOUND_SetVolume (0, 255-(timer1*0.85));
+    FSOUND_SetVolume (1, (timer1*0.85));
+
+    // Timer 3..2..1..GO!
+    if( timer1 <= 33){
+      masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18, 570, 400, 140, 180);
+    }
+    else if( timer1 <= 66){
+      masked_stretch_blit(countdownImage, buffer, 19, 0, 14, 18, 570, 400, 140, 180);
+    }
+    else if( timer1 <= 80){
+      masked_stretch_blit(countdownImage, buffer, 39, 0, 14, 18, 570, 400, 140, 180);
+    }
+    else if( timer1 <= 100){
+      masked_stretch_blit(countdownImage, buffer, 57, 0, 40, 18, 440, 400, 400, 180);
+    }
   }
 
   // Draw split screens
@@ -359,98 +332,25 @@ void Game::draw(){
   rectfill( buffer, 20, 20, 320, 140, makecol( 0,0,0));
   rectfill( buffer, 20, 500, 320, 620, makecol( 0,0,0));
 
-  // Ready?
-  if( !spawning && !controlReady){
-    if( turnOne){
-      masked_stretch_blit(countdownImage, buffer, 100, 0, 94, 26, 165, 160, 940, 260);
-      if( num_joysticks > 0){
-        draw_sprite( buffer, spaceImage[tile_map -> getFrame()/4 + 2], 640 - 32, 380);
-      }
-      else{
-        draw_sprite( buffer, spaceImage[tile_map -> getFrame()/4], 640 - 128, 380);
-      }
-    }
-    else{
-      masked_stretch_blit(countdownImage, buffer, 100, 0, 94, 26, 165, 645, 940, 260);
-      if( num_joysticks > 1){
-        draw_sprite( buffer, spaceImage[tile_map -> getFrame()/4 + 2], 640 - 32, 860);
-      }
-      else{
-        draw_sprite( buffer, spaceImage[tile_map -> getFrame()/4], 640 - 128, 860);
-      }
-    }
-  }
 
-  // Spawn timer
-  if( spawning){
-    // Scroll Map
-    if( turnOne){
-      currentPlayer = &player1;
-    }
-    else{
-      currentPlayer = &player2;
-    }
-    if(currentPlayer -> getY() - tile_map -> y < 200 && tile_map -> y > 0){
-      tile_map -> y -= 64;
-    }
-    if(currentPlayer -> getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  480){
-      tile_map -> y += 64;
-    }
-    if(currentPlayer -> getX() - tile_map -> x < 500 && tile_map -> x > 0){
-      tile_map -> x -= 64;
-    }
-    if(currentPlayer -> getX() - tile_map -> x > 480 && tile_map -> x < tile_map -> width * 64 - 1280){
-      tile_map -> x += 64;
-    }
-
-    // Mute full song, play waiting song
-    FSOUND_SetVolume (0, 255-(timer1*0.85));
-    FSOUND_SetVolume (1, (timer1*0.85));
-
-    // Set screen in
-    int drawYCoordinate;
-    if( turnOne){
-      drawYCoordinate = 160;
-    }
-    else{
-      drawYCoordinate = 645;
-    }
-
-    // Timer 3..2..1..GO!
-    if( timer1 <= 33){
-      masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18, 570, drawYCoordinate, 140, 180);
-    }
-    else if( timer1 <= 66){
-      masked_stretch_blit(countdownImage, buffer, 19, 0, 14, 18, 570, drawYCoordinate, 140, 180);
-    }
-    else if( timer1 <= 80){
-      masked_stretch_blit(countdownImage, buffer, 39, 0, 14, 18, 570, drawYCoordinate, 140, 180);
-    }
-    else if( timer1 <= 100){
-      masked_stretch_blit(countdownImage, buffer, 57, 0, 40, 18, 440, drawYCoordinate, 400, 180);
-    }
-  }
-  else if( controlReady){
+  if( controlReady){
     // Draw timer to screen
     string newTime = convertDoubleToString(timer1/10);
     newTime.insert((newTime.length() - 1), ".");
-    textprintf_ex(buffer,cooper,40,!turnOne * 480 + 80 ,makecol(255,255,255),-1,((string)(("Timer: " + newTime))).c_str());
+    //textprintf_ex(buffer,cooper,40,!turnOne * 480 + 80 ,makecol(255,255,255),-1,((string)(("Timer: " + newTime))).c_str());
   }
 
   // Draw timer to screen
   string player1TotalTime = convertIntToString(totalTime[0]/10);
-  if( turnOne && controlReady){
-    player1TotalTime = convertIntToString(totalTime[0]/10 + timer1/10);
-  }
+  player1TotalTime = convertIntToString(totalTime[0]/10 + timer1/10);
   player1TotalTime.insert((player1TotalTime.length() - 1), ".");
   textprintf_ex(buffer,cooper,40,40,makecol(255,255,255),-1,((string)(("Total Time: " + player1TotalTime))).c_str());
 
   string player2TotalTime = convertIntToString(totalTime[1]/10);
-  if( !turnOne && controlReady){
-    player2TotalTime = convertIntToString(totalTime[1]/10 + timer1/10);
-  }
+  player2TotalTime = convertIntToString(totalTime[1]/10 + timer1/10);
   player2TotalTime.insert((player2TotalTime.length() - 1), ".");
   textprintf_ex(buffer,cooper,40,520,makecol(255,255,255),-1,((string)(("Total Time: " + player2TotalTime))).c_str());
+
 
   // Change level when both are done
   if( player1.getFinished() && player2.getFinished()){
