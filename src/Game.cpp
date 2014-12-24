@@ -171,7 +171,10 @@ void Game::init(){
 void Game::update(){
   poll_joystick();
 
+    player1.update(tile_map);
+    player2.update(tile_map);
   if(!spawning){
+
     // Spawn time
     if( !controlReady){
       if((key[KEY_SPACE] || joy[!turnOne].button[0].b) && !player1.getFinished() && !player2.getFinished()){
@@ -184,12 +187,9 @@ void Game::update(){
       // Character movements (runs only every 2nd loop)
       if(frames_done % 2 == 0){
         // Update if its their turn
-        if( turnOne){
-          player1.update(tile_map);
-        }
-        else{
-          player2.update(tile_map);
-        }
+
+
+
       }
     }
   }
@@ -255,7 +255,7 @@ void Game::update(){
   }
   // Time limit per turn
   else if( controlReady){
-    if( timer1 > 1000 && !(player1.getFinished() || player2.getFinished())){
+    /*if( timer1 > 1000 && !(player1.getFinished() || player2.getFinished())){
       play_sample( timeout, 255, 128, 1000, 0);
       FSOUND_SetVolume (0, 255);
       FSOUND_SetVolume (1, 0);
@@ -268,7 +268,7 @@ void Game::update(){
       else{
         turnOne = !turnOne;
       }
-    }
+    }*/
   }
 
   // Scroll Map
@@ -310,14 +310,13 @@ void Game::draw(){
   rectfill( buffer, 0, 0, 1280, 960, makecol(0,0,0));
 
   // Draw tiles and characters
-  if( turnOne){
+
     tile_map -> draw_map(screen1);
     player1.draw(screen1, tile_map -> x, tile_map -> y);
-  }
-  else{
+
     tile_map -> draw_map(screen2);
     player2.draw(screen2, tile_map -> x, tile_map -> y);
-  }
+
 
   // Lighting
   if( lightingEnabled){
@@ -339,8 +338,7 @@ void Game::draw(){
       draw_trans_sprite(screen2, darkness, 0, 0);
       draw_sprite(darkness, spotlight, player1.getX() - tile_map -> x + 32 - (spotlight->w/2), player1.getY() - tile_map -> y + 32 - (spotlight->h/2));
       draw_trans_sprite(screen1, darkness, 0, 0);
-    }
-    else{
+
       draw_trans_sprite(screen1, darkness, 0, 0);
       draw_sprite(darkness, spotlight, player2.getX() - tile_map -> x + 32 - (spotlight->w/2), player2.getY() - tile_map -> y + 32 - (spotlight->h/2));
       draw_trans_sprite(screen2, darkness, 0, 0);
