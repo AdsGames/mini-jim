@@ -216,6 +216,12 @@ void tile::setType(int newType){
   else if(type == tile_fork2){
     attribute.push_back(harmful);
   }
+   else if(type == tile_chicken){
+    attribute.push_back(gas);
+  }
+   else if(type == tile_chicken_still){
+    attribute.push_back(gas);
+  }
   else if(type == tile_light){
     attribute.push_back(gas);
     attribute.push_back(light);
