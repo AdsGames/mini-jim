@@ -273,9 +273,11 @@ void Game::draw(){
 
   // Draw tiles and characters
   tile_map -> draw_map(screen1);
+  player2.draw(screen1, tile_map -> x, tile_map -> y);
   player1.draw(screen1, tile_map -> x, tile_map -> y);
 
   tile_map2 -> draw_map(screen2);
+  player1.draw(screen2, tile_map2 -> x, tile_map2 -> y);
   player2.draw(screen2, tile_map2 -> x, tile_map2 -> y);
 
 
