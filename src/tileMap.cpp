@@ -32,6 +32,7 @@ void tileMap::load_images(){
   // New tiles
   tileSprites[tile_carpet][0] = load_bitmap("images/blocks/carpet.png", NULL);
   tileSprites[tile_cement][0] = load_bitmap("images/blocks/cement.png", NULL);
+  tileSprites[tile_cement_full][0] = load_bitmap("images/blocks/cement_full.png", NULL);
   tileSprites[tile_dice][0] = load_bitmap("images/blocks/dice.png", NULL);
   tileSprites[tile_tile][0] = load_bitmap("images/blocks/tile.png", NULL);
   tileSprites[tile_book][0] = load_bitmap("images/blocks/book.png", NULL);
