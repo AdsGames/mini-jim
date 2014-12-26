@@ -356,7 +356,6 @@ void player::update(tileMap *fullMap){
         }
         else if(newMap -> mapTiles.at(i).getType() == tile_beak){
           play_sample( chicken, 255, 128, 1000, 0);
-          newMap -> mapTiles.at(i).setType(26);
         }
         else{
           play_sample(die,255,125,1000,0);
