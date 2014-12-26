@@ -255,9 +255,8 @@ void player::update(tileMap *fullMap){
   // Add close elements
   for(int i = 0; i < fullMap -> mapTiles.size(); i++){
     if(collisionAny(x - 140, x + 140, fullMap -> mapTiles.at(i).getX(), fullMap -> mapTiles.at(i).getX() +  fullMap -> mapTiles.at(i).getWidth(), y - 140, y + 140, fullMap -> mapTiles.at(i).getY(), fullMap -> mapTiles.at(i).getY() + fullMap -> mapTiles.at(i).getHeight())){
-      //if(fullMap -> mapTiles.at(i).){
-         newMap -> mapTiles.push_back( fullMap -> mapTiles.at(i));
-      //}
+        newMap -> mapTiles.push_back( fullMap -> mapTiles.at(i));
+
     }
   }
 
