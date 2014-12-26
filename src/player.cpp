@@ -323,17 +323,19 @@ void player::update(tileMap *fullMap){
   }
 
   //Check for points and dangers
-  for(int i = 0; i < newMap -> mapTiles.size(); i++){
+  for(int i = 0; i < fullMap -> mapTiles.size(); i++){
     // Chicken stuff
-    if(newMap -> mapTiles.at(i).getType() == tile_chicken){
-      if(newMap -> getFrame() == 1){
-        newMap -> mapTiles.at((newMap -> width) * 8 + i + 1).setType( tile_beak);
+    if(fullMap -> mapTiles.at(i).getType() == tile_chicken){
+      if(fullMap -> getFrame() == 1){
+        fullMap -> mapTiles.at((fullMap -> width) * 8 + i + 1).setType( tile_beak);
       }
       else{
-        newMap -> mapTiles.at((newMap -> width) * 8 + i + 1).setType( 0);
+        fullMap -> mapTiles.at((fullMap -> width) * 8 + i + 1).setType( 0);
       }
     }
+  }
 
+  for(int i = 0; i < newMap -> mapTiles.size(); i++){
     // Checkpoint
     if(newMap -> mapTiles.at(i).getType() == tile_checkpoint){
       if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 16, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
