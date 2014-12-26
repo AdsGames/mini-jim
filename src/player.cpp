@@ -5,6 +5,8 @@ player::player(){
   x = 128;
   y = 128;
 
+  deathcount;
+
   canFall = false;
   jumping = false;
   dead = false;
@@ -154,6 +156,10 @@ void player::set_keys( int up, int down, int left, int right, int jump, int newJ
   joyNumber = newJoyNumber;
 }
 
+int player::getDeathcount(){
+  return deathcount;
+}
+
 // Return X
 int player::getX(){
   return x;
@@ -187,7 +193,10 @@ vector<projectile> player::getBullets(){
 void player::setFinished( bool newFinished){
     finished = newFinished;
 }
-
+//Set deathcount
+void player::setDeathcount(int newDeathcount){
+  deathcount=newDeathcount;
+}
 //Set dead
 void player::setDead(bool newDead){
   dead = newDead;
@@ -352,7 +361,7 @@ void player::update(tileMap *fullMap){
       if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 16, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
         if(newMap -> mapTiles.at(i).getType() == tile_mousetrap_1){
           play_sample(trapsnap,255,125,1000,0);
-          newMap -> mapTiles.at(i).setType(26);
+          fullMap -> mapTiles.at(i).setType(tile_mousetrap_2);
         }
         else if(newMap -> mapTiles.at(i).getType() == tile_beak){
           play_sample( chicken, 255, 128, 1000, 0);
@@ -361,6 +370,7 @@ void player::update(tileMap *fullMap){
           play_sample(die,255,125,1000,0);
         }
         dead = true;
+        deathcount++;
       }
     }
     if(newMap -> mapTiles.at(i).getType() == tile_finish){
@@ -372,6 +382,7 @@ void player::update(tileMap *fullMap){
     if(x > newMap -> width*64 || x < 0 || y > newMap -> height*64){
       play_sample(die,255,125,1000,0);
       dead = true;
+      deathcount++;
     }
   }
 
