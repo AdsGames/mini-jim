@@ -732,7 +732,7 @@
 	"globals.h"
 	"tools.h"
 
-1419460552 source:e:\allans programming\games indev\minijim\src\main.cpp
+1419565378 source:e:\allans programming\games indev\minijim\src\main.cpp
 	<allegro.h>
 	<alpng.h>
 	"globals.h"
@@ -769,7 +769,7 @@
 	"tileMap.h"
 	"player.h"
 
-1419459817 e:\allans programming\games indev\minijim\include\player.h
+1419565378 e:\allans programming\games indev\minijim\include\player.h
 	<allegro.h>
 	<alpng.h>
 	"globals.h"
@@ -787,7 +787,7 @@
 1419455636 source:e:\allans programming\games indev\minijim\src\menu.cpp
 	"Menu.h"
 
-1419460866 source:e:\allans programming\games indev\minijim\src\player.cpp
+1419565378 source:e:\allans programming\games indev\minijim\src\player.cpp
 	"player.h"
 
 1398520054 source:e:\allans programming\games indev\minijim\src\projectile.cpp
@@ -803,6 +803,6 @@
 	"tools.h"
 	"globals.h"
 
-1419458383 source:e:\allans programming\games indev\minijim\src\game.cpp
+1419565378 source:e:\allans programming\games indev\minijim\src\game.cpp
 	"Game.h"
 
