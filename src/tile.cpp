@@ -222,6 +222,9 @@ void tile::setType(int newType){
    else if(type == tile_chicken_still){
     attribute.push_back(gas);
   }
+  else if(type == tile_cement_full){
+    attribute.push_back(solid);
+  }
   else if(type == tile_light){
     attribute.push_back(gas);
     attribute.push_back(light);

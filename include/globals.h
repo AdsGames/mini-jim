@@ -93,6 +93,7 @@
 #define tile_ovenleft 62
 #define tile_ovencenter 63
 #define tile_light 64
+#define tile_cement_full 65
 
 //Background Tiles
 #define tile_back_grey 100
