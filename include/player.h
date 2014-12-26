@@ -23,6 +23,7 @@ class player{
 
     int getX();
     int getY();
+    int getDeathcount();
 
     bool getFinished();
 
@@ -32,6 +33,7 @@ class player{
 
     void setFinished( bool newFinished);
     void setDead(bool newDead);
+    void setDeathcount(int newDeathcount);
     void spawncommand(tileMap *fullMap);
 
     void update(tileMap *fullMap);
@@ -40,6 +42,8 @@ class player{
   private:
     int x;
     int y;
+
+    int deathcount;
 
     int checkpointPosition[2];
 

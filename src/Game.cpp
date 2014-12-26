@@ -338,15 +338,20 @@ void Game::draw(){
     // Draw timer to screen
     string player1TotalTime = convertIntToString(totalTime[0]/10);
     player1TotalTime.insert((player1TotalTime.length() - 1), ".");
-    textprintf_ex(buffer,cooper,40,40,makecol(255,255,255),-1,((string)(("Time: " + player1TotalTime))).c_str());
+    textprintf_ex(buffer,cooper,40,55,makecol(255,255,255),-1,((string)(("Time: " + player1TotalTime))).c_str());
+    textprintf_ex(buffer,cooper,40,20,makecol(255,255,255),-1,"Deaths:%i",player1.getDeathcount());
 
     string player2TotalTime = convertIntToString(totalTime[1]/10);
     player2TotalTime.insert((player2TotalTime.length() - 1), ".");
-    textprintf_ex(buffer,cooper,40,520,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
+    textprintf_ex(buffer,cooper,40,535,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
+    textprintf_ex(buffer,cooper,40,500,makecol(255,255,255),-1,"Deaths:%i",player2.getDeathcount());
   }
 
   // Starting countdown
   if( gameBegin){
+    //Reset deathcount
+    player1.setDeathcount(0);
+    player2.setDeathcount(0);
     // Timer 3..2..1..GO!
     if( timer1 <= 33){
       masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18, 570, 400, 140, 180);

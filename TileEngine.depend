@@ -561,7 +561,7 @@
 	"tileMap.h"
 	"player.h"
 
-1419565603 c:\users\danward\documents\github\minijim\include\player.h
+1419619513 c:\users\danward\documents\github\minijim\include\player.h
 	<allegro.h>
 	<alpng.h>
 	"globals.h"
@@ -633,7 +633,7 @@
 1419483919 source:c:\users\danward\documents\github\minijim\src\menu.cpp
 	"Menu.h"
 
-1419570934 source:c:\users\danward\documents\github\minijim\src\player.cpp
+1419618054 source:c:\users\danward\documents\github\minijim\src\player.cpp
 	"player.h"
 
 1398530854 source:c:\users\danward\documents\github\minijim\src\projectile.cpp
