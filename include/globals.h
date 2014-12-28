@@ -19,6 +19,7 @@
 #define quarter_block_top 10
 #define quarter_block_bottom 11
 #define light 12
+#define slide 13
 
 //Character directions
 // 0-3 left, 4-7 right, 8-11 up
@@ -94,6 +95,8 @@
 #define tile_ovencenter 63
 #define tile_light 64
 #define tile_cement_full 65
+#define tile_wall 66
+#define tile_wall_slide 67
 
 //Background Tiles
 #define tile_back_grey 100
