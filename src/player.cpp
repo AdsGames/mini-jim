@@ -272,14 +272,30 @@ void player::update(tileMap *fullMap){
   //Check for collision
   for(int i = 0; i < newMap -> mapTiles.size(); i++){
     // Check moving LEFT
-    if(newMap -> mapTiles.at(i).containsAttribute(solid)){
+    if((newMap -> mapTiles.at(i).containsAttribute(solid) || newMap -> mapTiles.at(i).containsAttribute(slide))&& !sliding){
       if(collisionAny(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
          collisionLeft(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
         canMoveLeft = false;
       }
     }
+    //Sliding left
+    if(newMap -> mapTiles.at(i).containsAttribute(solid)&& sliding){
+      if(collisionAny(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+         collisionLeft(x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
+        canMoveLeft = false;
+      }
+    }
+
+
+
     // Check moving RIGHT
-    if(newMap -> mapTiles.at(i).containsAttribute(solid)){
+    if((newMap -> mapTiles.at(i).containsAttribute(solid)|| newMap -> mapTiles.at(i).containsAttribute(slide))&& !sliding){
+      if(collisionAny(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
+         collisionRight(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
+        canMoveRight = false;
+      }
+    }
+     if(newMap -> mapTiles.at(i).containsAttribute(solid)&& sliding){
       if(collisionAny(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight()) &&
          collisionRight(x + 8, x + 56 + sprintSpeed, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth())){
         canMoveRight = false;
