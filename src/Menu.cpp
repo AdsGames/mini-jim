@@ -92,7 +92,7 @@ Menu::Menu()
 
 void Menu::update()
 {
-  if(key[KEY_UP] || key[KEY_DOWN] || key[KEY_LEFT] || key[KEY_RIGHT] || key[KEY_W] || key[KEY_A] || key[KEY_S] || key[KEY_D])
+  if(key[KEY_UP] || key[KEY_DOWN] || key[KEY_LEFT] || key[KEY_RIGHT] || key[KEY_W] || key[KEY_A] || key[KEY_S] || key[KEY_D] || joy[0].stick[0].axis[1].d2 || joy[0].stick[0].axis[1].d1 || joy[0].button[4].b || joy[0].button[5].b)
     mouse_control=false;
   else if (mouse_x!=old_mouse_x || mouse_y!=old_mouse_y)mouse_control=true;
 
