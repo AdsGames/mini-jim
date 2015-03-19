@@ -6,7 +6,6 @@ Game::Game()
 {
   // Init fmod
   FSOUND_Init (44100, 32, 0);
-  install_joystick(JOY_TYPE_AUTODETECT);
 
   // Creates a random number generator (based on time)
   srand (time(NULL));

@@ -93,6 +93,7 @@ void setup(){
   install_timer();
   install_keyboard();
   install_mouse();
+  install_joystick(JOY_TYPE_AUTODETECT);
   install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,".");
   set_color_depth(32);
 
