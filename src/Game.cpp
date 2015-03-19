@@ -91,10 +91,6 @@ Game::Game()
   if(!(results = load_bitmap( "images/gui/winscreen.png", NULL))){
     abort_on_error( "Cannot find image images/gui/winscreen.png \n Please check your files and try again");
   }
-  if(!(cursor = load_bitmap("images/cursor.png", NULL))){
-    abort_on_error( "Cannot find image images/cursor.png \n Please check your files and try again");
-  }
-
   // Load music
   if(!(waitingMusic = FSOUND_Stream_Open("sounds/music/BasicJim.mp3",2, 0, 0))){
       abort_on_error( "Cannot find music sounds/music/BasicJim.mp3 \n Please check your files and try again");
