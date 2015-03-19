@@ -349,6 +349,24 @@ void player::update(tileMap *fullMap){
 
   //Check for points and dangers
   for(int i = 0; i < fullMap -> mapTiles.size(); i++){
+
+    if(fullMap -> mapTiles.at(i).containsAttribute(harmful)){
+      if(collisionAny(x + 16, x + 48, fullMap -> mapTiles.at(i).getX(), fullMap -> mapTiles.at(i).getX() +  fullMap -> mapTiles.at(i).getWidth(), y - 16, y + 64, fullMap -> mapTiles.at(i).getY(), fullMap -> mapTiles.at(i).getY() +  fullMap -> mapTiles.at(i).getHeight())){
+        if(fullMap -> mapTiles.at(i).getType() == tile_mousetrap_1){
+          fullMap -> mapTiles.at(i).setType(tile_mousetrap_2);
+          play_sample(trapsnap,255,125,1000,0);
+
+        }
+        else if(fullMap -> mapTiles.at(i).getType() == tile_beak){
+          play_sample( chicken, 255, 128, 1000, 0);
+        }
+        else{
+          play_sample(die,255,125,1000,0);
+        }
+        dead = true;
+        deathcount++;
+      }
+    }
     // Chicken stuff
     if(fullMap -> mapTiles.at(i).getType() == tile_chicken){
       if(fullMap -> getFrame() == 1){
@@ -373,22 +391,7 @@ void player::update(tileMap *fullMap){
     }
 
     //Die
-    if(newMap -> mapTiles.at(i).containsAttribute(harmful)){
-      if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 16, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
-        if(newMap -> mapTiles.at(i).getType() == tile_mousetrap_1){
-          play_sample(trapsnap,255,125,1000,0);
-          fullMap -> mapTiles.at(i).setType(tile_mousetrap_2);
-        }
-        else if(newMap -> mapTiles.at(i).getType() == tile_beak){
-          play_sample( chicken, 255, 128, 1000, 0);
-        }
-        else{
-          play_sample(die,255,125,1000,0);
-        }
-        dead = true;
-        deathcount++;
-      }
-    }
+
     if(newMap -> mapTiles.at(i).getType() == tile_finish){
       if(collisionAny(x + 16, x + 48, newMap -> mapTiles.at(i).getX(), newMap -> mapTiles.at(i).getX() +  newMap -> mapTiles.at(i).getWidth(), y - 16, y + 64, newMap -> mapTiles.at(i).getY(), newMap -> mapTiles.at(i).getY() +  newMap -> mapTiles.at(i).getHeight())){
         play_sample(win,255,125,1000,0);
