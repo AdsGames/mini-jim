@@ -396,6 +396,8 @@ void player::update(tileMap *fullMap){
       }
     }
     if(x > newMap -> width*64 || x < 0 || y > newMap -> height*64){
+      x=0;
+      y=0;
       play_sample(die,255,125,1000,0);
       dead = true;
       deathcount++;
