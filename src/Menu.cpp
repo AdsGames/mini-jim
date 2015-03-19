@@ -6,7 +6,7 @@ Menu::Menu()
   FSOUND_Init (44100, 32, 0);
 
   // Create buffer image
-  buffer = create_bitmap( 1280, 960);
+  buffer = create_bitmap( SCREEN_W, SCREEN_H);
 
   // Load images
   if(!(menu = load_bitmap( ("images/gui/menu.png"), NULL))){
@@ -284,7 +284,7 @@ void Menu::draw()
   }
 
   // Cursor
-  stretch_sprite(buffer, cursor[0], mouse_x, mouse_y, 21 * resDiv, 26 * resDiv);
+  draw_sprite(buffer, cursor[0], mouse_x, mouse_y);
 
   // Select button
   if (mouse_b & 1 || key[KEY_ENTER] || joy[0].button[0].b){
