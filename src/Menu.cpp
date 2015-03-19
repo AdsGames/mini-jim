@@ -127,7 +127,7 @@ void Menu::update()
     selectorY += selectorVelocity;
   }
   //Hover play
-  if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 637, 637 + 45)){
+  if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)){
     if(newSelectorY != 637){
       newSelectorY = 637;
       selectorX = 60;
@@ -135,7 +135,7 @@ void Menu::update()
     }
   }
   //Hover edit
-  else if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 700, 700 + 45)){
+  else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)){
     if(newSelectorY != 700){
       newSelectorY = 700;
       selectorX = 60;
@@ -143,7 +143,7 @@ void Menu::update()
     }
   }
   //Hover help
-  else if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 763, 763 + 45)){
+  else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)){
     if(newSelectorY != 763){
       newSelectorY = 763;
       selectorX = 60;
@@ -152,7 +152,7 @@ void Menu::update()
     menuOpen = true;
   }
   //Hover exit
-  else if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 828, 828 + 45)){
+  else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)){
     if(newSelectorY != 828){
       newSelectorY = 828;
       selectorX = 60;
@@ -163,7 +163,7 @@ void Menu::update()
   //Select button
   if(mouse_b & 1 || key[KEY_ENTER] || joy[0].button[0].b){
     // level select left
-    if(collisionAny(mouseX(),mouseX(),1100,1140,mouseY(),mouseY(), 80, 120)){
+    if(collisionAny(mouse_x,mouse_x,1100,1140,mouse_y,mouse_y, 80, 120)){
       play_sample(click,255,125,1000,0);
       if( levelOn > 0){
         levelOn--;
@@ -189,7 +189,7 @@ void Menu::update()
       while( mouse_b & 1){}
     }
     // level select right
-    else if(collisionAny(mouseX(),mouseX(),1200,1240,mouseY(),mouseY(), 80, 120)){
+    else if(collisionAny(mouse_x,mouse_x,1200,1240,mouse_y,mouse_y, 80, 120)){
       play_sample(click,255,125,1000,0);
       if( levelOn < 4){
         levelOn++;
@@ -215,19 +215,19 @@ void Menu::update()
       while( mouse_b & 1){}
     }
     // Start
-    else if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 637, 637 + 45)){
+    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)){
       set_next_state( STATE_GAME);
     }
     // Edit
-    else if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 700, 700 + 45)){
+    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)){
       set_next_state( STATE_EDIT);
     }
     // Help
-    else if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 763, 763 + 45)){
+    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)){
 
     }
     // Quit
-    else if(collisionAny(mouseX(),mouseX(),60,270,mouseY(),mouseY(), 828, 828 + 45)){
+    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)){
       set_next_state( STATE_EXIT);
     }
   }
@@ -252,16 +252,16 @@ void Menu::draw()
   draw_trans_sprite(buffer, levelSelectRight, 1200, 80);
 
   // Hover select left
-  if(collisionAny(mouseX(),mouseX(),1100,1140,mouseY(),mouseY(), 80, 120)){
+  if(collisionAny(mouse_x,mouse_x,1100,1140,mouse_y,mouse_y, 80, 120)){
     draw_trans_sprite(buffer, levelSelectLeft, 1100, 80);
   }
   // Hover select right
-  if(collisionAny(mouseX(),mouseX(),1200,1240,mouseY(),mouseY(), 80, 120)){
+  if(collisionAny(mouse_x,mouse_x,1200,1240,mouse_y,mouse_y, 80, 120)){
     draw_trans_sprite(buffer, levelSelectRight, 1200, 80);
   }
 
   // Cursor
-  stretch_sprite(buffer, cursor[0], mouseX(), mouseY(), 21 * resDiv, 26 * resDiv);
+  stretch_sprite(buffer, cursor[0], mouse_x, mouse_y, 21 * resDiv, 26 * resDiv);
 
   // Select button
   if (mouse_b & 1 || key[KEY_ENTER] || joy[0].button[0].b){
@@ -269,7 +269,7 @@ void Menu::draw()
       do{
         draw_sprite(buffer, menu, 0, 0);
         draw_sprite(buffer, help,0,0);
-        stretch_sprite(buffer, cursor[0], mouseX(), mouseY(), 21 * resDiv, 26 * resDiv);
+        stretch_sprite(buffer, cursor[0], mouse_x, mouse_y, 21 * resDiv, 26 * resDiv);
         draw_sprite(screen,buffer,0,0);
       }
       while(!key[KEY_ESC] && !mouse_b & 1 && !joy[0].button[0].b);
@@ -278,7 +278,7 @@ void Menu::draw()
   if( menuOpen){
     draw_trans_sprite( buffer,help,0,0);
   }
-
+  draw_sprite(buffer,cursor[0],mouse_x,mouse_y);
   // Draw buffer
   stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }

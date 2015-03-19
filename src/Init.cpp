@@ -6,7 +6,7 @@ Init::Init()
   set_window_title("Error");
 
   // Set screen mode
-  if(true == false){
+  /*if(true == false){
     resDiv = 1;
     if(set_gfx_mode( GFX_AUTODETECT_FULLSCREEN, 1280, 960, 0, 0) !=0){
       resDiv = 2;
@@ -33,7 +33,9 @@ Init::Init()
         }
       }
     }
-  }
+  }*/
+
+  set_gfx_mode( GFX_AUTODETECT, 1280,1024 , 0, 0);
 
   set_window_title("Tile Engine");
 }
