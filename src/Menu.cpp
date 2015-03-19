@@ -92,8 +92,15 @@ Menu::Menu()
 
 void Menu::update()
 {
-  menuOpen = false;
+  if(key[KEY_UP] || key[KEY_DOWN] || key[KEY_LEFT] || key[KEY_RIGHT] || key[KEY_W] || key[KEY_A] || key[KEY_S] || key[KEY_D])
+    mouse_control=false;
+  else if (mouse_x!=old_mouse_x || mouse_y!=old_mouse_y)mouse_control=true;
 
+  old_mouse_x=mouse_x;
+  old_mouse_y=mouse_y;
+
+  menuOpen = false;
+  poll_joystick();
   // Move around live background
   if( scrollDirection == "right"){
     if( tile_map -> x + 1 < tile_map -> width * 32){
@@ -112,6 +119,7 @@ void Menu::update()
     }
   }
 
+
   // Move selector
   if( selectorY != newSelectorY){
     int selectorVelocity;
@@ -126,44 +134,58 @@ void Menu::update()
     }
     selectorY += selectorVelocity;
   }
+  if((key[KEY_W] || key[KEY_UP] || joy[0].stick[0].axis[1].d1) && step>10){
+      if(selectorHovering!=0)selectorHovering--;
+      else selectorHovering=3;
+      step=0;
+  }
+  if((key[KEY_S] || key[KEY_DOWN] || joy[0].stick[0].axis[1].d2) && step>10){
+      if(selectorHovering!=3)selectorHovering++;
+      else selectorHovering=0;
+      step=0;
+  }
   //Hover play
-  if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)){
+  if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)) || !mouse_control && ( selectorHovering==0)){
     if(newSelectorY != 637){
       newSelectorY = 637;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
+
   }
   //Hover edit
-  else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)){
+  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)) || !mouse_control && ( selectorHovering==1)){
     if(newSelectorY != 700){
       newSelectorY = 700;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
+
   }
   //Hover help
-  else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)){
+  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)) || !mouse_control && ( selectorHovering==2)){
     if(newSelectorY != 763){
       newSelectorY = 763;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
+
     menuOpen = true;
   }
   //Hover exit
-  else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)){
+  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)) || !mouse_control && ( selectorHovering==3)){
     if(newSelectorY != 828){
       newSelectorY = 828;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
+
   }
 
   //Select button
-  if(mouse_b & 1 || key[KEY_ENTER] || joy[0].button[0].b){
+
     // level select left
-    if(collisionAny(mouse_x,mouse_x,1100,1140,mouse_y,mouse_y, 80, 120)){
+    if(((collisionAny(mouse_x,mouse_x,1100,1140,mouse_y,mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_A] || key[KEY_LEFT] || joy[0].button[4].b)) && step>10) {
       play_sample(click,255,125,1000,0);
       if( levelOn > 0){
         levelOn--;
@@ -186,10 +208,10 @@ void Menu::update()
       else if( levelOn == 4){
         tile_map -> load( "data/sullysface_old");
       }
-      while( mouse_b & 1){}
+      step=0;
     }
     // level select right
-    else if(collisionAny(mouse_x,mouse_x,1200,1240,mouse_y,mouse_y, 80, 120)){
+    if(((collisionAny(mouse_x,mouse_x,1200,1240,mouse_y,mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_D] || key[KEY_RIGHT] || joy[0].button[5].b)) && step>10){
       play_sample(click,255,125,1000,0);
       if( levelOn < 4){
         levelOn++;
@@ -212,25 +234,26 @@ void Menu::update()
       else if( levelOn == 4){
         tile_map -> load( "data/sullysface_old");
       }
-      while( mouse_b & 1){}
+      step=0;
     }
     // Start
-    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==0)) && step>10){
       set_next_state( STATE_GAME);
     }
     // Edit
-    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==1)) && step>10){
       set_next_state( STATE_EDIT);
     }
     // Help
-    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==2)) && step>10){
 
     }
     // Quit
-    else if(collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==3)) && step>10){
       set_next_state( STATE_EXIT);
     }
-  }
+
+  step++;
 }
 
 void Menu::draw()
@@ -281,6 +304,7 @@ void Menu::draw()
   draw_sprite(buffer,cursor[0],mouse_x,mouse_y);
   // Draw buffer
   stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
+
 }
 
 Menu::~Menu()

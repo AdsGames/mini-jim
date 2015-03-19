@@ -25,6 +25,14 @@ class Menu : public GameState
     SAMPLE *click, *intro;
     FSOUND_STREAM* music;
 
+    int selectorHovering;
+    int step;
+
+    int old_mouse_x;
+    int old_mouse_y;
+
+    bool mouse_control;
+
     // Live background
     int animationFrame;
     tileMap *tile_map;
