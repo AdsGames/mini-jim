@@ -143,6 +143,7 @@ extern int frames_done;
 
 // Resdiv
 extern int resDiv;
+extern bool single_player;
 
 //State variables
 extern int stateID;
