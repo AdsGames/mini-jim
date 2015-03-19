@@ -214,13 +214,25 @@ void Game::update(){
   }
 
   // Change level when both are done
-  if( player1.getFinished() && player2.getFinished()){
-    if( key[KEY_ENTER]){
-      player1.setFinished( false);
-      player2.setFinished( false);
-      set_next_state(STATE_MENU);
+  if(!single_player){
+    if( player1.getFinished() && player2.getFinished()){
+      if( key[KEY_ENTER]){
+        player1.setFinished( false);
+        player2.setFinished( false);
+        set_next_state(STATE_MENU);
+      }
+      timer1 = 0;
     }
-    timer1 = 0;
+  }
+  if(single_player){
+    if( player1.getFinished()){
+      if( key[KEY_ENTER]){
+        player1.setFinished( false);
+        set_next_state(STATE_MENU);
+      }
+      timer1 = 0;
+    }
+
   }
 
   // Scroll map scroll
@@ -273,11 +285,11 @@ void Game::draw(){
   tile_map -> draw_map(screen1);
   player2.draw(screen1, tile_map -> x, tile_map -> y);
   player1.draw(screen1, tile_map -> x, tile_map -> y);
-
-  tile_map2 -> draw_map(screen2);
-  player1.draw(screen2, tile_map2 -> x, tile_map2 -> y);
-  player2.draw(screen2, tile_map2 -> x, tile_map2 -> y);
-
+  if(!single_player){
+    tile_map2 -> draw_map(screen2);
+    player1.draw(screen2, tile_map2 -> x, tile_map2 -> y);
+    player2.draw(screen2, tile_map2 -> x, tile_map2 -> y);
+  }
 
   // Lighting
   if( lightingEnabled){
@@ -315,11 +327,12 @@ void Game::draw(){
 
   // Draw split screens
   // Screens
-  stretch_sprite( buffer, screen1, 0, 0, 1280, 960/2);
-  stretch_sprite( buffer, screen2, 0, 960/2, 1280, 960/2);
+  if(!single_player)stretch_sprite( buffer, screen1, 0, 0, 1280, 960/2);
+  if(single_player)stretch_sprite( buffer, screen1, 0, 0, 1280, 960);
+  if(!single_player)stretch_sprite( buffer, screen2, 0, 960/2, 1280, 960/2);
 
   // Divider
-  rectfill( buffer, 0, 480 - 8,  1280, 480 + 8, makecol( 0,0,0));
+  if(!single_player)rectfill( buffer, 0, 480 - 8,  1280, 480 + 8, makecol( 0,0,0));
 
   // Frame
   rectfill( buffer, 0, 0, 1280, 16, makecol( 0,0,0));
