@@ -34,8 +34,11 @@ Init::Init()
       }
     }
   }*/
+  int width;
+  int height;
+  get_desktop_resolution(&width,&height);
 
-  set_gfx_mode( GFX_AUTODETECT, 1280,1024 , 0, 0);
+  set_gfx_mode( GFX_AUTODETECT, width,height , 0, 0);
 
   set_window_title("Tile Engine");
 }
