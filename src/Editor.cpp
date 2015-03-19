@@ -191,16 +191,16 @@ void Editor::update(){
   }
   else{
     // Scroll Map
-    if(mouseY() < 10 && tile_map -> y > 0){
+    if(mouse_y < 10 && tile_map -> y > 0){
        tile_map -> y -= 16;
     }
-    if(mouseY() > 950 && tile_map -> y < tile_map -> height * 64 -  960){
+    if(mouse_y > 950 && tile_map -> y < tile_map -> height * 64 -  960){
        tile_map -> y += 16;
     }
-    if(mouseX()  < 10 && tile_map -> x > 0){
+    if(mouse_x  < 10 && tile_map -> x > 0){
        tile_map -> x -= 8;
     }
-    if(mouseX()   > 1270 && tile_map -> x < tile_map -> width * 64 - 1280){
+    if(mouse_x   > 1270 && tile_map -> x < tile_map -> width * 64 - 1280){
        tile_map -> x += 8;
     }
 
@@ -244,14 +244,14 @@ void Editor::update(){
       //Check for collision
       if( layer == 1){
         for(int i = 0; i < tile_map -> mapTiles.size(); i++){
-          if(collisionAny(mouseX()  + tile_map -> x, mouseX()  + tile_map -> x, tile_map -> mapTiles.at(i).getX(), tile_map -> mapTiles.at(i).getX() + 64, mouseY() + tile_map -> y, mouseY() + tile_map -> y, tile_map -> mapTiles.at(i).getY(), tile_map -> mapTiles.at(i).getY() + 64)){
+          if(collisionAny(mouse_x  + tile_map -> x, mouse_x  + tile_map -> x, tile_map -> mapTiles.at(i).getX(), tile_map -> mapTiles.at(i).getX() + 64, mouse_y + tile_map -> y, mouse_y + tile_map -> y, tile_map -> mapTiles.at(i).getY(), tile_map -> mapTiles.at(i).getY() + 64)){
             tile_map -> mapTiles.at(i).setType(selectedTileType);
           }
         }
       }
       else{
         for(int i = 0; i < tile_map -> mapTilesBack.size(); i++){
-          if(collisionAny(mouseX()  + tile_map -> x, mouseX()  + tile_map -> x, tile_map -> mapTilesBack.at(i).getX(), tile_map -> mapTilesBack.at(i).getX() + 64, mouseY() + tile_map -> y, mouseY() + tile_map -> y, tile_map -> mapTilesBack.at(i).getY(), tile_map -> mapTilesBack.at(i).getY() + 64)){
+          if(collisionAny(mouse_x  + tile_map -> x, mouse_x  + tile_map -> x, tile_map -> mapTilesBack.at(i).getX(), tile_map -> mapTilesBack.at(i).getX() + 64, mouse_y + tile_map -> y, mouse_y + tile_map -> y, tile_map -> mapTilesBack.at(i).getY(), tile_map -> mapTilesBack.at(i).getY() + 64)){
             tile_map -> mapTilesBack.at(i).setType(selectedTileType);
           }
         }
@@ -263,7 +263,7 @@ void Editor::update(){
       //Check for collision
       if( layer == 1){
         for(int i = 0; i < tile_map -> mapTiles.size(); i++){
-          if(collisionAny(mouseX()  + tile_map -> x, mouseX()  + tile_map -> x, tile_map -> mapTiles.at(i).getX(), tile_map -> mapTiles.at(i).getX() + 64, mouseY() + tile_map -> y, mouseY() + tile_map -> y, tile_map -> mapTiles.at(i).getY(), tile_map -> mapTiles.at(i).getY() + 64)){
+          if(collisionAny(mouse_x  + tile_map -> x, mouse_x  + tile_map -> x, tile_map -> mapTiles.at(i).getX(), tile_map -> mapTiles.at(i).getX() + 64, mouse_y + tile_map -> y, mouse_y + tile_map -> y, tile_map -> mapTiles.at(i).getY(), tile_map -> mapTiles.at(i).getY() + 64)){
             exampleTile -> setX(0);
             exampleTile -> setY(0);
             selectedTileType = tile_map -> mapTiles.at(i).getType();
@@ -273,7 +273,7 @@ void Editor::update(){
       }
       else{
         for(int i = 0; i < tile_map -> mapTilesBack.size(); i++){
-          if(collisionAny(mouseX()  + tile_map -> x, mouseX()  + tile_map -> x, tile_map -> mapTilesBack.at(i).getX(), tile_map -> mapTilesBack.at(i).getX() + 64, mouseY() + tile_map -> y, mouseY() + tile_map -> y, tile_map -> mapTilesBack.at(i).getY(), tile_map -> mapTilesBack.at(i).getY() + 64)){
+          if(collisionAny(mouse_x  + tile_map -> x, mouse_x  + tile_map -> x, tile_map -> mapTilesBack.at(i).getX(), tile_map -> mapTilesBack.at(i).getX() + 64, mouse_y + tile_map -> y, mouse_y + tile_map -> y, tile_map -> mapTilesBack.at(i).getY(), tile_map -> mapTilesBack.at(i).getY() + 64)){
             exampleTile -> setX(0);
             exampleTile -> setY(0);
             selectedTileType = tile_map -> mapTilesBack.at(i).getType();
@@ -288,14 +288,14 @@ void Editor::update(){
       //Check for collision
       if( layer == 1){
         for(int i = 0; i < tile_map -> mapTiles.size(); i++){
-          if(collisionAny(mouseX()  + tile_map -> x, mouseX()  + tile_map -> x, tile_map -> mapTiles.at(i).getX(), tile_map -> mapTiles.at(i).getX() + 64, mouseY() + tile_map -> y, mouseY() + tile_map -> y, tile_map -> mapTiles.at(i).getY(), tile_map -> mapTiles.at(i).getY() + 64)){
+          if(collisionAny(mouse_x  + tile_map -> x, mouse_x  + tile_map -> x, tile_map -> mapTiles.at(i).getX(), tile_map -> mapTiles.at(i).getX() + 64, mouse_y + tile_map -> y, mouse_y + tile_map -> y, tile_map -> mapTiles.at(i).getY(), tile_map -> mapTiles.at(i).getY() + 64)){
             tile_map -> mapTiles.at(i).setType(0);
           }
         }
       }
       else{
         for(int i = 0; i < tile_map -> mapTilesBack.size(); i++){
-          if(collisionAny(mouseX() + tile_map -> x, mouseX()  + tile_map -> x, tile_map -> mapTilesBack.at(i).getX(), tile_map -> mapTilesBack.at(i).getX() + 64, mouseY() + tile_map -> y, mouseY() + tile_map -> y, tile_map -> mapTilesBack.at(i).getY(), tile_map -> mapTilesBack.at(i).getY() + 64)){
+          if(collisionAny(mouse_x + tile_map -> x, mouse_x  + tile_map -> x, tile_map -> mapTilesBack.at(i).getX(), tile_map -> mapTilesBack.at(i).getX() + 64, mouse_y + tile_map -> y, mouse_y + tile_map -> y, tile_map -> mapTilesBack.at(i).getY(), tile_map -> mapTilesBack.at(i).getY() + 64)){
             tile_map -> mapTilesBack.at(i).setType(0);
           }
         }
@@ -377,8 +377,8 @@ void Editor::draw()
     }
 
     // Cursor
-    circlefill(buffer, mouseX() , mouseY() , 10, makecol(0,0,0));
-    circlefill(buffer, mouseX() , mouseY(), 8, makecol(255,255,255));
+    circlefill(buffer, mouse_x , mouse_y , 10, makecol(0,0,0));
+    circlefill(buffer, mouse_x , mouse_y, 8, makecol(255,255,255));
   }
   // Draw buffer
   stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);

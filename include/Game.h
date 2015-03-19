@@ -28,6 +28,8 @@ class Game : public GameState
     BITMAP* screen1;
     BITMAP* screen2;
 
+    BITMAP* cursor;
+
     SAMPLE *countdown;
     SAMPLE *timeout;
 

@@ -33,16 +33,6 @@ bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2){
   return false;
 }
 
-// Mouse x
-int mouseX(){
-  return mouse_x * resDiv;
-}
-
-// Mouse y
-int mouseY(){
-  return mouse_y * resDiv;
-}
-
 //Checks if file exists
 bool fexists(const char *filename){
   ifstream ifile(filename);
