@@ -11,9 +11,16 @@ Game::Game()
   srand (time(NULL));
 
   // Other Sprites
-  buffer = create_bitmap( 1280, 960);
-  screen1 = create_bitmap( 1280, 480);
-  screen2 = create_bitmap( 1280, 480);
+  buffer = create_bitmap( SCREEN_W, SCREEN_H);
+  if(!single_player){
+    screen1 = create_bitmap( SCREEN_W, SCREEN_H/2);
+    screen2 = create_bitmap( SCREEN_W, SCREEN_H/2);
+  }
+  if(single_player){
+    screen1 = create_bitmap( SCREEN_W, SCREEN_H);
+    screen2 = create_bitmap(0,0);
+  }
+
 
   lightingEnabled = false;
 
@@ -90,6 +97,9 @@ Game::Game()
   if(!(results = load_bitmap( "images/gui/winscreen.png", NULL))){
     abort_on_error( "Cannot find image images/gui/winscreen.png \n Please check your files and try again");
   }
+   if(!(results_singleplayer = load_bitmap( "images/gui/winscreen_singleplayer.png", NULL))){
+    abort_on_error( "Cannot find image images/gui/winscreen_singleplayer.png \n Please check your files and try again");
+  }
   // Load music
   if(!(waitingMusic = FSOUND_Stream_Open("sounds/music/BasicJim.mp3",2, 0, 0))){
       abort_on_error( "Cannot find music sounds/music/BasicJim.mp3 \n Please check your files and try again");
@@ -156,7 +166,7 @@ void Game::init(){
   FSOUND_SetVolume (1, 0);
 
   player1.spawncommand( tile_map);
-  player2.spawncommand( tile_map2);
+  if(!single_player)player2.spawncommand( tile_map2);
 
   // Draw player two screen initial
   tile_map2 -> y = player2.getY() - 200;
@@ -196,7 +206,7 @@ void Game::update(){
     if( !player1.getFinished()){
       player1.update(tile_map);
     }
-    if( !player2.getFinished()){
+    if( !player2.getFinished() && !single_player){
       player2.update(tile_map2);
     }
   }
@@ -239,13 +249,16 @@ void Game::update(){
   if(player1.getY() - tile_map -> y < 200 && tile_map -> y > 0){
     tile_map -> y -= 12;
   }
-  if(player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  480){
+  if(player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  (SCREEN_H/2) && !single_player){
+    tile_map -> y += 12;
+  }
+  if(player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  SCREEN_H && single_player){
     tile_map -> y += 12;
   }
   if(player1.getX() - tile_map -> x < 500 && tile_map -> x > 0){
     tile_map -> x -= 12;
   }
-  if(player1.getX() - tile_map -> x > 480 && tile_map -> x < tile_map -> width * 64 - 1280){
+  if(player1.getX() - tile_map -> x > 480 && tile_map -> x < tile_map -> width * 64 - SCREEN_W){
     tile_map -> x += 12;
   }
 
@@ -253,13 +266,13 @@ void Game::update(){
   if(player2.getY() - tile_map2 -> y < 200 && tile_map2 -> y > 0){
     tile_map2 -> y -= 12;
   }
-  if(player2.getY() - tile_map2 -> y > 275 && tile_map2 -> y < tile_map2 -> height * 64 -  480){
+  if(player2.getY() - tile_map2 -> y > 275 && tile_map2 -> y < tile_map2 -> height * 64 -  (SCREEN_H/2)){
     tile_map2 -> y += 12;
   }
   if(player2.getX() - tile_map2 -> x < 500 && tile_map2 -> x > 0){
     tile_map2 -> x -= 12;
   }
-  if(player2.getX() - tile_map2 -> x > 480 && tile_map2 -> x < tile_map2 -> width * 64 - 1280){
+  if(player2.getX() - tile_map2 -> x > 480 && tile_map2 -> x < tile_map2 -> width * 64 - SCREEN_W){
     tile_map2 -> x += 12;
   }
 
@@ -310,14 +323,15 @@ void Game::draw(){
     draw_sprite(darkness, spotlight, player1.getX() - tile_map -> x + 32 - (spotlight->w/2), player1.getY() - tile_map -> y + 32 - (spotlight->h/2));
     draw_trans_sprite(screen1, darkness, 0, 0);
 
-    // Player 2
-    for(int i = 0; i < tile_map2 -> mapTiles.size(); i++){
-      if((tile_map2 -> mapTiles.at(i).getX() >= tile_map2 -> x - tile_map2 -> mapTiles.at(i).getWidth()) && (tile_map2 -> mapTiles.at(i).getX() < tile_map2 -> x + 1280) &&
-         (tile_map2 -> mapTiles.at(i).getY() >= tile_map2 -> y - tile_map2 -> mapTiles.at(i).getHeight()) && (tile_map2 -> mapTiles.at(i).getY() < tile_map2 -> y + 960)){
-        if(tile_map2 -> mapTiles.at(i).containsAttribute(light)){
-          stretch_sprite(darkness, spotlight, tile_map2 -> mapTiles.at(i).getX() - tile_map2 -> x + 32 - (tile_map2 -> mapTiles.at(i).getWidth() * 3),
-            tile_map2 -> mapTiles.at(i).getY() - tile_map2 -> y + 32 - (tile_map2 -> mapTiles.at(i).getHeight() * 3), tile_map2 -> mapTiles.at(i).getWidth() * 6,
-            tile_map2 -> mapTiles.at(i).getHeight() * 6);
+    if(!single_player){// Player 2
+      for(int i = 0; i < tile_map2 -> mapTiles.size(); i++){
+        if((tile_map2 -> mapTiles.at(i).getX() >= tile_map2 -> x - tile_map2 -> mapTiles.at(i).getWidth()) && (tile_map2 -> mapTiles.at(i).getX() < tile_map2 -> x + 1280) &&
+          (tile_map2 -> mapTiles.at(i).getY() >= tile_map2 -> y - tile_map2 -> mapTiles.at(i).getHeight()) && (tile_map2 -> mapTiles.at(i).getY() < tile_map2 -> y + 960)){
+          if(tile_map2 -> mapTiles.at(i).containsAttribute(light)){
+            stretch_sprite(darkness, spotlight, tile_map2 -> mapTiles.at(i).getX() - tile_map2 -> x + 32 - (tile_map2 -> mapTiles.at(i).getWidth() * 3),
+              tile_map2 -> mapTiles.at(i).getY() - tile_map2 -> y + 32 - (tile_map2 -> mapTiles.at(i).getHeight() * 3), tile_map2 -> mapTiles.at(i).getWidth() * 6,
+              tile_map2 -> mapTiles.at(i).getHeight() * 6);
+          }
         }
       }
     }
@@ -344,18 +358,19 @@ void Game::draw(){
   if( !gameBegin){
     // Timers
     rectfill( buffer, 20, 20, 320, 90, makecol( 0,0,0));
-    rectfill( buffer, 20, 500, 320, 570, makecol( 0,0,0));
+    if(!single_player)rectfill( buffer, 20, 500, 320, 570, makecol( 0,0,0));
 
     // Draw timer to screen
     string player1TotalTime = convertIntToString(totalTime[0]/10);
     player1TotalTime.insert((player1TotalTime.length() - 1), ".");
     textprintf_ex(buffer,cooper,40,55,makecol(255,255,255),-1,((string)(("Time: " + player1TotalTime))).c_str());
     textprintf_ex(buffer,cooper,40,20,makecol(255,255,255),-1,"Deaths:%i",player1.getDeathcount());
-
-    string player2TotalTime = convertIntToString(totalTime[1]/10);
-    player2TotalTime.insert((player2TotalTime.length() - 1), ".");
-    textprintf_ex(buffer,cooper,40,535,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
-    textprintf_ex(buffer,cooper,40,500,makecol(255,255,255),-1,"Deaths:%i",player2.getDeathcount());
+    if(!single_player){
+      string player2TotalTime = convertIntToString(totalTime[1]/10);
+      player2TotalTime.insert((player2TotalTime.length() - 1), ".");
+      textprintf_ex(buffer,cooper,40,535,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
+      textprintf_ex(buffer,cooper,40,500,makecol(255,255,255),-1,"Deaths:%i",player2.getDeathcount());
+    }
   }
 
   // Starting countdown
@@ -379,11 +394,13 @@ void Game::draw(){
   }
 
   // Change level when both are done
-  if( player1.getFinished() && player2.getFinished()){
+  if(( player1.getFinished() && player2.getFinished() && !single_player) || ( player1.getFinished() && single_player)){
     set_alpha_blender();
-    draw_trans_sprite( buffer, results, 0, 0);
+
+    if(!single_player)draw_trans_sprite( buffer, results, 0, 0);
+    if(single_player)draw_trans_sprite( buffer, results_singleplayer, 0, 0);
     textprintf_ex(buffer,cooper,560,406,makecol(255,255,255),-1,"%i", totalTime[0]/100);
-    textprintf_ex(buffer,cooper,560,462,makecol(255,255,255),-1,"%i", totalTime[1]/100);
+    if(!single_player){textprintf_ex(buffer,cooper,560,462,makecol(255,255,255),-1,"%i", totalTime[1]/100);
     if( totalTime[0] < totalTime[1]){
       textprintf_ex(buffer,cooper,440,518,makecol(255,255,255),-1,"%i", 1);
       textprintf_ex(buffer,cooper,615,518,makecol(255,255,255),-1,"%i", (totalTime[1] - totalTime[0])/100);
@@ -391,6 +408,7 @@ void Game::draw(){
     else if( totalTime[0] > totalTime[1]){
       textprintf_ex(buffer,cooper,440,518,makecol(255,255,255),-1,"%i", 2);
       textprintf_ex(buffer,cooper,615,518,makecol(255,255,255),-1,"%i", (totalTime[0] - totalTime[1])/100);
+      }
     }
   }
 

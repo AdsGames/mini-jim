@@ -35,6 +35,7 @@ class Game : public GameState
 
     BITMAP* countdownImage;
     BITMAP* results;
+    BITMAP* results_singleplayer;
     BITMAP* spaceImage[4];
 
     FSOUND_STREAM* waitingMusic;

@@ -524,7 +524,7 @@
 	"tools.h"
 	"tile.h"
 
-1426794443 c:\users\danward\documents\github\minijim\include\globals.h
+1426797129 c:\users\danward\documents\github\minijim\include\globals.h
 	<allegro.h>
 
 1419449361 c:\users\danward\documents\github\minijim\include\tools.h
@@ -545,10 +545,10 @@
 	"globals.h"
 	"tools.h"
 
-1426794496 source:c:\users\danward\documents\github\minijim\src\game.cpp
+1426797430 source:c:\users\danward\documents\github\minijim\src\game.cpp
 	"Game.h"
 
-1426736081 c:\users\danward\documents\github\minijim\include\game.h
+1426796448 c:\users\danward\documents\github\minijim\include\game.h
 	"GameState.h"
 	<allegro.h>
 	<alpng.h>
@@ -578,10 +578,10 @@
 
 1396675824 source:c:\users\danward\documents\github\minijim\src\gamestate.cpp
 
-1426794446 source:c:\users\danward\documents\github\minijim\src\globals.cpp
+1426797430 source:c:\users\danward\documents\github\minijim\src\globals.cpp
 	"globals.h"
 
-1426736361 source:c:\users\danward\documents\github\minijim\src\init.cpp
+1426797142 source:c:\users\danward\documents\github\minijim\src\init.cpp
 	"Init.h"
 
 1419449361 c:\users\danward\documents\github\minijim\include\init.h
