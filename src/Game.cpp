@@ -349,10 +349,10 @@ void Game::draw(){
   if(!single_player)rectfill( buffer, 0, 480 - 8,  1280, 480 + 8, makecol( 0,0,0));
 
   // Frame
-  rectfill( buffer, 0, 0, 1280, 16, makecol( 0,0,0));
-  rectfill( buffer, 0, 0, 16, 960, makecol( 0,0,0));
-  rectfill( buffer, 1264, 0, 1280, 960, makecol( 0,0,0));
-  rectfill( buffer, 0, 944, 1280, 960, makecol( 0,0,0));
+  rectfill( buffer, 0, 0, SCREEN_W, 16, makecol( 0,0,0));
+  rectfill( buffer, 0, 0, 16, SCREEN_H, makecol( 0,0,0));
+  rectfill( buffer, SCREEN_W-16, 0, SCREEN_W, SCREEN_H, makecol( 0,0,0));
+  rectfill( buffer, 0, SCREEN_H-16, SCREEN_W, SCREEN_H, makecol( 0,0,0));
 
   // Only draw timer once game has begun
   if( !gameBegin){

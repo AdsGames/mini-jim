@@ -30,7 +30,7 @@ void Intro::draw()
   highcolor_fade_out( 32);
   highcolor_fade_in( title, 32);
   highcolor_fade_out( 32);
-  rectfill( buffer, 0, 0, 1280, 960, makecol( 0,0,0));
+  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 0,0,0));
   stretch_sprite( buffer, background, 105, 140, 1070, 680);
   highcolor_fade_in( buffer, 32);
 
