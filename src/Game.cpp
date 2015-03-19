@@ -341,12 +341,12 @@ void Game::draw(){
 
   // Draw split screens
   // Screens
-  if(!single_player)stretch_sprite( buffer, screen1, 0, 0, 1280, 960/2);
-  if(single_player)stretch_sprite( buffer, screen1, 0, 0, 1280, 960);
-  if(!single_player)stretch_sprite( buffer, screen2, 0, 960/2, 1280, 960/2);
+  if(!single_player)stretch_sprite( buffer, screen1, 0, 0, SCREEN_W, SCREEN_H/2);
+  if(single_player)stretch_sprite( buffer, screen1, 0, 0, SCREEN_W, SCREEN_H);
+  if(!single_player)stretch_sprite( buffer, screen2, 0, 960/2, SCREEN_W, SCREEN_H/2);
 
   // Divider
-  if(!single_player)rectfill( buffer, 0, 480 - 8,  1280, 480 + 8, makecol( 0,0,0));
+  if(!single_player)rectfill( buffer, 0, (SCREEN_H/2) - 8,  SCREEN_W, (SCREEN_H/2) + 8, makecol( 0,0,0));
 
   // Frame
   rectfill( buffer, 0, 0, SCREEN_W, 16, makecol( 0,0,0));
@@ -358,7 +358,7 @@ void Game::draw(){
   if( !gameBegin){
     // Timers
     rectfill( buffer, 20, 20, 320, 90, makecol( 0,0,0));
-    if(!single_player)rectfill( buffer, 20, 500, 320, 570, makecol( 0,0,0));
+    if(!single_player)rectfill( buffer, 20, (SCREEN_H/2)+20, 320, (SCREEN_H/2)+90, makecol( 0,0,0));
 
     // Draw timer to screen
     string player1TotalTime = convertIntToString(totalTime[0]/10);
@@ -368,8 +368,8 @@ void Game::draw(){
     if(!single_player){
       string player2TotalTime = convertIntToString(totalTime[1]/10);
       player2TotalTime.insert((player2TotalTime.length() - 1), ".");
-      textprintf_ex(buffer,cooper,40,535,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
-      textprintf_ex(buffer,cooper,40,500,makecol(255,255,255),-1,"Deaths:%i",player2.getDeathcount());
+      textprintf_ex(buffer,cooper,40,(SCREEN_H/2)+20+35,makecol(255,255,255),-1,((string)(("Time: " + player2TotalTime))).c_str());
+      textprintf_ex(buffer,cooper,40,(SCREEN_H/2)+20,makecol(255,255,255),-1,"Deaths:%i",player2.getDeathcount());
     }
   }
 

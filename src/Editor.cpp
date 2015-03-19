@@ -5,7 +5,7 @@ Editor::Editor()
   layer = 1;
 
   // Other Sprites
-  buffer = create_bitmap( 1280, 960);
+  buffer = create_bitmap( SCREEN_W, SCREEN_H);
 
   // Create map
   tile_map = new tileMap("data/templates/blank64x48");
@@ -194,13 +194,13 @@ void Editor::update(){
     if(mouse_y < 10 && tile_map -> y > 0){
        tile_map -> y -= 16;
     }
-    if(mouse_y > 950 && tile_map -> y < tile_map -> height * 64 -  960){
+    if(mouse_y > (SCREEN_H-10) && tile_map -> y < tile_map -> height * 64 -  SCREEN_H){
        tile_map -> y += 16;
     }
     if(mouse_x  < 10 && tile_map -> x > 0){
        tile_map -> x -= 8;
     }
-    if(mouse_x   > 1270 && tile_map -> x < tile_map -> width * 64 - 1280){
+    if(mouse_x   > (SCREEN_W-10) && tile_map -> x < tile_map -> width * 64 - SCREEN_W){
        tile_map -> x += 8;
     }
 

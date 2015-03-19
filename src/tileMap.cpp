@@ -239,14 +239,14 @@ void tileMap::load(string fileName){
 //Draw tile map
 void tileMap::draw_map(BITMAP* tempSprite){
   for(int i = 0; i < mapTilesBack.size(); i++){
-    if((mapTilesBack.at(i).getX() >= x - mapTilesBack.at(i).getWidth()) && (mapTilesBack.at(i).getX() < x + 1280) &&
-       (mapTilesBack.at(i).getY() >= y - mapTilesBack.at(i).getHeight()) && (mapTilesBack.at(i).getY() < y + 960)){
+    if((mapTilesBack.at(i).getX() >= x - mapTilesBack.at(i).getWidth()) && (mapTilesBack.at(i).getX() < x + SCREEN_W) &&
+       (mapTilesBack.at(i).getY() >= y - mapTilesBack.at(i).getHeight()) && (mapTilesBack.at(i).getY() < y + SCREEN_H)){
       mapTilesBack.at(i).draw_tile( tempSprite, x, y, frame);
     }
   }
   for(int i = 0; i < mapTiles.size(); i++){
-    if((mapTiles.at(i).getX() >= x - mapTiles.at(i).getWidth()) && (mapTiles.at(i).getX() < x + 1280) &&
-       (mapTiles.at(i).getY() >= y - mapTiles.at(i).getHeight()) && (mapTiles.at(i).getY() < y + 960)){
+    if((mapTiles.at(i).getX() >= x - mapTiles.at(i).getWidth()) && (mapTiles.at(i).getX() < x + SCREEN_W) &&
+       (mapTiles.at(i).getY() >= y - mapTiles.at(i).getHeight()) && (mapTiles.at(i).getY() < y + SCREEN_H)){
       mapTiles.at(i).draw_tile( tempSprite, x, y, frame);
     }
   }
@@ -254,14 +254,14 @@ void tileMap::draw_map(BITMAP* tempSprite){
 
 void tileMap::draw_map(BITMAP* tempSprite, int newX, int newY){
   for(int i = 0; i < mapTilesBack.size(); i++){
-    if((mapTilesBack.at(i).getX() >= newX - mapTilesBack.at(i).getWidth()) && (mapTilesBack.at(i).getX() < newX + 1280) &&
-       (mapTilesBack.at(i).getY() >= newY - mapTilesBack.at(i).getHeight()) && (mapTilesBack.at(i).getY() < newY + 960)){
+    if((mapTilesBack.at(i).getX() >= newX - mapTilesBack.at(i).getWidth()) && (mapTilesBack.at(i).getX() < newX + SCREEN_W) &&
+       (mapTilesBack.at(i).getY() >= newY - mapTilesBack.at(i).getHeight()) && (mapTilesBack.at(i).getY() < newY + SCREEN_H)){
       mapTilesBack.at(i).draw_tile( tempSprite, newX, newY, frame);
     }
   }
   for(int i = 0; i < mapTiles.size(); i++){
-    if((mapTiles.at(i).getX() >= newX - mapTiles.at(i).getHeight()) && (mapTiles.at(i).getX() < newX + 1280) &&
-       (mapTiles.at(i).getY() >= newY - mapTiles.at(i).getHeight()) && (mapTiles.at(i).getY() < newY + 960)){
+    if((mapTiles.at(i).getX() >= newX - mapTiles.at(i).getHeight()) && (mapTiles.at(i).getX() < newX + SCREEN_W) &&
+       (mapTiles.at(i).getY() >= newY - mapTiles.at(i).getHeight()) && (mapTiles.at(i).getY() < newY + SCREEN_H)){
       mapTiles.at(i).draw_tile( tempSprite, newX, newY, frame);
     }
   }
