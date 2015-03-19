@@ -397,17 +397,19 @@ void Game::draw(){
   if(( player1.getFinished() && player2.getFinished() && !single_player) || ( player1.getFinished() && single_player)){
     set_alpha_blender();
 
-    if(!single_player)draw_trans_sprite( buffer, results, 0, 0);
-    if(single_player)draw_trans_sprite( buffer, results_singleplayer, 0, 0);
-    textprintf_ex(buffer,cooper,560,406,makecol(255,255,255),-1,"%i", totalTime[0]/100);
-    if(!single_player){textprintf_ex(buffer,cooper,560,462,makecol(255,255,255),-1,"%i", totalTime[1]/100);
+    if(!single_player)draw_trans_sprite( buffer, results, (SCREEN_W/2)-364, (SCREEN_H/2)-200);
+    if(single_player)draw_trans_sprite( buffer, results_singleplayer, (SCREEN_W/2)-364, (SCREEN_H/2)-200);
+
+    textprintf_ex(buffer,cooper,(SCREEN_W/2)-60, (SCREEN_H/2)-110,makecol(255,255,255),-1,"%i", totalTime[0]/100);
+
+    if(!single_player){textprintf_ex(buffer,cooper,(SCREEN_W/2)-60,(SCREEN_H/2)-55,makecol(255,255,255),-1,"%i", totalTime[1]/100);
     if( totalTime[0] < totalTime[1]){
-      textprintf_ex(buffer,cooper,440,518,makecol(255,255,255),-1,"%i", 1);
-      textprintf_ex(buffer,cooper,615,518,makecol(255,255,255),-1,"%i", (totalTime[1] - totalTime[0])/100);
+      textprintf_ex(buffer,cooper,(SCREEN_W/2)-175, (SCREEN_H/2)+2,makecol(255,255,255),-1,"%i", 1);
+      textprintf_ex(buffer,cooper,(SCREEN_W/2)-5, (SCREEN_H/2)+2,makecol(255,255,255),-1,"%i", (totalTime[1] - totalTime[0])/100);
     }
     else if( totalTime[0] > totalTime[1]){
-      textprintf_ex(buffer,cooper,440,518,makecol(255,255,255),-1,"%i", 2);
-      textprintf_ex(buffer,cooper,615,518,makecol(255,255,255),-1,"%i", (totalTime[0] - totalTime[1])/100);
+      textprintf_ex(buffer,cooper,(SCREEN_W/2)-175, (SCREEN_H/2)+2,makecol(255,255,255),-1,"%i", 2);
+      textprintf_ex(buffer,cooper,(SCREEN_W/2)-5, (SCREEN_H/2)+2,makecol(255,255,255),-1,"%i", (totalTime[0] - totalTime[1])/100);
       }
     }
   }
