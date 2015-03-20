@@ -191,7 +191,7 @@ void Menu::update()
   //Select button
 
     // level select left
-    if(((collisionAny(mouse_x,mouse_x,1100,1140,mouse_y,mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_A] || key[KEY_LEFT] || joy[0].button[4].b)) && step>10) {
+    if(((collisionAny(mouse_x,mouse_x,SCREEN_W-180,SCREEN_W-140,mouse_y,mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_A] || key[KEY_LEFT] || joy[0].button[4].b)) && step>10) {
       play_sample(click,255,125,1000,0);
       if( levelOn > 0){
         levelOn--;
@@ -216,8 +216,8 @@ void Menu::update()
       }
       step=0;
     }
+    if(((collisionAny(mouse_x,mouse_x,SCREEN_W-80,SCREEN_W-40,mouse_y,mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_D] || key[KEY_RIGHT] || joy[0].button[5].b)) && step>10){
     // level select right
-    if(((collisionAny(mouse_x,mouse_x,1200,1240,mouse_y,mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_D] || key[KEY_RIGHT] || joy[0].button[5].b)) && step>10){
       play_sample(click,255,125,1000,0);
       if( levelOn < 4){
         levelOn++;
@@ -276,18 +276,18 @@ void Menu::draw()
   draw_trans_sprite(buffer, menuselect, selectorX, selectorY);
 
   // Level selection
-  draw_trans_sprite(buffer, levelSelectLeft, 1100, 80);
-  draw_trans_sprite(buffer, levelSelectNumber, 1120, 80);
-  textprintf_centre_ex(buffer,font,1168,73,makecol(0,0,0),-1,"%i",levelOn + 1);
-  draw_trans_sprite(buffer, levelSelectRight, 1200, 80);
+  draw_trans_sprite(buffer, levelSelectLeft, SCREEN_W-180, 80);
+  draw_trans_sprite(buffer, levelSelectNumber, SCREEN_W-160, 80);
+  textprintf_centre_ex(buffer,font,SCREEN_W-112,73,makecol(0,0,0),-1,"%i",levelOn + 1);
+  draw_trans_sprite(buffer, levelSelectRight, SCREEN_W-80, 80);
 
   // Hover select left
-  if(collisionAny(mouse_x,mouse_x,1100,1140,mouse_y,mouse_y, 80, 120)){
-    draw_trans_sprite(buffer, levelSelectLeft, 1100, 80);
+  if(collisionAny(mouse_x,mouse_x,SCREEN_W-180,SCREEN_W-140,mouse_y,mouse_y, 80, 120)){
+    draw_trans_sprite(buffer, levelSelectLeft, SCREEN_W-180, 80);
   }
   // Hover select right
-  if(collisionAny(mouse_x,mouse_x,1200,1240,mouse_y,mouse_y, 80, 120)){
-    draw_trans_sprite(buffer, levelSelectRight, 1200, 80);
+  if(collisionAny(mouse_x,mouse_x,SCREEN_W-80,SCREEN_W-40,mouse_y,mouse_y, 80, 120)){
+    draw_trans_sprite(buffer, levelSelectRight, SCREEN_W-80, 80);
   }
 
   // Cursor

@@ -578,7 +578,7 @@
 
 1396675824 source:c:\users\danward\documents\github\minijim\src\gamestate.cpp
 
-1426797430 source:c:\users\danward\documents\github\minijim\src\globals.cpp
+1426819415 source:c:\users\danward\documents\github\minijim\src\globals.cpp
 	"globals.h"
 
 1426800183 source:c:\users\danward\documents\github\minijim\src\init.cpp
@@ -630,7 +630,7 @@
 	"globals.h"
 	"tools.h"
 
-1426813978 source:c:\users\danward\documents\github\minijim\src\menu.cpp
+1426819142 source:c:\users\danward\documents\github\minijim\src\menu.cpp
 	"Menu.h"
 
 1426791655 source:c:\users\danward\documents\github\minijim\src\player.cpp
