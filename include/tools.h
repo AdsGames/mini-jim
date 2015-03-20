@@ -10,6 +10,8 @@
 
 using namespace std;
 
+extern bool keyboard_keypressed();
+extern bool joy_buttonpressed();
 //Collision
 extern bool collisionAny(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2);
 extern bool collisionBottom(int yMin1, int yMax1, int yMin2, int yMax2);
