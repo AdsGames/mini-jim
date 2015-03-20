@@ -331,7 +331,7 @@ void Editor::update(){
 void Editor::draw()
 {
   // Background
-  rectfill(buffer, 0, 0, 1280, 960, makecol(255,255,255));
+  rectfill(buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(255,255,255));
 
   if( saving){
     //Create gui
