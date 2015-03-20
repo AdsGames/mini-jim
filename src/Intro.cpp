@@ -26,11 +26,12 @@ void Intro::update()
 
 void Intro::draw()
 {
-  poll_joystick();
   // Intro stuffs
   highcolor_fade_in( intro, 32);
+    rest(3000);
   highcolor_fade_out( 32);
   highcolor_fade_in( title, 32);
+    rest(3000);
   highcolor_fade_out( 32);
   rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 0,0,0));
   stretch_sprite( buffer, background, 105, 140, 1070, 680);
