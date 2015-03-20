@@ -357,7 +357,7 @@ void Game::draw(){
   // Screens
   if(!single_player)stretch_sprite( buffer, screen1, 0, 0, SCREEN_W, SCREEN_H/2);
   if(single_player)stretch_sprite( buffer, screen1, 0, 0, SCREEN_W, SCREEN_H);
-  if(!single_player)stretch_sprite( buffer, screen2, 0, 960/2, SCREEN_W, SCREEN_H/2);
+  if(!single_player)stretch_sprite( buffer, screen2, 0, SCREEN_H/2, SCREEN_W, SCREEN_H/2);
 
   // Divider
   if(!single_player)rectfill( buffer, 0, (SCREEN_H/2) - 8,  SCREEN_W, (SCREEN_H/2) + 8, makecol( 0,0,0));
