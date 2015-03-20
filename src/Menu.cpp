@@ -36,6 +36,9 @@ Menu::Menu()
   if(!(copyright = load_bitmap( ("images/gui/copyright.png"), NULL))){
     abort_on_error( "Cannot find image images/gui/copyright.png \n Please check your files and try again");
   }
+  if(!(credits = load_bitmap( ("images/gui/credits.png"), NULL))){
+    abort_on_error( "Cannot find image images/gui/credits.png \n Please check your files and try again");
+  }
 
   //Load sound effects
   if(!(click = load_sample(("sounds/click.wav")))){
@@ -268,7 +271,8 @@ void Menu::draw()
   tile_map -> draw_map(buffer);
 
   // Overlay
-  draw_trans_sprite(buffer, menu, 0, 0);
+  draw_trans_sprite(buffer, credits, 0, 0);
+  draw_trans_sprite(buffer, menu, 0, SCREEN_H-461);
   draw_trans_sprite(buffer, menuselect, selectorX, selectorY);
 
   // Level selection
