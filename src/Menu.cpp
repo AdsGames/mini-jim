@@ -79,8 +79,8 @@ Menu::Menu()
   set_alpha_blender();
 
   //Variables
-  newSelectorY = 637;
-  selectorY = 637;
+  newSelectorY = SCREEN_H-323;
+  selectorY = SCREEN_H-323;
   selectorX = 60;
 
   // Create map for live background
@@ -151,27 +151,27 @@ void Menu::update()
       step=0;
   }
   //Hover play
-  if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)) || !mouse_control && ( selectorHovering==0)){
-    if(newSelectorY != 637){
-      newSelectorY = 637;
+  if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-323, SCREEN_H-278)) || !mouse_control && ( selectorHovering==0)){
+    if(newSelectorY != SCREEN_H-323){
+      newSelectorY = SCREEN_H-323;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
 
   }
   //Hover edit
-  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)) || !mouse_control && ( selectorHovering==1)){
-    if(newSelectorY != 700){
-      newSelectorY = 700;
+  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-260, SCREEN_H-215)) || !mouse_control && ( selectorHovering==1)){
+    if(newSelectorY != SCREEN_H-260){
+      newSelectorY = SCREEN_H-260;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
 
   }
   //Hover help
-  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)) || !mouse_control && ( selectorHovering==2)){
-    if(newSelectorY != 763){
-      newSelectorY = 763;
+  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-197, SCREEN_H-152)) || !mouse_control && ( selectorHovering==2)){
+    if(newSelectorY != SCREEN_H-197){
+      newSelectorY = SCREEN_H-197;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
@@ -179,9 +179,9 @@ void Menu::update()
     menuOpen = true;
   }
   //Hover exit
-  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)) || !mouse_control && ( selectorHovering==3)){
-    if(newSelectorY != 828){
-      newSelectorY = 828;
+  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-132, SCREEN_H-87)) || !mouse_control && ( selectorHovering==3)){
+    if(newSelectorY != SCREEN_H-132){
+      newSelectorY = SCREEN_H-132;
       selectorX = 60;
       play_sample(click,255,125,1000,0);
     }
@@ -243,19 +243,19 @@ void Menu::update()
       step=0;
     }
     // Start
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 637, 637 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==0)) && step>10){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y,  SCREEN_H-323, SCREEN_H-278)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==0)) && step>10){
       set_next_state( STATE_GAME);
     }
     // Edit
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 700, 700 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==1)) && step>10){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-260, SCREEN_H-215)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==1)) && step>10){
       set_next_state( STATE_EDIT);
     }
     // Help
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 763, 763 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==2)) && step>10){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-197, SCREEN_H-152)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==2)) && step>10){
 
     }
     // Quit
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, 828, 828 + 45)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==3)) && step>10){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y,  SCREEN_H-132, SCREEN_H-87)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==3)) && step>10){
       set_next_state( STATE_EXIT);
     }
 
