@@ -39,6 +39,12 @@ Menu::Menu()
   if(!(credits = load_bitmap( ("images/gui/credits.png"), NULL))){
     abort_on_error( "Cannot find image images/gui/credits.png \n Please check your files and try again");
   }
+  if(!(menu_player_select = load_bitmap( ("images/gui/menu_player_select.png"), NULL))){
+    abort_on_error( "Cannot find image images/gui/menu_player_select.png \n Please check your files and try again");
+  }
+  if(!(playerSelector = load_bitmap( ("images/gui/playerSelector.png"), NULL))){
+    abort_on_error( "Cannot find image images/gui/playerSelector.png \n Please check your files and try again");
+  }
 
   //Load sound effects
   if(!(click = load_sample(("sounds/click.wav")))){
@@ -143,18 +149,30 @@ void Menu::update()
     }
     selectorY += selectorVelocity;
   }
-  if((key[KEY_W] || key[KEY_UP] || joy[0].stick[0].axis[1].d1) && step>10){
-      if(selectorHovering!=0)selectorHovering--;
-      else selectorHovering=3;
+  if((key[KEY_W] || key[KEY_UP] || joy[0].stick[0].axis[1].d1) && step>10 && !player_select){
+
+          if(selectorHovering!=0)selectorHovering--;
+          else selectorHovering=3;
+
       step=0;
   }
-  if((key[KEY_S] || key[KEY_DOWN] || joy[0].stick[0].axis[1].d2) && step>10){
-      if(selectorHovering!=3)selectorHovering++;
-      else selectorHovering=0;
+  if((key[KEY_S] || key[KEY_DOWN] || joy[0].stick[0].axis[1].d2) && step>10 && !player_select){
+        if(selectorHovering!=3)selectorHovering++;
+        else selectorHovering=0;
       step=0;
+  }
+  if((key[KEY_S] || key[KEY_DOWN] || joy[0].stick[0].axis[1].d2 || key[KEY_W] || key[KEY_UP] || joy[0].stick[0].axis[1].d1) && player_select){
+    if(selectorHovering==0 && step>10){
+      selectorHovering=1;
+      step=0;
+    }
+    if(selectorHovering==1 && step>10){
+      selectorHovering=0;
+      step=0;
+    }
   }
   //Hover play
-  if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-323, SCREEN_H-278)) || !mouse_control && ( selectorHovering==0)){
+  if((mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-323, SCREEN_H-278)) || !mouse_control && ( selectorHovering==0)) && !player_select){
     if(newSelectorY != SCREEN_H-323){
       newSelectorY = SCREEN_H-323;
       selectorX = 60;
@@ -163,7 +181,7 @@ void Menu::update()
 
   }
   //Hover edit
-  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-260, SCREEN_H-215)) || !mouse_control && ( selectorHovering==1)){
+  else if((mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-260, SCREEN_H-215)) || !mouse_control && ( selectorHovering==1)) && !player_select){
     if(newSelectorY != SCREEN_H-260){
       newSelectorY = SCREEN_H-260;
       selectorX = 60;
@@ -172,7 +190,7 @@ void Menu::update()
 
   }
   //Hover help
-  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-197, SCREEN_H-152)) || !mouse_control && ( selectorHovering==2)){
+  else if((mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-197, SCREEN_H-152)) || !mouse_control && ( selectorHovering==2)) && !player_select){
     if(newSelectorY != SCREEN_H-197){
       newSelectorY = SCREEN_H-197;
       selectorX = 60;
@@ -182,10 +200,27 @@ void Menu::update()
     menuOpen = true;
   }
   //Hover exit
-  else if(mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-132, SCREEN_H-87)) || !mouse_control && ( selectorHovering==3)){
+  else if((mouse_control && (collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-132, SCREEN_H-87)) || !mouse_control && ( selectorHovering==3)) && !player_select){
     if(newSelectorY != SCREEN_H-132){
       newSelectorY = SCREEN_H-132;
       selectorX = 60;
+      play_sample(click,255,125,1000,0);
+    }
+
+  }
+    //Player select buttons
+   if((mouse_control && (collisionAny(mouse_x,mouse_x,370,650,mouse_y,mouse_y, SCREEN_H-270, SCREEN_H-200)) || !mouse_control && ( selectorHovering==0)) && player_select){
+    if(newSelectorY != SCREEN_H-260){
+      newSelectorY = SCREEN_H-260;
+      selectorX = 372;
+      play_sample(click,255,125,1000,0);
+    }
+
+  }
+  if((mouse_control && (collisionAny(mouse_x,mouse_x,370,650,mouse_y,mouse_y, SCREEN_H-335, SCREEN_H-271)) || !mouse_control && ( selectorHovering==1)) && player_select){
+    if(newSelectorY != SCREEN_H-325){
+      newSelectorY = SCREEN_H-325;
+      selectorX = 372;
       play_sample(click,255,125,1000,0);
     }
 
@@ -246,20 +281,28 @@ void Menu::update()
       step=0;
     }
     // Start
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y,  SCREEN_H-323, SCREEN_H-278)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==0)) && step>10){
-      set_next_state( STATE_GAME);
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y,  SCREEN_H-323, SCREEN_H-278)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==0)) && step>10 && !player_select){
+      player_select=true;
+      selectorX=372;
+      selectorY=SCREEN_H-325;
     }
     // Edit
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-260, SCREEN_H-215)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==1)) && step>10){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-260, SCREEN_H-215)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==1)) && step>10 && !player_select){
       set_next_state( STATE_EDIT);
     }
-    // Help
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-197, SCREEN_H-152)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==2)) && step>10){
-
-    }
     // Quit
-    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y,  SCREEN_H-132, SCREEN_H-87)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==3)) && step>10){
+    if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y,  SCREEN_H-132, SCREEN_H-87)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==3)) && step>10 && !player_select){
       set_next_state( STATE_EXIT);
+    }
+
+    if(((collisionAny(mouse_x,mouse_x,370,650,mouse_y,mouse_y, SCREEN_H-335, SCREEN_H-271)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==0)) && step>10 && player_select){
+      single_player=true;
+      set_next_state(STATE_GAME);
+    }
+
+    if(((collisionAny(mouse_x,mouse_x,370,650,mouse_y,mouse_y, SCREEN_H-270, SCREEN_H-200)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==1)) && step>10 && player_select){
+      single_player=false;
+      set_next_state(STATE_GAME);
     }
 
   step++;
@@ -275,9 +318,10 @@ void Menu::draw()
 
   // Overlay
   draw_trans_sprite(buffer, credits, 0, 0);
-  draw_trans_sprite(buffer, menu, 0, SCREEN_H-461);
-  draw_trans_sprite(buffer, menuselect, selectorX, selectorY);
-
+  if(!player_select)draw_trans_sprite(buffer, menu, 0, SCREEN_H-461);
+  else draw_trans_sprite(buffer, menu_player_select, 0, SCREEN_H-461);
+  if(!player_select) draw_trans_sprite(buffer, menuselect, selectorX, selectorY);
+  else draw_trans_sprite(buffer, playerSelector, selectorX, selectorY);
   // Level selection
   draw_trans_sprite(buffer, levelSelectLeft, SCREEN_W-180, 80);
   draw_trans_sprite(buffer, levelSelectNumber, SCREEN_W-160, 80);
@@ -302,7 +346,7 @@ void Menu::draw()
       do{
         draw_sprite(buffer, menu, 0, 0);
         draw_sprite(buffer, help,0,0);
-        stretch_sprite(buffer, cursor[0], mouse_x, mouse_y, 21 * resDiv, 26 * resDiv);
+        //stretch_sprite(buffer, cursor[0], mouse_x, mouse_y, 21 * resDiv, 26 * resDiv);
         draw_sprite(screen,buffer,0,0);
       }
       while(!key[KEY_ESC] && !mouse_b & 1 && !joy[0].button[0].b);
