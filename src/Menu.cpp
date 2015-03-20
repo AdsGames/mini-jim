@@ -82,6 +82,7 @@ Menu::Menu()
   newSelectorY = SCREEN_H-323;
   selectorY = SCREEN_H-323;
   selectorX = 60;
+  mouse_control=false;
 
   // Create map for live background
   tile_map = new tileMap("data/bedroom");
