@@ -235,6 +235,9 @@ void tile::setType(int newType){
     attribute.push_back(gas);
     attribute.push_back(light);
   }
+  else if(type == tile_wood_light_slide){
+    attribute.push_back(slide);
+  }
   else{
     attribute.push_back(gas);
   }
