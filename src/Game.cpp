@@ -185,6 +185,18 @@ void Game::init(){
 }
 
 void Game::update(){
+
+    //Mother freaking mousetraps
+    for(int i = 0; i < tile_map2 -> mapTiles.size(); i++){
+        if(tile_map2 -> mapTiles.at(i).getType()==tile_mousetrap_2){
+          tile_map -> mapTiles.at(i).setType(tile_mousetrap_2);
+        }
+    }
+    for(int i = 0; i < tile_map -> mapTiles.size(); i++){
+        if(tile_map -> mapTiles.at(i).getType()==tile_mousetrap_2){
+          tile_map2 -> mapTiles.at(i).setType(tile_mousetrap_2);
+        }
+    }
   // Starting countdown
   if( gameBegin){
     // Mute full song, play waiting song
@@ -335,6 +347,8 @@ void Game::draw(){
         }
       }
     }
+
+
     draw_sprite(darkness, spotlight, player2.getX() - tile_map2 -> x + 32 - (spotlight->w/2), player2.getY() - tile_map2 -> y + 32 - (spotlight->h/2));
     draw_trans_sprite(screen2, darkness, 0, 0);
   }
