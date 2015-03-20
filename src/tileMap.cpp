@@ -127,6 +127,7 @@ void tileMap::load_images(){
   tileSprites[tile_car][0] = load_bitmap("images/blocks/car.png", NULL);
   tileSprites[tile_red_cloth][0] = load_bitmap("images/blocks/red_cloth.png", NULL);
   tileSprites[tile_wood_light][0] = load_bitmap("images/blocks/wood_light.png", NULL);
+  tileSprites[tile_wood_light_slide][0] = load_bitmap("images/blocks/wood_light_slide.png", NULL);
   tileSprites[tile_ovenright][0] = load_bitmap("images/blocks/ovenright.png", NULL);
   tileSprites[tile_ovenleft][0] = load_bitmap("images/blocks/ovenleft.png", NULL);
   tileSprites[tile_oven_fill][0] = load_bitmap("images/blocks/ovenfill.png", NULL);

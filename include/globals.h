@@ -113,6 +113,7 @@
 #define tile_back_grey_dark_top_right 109
 
 #define tile_back_lamp 110
+#define tile_wood_light_slide 111
 
 //Spawners
 #define tile_spawn_player 199
