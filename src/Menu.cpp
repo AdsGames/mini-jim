@@ -33,6 +33,9 @@ Menu::Menu()
   if(!(levelSelectNumber = load_bitmap( ("images/gui/levelSelectNumber.png"), NULL))){
     abort_on_error( "Cannot find image images/gui/levelSelectNumber.png \n Please check your files and try again");
   }
+  if(!(copyright = load_bitmap( ("images/gui/copyright.png"), NULL))){
+    abort_on_error( "Cannot find image images/gui/copyright.png \n Please check your files and try again");
+  }
 
   //Load sound effects
   if(!(click = load_sample(("sounds/click.wav")))){
@@ -259,7 +262,7 @@ void Menu::update()
 void Menu::draw()
 {
   // Draw background to screen
-  rectfill( buffer, 0, 0, 1280, 960, makecol( 255,255,255));
+  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255,255,255));
 
   // Draw live background
   tile_map -> draw_map(buffer);
@@ -301,6 +304,7 @@ void Menu::draw()
   if( menuOpen){
     draw_trans_sprite( buffer,help,0,0);
   }
+  draw_trans_sprite(buffer,copyright,SCREEN_W-350,SCREEN_H-40);
   draw_sprite(buffer,cursor[0],mouse_x,mouse_y);
   // Draw buffer
   stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);

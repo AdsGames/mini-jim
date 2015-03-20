@@ -20,7 +20,7 @@ class Menu : public GameState
 {
   private:
     // Menu/GUI
-    BITMAP *buffer, *levelSelectLeft, *levelSelectRight, *levelSelectNumber, *cursor[2], *menuselect, *menu, *help;
+    BITMAP *buffer, *levelSelectLeft, *levelSelectRight, *levelSelectNumber, *cursor[2], *menuselect, *menu, *help, *copyright;
 
     SAMPLE *click, *intro;
     FSOUND_STREAM* music;
