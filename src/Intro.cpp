@@ -1,4 +1,5 @@
 #include "Intro.h"
+#include "tools.h"
 
 Intro::Intro()
 {
@@ -25,6 +26,7 @@ void Intro::update()
 
 void Intro::draw()
 {
+  poll_joystick();
   // Intro stuffs
   highcolor_fade_in( intro, 32);
   highcolor_fade_out( 32);
@@ -39,7 +41,8 @@ void Intro::draw()
   // Show background
   play_sample( introSound, 255, 128, 1000, 0);
   for( int i = 0; i < 81; i++){
-    if( keypressed()){
+    poll_joystick();
+    if(keyboard_keypressed() || joy_buttonpressed()){
       break;
     }
     rectfill( buffer, 0, 0, 1280, 960, makecol( 0,0,0));
