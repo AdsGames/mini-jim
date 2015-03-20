@@ -304,7 +304,7 @@ void Game::update(){
 
 void Game::draw(){
   // Black background (just in case)
-  rectfill( buffer, 0, 0, 1280, 960, makecol(0,0,0));
+  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(0,0,0));
 
   // Draw tiles and characters
   tile_map -> draw_map(screen1);
