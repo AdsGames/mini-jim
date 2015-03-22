@@ -58,6 +58,9 @@ class Game : public GameState
     player player2;
     player *currentPlayer;
 
+    bool player_1_ready;
+    bool player_2_ready;
+
     bool deathFrame;
 
     tileMap *tile_map;

@@ -44,6 +44,7 @@ class player{
     int y;
 
     int deathcount;
+    int idle_timer;
 
     int checkpointPosition[2];
 
@@ -75,8 +76,8 @@ class player{
     vector<projectile> bullets;
     tileMap *newMap;
 
-    // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27
-    BITMAP* player_images[28];
+    // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27 28-19 is idle
+    BITMAP* player_images[30];
 
     //Sounds
     SAMPLE* walk1;

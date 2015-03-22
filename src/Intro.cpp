@@ -27,7 +27,7 @@ void Intro::update()
 void Intro::draw()
 {
   // Intro stuffs
-  highcolor_fade_in( intro, 32);
+ /* highcolor_fade_in( intro, 32);
     rest(3000);
   highcolor_fade_out( 32);
   highcolor_fade_in( title, 32);
@@ -53,7 +53,7 @@ void Intro::draw()
     // Wheres my car?
     rest(100);
   }
-  highcolor_fade_out( 64);
+*///  highcolor_fade_out( 64);
 }
 
 Intro::~Intro()
