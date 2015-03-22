@@ -388,22 +388,27 @@ void Game::draw(){
   }
 
   // Starting countdown
-  if( gameBegin){
+  if(gameBegin && (!player_1_ready || !player_2_ready)){
+
+
+  }
+
+  if( gameBegin && player_1_ready && player_2_ready){
     //Reset deathcount
     player1.setDeathcount(0);
     player2.setDeathcount(0);
     // Timer 3..2..1..GO!
     if( timer1 <= 33){
-      masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18, 570, 400, 140, 180);
+      masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18, SCREEN_W/2-100, SCREEN_H/2-100, 140, 180);
     }
     else if( timer1 <= 66){
-      masked_stretch_blit(countdownImage, buffer, 19, 0, 14, 18, 570, 400, 140, 180);
+      masked_stretch_blit(countdownImage, buffer, 19, 0, 14, 18, SCREEN_W/2-100, SCREEN_H/2-100, 140, 180);
     }
     else if( timer1 <= 80){
-      masked_stretch_blit(countdownImage, buffer, 39, 0, 14, 18, 570, 400, 140, 180);
+      masked_stretch_blit(countdownImage, buffer, 39, 0, 14, 18, SCREEN_W/2-100, SCREEN_H/2-100, 140, 180);
     }
     else if( timer1 <= 100){
-      masked_stretch_blit(countdownImage, buffer, 57, 0, 40, 18, 440, 400, 400, 180);
+      masked_stretch_blit(countdownImage, buffer, 57, 0, 40, 18, SCREEN_W/2-200, SCREEN_H/2-100, 400, 180);
     }
   }
 

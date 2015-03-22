@@ -25,6 +25,7 @@ class Menu : public GameState
     SAMPLE *click, *intro;
     FSOUND_STREAM* music;
 
+
     int selectorHovering;
     int step;
 

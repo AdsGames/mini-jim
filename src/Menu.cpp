@@ -90,6 +90,7 @@ Menu::Menu()
   selectorX = 60;
   mouse_control=false;
   selectorHovering=0;
+  player_select=false;
 
   // Create map for live background
   tile_map = new tileMap("data/bedroom");
@@ -285,6 +286,7 @@ void Menu::update()
       player_select=true;
       selectorX=372;
       selectorY=SCREEN_H-325;
+      step=0;
     }
     // Edit
     if(((collisionAny(mouse_x,mouse_x,60,270,mouse_y,mouse_y, SCREEN_H-260, SCREEN_H-215)&& mouse_b & 1)|| ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering==1)) && step>10 && !player_select){
