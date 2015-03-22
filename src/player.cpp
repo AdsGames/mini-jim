@@ -220,10 +220,10 @@ void player::draw(BITMAP* temp, int tile_map_x, int tile_map_y){
       }
     }
     else if(characterDir + walking_animation_sequence/ANIMATION_SPEED==0 || characterDir + walking_animation_sequence/ANIMATION_SPEED==4){
-      if(idle_timer<=4 && characterDir==LEFT)draw_sprite( temp, player_images[0], x - tile_map_x, y - tile_map_y);
-      if(idle_timer<=4 && characterDir==RIGHT)draw_sprite( temp, player_images[4], x - tile_map_x, y - tile_map_y);
-      if(idle_timer>4 && characterDir==LEFT)draw_sprite( temp, player_images[28], x - tile_map_x, y - tile_map_y);
-      if(idle_timer>4 && characterDir==RIGHT)draw_sprite( temp, player_images[29], x - tile_map_x, y - tile_map_y);
+      if(idle_timer<=50 && characterDir==LEFT)draw_sprite( temp, player_images[0], x - tile_map_x, y - tile_map_y);
+      if(idle_timer<=50 && characterDir==RIGHT)draw_sprite( temp, player_images[4], x - tile_map_x, y - tile_map_y);
+      if(idle_timer>50 && characterDir==LEFT)draw_sprite( temp, player_images[28], x - tile_map_x, y - tile_map_y);
+      if(idle_timer>50 && characterDir==RIGHT)draw_sprite( temp, player_images[29], x - tile_map_x, y - tile_map_y);
     }else{
         draw_sprite( temp, player_images[characterDir + walking_animation_sequence/ANIMATION_SPEED], x - tile_map_x, y - tile_map_y);
     }
@@ -620,7 +620,7 @@ void player::update(tileMap *fullMap){
     walking_animation_sequence = 0;
   }
   idle_timer++;
-  if(idle_timer>10)idle_timer=0;
+  if(idle_timer>100)idle_timer=0;
 }
 
 player::~player(){
