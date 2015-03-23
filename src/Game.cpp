@@ -257,6 +257,8 @@ void Game::update(){
 
   }
 
+
+
   // Scroll map scroll
   if(player1.getY() - tile_map -> y < 200 && tile_map -> y > 0){
     tile_map -> y -= 12;
@@ -267,10 +269,10 @@ void Game::update(){
   if(player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  SCREEN_H && single_player){
     tile_map -> y += 12;
   }
-  if(player1.getX() - tile_map -> x < 500 && tile_map -> x > 0){
-    tile_map -> x -= 12;
+  if(player1.getX() - tile_map -> x < SCREEN_H-400 && tile_map -> x > 0){
+    tile_map -> x -=12;
   }
-  if(player1.getX() - tile_map -> x > 480 && tile_map -> x < tile_map -> width * 64 - SCREEN_W){
+  if(player1.getX() - tile_map -> x > 400 && tile_map -> x < tile_map -> width * 64 - SCREEN_W){
     tile_map -> x += 12;
   }
 
@@ -281,10 +283,10 @@ void Game::update(){
   if(player2.getY() - tile_map2 -> y > 275 && tile_map2 -> y < tile_map2 -> height * 64 -  (SCREEN_H/2)){
     tile_map2 -> y += 12;
   }
-  if(player2.getX() - tile_map2 -> x < 500 && tile_map2 -> x > 0){
+  if(player2.getX() - tile_map2 -> x < SCREEN_H-400 && tile_map2 -> x > 0){
     tile_map2 -> x -= 12;
   }
-  if(player2.getX() - tile_map2 -> x > 480 && tile_map2 -> x < tile_map2 -> width * 64 - SCREEN_W){
+  if(player2.getX() - tile_map2 -> x > 400 && tile_map2 -> x < tile_map2 -> width * 64 - SCREEN_W){
     tile_map2 -> x += 12;
   }
 

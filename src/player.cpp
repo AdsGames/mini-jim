@@ -367,6 +367,8 @@ void player::update(tileMap *fullMap){
           fullMap -> mapTiles.at(i).setType(tile_mousetrap_2);
           play_sample(trapsnap,255,125,1000,0);
 
+
+
         }
         else if(fullMap -> mapTiles.at(i).getType() == tile_beak){
           play_sample( chicken, 255, 128, 1000, 0);
