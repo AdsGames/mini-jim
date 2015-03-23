@@ -47,6 +47,9 @@ class Game : public GameState
     bool gameBegin;
     int totalTime[2];
 
+    int old_player_x;
+    int old_player_y;
+
     // Lighting effects
     COLOR_MAP light_table;
     PALLETE pal;
