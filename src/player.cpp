@@ -5,6 +5,8 @@ player::player(){
   x = 128;
   y = 128;
 
+  hasJumped=false;
+
   deathcount;
 
   canFall = false;
@@ -430,7 +432,10 @@ void player::update(tileMap *fullMap){
     }
     sliding = false;
   }
+  //Reset jumping
 
+  if(hasJumped && !canClimbDown && !canClimbDown2)
+    hasJumped=false;
   //Move right
   if((key[rightKey] || joy[joyNumber].stick[0].axis[0].d2) && x < newMap -> width*64){
     if( !sprinting && !sliding){
@@ -598,7 +603,8 @@ void player::update(tileMap *fullMap){
     if(inLiquid){
       y -= 16;
     }
-    else if(!canFall && canJump && !jumping){
+    else if(canJump && !jumping && !hasJumped){
+      hasJumped=true;
       yVelocity = 16;
       if( canJumpUp){
         play_sample(jump,255,125,1000,0);

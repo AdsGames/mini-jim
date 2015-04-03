@@ -56,6 +56,8 @@ class player{
     bool dead;
     bool sprinting;
 
+    bool hasJumped;
+
     bool finished;
     bool sliding;
 
