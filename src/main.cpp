@@ -1,9 +1,12 @@
+
+// Includes
 #include <allegro.h>
 #include <alpng.h>
 
 #include "globals.h"
 #include "tools.h"
 
+// For state engine
 #include "GameState.h"
 
 #include "Init.h"
@@ -12,11 +15,11 @@
 #include "Editor.h"
 #include "Game.h"
 
-// Close button
+// Close button handler
 volatile int close_button_pressed = FALSE;
 bool closeGame;
 
-// FPS System
+// FPS system vars
 volatile int ticks = 0;
 const int updates_per_second = 60;
 volatile int game_time = 0;
@@ -24,6 +27,7 @@ volatile int game_time = 0;
 int fps;
 int old_time;
 
+// FPS system functions
 void ticker(){
   ticks++;
 }
@@ -39,12 +43,16 @@ void close_button_handler(void){
 }
 END_OF_FUNCTION(close_button_handler)
 
-//Game state object
+// Current state object
 GameState *currentState = NULL;
 
+//Delete game state and free state resources
+void clean_up(){
+  delete currentState;
+}
+
 // Change game screen
-void change_state()
-{
+void change_state(){
   //If the state needs to be changed
   if( nextState != STATE_NULL ){
     //Delete the current state
@@ -53,8 +61,7 @@ void change_state()
     }
 
     //Change the state
-    switch( nextState )
-    {
+    switch( nextState ){
       case STATE_INIT:
         currentState = new Init();
         break;
@@ -75,7 +82,6 @@ void change_state()
         currentState = new Game();
         break;
     }
-
 
     //Change the current state ID
     stateID = nextState;
@@ -118,13 +124,6 @@ void setup(){
   closeGame = false;
 }
 
-void clean_up()
-{
-    //Delete game state and free state resources
-    delete currentState;
-}
-
-
 //Main function*/
 int main(){
   // Setup basic functionality
@@ -136,6 +135,7 @@ int main(){
   //Set the current game state object
   currentState = new Init();
 
+  // FPS loop
   while( !key[KEY_ESC] && !close_button_pressed && stateID != STATE_EXIT){
     while(ticks == 0){
       rest(1);
@@ -169,6 +169,7 @@ int main(){
   //Clean up
   clean_up();
 
+  // End program
   return 0;
 }
 END_OF_MAIN();
