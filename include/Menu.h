@@ -38,7 +38,7 @@ class Menu : public GameState
     // Live background
     int animationFrame;
     tileMap *tile_map;
-    string scrollDirection;
+    int scrollDirection;
 
     // Menu
     int selectorY, selectorX, newSelectorY, selected_object;

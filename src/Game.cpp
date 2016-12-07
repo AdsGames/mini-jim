@@ -185,7 +185,6 @@ void Game::init(){
 }
 
 void Game::update(){
-
     //Mother freaking mousetraps
     for(int i = 0; i < tile_map2 -> mapTiles.size(); i++){
         if(tile_map2 -> mapTiles.at(i).getType()==tile_mousetrap_2){
