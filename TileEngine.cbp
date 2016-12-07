@@ -13,20 +13,28 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-static" />
+					<Add directory="C:/Libraries/include" />
+					<Add directory="C:/Libraries/lib" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
-					<Add option="-lalpng" />
-					<Add option="-lalleg" />
-					<Add option="-lfmod" />
-					<Add option="-static-libgcc" />
-					<Add option="-static-libstdc++" />
+					<Add library="C:\Libraries\lib\liballeg.a" />
+					<Add library="C:\Libraries\lib\libalpng.a" />
+					<Add library="C:\Libraries\lib\libfmod.a" />
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-static" />
+			<Add directory="C:/Libraries/include" />
+			<Add directory="C:/Libraries/lib" />
+			<Add directory="include" />
+		</Compiler>
 		<Linker>
-			<Add library="alleg" />
-			<Add library="fmod" />
+			<Add library="C:\Libraries\lib\liballeg.a" />
+			<Add library="C:\Libraries\lib\libalpng.a" />
+			<Add library="C:\Libraries\lib\libfmod.a" />
 		</Linker>
 		<Unit filename="include/Editor.h" />
 		<Unit filename="include/Game.h" />

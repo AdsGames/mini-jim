@@ -545,10 +545,10 @@
 	"globals.h"
 	"tools.h"
 
-1426972889 source:c:\users\danward\documents\github\minijim\src\game.cpp
+1427072415 source:c:\users\danward\documents\github\minijim\src\game.cpp
 	"Game.h"
 
-1426972889 c:\users\danward\documents\github\minijim\include\game.h
+1427071866 c:\users\danward\documents\github\minijim\include\game.h
 	"GameState.h"
 	<allegro.h>
 	<alpng.h>
@@ -561,7 +561,7 @@
 	"tileMap.h"
 	"player.h"
 
-1427053741 c:\users\danward\documents\github\minijim\include\player.h
+1427409212 c:\users\danward\documents\github\minijim\include\player.h
 	<allegro.h>
 	<alpng.h>
 	"globals.h"
@@ -634,7 +634,7 @@
 1426889783 source:c:\users\danward\documents\github\minijim\src\menu.cpp
 	"Menu.h"
 
-1426827733 source:c:\users\danward\documents\github\minijim\src\player.cpp
+1427409971 source:c:\users\danward\documents\github\minijim\src\player.cpp
 	"player.h"
 
 1398534454 source:c:\users\danward\documents\github\minijim\src\projectile.cpp
@@ -643,7 +643,7 @@
 1426877012 source:c:\users\danward\documents\github\minijim\src\tile.cpp
 	"tile.h"
 
-1426876907 source:c:\users\danward\documents\github\minijim\src\tilemap.cpp
+1427070470 source:c:\users\danward\documents\github\minijim\src\tilemap.cpp
 	"tileMap.h"
 
 1426870956 source:c:\users\danward\documents\github\minijim\src\tools.cpp
@@ -965,4 +965,463 @@
 	"Menu.h"
 	"Editor.h"
 	"Game.h"
+
+1419449362 source:c:\users\danny\documents\github\minijim\res\resources.rc
+
+1426814042 source:c:\users\danny\documents\github\minijim\src\editor.cpp
+	"Editor.h"
+
+1428081338 c:\users\danny\documents\github\minijim\include\editor.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"tileMap.h"
+	"tile.h"
+	"globals.h"
+	"tools.h"
+
+1419449362 c:\users\danny\documents\github\minijim\include\gamestate.h
+
+1383638076 c:\libraries\include\allegro.h
+	"allegro/base.h"
+	"allegro/system.h"
+	"allegro/debug.h"
+	"allegro/unicode.h"
+	"allegro/mouse.h"
+	"allegro/timer.h"
+	"allegro/keyboard.h"
+	"allegro/joystick.h"
+	"allegro/palette.h"
+	"allegro/gfx.h"
+	"allegro/color.h"
+	"allegro/draw.h"
+	"allegro/rle.h"
+	"allegro/compiled.h"
+	"allegro/text.h"
+	"allegro/font.h"
+	"allegro/fli.h"
+	"allegro/config.h"
+	"allegro/gui.h"
+	"allegro/sound.h"
+	"allegro/file.h"
+	"allegro/lzss.h"
+	"allegro/datafile.h"
+	"allegro/fixed.h"
+	"allegro/fmaths.h"
+	"allegro/matrix.h"
+	"allegro/quat.h"
+	"allegro/3d.h"
+	"allegro/3dmaths.h"
+	"allegro/alcompat.h"
+	"allegro/fix.h"
+
+1383638076 c:\libraries\include\allegro\base.h
+	<errno.h>
+	<limits.h>
+	<stdarg.h>
+	<stddef.h>
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<fortify/fortify.h>
+	<dmalloc.h>
+	"internal/alconfig.h"
+
+1383638076 c:\libraries\include\allegro\internal\alconfig.h
+	"allegro/platform/alplatf.h"
+	"allegro/platform/aldjgpp.h"
+	"allegro/platform/alwatcom.h"
+	"allegro/platform/almngw32.h"
+	"allegro/platform/aldmc.h"
+	"allegro/platform/albcc32.h"
+	"allegro/platform/almsvc.h"
+	"allegro/platform/albecfg.h"
+	"allegro/platform/albecfg.h"
+	"allegro/platform/almaccfg.h"
+	"allegro/platform/alosxcfg.h"
+	"allegro/platform/alqnxcfg.h"
+	"allegro/platform/alucfg.h"
+	"allegro/platform/alpspcfg.h"
+	"allegro/platform/astdint.h"
+
+1383638076 c:\libraries\include\allegro\platform\alplatf.h
+
+1383638076 c:\libraries\include\allegro\platform\aldjgpp.h
+	<pc.h>
+	<dir.h>
+	<dpmi.h>
+	<go32.h>
+	<fcntl.h>
+	<unistd.h>
+	<sys/farptr.h>
+
+1383638076 c:\libraries\include\allegro\platform\alwatcom.h
+	<io.h>
+	<i86.h>
+	<conio.h>
+	<fcntl.h>
+	<direct.h>
+	<malloc.h>
+
+1383638076 c:\libraries\include\allegro\platform\almngw32.h
+	<io.h>
+	<fcntl.h>
+	<direct.h>
+	<malloc.h>
+
+1383638076 c:\libraries\include\allegro\platform\aldmc.h
+	<io.h>
+	<fcntl.h>
+	<stdint.h>
+
+1383638076 c:\libraries\include\allegro\platform\albcc32.h
+	<io.h>
+	<fcntl.h>
+	<direct.h>
+	<malloc.h>
+
+1383638076 c:\libraries\include\allegro\platform\almsvc.h
+	<io.h>
+	<fcntl.h>
+	<direct.h>
+	<malloc.h>
+
+1383638076 c:\libraries\include\allegro\platform\albecfg.h
+	<fcntl.h>
+	<unistd.h>
+
+1383638076 c:\libraries\include\allegro\platform\almaccfg.h
+	<MacTypes.h>
+	<QuickDraw.h>
+	<FCntl.h>
+
+1383638076 c:\libraries\include\allegro\platform\alosxcfg.h
+
+1383638076 c:\libraries\include\allegro\platform\alqnxcfg.h
+	<stdio.h>
+	<stdlib.h>
+	<fcntl.h>
+	<unistd.h>
+
+1383638076 c:\libraries\include\allegro\platform\alucfg.h
+	<fcntl.h>
+	<unistd.h>
+	"allegro/platform/alunixac.h"
+
+1383638076 c:\libraries\include\allegro\platform\alpspcfg.h
+	<fcntl.h>
+	<unistd.h>
+
+1383638076 c:\libraries\include\allegro\platform\astdint.h
+	<inttypes.h>
+	<stdint.h>
+
+1383638076 c:\libraries\include\allegro\system.h
+	"base.h"
+	"unicode.h"
+	"config.h"
+	"inline/system.inl"
+
+1383638076 c:\libraries\include\allegro\unicode.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\config.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\inline\system.inl
+	"allegro/debug.h"
+
+1383638076 c:\libraries\include\allegro\debug.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\mouse.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\timer.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\keyboard.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\joystick.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\palette.h
+
+1383638076 c:\libraries\include\allegro\gfx.h
+	"3d.h"
+	"base.h"
+	"fixed.h"
+	"inline/gfx.inl"
+
+1383638076 c:\libraries\include\allegro\3d.h
+	"base.h"
+	"fixed.h"
+
+1383638076 c:\libraries\include\allegro\fixed.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\inline\gfx.inl
+	"allegro/debug.h"
+	"asm.inl"
+
+1383638076 c:\libraries\include\allegro\inline\asm.inl
+	"allegro/platform/al386gcc.h"
+	"allegro/platform/al386vc.h"
+	"allegro/platform/al386wat.h"
+
+1383638076 c:\libraries\include\allegro\platform\al386gcc.h
+
+1383638076 c:\libraries\include\allegro\platform\al386vc.h
+
+1383638076 c:\libraries\include\allegro\platform\al386wat.h
+
+1383638076 c:\libraries\include\allegro\color.h
+	"base.h"
+	"palette.h"
+	"inline/color.inl"
+
+1383638076 c:\libraries\include\allegro\inline\color.inl
+
+1383638076 c:\libraries\include\allegro\draw.h
+	"base.h"
+	"fixed.h"
+	"gfx.h"
+	"inline/draw.inl"
+
+1383638076 c:\libraries\include\allegro\inline\draw.inl
+	"allegro/debug.h"
+	"allegro/3d.h"
+	"gfx.inl"
+
+1383638076 c:\libraries\include\allegro\rle.h
+	"base.h"
+	"gfx.h"
+	"inline/rle.inl"
+
+1383638076 c:\libraries\include\allegro\inline\rle.inl
+	"allegro/debug.h"
+
+1383638076 c:\libraries\include\allegro\compiled.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\text.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\font.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\fli.h
+	"base.h"
+	"palette.h"
+
+1383638076 c:\libraries\include\allegro\gui.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\sound.h
+	"base.h"
+	"digi.h"
+	"stream.h"
+	"midi.h"
+
+1383638076 c:\libraries\include\allegro\digi.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\stream.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\midi.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\file.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\lzss.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\datafile.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\fmaths.h
+	"base.h"
+	"fixed.h"
+	"inline/fmaths.inl"
+
+1383638076 c:\libraries\include\allegro\inline\fmaths.inl
+	"asm.inl"
+
+1383638076 c:\libraries\include\allegro\matrix.h
+	"base.h"
+	"fixed.h"
+	"fmaths.h"
+	"inline/matrix.inl"
+
+1383638076 c:\libraries\include\allegro\inline\matrix.inl
+
+1383638076 c:\libraries\include\allegro\quat.h
+	"base.h"
+
+1383638076 c:\libraries\include\allegro\3dmaths.h
+	"base.h"
+	"fixed.h"
+	"inline/3dmaths.inl"
+
+1383638076 c:\libraries\include\allegro\inline\3dmaths.inl
+
+1383638076 c:\libraries\include\allegro\alcompat.h
+
+1383638076 c:\libraries\include\allegro\fix.h
+	"fixed.h"
+	"fmaths.h"
+	"inline/fix.inl"
+
+1383638076 c:\libraries\include\allegro\inline\fix.inl
+
+1387690466 c:\libraries\include\alpng.h
+
+1419449362 c:\users\danny\documents\github\minijim\include\tilemap.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<iostream>
+	<sstream>
+	<fstream>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tile.h"
+
+1383638086 c:\libraries\include\fmod\fmod.h
+
+1396136736 c:\libraries\include\fmod\fmod_errors.h
+
+1426876952 c:\users\danny\documents\github\minijim\include\globals.h
+	<allegro.h>
+
+1426871122 c:\users\danny\documents\github\minijim\include\tools.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<iostream>
+	<sstream>
+	<fstream>
+
+1419449362 c:\users\danny\documents\github\minijim\include\tile.h
+	<allegro.h>
+	<alpng.h>
+	<vector>
+	<iostream>
+	<algorithm>
+	<iterator>
+	"globals.h"
+	"tools.h"
+
+1427072416 source:c:\users\danny\documents\github\minijim\src\game.cpp
+	"Game.h"
+
+1427071868 c:\users\danny\documents\github\minijim\include\game.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+	"player.h"
+
+1427409214 c:\users\danny\documents\github\minijim\include\player.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"projectile.h"
+	"tileMap.h"
+
+1419449362 c:\users\danny\documents\github\minijim\include\projectile.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+
+1396675824 source:c:\users\danny\documents\github\minijim\src\gamestate.cpp
+
+1426827870 source:c:\users\danny\documents\github\minijim\src\globals.cpp
+	"globals.h"
+
+1426800184 source:c:\users\danny\documents\github\minijim\src\init.cpp
+	"Init.h"
+
+1419449362 c:\users\danny\documents\github\minijim\include\init.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"globals.h"
+	"tools.h"
+
+1426881362 source:c:\users\danny\documents\github\minijim\src\intro.cpp
+	"Intro.h"
+	"tools.h"
+
+1419449362 c:\users\danny\documents\github\minijim\include\intro.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<string>
+	"globals.h"
+	"tools.h"
+
+1426874394 source:c:\users\danny\documents\github\minijim\src\main.cpp
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"GameState.h"
+	"Init.h"
+	"Intro.h"
+	"Menu.h"
+	"Editor.h"
+	"Game.h"
+
+1426880838 c:\users\danny\documents\github\minijim\include\menu.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"tilemap.h"
+	"globals.h"
+	"tools.h"
+
+1426889784 source:c:\users\danny\documents\github\minijim\src\menu.cpp
+	"Menu.h"
+
+1428026134 source:c:\users\danny\documents\github\minijim\src\player.cpp
+	"player.h"
+
+1398534454 source:c:\users\danny\documents\github\minijim\src\projectile.cpp
+	"projectile.h"
+
+1426877014 source:c:\users\danny\documents\github\minijim\src\tile.cpp
+	"tile.h"
+
+1427070472 source:c:\users\danny\documents\github\minijim\src\tilemap.cpp
+	"tileMap.h"
+
+1426870958 source:c:\users\danny\documents\github\minijim\src\tools.cpp
+	"tools.h"
+	"globals.h"
 
