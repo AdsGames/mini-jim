@@ -4,32 +4,25 @@
 #include "GameState.h"
 
 #include <allegro.h>
-#include <loadpng.h>
-#include <string>
-#include <vector>
-#include <string>
 
-#include "globals.h"
-#include "tools.h"
+#define INTRO_FRAMES 82
 
 // Intro screen of game
 class Intro : public GameState {
-  private:
-    //Intro background
-    BITMAP *buffer;
-    BITMAP *intro;
-    BITMAP *title;
-    BITMAP *background;
-    BITMAP *images[100];
-
-    SAMPLE *introSound;
-
   public:
-    //Main loop functions
     Intro();
     void update();
     void draw();
     ~Intro();
+
+  private:
+    BITMAP *buffer;
+    BITMAP *intro;
+    BITMAP *title;
+    BITMAP *background;
+    BITMAP *images[INTRO_FRAMES];
+
+    SAMPLE *introSound;
 };
 
 #endif // INTRO_H

@@ -6,6 +6,9 @@
 #include "globals.h"
 #include "tools.h"
 
+#include "utility/KeyListener.h"
+#include "utility/MouseListener.h"
+
 // For state engine
 #include "GameState.h"
 
@@ -145,6 +148,9 @@ int main() {
 
       //Do state logic
       currentState -> update();
+
+      KeyListener::update();
+      MouseListener::update();
 
       //Change state if needed
       change_state();
