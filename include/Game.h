@@ -4,12 +4,9 @@
 #include "GameState.h"
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <string>
 #include <vector>
-
-#include "fmod/fmod.h"
-#include "fmod/fmod_errors.h"
 
 #include "globals.h"
 #include "tools.h"
@@ -37,8 +34,8 @@ class Game : public GameState {
     BITMAP *results_singleplayer;
     BITMAP *spaceImage[4];
 
-    FSOUND_STREAM *waitingMusic;
-    FSOUND_STREAM *mainMusic;
+    SAMPLE *waitingMusic;
+    SAMPLE *mainMusic;
 
     // Variables
     int animationFrame;

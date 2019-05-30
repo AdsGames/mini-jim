@@ -2,7 +2,7 @@
 #define PROJECTILE_H
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 
 #include "globals.h"
 #include "tools.h"

@@ -4,15 +4,12 @@
 #define FRAME_MILASECONDS 100
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <string>
 #include <vector>
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
-#include "fmod/fmod.h"
-#include "fmod/fmod_errors.h"
 
 #include "globals.h"
 #include "tools.h"

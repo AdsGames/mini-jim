@@ -1,7 +1,7 @@
 
 // Includes
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 
 #include "globals.h"
 #include "tools.h"
@@ -95,7 +95,6 @@ void change_state() {
 void setup() {
   // Load allegro library
   allegro_init();
-  alpng_init();
   install_timer();
   install_keyboard();
   install_mouse();

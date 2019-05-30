@@ -4,12 +4,9 @@
 #include "GameState.h"
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <string>
 #include <vector>
-
-#include "fmod/fmod.h"
-#include "fmod/fmod_errors.h"
 
 #include "tilemap.h"
 
@@ -22,7 +19,7 @@ class Menu : public GameState {
     BITMAP *buffer, *levelSelectLeft, *levelSelectRight, *levelSelectNumber, *cursor[2], *menuselect, *menu, *help, *copyright, *credits, *menu_player_select, * playerSelector;
 
     SAMPLE *click, *intro;
-    FSOUND_STREAM *music;
+    SAMPLE *music;
 
 
     int selectorHovering;

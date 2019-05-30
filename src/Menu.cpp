@@ -2,58 +2,56 @@
 
 // Create menu
 Menu::Menu() {
-  // Init fmod
-  FSOUND_Init (44100, 32, 0);
 
   // Create buffer image
   buffer = create_bitmap (SCREEN_W, SCREEN_H);
 
   // Load images
-  if (! (menu = load_bitmap (("images/gui/menu.png"), NULL))) {
+  if (! (menu = load_png (("images/gui/menu.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/menu.png \n Please check your files and try again");
   }
 
-  if (! (menuselect = load_bitmap (("images/gui/menuSelector.png"), NULL))) {
+  if (! (menuselect = load_png (("images/gui/menuSelector.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/menuSelector.png \n Please check your files and try again");
   }
 
-  if (! (help = load_bitmap (("images/gui/help.png"), NULL))) {
+  if (! (help = load_png (("images/gui/help.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/help.png \n Please check your files and try again");
   }
 
-  if (! (cursor[0] = load_bitmap (("images/gui/cursor1.png"), NULL))) {
+  if (! (cursor[0] = load_png (("images/gui/cursor1.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/cursor1.png \n Please check your files and try again");
   }
 
-  if (! (cursor[1] = load_bitmap (("images/gui/cursor2.png"), NULL))) {
+  if (! (cursor[1] = load_png (("images/gui/cursor2.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/cursor2.png \n Please check your files and try again");
   }
 
-  if (! (levelSelectLeft = load_bitmap (("images/gui/levelSelectLeft.png"), NULL))) {
+  if (! (levelSelectLeft = load_png (("images/gui/levelSelectLeft.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/levelSelectLeft.png \n Please check your files and try again");
   }
 
-  if (! (levelSelectRight = load_bitmap (("images/gui/levelSelectRight.png"), NULL))) {
+  if (! (levelSelectRight = load_png (("images/gui/levelSelectRight.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/levelSelectRight.png \n Please check your files and try again");
   }
 
-  if (! (levelSelectNumber = load_bitmap (("images/gui/levelSelectNumber.png"), NULL))) {
+  if (! (levelSelectNumber = load_png (("images/gui/levelSelectNumber.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/levelSelectNumber.png \n Please check your files and try again");
   }
 
-  if (! (copyright = load_bitmap (("images/gui/copyright.png"), NULL))) {
+  if (! (copyright = load_png (("images/gui/copyright.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/copyright.png \n Please check your files and try again");
   }
 
-  if (! (credits = load_bitmap (("images/gui/credits.png"), NULL))) {
+  if (! (credits = load_png (("images/gui/credits.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/credits.png \n Please check your files and try again");
   }
 
-  if (! (menu_player_select = load_bitmap (("images/gui/menu_player_select.png"), NULL))) {
+  if (! (menu_player_select = load_png (("images/gui/menu_player_select.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/menu_player_select.png \n Please check your files and try again");
   }
 
-  if (! (playerSelector = load_bitmap (("images/gui/playerSelector.png"), NULL))) {
+  if (! (playerSelector = load_png (("images/gui/playerSelector.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/playerSelector.png \n Please check your files and try again");
   }
 
@@ -71,9 +69,7 @@ Menu::Menu() {
   }
 
   // Load music
-  if (! (music = FSOUND_Stream_Open ("sounds/music/MiniJim.mp3", 2, 0, 0))) {
-    abort_on_error ("Cannot find music sounds/music/MiniJim.mp3 \n Please check your files and try again");
-  }
+  music = load_ogg_ex("sounds/music/MiniJim.ogg");
 
   if (! (intro = load_sample ("sounds/intro.wav"))) {
     abort_on_error ("Cannot find sound sounds/intro.wav \n Please check your files and try again");
@@ -111,7 +107,7 @@ Menu::Menu() {
   // Set background scroll dir
   scrollDirection = 1;
 
-  FSOUND_Stream_Play (0, music);
+  play_sample (music, 255, 125, 1000, 1);
   play_sample (intro, 255, 128, 1000, 0);
 
   levelOn = 0;
@@ -367,8 +363,5 @@ Menu::~Menu() {
   highcolor_fade_out (16);
 
   // Stop music
-  FSOUND_Stream_Stop (music);
-
-  // Clean up fmod
-  FSOUND_Close();
+  destroy_sample (music);
 }

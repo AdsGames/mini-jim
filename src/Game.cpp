@@ -3,9 +3,6 @@
 volatile int Game::timer1 = 00;
 
 Game::Game() {
-  // Init fmod
-  FSOUND_Init (44100, 32, 0);
-
   // Creates a random number generator (based on time)
   srand (time (NULL));
 
@@ -66,7 +63,7 @@ Game::Game() {
   destroy_font (f5);
 
   // Load images
-  if (! (countdownImage = load_bitmap (("images/321go.png"), NULL))) {
+  if (! (countdownImage = load_png (("images/321go.png"), NULL))) {
     abort_on_error ("Cannot find image images/gui/321go.png \n Please check your files and try again");
   }
 
@@ -78,50 +75,45 @@ Game::Game() {
     abort_on_error ("Cannot find sound sounds/timeout.wav \n Please check your files and try again");
   }
 
-  if (! (darkness = load_bitmap ("images/darkness.png", NULL))) {
+  if (! (darkness = load_png ("images/darkness.png", NULL))) {
     abort_on_error ("Cannot find image images/darkness.png \n Please check your files and try again");
   }
 
-  if (! (darkness_old = load_bitmap ("images/darkness.png", NULL))) {
+  if (! (darkness_old = load_png ("images/darkness.png", NULL))) {
     abort_on_error ("Cannot find image images/darkness.png \n Please check your files and try again");
   }
 
-  if (! (spotlight = load_bitmap ("images/spotlight.png", NULL))) {
+  if (! (spotlight = load_png ("images/spotlight.png", NULL))) {
     abort_on_error ("Cannot find image images/spotlight.png \n Please check your files and try again");
   }
 
-  if (! (spaceImage[0] = load_bitmap ("images/space0.png", NULL))) {
+  if (! (spaceImage[0] = load_png ("images/space0.png", NULL))) {
     abort_on_error ("Cannot find image images/space0.png \n Please check your files and try again");
   }
 
-  if (! (spaceImage[1] = load_bitmap ("images/space1.png", NULL))) {
+  if (! (spaceImage[1] = load_png ("images/space1.png", NULL))) {
     abort_on_error ("Cannot find image images/space1.png \n Please check your files and try again");
   }
 
-  if (! (spaceImage[2] = load_bitmap ("images/abutton0.png", NULL))) {
+  if (! (spaceImage[2] = load_png ("images/abutton0.png", NULL))) {
     abort_on_error ("Cannot find image images/abutton0.png \n Please check your files and try again");
   }
 
-  if (! (spaceImage[3] = load_bitmap ("images/abutton1.png", NULL))) {
+  if (! (spaceImage[3] = load_png ("images/abutton1.png", NULL))) {
     abort_on_error ("Cannot find image images/abutton1.png \n Please check your files and try again");
   }
 
-  if (! (results = load_bitmap ("images/gui/winscreen.png", NULL))) {
+  if (! (results = load_png ("images/gui/winscreen.png", NULL))) {
     abort_on_error ("Cannot find image images/gui/winscreen.png \n Please check your files and try again");
   }
 
-  if (! (results_singleplayer = load_bitmap ("images/gui/winscreen_singleplayer.png", NULL))) {
+  if (! (results_singleplayer = load_png ("images/gui/winscreen_singleplayer.png", NULL))) {
     abort_on_error ("Cannot find image images/gui/winscreen_singleplayer.png \n Please check your files and try again");
   }
 
   // Load music
-  if (! (waitingMusic = FSOUND_Stream_Open ("sounds/music/BasicJim.mp3", 2, 0, 0))) {
-    abort_on_error ("Cannot find music sounds/music/BasicJim.mp3 \n Please check your files and try again");
-  }
-
-  if (! (mainMusic = FSOUND_Stream_Open ("sounds/music/BasicJimFull.mp3", 2, 0, 0))) {
-    abort_on_error ("Cannot find music sounds/music/BasicJimFull.mp3 \n Please check your files and try again");
-  }
+  waitingMusic = load_ogg_ex("sounds/music/BasicJim.ogg");
+  mainMusic = load_ogg_ex("sounds/music/BasicJimFull.ogg");
 
   // Init
   init();
@@ -174,11 +166,8 @@ void Game::init() {
   deathFrame = false;
 
   // Play music
-  FSOUND_Stream_Play (0, waitingMusic);
-  FSOUND_Stream_Play (1, mainMusic);
-
-  FSOUND_SetVolume (0, 255);
-  FSOUND_SetVolume (1, 0);
+  play_sample (countdown, 255, 125, 1000, 0);
+  play_sample (mainMusic, 255, 125, 1000, 1);
 
   player1.spawncommand (tile_map);
 
@@ -218,14 +207,8 @@ void Game::update() {
 
   // Starting countdown
   if (gameBegin) {
-    // Mute full song, play waiting song
-    FSOUND_SetVolume (0, 255 - (timer1 * 0.85));
-    FSOUND_SetVolume (1, (timer1 * 0.85));
-
     // Start round
     if (timer1 > 100) {
-      FSOUND_SetVolume (0, 0);
-      FSOUND_SetVolume (1, 255);
       timer1 = 0;
       gameBegin = false;
     }
@@ -507,9 +490,6 @@ Game::~Game() {
   highcolor_fade_out (16);
 
   // Stop music
-  FSOUND_Stream_Stop (waitingMusic);
-  FSOUND_Stream_Stop (mainMusic);
-
-  // Clean up fmod
-  FSOUND_Close();
+  destroy_sample (waitingMusic);
+  destroy_sample (mainMusic);
 }

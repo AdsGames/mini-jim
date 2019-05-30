@@ -2,7 +2,7 @@
 #define TILE_H
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <vector>
 #include <iostream>
 #include <algorithm>

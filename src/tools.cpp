@@ -1,6 +1,8 @@
 #include "tools.h"
 #include "globals.h"
 
+#include <logg.h>
+
 //Iterates through the number of buttons in a joystick and returns true if any keys are pressed
 bool keyboard_keypressed() {
   bool keypressed = false;
@@ -64,7 +66,7 @@ bool collisionLeft (int xMin1, int xMax1, int xMin2, int xMax2) {
 //Checks if file exists
 bool fexists (const char *filename) {
   ifstream ifile (filename);
-  return ifile;
+  return !ifile.fail();
 }
 
 //Random number generator. Use int random(lowest,highest);
