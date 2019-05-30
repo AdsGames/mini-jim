@@ -23,6 +23,12 @@ class Menu : public GameState {
     virtual void draw() override;
 
   private:
+    // Mouse hovering over button
+    bool button_hover();
+
+    // Change level (background)
+    void change_level(int level);
+
     // Menu/GUI
     BITMAP *buffer, *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright, *credits;
     SAMPLE *click, *intro, *music;
@@ -35,7 +41,18 @@ class Menu : public GameState {
     float selector_y, target_selector_y;
     int selected_button, move_to_button;
 
-    Button btn_start, btn_edit, btn_help, btn_exit, btn_start_mp, btn_left, btn_right;
+    enum button_names {
+      BUTTON_START,
+      BUTTON_START_MP,
+      BUTTON_EDIT,
+      BUTTON_HELP,
+      BUTTON_EXIT,
+      BUTTON_LEFT,
+      BUTTON_RIGHT,
+      NUM_BUTTONS
+    };
+
+    Button buttons[7];
 };
 
 #endif // MENU_H

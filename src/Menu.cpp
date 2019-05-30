@@ -18,54 +18,63 @@ Menu::Menu() {
   copyright = load_png_ex("images/gui/copyright.png");
   credits = load_png_ex("images/gui/credits.png");
 
-  //Load sound effects
+  //Load sound
   click = load_sample_ex("sounds/click.wav");
   intro = load_sample_ex("sounds/intro.wav");
+  music = load_ogg_ex("sounds/music/MiniJim.ogg");
 
   //Sets Font
   font = load_font_ex("fonts/arial_black.pcx");
 
-  // Load music
-  music = load_ogg_ex("sounds/music/MiniJim.ogg");
-
   // Allow transparency
   set_alpha_blender();
+
+  // Create map for live background
+  tile_map = new tileMap ("data/level_1");
+
+  // Buttons
+  buttons[BUTTON_START] = Button(60, 630);
+  buttons[BUTTON_START_MP] = Button(60, 690);
+  buttons[BUTTON_EDIT] = Button(60, 750);
+  buttons[BUTTON_HELP] = Button(60, 810);
+  buttons[BUTTON_EXIT] = Button(60, 870);
+  buttons[BUTTON_LEFT] = Button(SCREEN_W - 180, 80);
+  buttons[BUTTON_RIGHT] = Button(SCREEN_W - 80, 80);
+
+  buttons[BUTTON_START].SetImages("images/gui/button_start.png", "images/gui/button_start.png");
+  buttons[BUTTON_START_MP].SetImages("images/gui/button_start_mp.png", "images/gui/button_start_mp.png");
+  buttons[BUTTON_EDIT].SetImages("images/gui/button_edit.png", "images/gui/button_edit.png");
+  buttons[BUTTON_HELP].SetImages("images/gui/button_help.png", "images/gui/button_help.png");
+  buttons[BUTTON_EXIT].SetImages("images/gui/button_quit.png", "images/gui/button_quit.png");
+  buttons[BUTTON_LEFT].SetImages("images/gui/button_left.png", "images/gui/button_left_hover.png");
+  buttons[BUTTON_RIGHT].SetImages("images/gui/button_right.png", "images/gui/button_right_hover.png");
 
   //Variables
   selected_button = 0;
   move_to_button = 0;
-
-  // Create map for live background
-  tile_map = new tileMap ("data/level_1");
-  //tile_map -> y = 4000;
-
-  // Buttons
-  btn_start = Button(60, 630);
-  btn_start_mp = Button(60, 690);
-  btn_edit = Button(60, 750);
-  btn_help = Button(60, 810);
-  btn_exit = Button(60, 870);
-  btn_left = Button(SCREEN_W - 180, 80);
-  btn_right = Button(SCREEN_W - 80, 80);
-
-  btn_start.SetImages("images/gui/button_start.png", "images/gui/button_start.png");
-  btn_start_mp.SetImages("images/gui/button_start_mp.png", "images/gui/button_start_mp.png");
-  btn_edit.SetImages("images/gui/button_edit.png", "images/gui/button_edit.png");
-  btn_help.SetImages("images/gui/button_help.png", "images/gui/button_help.png");
-  btn_exit.SetImages("images/gui/button_quit.png", "images/gui/button_quit.png");
-  btn_left.SetImages("images/gui/button_left.png", "images/gui/button_left_hover.png");
-  btn_right.SetImages("images/gui/button_right.png", "images/gui/button_right_hover.png");
-
-  target_selector_y = btn_start.GetY();
-  selector_y = btn_start.GetY();
-
-  // Set background scroll dir
+  target_selector_y = buttons[BUTTON_START].GetY();
+  selector_y = target_selector_y;
   scrollDirection = 1;
+  levelOn = 0;
 
   play_sample (music, 255, 125, 1000, 1);
   play_sample (intro, 255, 128, 1000, 0);
+}
 
-  levelOn = 0;
+bool Menu::button_hover() {
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    if (buttons[i].Hover()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void Menu::change_level(int level) {
+  levelOn = (levelOn + level) < 0 ? 2 : (levelOn + level) % 3;
+  tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
+  tile_map -> x = 0;
+  play_sample (click, 255, 125, 1000, 0);
 }
 
 void Menu::update() {
@@ -75,51 +84,24 @@ void Menu::update() {
     scrollDirection *= -1;
 
   // Move selector
-  if (selector_y != target_selector_y)
-    selector_y += (target_selector_y - selector_y) / 3.0f;
-
-  // Change level
-  if (KeyListener::keyPressed[KEY_A] || KeyListener::keyPressed[KEY_LEFT] ||
-     (MouseListener::mouse_pressed & 1 && selected_button == 5)) {
-    play_sample (click, 255, 125, 1000, 0);
-    levelOn --;
-    levelOn = levelOn % 3 + (levelOn < 0) * 3;
-    tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
-  }
-  if (KeyListener::keyPressed[KEY_D] || KeyListener::keyPressed[KEY_RIGHT] ||
-     (MouseListener::mouse_pressed & 1 && selected_button == 6)) {
-    play_sample (click, 255, 125, 1000, 0);
-    levelOn ++;
-    levelOn = levelOn % 3 + (levelOn < 0) * 3;
-    tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
-  }
+  selector_y += (target_selector_y - selector_y) / 3.0f;
 
   // Change menu
-  if (KeyListener::keyPressed[KEY_W] || KeyListener::keyPressed[KEY_UP]) {
+  if (KeyListener::keyPressed[KEY_W] || KeyListener::keyPressed[KEY_UP])
     move_to_button = (move_to_button - 1 < 0) ? 4 : move_to_button - 1;
-  }
 
-  if (KeyListener::keyPressed[KEY_S] || KeyListener::keyPressed[KEY_DOWN]) {
+  if (KeyListener::keyPressed[KEY_S] || KeyListener::keyPressed[KEY_DOWN])
     move_to_button = (move_to_button + 1) % 5;
-  }
 
-  if (btn_start.Hover())
-    move_to_button = 0;
-  else if (btn_start_mp.Hover())
-    move_to_button = 1;
-  else if (btn_edit.Hover())
-    move_to_button = 2;
-  else if (btn_help.Hover())
-    move_to_button = 3;
-  else if (btn_exit.Hover())
-    move_to_button = 4;
-  else if (btn_left.Hover())
-    move_to_button = 5;
-  else if (btn_right.Hover())
-    move_to_button = 6;
+  // Check hovers
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    if (buttons[i].Hover()) {
+      move_to_button = i;
+    }
+  }
 
   // Select button
-  if (mouse_b & 1 || KeyListener::keyPressed[KEY_ENTER]) {
+  if ((mouse_b & 1 && button_hover()) || KeyListener::keyPressed[KEY_ENTER]) {
     switch (selected_button) {
       case 0:
         single_player = true;
@@ -140,30 +122,21 @@ void Menu::update() {
     }
   }
 
+  // Change level
+  if (KeyListener::keyPressed[KEY_A] || KeyListener::keyPressed[KEY_LEFT] ||
+     (MouseListener::mouse_pressed & 1 && selected_button == 5)) {
+    change_level(-1);
+  }
+  if (KeyListener::keyPressed[KEY_D] || KeyListener::keyPressed[KEY_RIGHT] ||
+     (MouseListener::mouse_pressed & 1 && selected_button == 6)) {
+    change_level(1);
+  }
+
   // Move to selection
   if (selected_button != move_to_button) {
     play_sample (click, 255, 125, 1000, 0);
     selected_button = move_to_button;
-
-    switch (selected_button) {
-      case 0:
-        target_selector_y = btn_start.GetY();
-        break;
-      case 1:
-        target_selector_y = btn_start_mp.GetY();
-        break;
-      case 2:
-        target_selector_y = btn_edit.GetY();
-        break;
-      case 3:
-        target_selector_y = btn_help.GetY();
-        break;
-      case 4:
-        target_selector_y = btn_exit.GetY();
-        break;
-      default:
-        break;
-    }
+    target_selector_y = buttons[selected_button].GetY();
   }
 }
 
@@ -177,16 +150,13 @@ void Menu::draw() {
   // Overlay
   draw_trans_sprite (buffer, credits, 0, 0);
   draw_trans_sprite (buffer, menu, 40, 480);
-  draw_trans_sprite (buffer, menuselect, 50, selector_y);
+
+  if (selected_button < 5)
+    draw_trans_sprite (buffer, menuselect, 50, selector_y);
 
   // Buttons
-  btn_start.Draw(buffer);
-  btn_start_mp.Draw(buffer);
-  btn_edit.Draw(buffer);
-  btn_help.Draw(buffer);
-  btn_exit.Draw(buffer);
-  btn_left.Draw(buffer);
-  btn_right.Draw(buffer);
+  for (int i = 0; i < NUM_BUTTONS; i++)
+    buttons[i].Draw(buffer);
 
   // Level selection
   draw_trans_sprite (buffer, levelSelectNumber, SCREEN_W - 160, 80);
