@@ -16,14 +16,13 @@
 #include "globals.h"
 #include "tools.h"
 
-class Menu : public GameState
-{
+class Menu : public GameState {
   private:
     // Menu/GUI
     BITMAP *buffer, *levelSelectLeft, *levelSelectRight, *levelSelectNumber, *cursor[2], *menuselect, *menu, *help, *copyright, *credits, *menu_player_select, * playerSelector;
 
     SAMPLE *click, *intro;
-    FSOUND_STREAM* music;
+    FSOUND_STREAM *music;
 
 
     int selectorHovering;

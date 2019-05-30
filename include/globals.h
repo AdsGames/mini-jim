@@ -121,22 +121,21 @@
 //Enemies
 #define enemy_vorticon 0
 
-extern BITMAP* tileSprites[400][8];
-extern BITMAP* projectileSprites[10][3];
+extern BITMAP *tileSprites[400][8];
+extern BITMAP *projectileSprites[10][3];
 
 // Set next state
-void set_next_state( int newState );
+void set_next_state (int newState);
 
 //Game states
-enum GameStates
-{
-    STATE_NULL,
-    STATE_INIT,
-    STATE_INTRO,
-    STATE_MENU,
-    STATE_EDIT,
-    STATE_GAME,
-    STATE_EXIT,
+enum GameStates {
+  STATE_NULL,
+  STATE_INIT,
+  STATE_INTRO,
+  STATE_MENU,
+  STATE_EDIT,
+  STATE_GAME,
+  STATE_EXIT,
 };
 
 // Frames

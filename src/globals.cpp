@@ -1,7 +1,7 @@
 #include "globals.h"
 
-BITMAP* tileSprites[400][8];
-BITMAP* projectileSprites[10][3];
+BITMAP *tileSprites[400][8];
+BITMAP *projectileSprites[10][3];
 
 // Frames
 int frames_done;

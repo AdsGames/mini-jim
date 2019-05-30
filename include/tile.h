@@ -11,9 +11,9 @@
 #include "globals.h"
 #include "tools.h"
 
-class tile{
+class tile {
   public:
-    tile(int newType);
+    tile (int newType);
     ~tile();
 
     int getX();
@@ -22,22 +22,22 @@ class tile{
     int getWidth();
     int getHeight();
 
-    void setX(int newX);
-    void setY(int newY);
+    void setX (int newX);
+    void setY (int newY);
 
     int getType();
     vector<int> getAttribute();
-    bool containsAttribute( int newAttribute);
+    bool containsAttribute (int newAttribute);
 
-    BITMAP* getImage();
+    BITMAP *getImage();
 
-    void setType(int newType);
+    void setType (int newType);
 
-    void setImages(BITMAP* image1);
-    void setImagesAnimated(BITMAP* image1, BITMAP* image2, BITMAP* image3, BITMAP* image4);
-    void setImagesAnimatedEight(BITMAP* image1, BITMAP* image2, BITMAP* image3, BITMAP* image4, BITMAP* image5, BITMAP* image6, BITMAP* image7, BITMAP* image8);
+    void setImages (BITMAP *image1);
+    void setImagesAnimated (BITMAP *image1, BITMAP *image2, BITMAP *image3, BITMAP *image4);
+    void setImagesAnimatedEight (BITMAP *image1, BITMAP *image2, BITMAP *image3, BITMAP *image4, BITMAP *image5, BITMAP *image6, BITMAP *image7, BITMAP *image8);
 
-    void draw_tile(BITMAP* temp, int xOffset, int yOffset, int newFrame);
+    void draw_tile (BITMAP *temp, int xOffset, int yOffset, int newFrame);
 
   private:
     void setDimensions();
@@ -50,7 +50,7 @@ class tile{
 
     int animated;
 
-    BITMAP* images[8];
+    BITMAP *images[8];
 };
 
 #endif

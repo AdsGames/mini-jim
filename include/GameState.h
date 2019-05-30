@@ -2,12 +2,11 @@
 #define GAMESTATE_H
 
 // GameState, holds all levels
-class GameState
-{
+class GameState {
   public:
     virtual void update() = 0;
     virtual void draw() = 0;
-    virtual ~GameState(){};
+    virtual ~GameState() {};
 };
 
 #endif

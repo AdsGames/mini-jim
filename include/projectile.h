@@ -10,9 +10,9 @@
 #include "tileMap.h"
 
 
-class projectile{
+class projectile {
   public:
-    projectile(int newType, int newX, int newY, int newSpeed);
+    projectile (int newType, int newX, int newY, int newSpeed);
     ~projectile();
 
     int getX();
@@ -20,14 +20,14 @@ class projectile{
 
     int getType();
     int getContactFrameCounter();
-    bool getContact(tileMap *newMap);
+    bool getContact (tileMap *newMap);
 
-    void setType(int newType);
-    void setImage(BITMAP* image1, BITMAP* image2, BITMAP* image3);
-    void setSounds( int newType);
+    void setType (int newType);
+    void setImage (BITMAP *image1, BITMAP *image2, BITMAP *image3);
+    void setSounds (int newType);
 
     void update();
-    void draw(BITMAP* temp, int xOffset, int yOffset);
+    void draw (BITMAP *temp, int xOffset, int yOffset);
 
   private:
     int x;
@@ -38,8 +38,8 @@ class projectile{
 
     bool contact;
 
-    BITMAP* image[3];
-    SAMPLE* sound[2];
+    BITMAP *image[3];
+    SAMPLE *sound[2];
 };
 
 #endif

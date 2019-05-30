@@ -11,8 +11,7 @@
 #include "globals.h"
 #include "tools.h"
 
-class Init : public GameState
-{
+class Init : public GameState {
   private:
   protected:
   public:
