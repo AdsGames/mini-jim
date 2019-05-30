@@ -13,8 +13,7 @@
 #include "globals.h"
 #include "tools.h"
 
-class Editor : public GameState
-{
+class Editor : public GameState {
   private:
     int selectedTileType;
     int layer;
@@ -22,7 +21,7 @@ class Editor : public GameState
     bool saving;
     bool opening;
 
-    BITMAP* buffer;
+    BITMAP *buffer;
 
     tileMap *tile_map;
     tile *exampleTile;

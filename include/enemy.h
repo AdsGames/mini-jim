@@ -15,9 +15,9 @@
 #define ANIMATION_SPEED 5
 #define JUMPING_HEIGHT 192
 
-class enemy{
+class enemy {
   public:
-    enemy( int newX, int newY, int newType);
+    enemy (int newX, int newY, int newType);
     ~enemy();
 
     void load_images();
@@ -28,10 +28,10 @@ class enemy{
 
     bool getDead();
 
-    void setDead(bool newDead);
+    void setDead (bool newDead);
 
-    void update(tileMap *newMap, player newPlayer);
-    void draw(BITMAP* temp, int tile_map_x, int tile_map_y);
+    void update (tileMap *newMap, player newPlayer);
+    void draw (BITMAP *temp, int tile_map_x, int tile_map_y);
 
   private:
     int x;
@@ -64,15 +64,15 @@ class enemy{
     vector<projectile> bullets;
 
     // 0-3 left, 4-7 right, 8 jump left 9 jump right 10 dead
-    BITMAP* enemy_images[11];
+    BITMAP *enemy_images[11];
 
     //Sounds
-    SAMPLE* walk1;
-    SAMPLE* walk2;
-    SAMPLE* jump;
-    SAMPLE* die;
-    SAMPLE* getItem;
-    SAMPLE* getBonus;
+    SAMPLE *walk1;
+    SAMPLE *walk2;
+    SAMPLE *jump;
+    SAMPLE *die;
+    SAMPLE *getItem;
+    SAMPLE *getBonus;
 };
 
 #endif

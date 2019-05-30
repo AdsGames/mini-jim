@@ -21,25 +21,24 @@
 using namespace std;
 
 // Main game screen
-class Game : public GameState
-{
+class Game : public GameState {
   private:
-    BITMAP* buffer;
-    BITMAP* screen1;
-    BITMAP* screen2;
+    BITMAP *buffer;
+    BITMAP *screen1;
+    BITMAP *screen2;
 
     SAMPLE *countdown;
     SAMPLE *timeout;
 
     FONT *cooper;
 
-    BITMAP* countdownImage;
-    BITMAP* results;
-    BITMAP* results_singleplayer;
-    BITMAP* spaceImage[4];
+    BITMAP *countdownImage;
+    BITMAP *results;
+    BITMAP *results_singleplayer;
+    BITMAP *spaceImage[4];
 
-    FSOUND_STREAM* waitingMusic;
-    FSOUND_STREAM* mainMusic;
+    FSOUND_STREAM *waitingMusic;
+    FSOUND_STREAM *mainMusic;
 
     // Variables
     int animationFrame;

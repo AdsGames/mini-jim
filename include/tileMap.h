@@ -21,9 +21,9 @@
 
 using namespace std;
 
-class tileMap{
+class tileMap {
   public:
-    tileMap(string fileName);
+    tileMap (string fileName);
 
     vector<tile> mapTiles;
     vector<tile> mapTilesBack;
@@ -37,9 +37,9 @@ class tileMap{
     long getFrame();
 
     void load_images();
-    void draw_map(BITMAP* tempSprite);
-    void draw_map(BITMAP* tempSprite, int newX, int newY);
-    void load(string fileName);
+    void draw_map (BITMAP *tempSprite);
+    void draw_map (BITMAP *tempSprite, int newX, int newY);
+    void load (string fileName);
 
     ~tileMap();
   private:

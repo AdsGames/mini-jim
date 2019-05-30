@@ -2,96 +2,107 @@
 #include "globals.h"
 
 //Iterates through the number of buttons in a joystick and returns true if any keys are pressed
-bool keyboard_keypressed(){
-    bool keypressed=false;
-    for(int i=0; i<125; i++)
-        if(key[i])keypressed=true;
-    return keypressed;
+bool keyboard_keypressed() {
+  bool keypressed = false;
+
+  for (int i = 0; i < 125; i++)
+    if (key[i]) {
+      keypressed = true;
+    }
+
+  return keypressed;
 
 }
 //Iterates through the number of buttons in a joystick and returns true if any buttons are pressed
-bool joy_buttonpressed(){
-    bool buttonpressed=false;
-    for(int i=0; i<joy[0].num_buttons; i++)
-        if(joy[0].button[i].b)buttonpressed=true;
-    return buttonpressed;
+bool joy_buttonpressed() {
+  bool buttonpressed = false;
+
+  for (int i = 0; i < joy[0].num_buttons; i++)
+    if (joy[0].button[i].b) {
+      buttonpressed = true;
+    }
+
+  return buttonpressed;
 }
 //Collision
-bool collisionAny(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2){
-  if (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1){
+bool collisionAny (int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2) {
+  if (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1) {
     return true;
   }
+
   return false;
 }
-bool collisionBottom(int yMin1, int yMax1, int yMin2, int yMax2){
-  if(yMin1 < yMax2 && yMax1 > yMax2){
+bool collisionBottom (int yMin1, int yMax1, int yMin2, int yMax2) {
+  if (yMin1 < yMax2 && yMax1 > yMax2) {
     return true;
   }
+
   return false;
 }
-bool collisionTop(int yMin1, int yMax1, int yMin2, int yMax2){
-  if(yMin2 < yMax1 && yMin1 < yMin2){
+bool collisionTop (int yMin1, int yMax1, int yMin2, int yMax2) {
+  if (yMin2 < yMax1 && yMin1 < yMin2) {
     return true;
   }
+
   return false;
 }
-bool collisionRight(int xMin1, int xMax1, int xMin2, int xMax2){
-  if(xMin2 < xMax1 && xMin1 < xMin2){
+bool collisionRight (int xMin1, int xMax1, int xMin2, int xMax2) {
+  if (xMin2 < xMax1 && xMin1 < xMin2) {
     return true;
   }
+
   return false;
 }
-bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2){
-  if(xMin1 < xMax2 && xMax1 > xMax2){
+bool collisionLeft (int xMin1, int xMax1, int xMin2, int xMax2) {
+  if (xMin1 < xMax2 && xMax1 > xMax2) {
     return true;
   }
+
   return false;
 }
 
 //Checks if file exists
-bool fexists(const char *filename){
-  ifstream ifile(filename);
+bool fexists (const char *filename) {
+  ifstream ifile (filename);
   return ifile;
 }
 
 //Random number generator. Use int random(lowest,highest);
-int random(int newLowest, int newHighest){
+int random (int newLowest, int newHighest) {
   int lowest = newLowest, highest = newHighest;
   int range = (highest - lowest) + 1;
-  int randomNumber = lowest+int(range*rand()/(RAND_MAX + 1.0));
+  int randomNumber = lowest + int (range * rand() / (RAND_MAX + 1.0));
   return randomNumber;
 }
 
 //Convert int to string
-string convertIntToString(int number){
+string convertIntToString (int number) {
   stringstream ss;
   ss << number;
   return ss.str();
 }
 
 //Convert double to string
-string convertDoubleToString(double number){
+string convertDoubleToString (double number) {
   stringstream ss;
   ss << number;
   return ss.str();
 }
 
 //Convert bool to string
-string convertBoolToString(bool boolean){
+string convertBoolToString (bool boolean) {
   stringstream ss;
   ss << boolean;
   return ss.str();
 }
 
 // Set next state
-void set_next_state( int newState )
-{
-    //If the user doesn't want to exit
-    if( nextState != STATE_EXIT )
-    {
-        //Set the next state
-        nextState = newState;
-    }
+void set_next_state (int newState) {
+  //If the user doesn't want to exit
+  if (nextState != STATE_EXIT) {
+    //Set the next state
+    nextState = newState;
+  }
 }
 
 // Fade in
@@ -145,39 +156,47 @@ void abort_on_error (const char *message) {
 
 
 // Load image
-BITMAP* load_png_ex(const char *path) {
+BITMAP *load_png_ex (const char *path) {
   BITMAP *temp = nullptr;
-  if (!(temp = load_png(path, nullptr))) {
-    abort_on_error ((std::string("Cannot find image (") + path + ") \n Please check your files and try again").c_str());
+
+  if (! (temp = load_png (path, nullptr))) {
+    abort_on_error ((std::string ("Cannot find image (") + path + ") \n Please check your files and try again").c_str());
   }
+
   return temp;
 }
 
 // Load ogg
-SAMPLE* load_ogg_ex(const char *path) {
+SAMPLE *load_ogg_ex (const char *path) {
   SAMPLE *temp = nullptr;
-  if (!(temp = logg_load(path))) {
-    abort_on_error ((std::string("Cannot find music (") + path + ") \n Please check your files and try again").c_str());
+
+  if (! (temp = logg_load (path))) {
+    abort_on_error ((std::string ("Cannot find music (") + path + ") \n Please check your files and try again").c_str());
   }
+
   return temp;
 }
 
 
 // Load sample
-SAMPLE* load_sample_ex(const char *path) {
+SAMPLE *load_sample_ex (const char *path) {
   SAMPLE *temp = nullptr;
-  if (!(temp = load_sample(path))) {
-    abort_on_error ((std::string("Cannot find sample (") + path + ") \n Please check your files and try again").c_str());
+
+  if (! (temp = load_sample (path))) {
+    abort_on_error ((std::string ("Cannot find sample (") + path + ") \n Please check your files and try again").c_str());
   }
+
   return temp;
 }
 
 // Load font
-FONT* load_font_ex(const char *path) {
+FONT *load_font_ex (const char *path) {
   FONT *temp = nullptr;
-  if (!(temp = load_font(path, nullptr, nullptr))) {
-    abort_on_error ((std::string("Cannot find font (") + path + ") \n Please check your files and try again").c_str());
+
+  if (! (temp = load_font (path, nullptr, nullptr))) {
+    abort_on_error ((std::string ("Cannot find font (") + path + ") \n Please check your files and try again").c_str());
   }
+
   return temp;
 }
 
