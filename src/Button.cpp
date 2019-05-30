@@ -1,6 +1,6 @@
 #include "Button.h"
 
-#include "tools.h"
+#include "utility/tools.h"
 
 Button::Button () {
   images[0] = nullptr;

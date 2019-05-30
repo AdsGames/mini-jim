@@ -11,7 +11,7 @@
 #include "tileMap.h"
 #include "tile.h"
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 class Editor : public GameState {
   private:

@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 #include "tileMap.h"
 #include "player.h"

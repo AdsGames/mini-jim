@@ -9,7 +9,7 @@
 #include <iterator>
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 class tile {
   public:
