@@ -12,7 +12,7 @@
 #include <fstream>
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 #include "tile.h"
 

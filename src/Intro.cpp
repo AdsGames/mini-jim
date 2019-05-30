@@ -1,5 +1,5 @@
 #include "Intro.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 #include <loadpng.h>
 #include <string>
@@ -7,7 +7,7 @@
 #include <string>
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 Intro::Intro() {
   background = load_png_ex("images/opening/background.png");

@@ -5,7 +5,7 @@
 #include <loadpng.h>
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 #include "tileMap.h"
 

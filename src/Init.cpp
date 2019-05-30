@@ -3,7 +3,7 @@
 #include <allegro.h>
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 Init::Init() {
   set_window_title ("Setting up");

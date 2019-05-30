@@ -11,7 +11,7 @@
 #include "tilemap.h"
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
 #include "Button.h"
 
