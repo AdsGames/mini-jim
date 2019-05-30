@@ -1,20 +1,17 @@
 #include "Init.h"
 
+#include <allegro.h>
+
+#include "globals.h"
+#include "tools.h"
+
 Init::Init() {
-  // Set window title
   set_window_title ("Setting up");
-
-  int width;
-  int height;
-  get_desktop_resolution (&width, &height);
-
   set_gfx_mode (GFX_AUTODETECT_WINDOWED, 1280, 960, 0, 0);
-
   set_window_title ("Mini Jim");
 }
 
 void Init::update() {
-  // Change to splash screen
   set_next_state (STATE_INTRO);
 }
 

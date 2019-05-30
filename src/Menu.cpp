@@ -1,5 +1,8 @@
 #include "Menu.h"
 
+#include "utility/KeyListener.h"
+#include "utility/MouseListener.h"
+
 // Create menu
 Menu::Menu() {
 
@@ -7,102 +10,54 @@ Menu::Menu() {
   buffer = create_bitmap (SCREEN_W, SCREEN_H);
 
   // Load images
-  if (! (menu = load_png (("images/gui/menu.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/menu.png \n Please check your files and try again");
-  }
-
-  if (! (menuselect = load_png (("images/gui/menuSelector.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/menuSelector.png \n Please check your files and try again");
-  }
-
-  if (! (help = load_png (("images/gui/help.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/help.png \n Please check your files and try again");
-  }
-
-  if (! (cursor[0] = load_png (("images/gui/cursor1.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/cursor1.png \n Please check your files and try again");
-  }
-
-  if (! (cursor[1] = load_png (("images/gui/cursor2.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/cursor2.png \n Please check your files and try again");
-  }
-
-  if (! (levelSelectLeft = load_png (("images/gui/levelSelectLeft.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/levelSelectLeft.png \n Please check your files and try again");
-  }
-
-  if (! (levelSelectRight = load_png (("images/gui/levelSelectRight.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/levelSelectRight.png \n Please check your files and try again");
-  }
-
-  if (! (levelSelectNumber = load_png (("images/gui/levelSelectNumber.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/levelSelectNumber.png \n Please check your files and try again");
-  }
-
-  if (! (copyright = load_png (("images/gui/copyright.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/copyright.png \n Please check your files and try again");
-  }
-
-  if (! (credits = load_png (("images/gui/credits.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/credits.png \n Please check your files and try again");
-  }
-
-  if (! (menu_player_select = load_png (("images/gui/menu_player_select.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/menu_player_select.png \n Please check your files and try again");
-  }
-
-  if (! (playerSelector = load_png (("images/gui/playerSelector.png"), NULL))) {
-    abort_on_error ("Cannot find image images/gui/playerSelector.png \n Please check your files and try again");
-  }
+  menu = load_png_ex("images/gui/menu.png");
+  menuselect = load_png_ex("images/gui/menuSelector.png");
+  help = load_png_ex("images/gui/help.png");
+  cursor = load_png_ex ("images/gui/cursor1.png");
+  levelSelectNumber = load_png_ex("images/gui/levelSelectNumber.png");
+  copyright = load_png_ex("images/gui/copyright.png");
+  credits = load_png_ex("images/gui/credits.png");
 
   //Load sound effects
-  if (! (click = load_sample (("sounds/click.wav")))) {
-    abort_on_error ("Cannot find sound sounds/click.png \n Please check your files and try again");
-  }
-
-  // Temporary fonts
-  FONT *f1, *f2, *f3, *f4, *f5;
+  click = load_sample_ex("sounds/click.wav");
+  intro = load_sample_ex("sounds/intro.wav");
 
   //Sets Font
-  if (! (f1 = load_font (("fonts/arial_black.pcx"), NULL, NULL))) {
-    abort_on_error ("Cannot find font fonts/arial_black.png \n Please check your files and try again");
-  }
+  font = load_font_ex("fonts/arial_black.pcx");
 
   // Load music
   music = load_ogg_ex("sounds/music/MiniJim.ogg");
-
-  if (! (intro = load_sample ("sounds/intro.wav"))) {
-    abort_on_error ("Cannot find sound sounds/intro.wav \n Please check your files and try again");
-  }
-
-  f2 = extract_font_range (f1, ' ', 'A' - 1);
-  f3 = extract_font_range (f1, 'A', 'Z');
-  f4 = extract_font_range (f1, 'Z' + 1, 'z');
-
-  //Merge fonts
-  font = merge_fonts (f4, f5 = merge_fonts (f2, f3));
-
-  //Destroy temporary fonts
-  destroy_font (f1);
-  destroy_font (f2);
-  destroy_font (f3);
-  destroy_font (f4);
-  destroy_font (f5);
 
   // Allow transparency
   set_alpha_blender();
 
   //Variables
-  newSelectorY = SCREEN_H - 323;
-  selectorY = SCREEN_H - 323;
-  selectorX = 60;
-  mouse_control = false;
-  selectorHovering = 0;
-  player_select = false;
+  selected_button = 0;
+  move_to_button = 0;
 
   // Create map for live background
-  tile_map = new tileMap ("data/bedroom");
+  tile_map = new tileMap ("data/level_1");
   //tile_map -> y = 4000;
+
+  // Buttons
+  btn_start = Button(60, 630);
+  btn_start_mp = Button(60, 690);
+  btn_edit = Button(60, 750);
+  btn_help = Button(60, 810);
+  btn_exit = Button(60, 870);
+  btn_left = Button(SCREEN_W - 180, 80);
+  btn_right = Button(SCREEN_W - 80, 80);
+
+  btn_start.SetImages("images/gui/button_start.png", "images/gui/button_start.png");
+  btn_start_mp.SetImages("images/gui/button_start_mp.png", "images/gui/button_start_mp.png");
+  btn_edit.SetImages("images/gui/button_edit.png", "images/gui/button_edit.png");
+  btn_help.SetImages("images/gui/button_help.png", "images/gui/button_help.png");
+  btn_exit.SetImages("images/gui/button_quit.png", "images/gui/button_quit.png");
+  btn_left.SetImages("images/gui/button_left.png", "images/gui/button_left_hover.png");
+  btn_right.SetImages("images/gui/button_right.png", "images/gui/button_right_hover.png");
+
+  target_selector_y = btn_start.GetY();
+  selector_y = btn_start.GetY();
 
   // Set background scroll dir
   scrollDirection = 1;
@@ -114,168 +69,102 @@ Menu::Menu() {
 }
 
 void Menu::update() {
-  // Override mouse control
-  if (key[KEY_UP] || key[KEY_DOWN] || key[KEY_LEFT] || key[KEY_RIGHT] || key[KEY_W] || key[KEY_A] || key[KEY_S] || key[KEY_D] || joy[0].stick[0].axis[1].d2 || joy[0].stick[0].axis[1].d1 || joy[0].button[4].b || joy[0].button[5].b) {
-    mouse_control = false;
-  }
-  // Override keyboard/joystick control
-  else if (mouse_x != old_mouse_x || mouse_y != old_mouse_y) {
-    mouse_control = true;
-  }
-
-  // Mouse memory
-  old_mouse_x = mouse_x;
-  old_mouse_y = mouse_y;
-
-  menuOpen = false;
-  poll_joystick();
-
   // Move around live background
   tile_map -> x += scrollDirection * 2;
-
-  if (tile_map -> x + 1 > tile_map -> width * 32 || tile_map -> x - 1 < 0) {
+  if (tile_map -> x >= tile_map -> width * 32 || tile_map -> x <= 0)
     scrollDirection *= -1;
-  }
 
   // Move selector
-  if (selectorY != newSelectorY) {
-    selectorY += (newSelectorY - selectorY) / 3;
+  if (selector_y != target_selector_y)
+    selector_y += (target_selector_y - selector_y) / 3.0f;
+
+  // Change level
+  if (KeyListener::keyPressed[KEY_A] || KeyListener::keyPressed[KEY_LEFT] ||
+     (MouseListener::mouse_pressed & 1 && selected_button == 5)) {
+    play_sample (click, 255, 125, 1000, 0);
+    levelOn --;
+    levelOn = levelOn % 3 + (levelOn < 0) * 3;
+    tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
+  }
+  if (KeyListener::keyPressed[KEY_D] || KeyListener::keyPressed[KEY_RIGHT] ||
+     (MouseListener::mouse_pressed & 1 && selected_button == 6)) {
+    play_sample (click, 255, 125, 1000, 0);
+    levelOn ++;
+    levelOn = levelOn % 3 + (levelOn < 0) * 3;
+    tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
   }
 
-  // Move selector
-  if ((key[KEY_W] || key[KEY_UP] || joy[0].stick[0].axis[1].d1) && step > 10 && !player_select) {
-    if (selectorHovering != 0) {
-      selectorHovering--;
-    }
-    else {
-      selectorHovering = 3;
-    }
-
-    step = 0;
+  // Change menu
+  if (KeyListener::keyPressed[KEY_W] || KeyListener::keyPressed[KEY_UP]) {
+    move_to_button = (move_to_button - 1 < 0) ? 4 : move_to_button - 1;
   }
 
-  if ((key[KEY_S] || key[KEY_DOWN] || joy[0].stick[0].axis[1].d2) && step > 10 && !player_select) {
-    if (selectorHovering != 3) {
-      selectorHovering++;
-    }
-    else {
-      selectorHovering = 0;
-    }
-
-    step = 0;
+  if (KeyListener::keyPressed[KEY_S] || KeyListener::keyPressed[KEY_DOWN]) {
+    move_to_button = (move_to_button + 1) % 5;
   }
 
-  if ((key[KEY_S] || key[KEY_DOWN] || joy[0].stick[0].axis[1].d2 || key[KEY_W] || key[KEY_UP] || joy[0].stick[0].axis[1].d1) && player_select) {
-    if (selectorHovering == 0 && step > 10) {
-      selectorHovering = 1;
-      step = 0;
-    }
-
-    if (selectorHovering == 1 && step > 10) {
-      selectorHovering = 0;
-      step = 0;
-    }
-  }
-
-  //Hover play
-  if ((mouse_control && collisionAny (mouse_x, mouse_x, 60, 270, mouse_y, mouse_y, SCREEN_H - 323, SCREEN_H - 278) || !mouse_control && selectorHovering == 0) && !player_select) {
-    if (newSelectorY != SCREEN_H - 323) {
-      newSelectorY = SCREEN_H - 323;
-      selectorX = 60;
-      play_sample (click, 255, 125, 1000, 0);
-    }
-  }
-  //Hover edit
-  else if ((mouse_control && collisionAny (mouse_x, mouse_x, 60, 270, mouse_y, mouse_y, SCREEN_H - 260, SCREEN_H - 215) || !mouse_control && selectorHovering == 1) && !player_select) {
-    if (newSelectorY != SCREEN_H - 260) {
-      newSelectorY = SCREEN_H - 260;
-      selectorX = 60;
-      play_sample (click, 255, 125, 1000, 0);
-    }
-  }
-  //Hover help
-  else if ((mouse_control && collisionAny (mouse_x, mouse_x, 60, 270, mouse_y, mouse_y, SCREEN_H - 197, SCREEN_H - 152) || !mouse_control && selectorHovering == 2) && !player_select) {
-    if (newSelectorY != SCREEN_H - 197) {
-      newSelectorY = SCREEN_H - 197;
-      selectorX = 60;
-      play_sample (click, 255, 125, 1000, 0);
-    }
-
-    menuOpen = true;
-  }
-  //Hover exit
-  else if ((mouse_control && collisionAny (mouse_x, mouse_x, 60, 270, mouse_y, mouse_y, SCREEN_H - 132, SCREEN_H - 87) || !mouse_control && selectorHovering == 3) && !player_select) {
-    if (newSelectorY != SCREEN_H - 132) {
-      newSelectorY = SCREEN_H - 132;
-      selectorX = 60;
-      play_sample (click, 255, 125, 1000, 0);
-    }
-  }
-
-  //Player select buttons
-  if ((mouse_control && (collisionAny (mouse_x, mouse_x, 370, 650, mouse_y, mouse_y, SCREEN_H - 270, SCREEN_H - 200)) || !mouse_control && (selectorHovering == 0)) && player_select) {
-    if (newSelectorY != SCREEN_H - 260) {
-      newSelectorY = SCREEN_H - 260;
-      selectorX = 372;
-      play_sample (click, 255, 125, 1000, 0);
-    }
-  }
-
-  if ((mouse_control && (collisionAny (mouse_x, mouse_x, 370, 650, mouse_y, mouse_y, SCREEN_H - 335, SCREEN_H - 271)) || !mouse_control && (selectorHovering == 1)) && player_select) {
-    if (newSelectorY != SCREEN_H - 325) {
-      newSelectorY = SCREEN_H - 325;
-      selectorX = 372;
-      play_sample (click, 255, 125, 1000, 0);
-    }
-  }
+  if (btn_start.Hover())
+    move_to_button = 0;
+  else if (btn_start_mp.Hover())
+    move_to_button = 1;
+  else if (btn_edit.Hover())
+    move_to_button = 2;
+  else if (btn_help.Hover())
+    move_to_button = 3;
+  else if (btn_exit.Hover())
+    move_to_button = 4;
+  else if (btn_left.Hover())
+    move_to_button = 5;
+  else if (btn_right.Hover())
+    move_to_button = 6;
 
   // Select button
-  // Level select left
-  if (((collisionAny (mouse_x, mouse_x, SCREEN_W - 180, SCREEN_W - 140, mouse_y, mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_A] || key[KEY_LEFT] || joy[0].button[4].b)) && step > 10) {
+  if (mouse_b & 1 || KeyListener::keyPressed[KEY_ENTER]) {
+    switch (selected_button) {
+      case 0:
+        single_player = true;
+        set_next_state (STATE_GAME);
+        break;
+      case 1:
+        single_player = false;
+        set_next_state (STATE_GAME);
+        break;
+      case 2:
+        set_next_state (STATE_EDIT);
+        break;
+      case 4:
+        set_next_state (STATE_EXIT);
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Move to selection
+  if (selected_button != move_to_button) {
     play_sample (click, 255, 125, 1000, 0);
-    levelOn--;
-    levelOn = levelOn % 3 + (levelOn < 0) * 3;
-    tile_map -> load (string ("data/level_" + convertIntToString (levelOn + 1)).c_str());
-    step = 0;
-  }
-  // Level select right
-  else if (((collisionAny (mouse_x, mouse_x, SCREEN_W - 80, SCREEN_W - 40, mouse_y, mouse_y, 80, 120) && mouse_b & 1) || (key[KEY_D] || key[KEY_RIGHT] || joy[0].button[5].b)) && step > 10) {
-    play_sample (click, 255, 125, 1000, 0);
-    levelOn++;
-    levelOn = levelOn % 3;
-    tile_map -> load (string ("data/level_" + convertIntToString (levelOn + 1)).c_str());
-    step = 0;
-  }
+    selected_button = move_to_button;
 
-  // Start
-  if (((collisionAny (mouse_x, mouse_x, 60, 270, mouse_y, mouse_y,  SCREEN_H - 323, SCREEN_H - 278) && mouse_b & 1) || ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering == 0)) && step > 10 && !player_select) {
-    player_select = true;
-    selectorX = 372;
-    selectorY = SCREEN_H - 325;
-    step = 0;
+    switch (selected_button) {
+      case 0:
+        target_selector_y = btn_start.GetY();
+        break;
+      case 1:
+        target_selector_y = btn_start_mp.GetY();
+        break;
+      case 2:
+        target_selector_y = btn_edit.GetY();
+        break;
+      case 3:
+        target_selector_y = btn_help.GetY();
+        break;
+      case 4:
+        target_selector_y = btn_exit.GetY();
+        break;
+      default:
+        break;
+    }
   }
-  // Edit
-  else if (((collisionAny (mouse_x, mouse_x, 60, 270, mouse_y, mouse_y, SCREEN_H - 260, SCREEN_H - 215) && mouse_b & 1) || ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering == 1)) && step > 10 && !player_select) {
-    set_next_state (STATE_EDIT);
-  }
-  // Quit
-  else if (((collisionAny (mouse_x, mouse_x, 60, 270, mouse_y, mouse_y,  SCREEN_H - 132, SCREEN_H - 87) && mouse_b & 1) || ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering == 3)) && step > 10 && !player_select) {
-    set_next_state (STATE_EXIT);
-  }
-
-  // Single player
-  else if (((collisionAny (mouse_x, mouse_x, 370, 650, mouse_y, mouse_y, SCREEN_H - 335, SCREEN_H - 271) && mouse_b & 1) || ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering == 0)) && step > 10 && player_select) {
-    single_player = true;
-    set_next_state (STATE_GAME);
-  }
-  // Multiplayer
-  else if (((collisionAny (mouse_x, mouse_x, 370, 650, mouse_y, mouse_y, SCREEN_H - 270, SCREEN_H - 200) && mouse_b & 1) || ((key[KEY_ENTER] || joy[0].button[0].b) && selectorHovering == 1)) && step > 10 && player_select) {
-    single_player = false;
-    set_next_state (STATE_GAME);
-  }
-
-  // Increase step
-  step++;
 }
 
 void Menu::draw() {
@@ -287,57 +176,31 @@ void Menu::draw() {
 
   // Overlay
   draw_trans_sprite (buffer, credits, 0, 0);
+  draw_trans_sprite (buffer, menu, 40, 480);
+  draw_trans_sprite (buffer, menuselect, 50, selector_y);
 
-  if (!player_select) {
-    draw_trans_sprite (buffer, menu, 0, SCREEN_H - 461);
-  }
-  else {
-    draw_trans_sprite (buffer, menu_player_select, 0, SCREEN_H - 461);
-  }
-
-  if (!player_select) {
-    draw_trans_sprite (buffer, menuselect, selectorX, selectorY);
-  }
-  else {
-    draw_trans_sprite (buffer, playerSelector, selectorX, selectorY);
-  }
+  // Buttons
+  btn_start.Draw(buffer);
+  btn_start_mp.Draw(buffer);
+  btn_edit.Draw(buffer);
+  btn_help.Draw(buffer);
+  btn_exit.Draw(buffer);
+  btn_left.Draw(buffer);
+  btn_right.Draw(buffer);
 
   // Level selection
-  draw_trans_sprite (buffer, levelSelectLeft, SCREEN_W - 180, 80);
   draw_trans_sprite (buffer, levelSelectNumber, SCREEN_W - 160, 80);
-  textprintf_centre_ex (buffer, font, SCREEN_W - 112, 73, makecol (0, 0, 0), -1, "%i", levelOn + 1);
-  draw_trans_sprite (buffer, levelSelectRight, SCREEN_W - 80, 80);
-
-  // Hover select left
-  if (collisionAny (mouse_x, mouse_x, SCREEN_W - 180, SCREEN_W - 140, mouse_y, mouse_y, 80, 120)) {
-    draw_trans_sprite (buffer, levelSelectLeft, SCREEN_W - 180, 80);
-  }
-
-  // Hover select right
-  if (collisionAny (mouse_x, mouse_x, SCREEN_W - 80, SCREEN_W - 40, mouse_y, mouse_y, 80, 120)) {
-    draw_trans_sprite (buffer, levelSelectRight, SCREEN_W - 80, 80);
-  }
+  textprintf_centre_ex (buffer, font, SCREEN_W - 113, 76, 0x000000, -1, "%i", levelOn + 1);
 
   // Cursor
-  draw_sprite (buffer, cursor[0], mouse_x, mouse_y);
+  draw_sprite (buffer, cursor, mouse_x, mouse_y);
 
-  // Select button
-  if (mouse_b & 1 || key[KEY_ENTER] || joy[0].button[0].b) {
-    if (selectorY == 610) {
-      do {
-        draw_sprite (buffer, menu, 0, 0);
-        draw_sprite (buffer, help, 0, 0);
-        draw_sprite (screen, buffer, 0, 0);
-      } while (!key[KEY_ESC] && !mouse_b & 1 && !joy[0].button[0].b);
-    }
-  }
-
-  if (menuOpen) {
+  // Help menu
+  if (selected_button == 3)
     draw_trans_sprite (buffer, help, 0, 0);
-  }
 
   draw_trans_sprite (buffer, copyright, SCREEN_W - 350, SCREEN_H - 40);
-  draw_sprite (buffer, cursor[0], mouse_x, mouse_y);
+  draw_sprite (buffer, cursor, mouse_x, mouse_y);
 
   // Draw buffer
   stretch_sprite (screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
@@ -346,22 +209,22 @@ void Menu::draw() {
 Menu::~Menu() {
   // Destory Bitmaps
   destroy_bitmap (buffer);
-  destroy_bitmap (menu);
-  destroy_bitmap (menuselect);
-  destroy_bitmap (help);
-  destroy_bitmap (cursor[0]);
-  destroy_bitmap (cursor[1]);
-  destroy_bitmap (levelSelectLeft);
-  destroy_bitmap (levelSelectRight);
   destroy_bitmap (levelSelectNumber);
+  destroy_bitmap (cursor);
+  destroy_bitmap (menuselect);
+  destroy_bitmap (menu);
+  destroy_bitmap (help);
+  destroy_bitmap (copyright);
+  destroy_bitmap (credits);
 
   // Destory Samples
   destroy_sample (click);
   destroy_sample (intro);
+  destroy_sample (music);
+
+  // Destory background
+  delete tile_map;
 
   // Fade out
   highcolor_fade_out (16);
-
-  // Stop music
-  destroy_sample (music);
 }

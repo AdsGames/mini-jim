@@ -13,41 +13,29 @@
 #include "globals.h"
 #include "tools.h"
 
+#include "Button.h"
+
 class Menu : public GameState {
+  public:
+    Menu();
+    virtual ~Menu();
+    virtual void update() override;
+    virtual void draw() override;
+
   private:
     // Menu/GUI
-    BITMAP *buffer, *levelSelectLeft, *levelSelectRight, *levelSelectNumber, *cursor[2], *menuselect, *menu, *help, *copyright, *credits, *menu_player_select, * playerSelector;
-
-    SAMPLE *click, *intro;
-    SAMPLE *music;
-
-
-    int selectorHovering;
-    int step;
-
-    int old_mouse_x;
-    int old_mouse_y;
-
-    bool mouse_control;
-    bool player_select;
+    BITMAP *buffer, *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright, *credits;
+    SAMPLE *click, *intro, *music;
 
     // Live background
-    int animationFrame;
     tileMap *tile_map;
     int scrollDirection;
 
     // Menu
-    int selectorY, selectorX, newSelectorY, selected_object;
-    int cursor_x, cursor_y;
-    int menu_view_x, menu_view_y;
-    bool menuOpen;
-  protected:
-  public:
-    //Main loop functions
-    Menu();
-    void update();
-    void draw();
-    ~Menu();
+    float selector_y, target_selector_y;
+    int selected_button, move_to_button;
+
+    Button btn_start, btn_edit, btn_help, btn_exit, btn_start_mp, btn_left, btn_right;
 };
 
 #endif // MENU_H

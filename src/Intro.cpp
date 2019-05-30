@@ -1,25 +1,39 @@
 #include "Intro.h"
 #include "tools.h"
 
+#include <loadpng.h>
+#include <string>
+#include <vector>
+#include <string>
+
+#include "globals.h"
+#include "tools.h"
+
 Intro::Intro() {
-  // Load background
-  background = load_png ("images/opening/background.png", NULL);
-  intro = load_png ("images/opening/intro.png", NULL);
-  title = load_png ("images/opening/title.png", NULL);
-  introSound = load_sample ("sounds/introSound.wav");
+  background = load_png_ex("images/opening/background.png");
+  intro = load_png_ex("images/opening/intro.png");
+  title = load_png_ex("images/opening/title.png");
+  introSound = load_sample_ex("sounds/introSound.wav");
 
-  string fileName;
-
-  for (int i = 0; i < 81; i++) {
-    fileName = "images/opening/opening" + convertIntToString (i) + ".png";
-    images[i] = load_png (fileName.c_str(), NULL);
+  for (int i = 0; i < INTRO_FRAMES; i++) {
+    images[i] = load_png_ex(std::string("images/opening/opening" + std::to_string(i) + ".png").c_str());
   }
 
-  buffer = create_bitmap (1280, 960);
+  buffer = create_bitmap (SCREEN_W, SCREEN_H);
 }
 
+Intro::~Intro() {
+  for (int i = 0; i < INTRO_FRAMES; i++)
+    destroy_bitmap (images[i]);
+
+  destroy_bitmap (background);
+  destroy_bitmap (title);
+  destroy_bitmap (intro);
+  destroy_sample (introSound);
+}
+
+
 void Intro::update() {
-  // Wait 2 seconds then go to the menu
   set_next_state (STATE_MENU);
 }
 
@@ -52,18 +66,4 @@ void Intro::draw() {
      rest(100);
    }
   *///  highcolor_fade_out( 64);
-}
-
-Intro::~Intro() {
-  // Clear memory
-  for (int i = 0; i < 81; i++) {
-    if (images[i]) {
-      destroy_bitmap (images[i]);
-    }
-  }
-
-  destroy_bitmap (background);
-  destroy_bitmap (title);
-  destroy_bitmap (intro);
-  destroy_sample (introSound);
 }

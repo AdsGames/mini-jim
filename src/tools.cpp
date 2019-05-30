@@ -4,28 +4,25 @@
 #include <logg.h>
 
 //Iterates through the number of buttons in a joystick and returns true if any keys are pressed
-bool keyboard_keypressed() {
-  bool keypressed = false;
-
-  for (int i = 0; i < 125; i++)
+bool key_down() {
+  for (int i = 0; i < KEY_MAX; i++) {
     if (key[i]) {
-      keypressed = true;
+      return true;
     }
-
-  return keypressed;
-
+  }
+  return false;
 }
+
 //Iterates through the number of buttons in a joystick and returns true if any buttons are pressed
-bool joy_buttonpressed() {
-  bool buttonpressed = false;
-
-  for (int i = 0; i < joy[0].num_buttons; i++)
+bool button_down() {
+  for (int i = 0; i < joy[0].num_buttons; i++) {
     if (joy[0].button[i].b) {
-      buttonpressed = true;
+      return true;
     }
-
-  return buttonpressed;
+  }
+  return false;
 }
+
 //Collision
 bool collisionAny (int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2) {
   if (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1) {
