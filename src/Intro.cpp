@@ -3,16 +3,16 @@
 
 Intro::Intro() {
   // Load background
-  background = load_bitmap ("images/opening/background.png", NULL);
-  intro = load_bitmap ("images/opening/intro.png", NULL);
-  title = load_bitmap ("images/opening/title.png", NULL);
+  background = load_png ("images/opening/background.png", NULL);
+  intro = load_png ("images/opening/intro.png", NULL);
+  title = load_png ("images/opening/title.png", NULL);
   introSound = load_sample ("sounds/introSound.wav");
 
   string fileName;
 
   for (int i = 0; i < 81; i++) {
     fileName = "images/opening/opening" + convertIntToString (i) + ".png";
-    images[i] = load_bitmap (fileName.c_str(), NULL);
+    images[i] = load_png (fileName.c_str(), NULL);
   }
 
   buffer = create_bitmap (1280, 960);

@@ -4,7 +4,7 @@
 #include "GameState.h"
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <string>
 #include <vector>
 

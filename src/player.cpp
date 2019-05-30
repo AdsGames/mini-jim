@@ -38,85 +38,85 @@ player::player() {
 // 0-3 left, 4-7 right, 8-11 up
 void player::load_images (int newType) {
   if (newType == 1) {
-    player_images[0] = load_bitmap ("images/character/character_1_left_1.png", NULL);
-    player_images[1] = load_bitmap ("images/character/character_1_left_2.png", NULL);
-    player_images[2] = load_bitmap ("images/character/character_1_left_3.png", NULL);
-    player_images[3] = load_bitmap ("images/character/character_1_left_4.png", NULL);
+    player_images[0] = load_png ("images/character/character_1_left_1.png", NULL);
+    player_images[1] = load_png ("images/character/character_1_left_2.png", NULL);
+    player_images[2] = load_png ("images/character/character_1_left_3.png", NULL);
+    player_images[3] = load_png ("images/character/character_1_left_4.png", NULL);
 
-    player_images[4] = load_bitmap ("images/character/character_1_right_1.png", NULL);
-    player_images[5] = load_bitmap ("images/character/character_1_right_2.png", NULL);
-    player_images[6] = load_bitmap ("images/character/character_1_right_3.png", NULL);
-    player_images[7] = load_bitmap ("images/character/character_1_right_4.png", NULL);
+    player_images[4] = load_png ("images/character/character_1_right_1.png", NULL);
+    player_images[5] = load_png ("images/character/character_1_right_2.png", NULL);
+    player_images[6] = load_png ("images/character/character_1_right_3.png", NULL);
+    player_images[7] = load_png ("images/character/character_1_right_4.png", NULL);
 
-    player_images[8] = load_bitmap ("images/character/character_1_right.png", NULL);
-    player_images[9] = load_bitmap ("images/character/character_1_right.png", NULL);
-    player_images[10] = load_bitmap ("images/character/character_1_right.png", NULL);
-    player_images[11] = load_bitmap ("images/character/character_1_right.png", NULL);
+    player_images[8] = load_png ("images/character/character_1_right.png", NULL);
+    player_images[9] = load_png ("images/character/character_1_right.png", NULL);
+    player_images[10] = load_png ("images/character/character_1_right.png", NULL);
+    player_images[11] = load_png ("images/character/character_1_right.png", NULL);
 
-    player_images[12] = load_bitmap ("images/character/character_1_left_jump_1.png", NULL);
-    player_images[13] = load_bitmap ("images/character/character_1_left_jump_2.png", NULL);
-    player_images[14] = load_bitmap ("images/character/character_1_left_jump_2.png", NULL);
-    player_images[15] = load_bitmap ("images/character/character_1_left_jump_2.png", NULL);
-    player_images[16] = load_bitmap ("images/character/character_1_left_jump_2.png", NULL);
-    player_images[17] = load_bitmap ("images/character/character_1_left_jump_2.png", NULL);
+    player_images[12] = load_png ("images/character/character_1_left_jump_1.png", NULL);
+    player_images[13] = load_png ("images/character/character_1_left_jump_2.png", NULL);
+    player_images[14] = load_png ("images/character/character_1_left_jump_2.png", NULL);
+    player_images[15] = load_png ("images/character/character_1_left_jump_2.png", NULL);
+    player_images[16] = load_png ("images/character/character_1_left_jump_2.png", NULL);
+    player_images[17] = load_png ("images/character/character_1_left_jump_2.png", NULL);
 
-    player_images[18] = load_bitmap ("images/character/character_1_right_jump_1.png", NULL);
-    player_images[19] = load_bitmap ("images/character/character_1_right_jump_2.png", NULL);
-    player_images[20] = load_bitmap ("images/character/character_1_right_jump_2.png", NULL);
-    player_images[21] = load_bitmap ("images/character/character_1_right_jump_2.png", NULL);
-    player_images[22] = load_bitmap ("images/character/character_1_right_jump_2.png", NULL);
-    player_images[23] = load_bitmap ("images/character/character_1_right_jump_2.png", NULL);
+    player_images[18] = load_png ("images/character/character_1_right_jump_1.png", NULL);
+    player_images[19] = load_png ("images/character/character_1_right_jump_2.png", NULL);
+    player_images[20] = load_png ("images/character/character_1_right_jump_2.png", NULL);
+    player_images[21] = load_png ("images/character/character_1_right_jump_2.png", NULL);
+    player_images[22] = load_png ("images/character/character_1_right_jump_2.png", NULL);
+    player_images[23] = load_png ("images/character/character_1_right_jump_2.png", NULL);
 
-    player_images[24] = load_bitmap ("images/character/character_1_slide_left.png", NULL);
-    player_images[25] = load_bitmap ("images/character/character_1_slide_left.png", NULL);
-    player_images[26] = load_bitmap ("images/character/character_1_slide_right.png", NULL);
-    player_images[27] = load_bitmap ("images/character/character_1_slide_right.png", NULL);
+    player_images[24] = load_png ("images/character/character_1_slide_left.png", NULL);
+    player_images[25] = load_png ("images/character/character_1_slide_left.png", NULL);
+    player_images[26] = load_png ("images/character/character_1_slide_right.png", NULL);
+    player_images[27] = load_png ("images/character/character_1_slide_right.png", NULL);
 
-    player_images[28] = load_bitmap ("images/character/character_1_left_idle.png", NULL);
-    player_images[29] = load_bitmap ("images/character/character_1_right_idle.png", NULL);
+    player_images[28] = load_png ("images/character/character_1_left_idle.png", NULL);
+    player_images[29] = load_png ("images/character/character_1_right_idle.png", NULL);
   }
   else if (newType == 2) {
-    player_images[0] = load_bitmap ("images/character/character_2_left_1.png", NULL);
-    player_images[1] = load_bitmap ("images/character/character_2_left_2.png", NULL);
-    player_images[2] = load_bitmap ("images/character/character_2_left_3.png", NULL);
-    player_images[3] = load_bitmap ("images/character/character_2_left_4.png", NULL);
+    player_images[0] = load_png ("images/character/character_2_left_1.png", NULL);
+    player_images[1] = load_png ("images/character/character_2_left_2.png", NULL);
+    player_images[2] = load_png ("images/character/character_2_left_3.png", NULL);
+    player_images[3] = load_png ("images/character/character_2_left_4.png", NULL);
 
-    player_images[4] = load_bitmap ("images/character/character_2_right_1.png", NULL);
-    player_images[5] = load_bitmap ("images/character/character_2_right_2.png", NULL);
-    player_images[6] = load_bitmap ("images/character/character_2_right_3.png", NULL);
-    player_images[7] = load_bitmap ("images/character/character_2_right_4.png", NULL);
+    player_images[4] = load_png ("images/character/character_2_right_1.png", NULL);
+    player_images[5] = load_png ("images/character/character_2_right_2.png", NULL);
+    player_images[6] = load_png ("images/character/character_2_right_3.png", NULL);
+    player_images[7] = load_png ("images/character/character_2_right_4.png", NULL);
 
-    player_images[8] = load_bitmap ("images/character/character_2_right.png", NULL);
-    player_images[9] = load_bitmap ("images/character/character_2_right.png", NULL);
-    player_images[10] = load_bitmap ("images/character/character_2_right.png", NULL);
-    player_images[11] = load_bitmap ("images/character/character_2_right.png", NULL);
+    player_images[8] = load_png ("images/character/character_2_right.png", NULL);
+    player_images[9] = load_png ("images/character/character_2_right.png", NULL);
+    player_images[10] = load_png ("images/character/character_2_right.png", NULL);
+    player_images[11] = load_png ("images/character/character_2_right.png", NULL);
 
-    player_images[12] = load_bitmap ("images/character/character_2_left_jump_1.png", NULL);
-    player_images[13] = load_bitmap ("images/character/character_2_left_jump_2.png", NULL);
-    player_images[14] = load_bitmap ("images/character/character_2_left_jump_2.png", NULL);
-    player_images[15] = load_bitmap ("images/character/character_2_left_jump_2.png", NULL);
-    player_images[16] = load_bitmap ("images/character/character_2_left_jump_2.png", NULL);
-    player_images[17] = load_bitmap ("images/character/character_2_left_jump_2.png", NULL);
+    player_images[12] = load_png ("images/character/character_2_left_jump_1.png", NULL);
+    player_images[13] = load_png ("images/character/character_2_left_jump_2.png", NULL);
+    player_images[14] = load_png ("images/character/character_2_left_jump_2.png", NULL);
+    player_images[15] = load_png ("images/character/character_2_left_jump_2.png", NULL);
+    player_images[16] = load_png ("images/character/character_2_left_jump_2.png", NULL);
+    player_images[17] = load_png ("images/character/character_2_left_jump_2.png", NULL);
 
-    player_images[18] = load_bitmap ("images/character/character_2_right_jump_1.png", NULL);
-    player_images[19] = load_bitmap ("images/character/character_2_right_jump_2.png", NULL);
-    player_images[20] = load_bitmap ("images/character/character_2_right_jump_2.png", NULL);
-    player_images[21] = load_bitmap ("images/character/character_2_right_jump_2.png", NULL);
-    player_images[22] = load_bitmap ("images/character/character_2_right_jump_2.png", NULL);
-    player_images[23] = load_bitmap ("images/character/character_2_right_jump_2.png", NULL);
+    player_images[18] = load_png ("images/character/character_2_right_jump_1.png", NULL);
+    player_images[19] = load_png ("images/character/character_2_right_jump_2.png", NULL);
+    player_images[20] = load_png ("images/character/character_2_right_jump_2.png", NULL);
+    player_images[21] = load_png ("images/character/character_2_right_jump_2.png", NULL);
+    player_images[22] = load_png ("images/character/character_2_right_jump_2.png", NULL);
+    player_images[23] = load_png ("images/character/character_2_right_jump_2.png", NULL);
 
-    player_images[24] = load_bitmap ("images/character/character_2_slide_left.png", NULL);
-    player_images[25] = load_bitmap ("images/character/character_2_slide_left.png", NULL);
-    player_images[26] = load_bitmap ("images/character/character_2_slide_right.png", NULL);
-    player_images[27] = load_bitmap ("images/character/character_2_slide_right.png", NULL);
+    player_images[24] = load_png ("images/character/character_2_slide_left.png", NULL);
+    player_images[25] = load_png ("images/character/character_2_slide_left.png", NULL);
+    player_images[26] = load_png ("images/character/character_2_slide_right.png", NULL);
+    player_images[27] = load_png ("images/character/character_2_slide_right.png", NULL);
 
-    player_images[28] = load_bitmap ("images/character/character_2_left_idle.png", NULL);
-    player_images[29] = load_bitmap ("images/character/character_2_right_idle.png", NULL);
+    player_images[28] = load_png ("images/character/character_2_left_idle.png", NULL);
+    player_images[29] = load_png ("images/character/character_2_right_idle.png", NULL);
   }
 
-  projectileSprites[0][0] = load_bitmap ("images/laser.png", NULL);
-  projectileSprites[0][1] = load_bitmap ("images/laser.png", NULL);
-  projectileSprites[0][2] = load_bitmap ("images/laser_hit.png", NULL);
+  projectileSprites[0][0] = load_png ("images/laser.png", NULL);
+  projectileSprites[0][1] = load_png ("images/laser.png", NULL);
+  projectileSprites[0][2] = load_png ("images/laser_hit.png", NULL);
 }
 
 // Load sounds
