@@ -48,5 +48,17 @@ extern void set_next_state( int newState );
 // Error reporting
 extern void abort_on_error(const char *message);
 
+// Load image
+extern BITMAP* load_png_ex(const char *path);
+
+// Load ogg
+extern SAMPLE* load_ogg_ex(const char *path);
+
+// Load sample
+extern SAMPLE* load_sample_ex(const char *path);
+
+// Load font
+extern FONT* load_font_ex(const char *path);
+
 
 #endif // TOOLS_H

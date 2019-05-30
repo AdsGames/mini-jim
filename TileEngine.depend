@@ -1425,3 +1425,161 @@
 	"tools.h"
 	"globals.h"
 
+1558818760 source:c:\users\alege\documents\github\minijim\res\resources.rc
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\editor.cpp
+	"Editor.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\editor.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"tileMap.h"
+	"tile.h"
+	"globals.h"
+	"tools.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\gamestate.h
+
+1558818760 c:\users\alege\documents\github\minijim\include\tilemap.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<iostream>
+	<sstream>
+	<fstream>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tile.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\globals.h
+	<allegro.h>
+
+1558818760 c:\users\alege\documents\github\minijim\include\tools.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<iostream>
+	<sstream>
+	<fstream>
+
+1558818760 c:\users\alege\documents\github\minijim\include\tile.h
+	<allegro.h>
+	<alpng.h>
+	<vector>
+	<iostream>
+	<algorithm>
+	<iterator>
+	"globals.h"
+	"tools.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\game.cpp
+	"Game.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\game.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+	"player.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\player.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"projectile.h"
+	"tileMap.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\projectile.h
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"tileMap.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\gamestate.cpp
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\globals.cpp
+	"globals.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\init.cpp
+	"Init.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\init.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"globals.h"
+	"tools.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\intro.cpp
+	"Intro.h"
+	"tools.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\intro.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	<string>
+	"globals.h"
+	"tools.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\main.cpp
+	<allegro.h>
+	<alpng.h>
+	"globals.h"
+	"tools.h"
+	"GameState.h"
+	"Init.h"
+	"Intro.h"
+	"Menu.h"
+	"Editor.h"
+	"Game.h"
+
+1558818760 c:\users\alege\documents\github\minijim\include\menu.h
+	"GameState.h"
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<vector>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"tilemap.h"
+	"globals.h"
+	"tools.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\menu.cpp
+	"Menu.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\player.cpp
+	"player.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\projectile.cpp
+	"projectile.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\tile.cpp
+	"tile.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\tilemap.cpp
+	"tileMap.h"
+
+1558818760 source:c:\users\alege\documents\github\minijim\src\tools.cpp
+	"tools.h"
+	"globals.h"
+
