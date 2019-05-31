@@ -4,26 +4,25 @@
 #include "GameState.h"
 
 #include <allegro.h>
-#include <loadpng.h>
-#include <string>
-#include <vector>
-
-#include "globals.h"
-#include "utility/tools.h"
 
 #include "TileMap.h"
 #include "player.h"
-
-
-using namespace std;
+#include "Timer.h"
 
 // Main game screen
 class Game : public GameState {
+  public:
+    Game();
+    ~Game();
+
+    void init();
+    void update();
+    void draw();
+
   private:
     BITMAP *buffer;
     BITMAP *screen1;
     BITMAP *screen2;
-
     SAMPLE *countdown;
     SAMPLE *timeout;
 
@@ -37,15 +36,6 @@ class Game : public GameState {
     SAMPLE *waitingMusic;
     SAMPLE *mainMusic;
 
-    // Variables
-    int animationFrame;
-    static volatile int timer1;
-    bool gameBegin;
-    int totalTime[2];
-
-    int old_player_x;
-    int old_player_y;
-
     // Lighting effects
     COLOR_MAP light_table;
     PALLETE pal;
@@ -53,27 +43,9 @@ class Game : public GameState {
     BITMAP *darkness, *darkness_old, *lightBuffer, *spotlight;
 
     // Objects
-    player player1;
-    player player2;
-    player *currentPlayer;
-
-    bool player_1_ready;
-    bool player_2_ready;
-
-    bool deathFrame;
-
-    TileMap *tile_map;
-    TileMap *tile_map2;
-
-    static void gameTicker();
-
-  public:
-    //Main loop functions
-    Game();
-    void init();
-    void update();
-    void draw();
-    ~Game();
+    player player1, player2;
+    TileMap *tile_map, *tile_map2;
+    Timer tm_begin, tm_p1, tm_p2;
 };
 
 #endif

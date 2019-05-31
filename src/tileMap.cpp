@@ -12,7 +12,7 @@ TileMap::TileMap (std::string file) {
   y = 0;
   width = 0;
   height = 0;
-  frame = 0;
+  frame_timer.Start();
 
   if (file != "")
     load (file);
@@ -23,12 +23,16 @@ TileMap::~TileMap() { }
 
 // Get frame
 int TileMap::getFrame() {
-  return frame;
+  return int(frame_timer.GetElapsedTime<milliseconds>() / 100) % 8;
 }
 
-void TileMap::load (std::string file) {
+bool TileMap::load (std::string file) {
   //Change size
   std::ifstream read ((file + ".txt").c_str());
+
+  if (read.fail())
+    return false;
+
   width = height = x = y = 0;
   int data;
 
@@ -61,6 +65,8 @@ void TileMap::load (std::string file) {
     }
   }
   read.close();
+
+  return true;
 }
 
 // Save individual layer
@@ -101,22 +107,22 @@ tile* TileMap::get_tile_at (int s_x, int s_y, int layer) {
 }
 
 // Draw a layer
-void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> *layer) {
+void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y) {
   for (auto &t: *layer) {
     if ((t.getX() >= x - t.getWidth() ) && (t.getX() < x + SCREEN_W) &&
         (t.getY() >= y - t.getHeight()) && (t.getY() < y + SCREEN_H)) {
-      t.draw_tile (buffer, x, y, frame);
+      t.draw_tile (buffer, x, y, getFrame());
     }
   }
 }
 
 //Draw tile map
 void TileMap::draw (BITMAP *buffer) {
-  if (frame_timer.GetElapsedTime<milliseconds>() > 100) {
-    frame_timer.Reset();
-    frame = (frame + 1) % 8;
-  }
+  draw (buffer, x, y);
+}
 
-  draw_layer (buffer, &mapTilesBack);
-  draw_layer (buffer, &mapTiles);
+// Draw at position
+void TileMap::draw (BITMAP *buffer, int x, int y) {
+  draw_layer (buffer, &mapTilesBack, x, y);
+  draw_layer (buffer, &mapTiles, x, y);
 }

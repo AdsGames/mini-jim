@@ -10,6 +10,8 @@ Init::Init() {
   set_gfx_mode (GFX_AUTODETECT_WINDOWED, 1280, 960, 0, 0);
   set_window_title ("Mini Jim");
 
+  srand (time (NULL));
+
   // Tile Sprites
   // Not animated
   tileSprites[tile_air][0] = load_png ("images/blocks/air.png", NULL);
