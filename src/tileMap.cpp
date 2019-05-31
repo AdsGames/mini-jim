@@ -106,6 +106,29 @@ tile* TileMap::get_tile_at (int s_x, int s_y, int layer) {
   return nullptr;
 }
 
+// Find tile type
+tile* TileMap::find_tile_type (int type, int layer) {
+  std::vector<tile> *ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
+  for (auto &t: *ttm) {
+    if (t.getType() == type) {
+      return &t;
+    }
+  }
+  return nullptr;
+}
+
+// Get tile at
+std::vector<tile*> TileMap::get_tiles_in_range (int x_1, int x_2, int y_1, int y_2) {
+  std::vector<tile*> ranged_map;
+  for (auto &t : mapTiles) {
+    if (collisionAny (x_1, x_2, t.getX(), t.getX() + 64,
+                      y_1, y_2, t.getY(), t.getY() + 64)) {
+      ranged_map.push_back(&t);
+    }
+  }
+  return ranged_map;
+}
+
 // Draw a layer
 void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y) {
   for (auto &t: *layer) {
