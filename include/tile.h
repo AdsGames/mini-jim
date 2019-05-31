@@ -27,7 +27,7 @@ class tile {
     void setY (int newY);
 
     int getType();
-    vector<int> getAttribute();
+    std::vector<int> getAttribute();
     bool containsAttribute (int newAttribute);
 
     BITMAP *getImage();
@@ -47,7 +47,7 @@ class tile {
     int width;
     int height;
     int type;
-    vector<int> attribute;
+    std::vector<int> attribute;
 
     int animated;
 
