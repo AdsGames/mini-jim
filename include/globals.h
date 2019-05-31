@@ -124,9 +124,6 @@
 extern BITMAP *tileSprites[400][8];
 extern BITMAP *projectileSprites[10][3];
 
-// Set next state
-void set_next_state (int newState);
-
 //Game states
 enum GameStates {
   STATE_NULL,
@@ -138,11 +135,6 @@ enum GameStates {
   STATE_EXIT,
 };
 
-// Frames
-extern int frames_done;
-
-// Resdiv
-extern int resDiv;
 extern bool single_player;
 
 //State variables
