@@ -25,17 +25,18 @@ class TileMap {
     int getFrame();
 
     void draw (BITMAP *buffer);
-    void load (std::string file);
+    void draw (BITMAP *buffer, int x, int y);
+
+    bool load (std::string file);
     void save (std::string file);
 
     tile *get_tile_at (int x, int y, int layer);
 
   private:
     void save_layer (std::string file, std::vector<tile> *layer);
-    void draw_layer (BITMAP *buffer, std::vector<tile> *layer);
+    void draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y);
 
     Timer frame_timer;
-    int frame;
 };
 
 #endif
