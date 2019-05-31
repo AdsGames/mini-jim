@@ -175,6 +175,7 @@ int main() {
     }
 
     //Do state rendering
+    vsync();
     currentState -> draw();
   }
 

@@ -37,15 +37,24 @@ void Camera::Follow (int f_x, int f_y) {
   float y_diff = f_y - y;
   float x_diff = f_x - x;
 
-  if (y_diff < bound_y && y > 0)
+  if (y_diff < bound_y)
     y += (y_diff - bound_y) / speed;
-  if (y_diff > height - bound_y && y + height < max_y)
+  if (y_diff > height - bound_y)
     y += (y_diff - (height - bound_y)) / speed;
 
-  if (x_diff < bound_x && x > 0)
+  if (x_diff < bound_x)
     x += (x_diff - bound_x) / speed;
-  if (x_diff > width - bound_x && x + width < max_x)
+  if (x_diff > width - bound_x)
     x += (x_diff - (width - bound_x)) / speed;
+
+  if (y < 0)
+    y = 0;
+  if (y + height > max_y)
+    y = max_y - height;
+  if (x < 0)
+    x = 0;
+  if (x + width > max_x)
+    x = max_x - width;
 }
 
 int Camera::GetWidth() {

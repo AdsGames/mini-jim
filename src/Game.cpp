@@ -89,10 +89,6 @@ void Game::init() {
     player2.set_spawn (spawnTile -> getX(), spawnTile -> getY());
   }
 
-  // Draw player one screen initial
-  tile_map -> y = player1.getY() - 200;
-  tile_map -> x = player1.getX() - 50;
-
   // Play music
   play_sample (countdown, 255, 125, 1000, 0);
   play_sample (mainMusic, 255, 125, 1000, 1);
@@ -152,7 +148,7 @@ void Game::draw() {
 
   // Lighting
   if (lightingEnabled) {
-    set_alpha_blender();
+    /*set_alpha_blender();
     draw_sprite (darkness, darkness_old, 0, 0);
 
     // Player 1
@@ -169,7 +165,7 @@ void Game::draw() {
     draw_sprite (darkness, spotlight, player1.getX() - cam_1.GetX() + 32 - (spotlight->w / 2), player1.getY() - cam_2.GetY() + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen1, darkness, 0, 0);
     draw_sprite (darkness, spotlight, player2.getX() - cam_2.GetX() + 32 - (spotlight->w / 2), player2.getY() - cam_2.GetY() + 32 - (spotlight->h / 2));
-    draw_trans_sprite (screen2, darkness, 0, 0);
+    draw_trans_sprite (screen2, darkness, 0, 0);*/
   }
 
   // Draw split screens

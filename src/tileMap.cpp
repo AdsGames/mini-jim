@@ -8,8 +8,6 @@
 
 // Constructor
 TileMap::TileMap (std::string file) {
-  x = 0;
-  y = 0;
   width = 0;
   height = 0;
   frame_timer.Start();
@@ -33,7 +31,8 @@ bool TileMap::load (std::string file) {
   if (read.fail())
     return false;
 
-  width = height = x = y = 0;
+  width = 0;
+  height = 0;
   int data;
 
   while (read >> data) {
@@ -98,8 +97,8 @@ void TileMap::save (std::string file) {
 tile* TileMap::get_tile_at (int s_x, int s_y, int layer) {
   std::vector<tile> *ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
   for (auto &t: *ttm) {
-    if (collisionAny (s_x + x, s_x + x, t.getX(), t.getX() + 64,
-                      s_y + y, s_y + y, t.getY(), t.getY() + 64)) {
+    if (collisionAny (s_x, s_x, t.getX(), t.getX() + 64,
+                      s_y, s_y, t.getY(), t.getY() + 64)) {
       return &t;
     }
   }
@@ -137,11 +136,6 @@ void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y
       t.draw_tile (buffer, x, y, getFrame());
     }
   }
-}
-
-//Draw tile map
-void TileMap::draw (BITMAP *buffer) {
-  draw (buffer, x, y);
 }
 
 // Draw at position
