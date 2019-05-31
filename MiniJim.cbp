@@ -51,7 +51,6 @@
 		<Unit filename="include/Timer.h" />
 		<Unit filename="include/globals.h" />
 		<Unit filename="include/player.h" />
-		<Unit filename="include/projectile.h" />
 		<Unit filename="include/tile.h" />
 		<Unit filename="include/tileMap.h" />
 		<Unit filename="include/utility/KeyListener.h" />
@@ -72,7 +71,6 @@
 		<Unit filename="src/globals.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/player.cpp" />
-		<Unit filename="src/projectile.cpp" />
 		<Unit filename="src/tile.cpp" />
 		<Unit filename="src/tileMap.cpp" />
 		<Unit filename="src/utility/KeyListener.cpp" />

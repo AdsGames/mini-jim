@@ -111,10 +111,6 @@ void player::load_images (int newType) {
     player_images[28] = load_png ("images/character/character_2_left_idle.png", NULL);
     player_images[29] = load_png ("images/character/character_2_right_idle.png", NULL);
   }
-
-  projectileSprites[0][0] = load_png ("images/laser.png", NULL);
-  projectileSprites[0][1] = load_png ("images/laser.png", NULL);
-  projectileSprites[0][2] = load_png ("images/laser_hit.png", NULL);
 }
 
 // Load sounds
@@ -198,11 +194,6 @@ bool player::getDead() {
   }
 
   return dead;
-}
-
-//Get bullets
-vector<projectile> player::getBullets() {
-  return bullets;
 }
 
 // Set finished
@@ -668,8 +659,6 @@ void player::update (TileMap *fullMap) {
 }
 
 player::~player() {
-  bullets.clear();
-
   for (int i = 0; i < 26; i++) {
     if (player_images[i]) {
       destroy_bitmap (player_images[i]);
