@@ -7,7 +7,7 @@
 
 #include "TileMap.h"
 #include "player.h"
-#include "Timer.h"
+#include "utility/Timer.h"
 
 // Main game screen
 class Game : public GameState {

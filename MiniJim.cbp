@@ -40,41 +40,41 @@
 		<Compiler>
 			<Add option="-static" />
 		</Compiler>
-		<Unit filename="include/Button.h" />
 		<Unit filename="include/Editor.h" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/GameState.h" />
 		<Unit filename="include/Init.h" />
-		<Unit filename="include/InputBox.h" />
 		<Unit filename="include/Intro.h" />
 		<Unit filename="include/Menu.h" />
-		<Unit filename="include/Timer.h" />
 		<Unit filename="include/globals.h" />
 		<Unit filename="include/player.h" />
 		<Unit filename="include/tile.h" />
 		<Unit filename="include/tileMap.h" />
+		<Unit filename="include/ui/Button.h" />
+		<Unit filename="include/ui/InputBox.h" />
 		<Unit filename="include/utility/KeyListener.h" />
 		<Unit filename="include/utility/MouseListener.h" />
+		<Unit filename="include/utility/Timer.h" />
 		<Unit filename="include/utility/tools.h" />
 		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="src/Button.cpp" />
 		<Unit filename="src/Editor.cpp" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/GameState.cpp" />
 		<Unit filename="src/Init.cpp" />
-		<Unit filename="src/InputBox.cpp" />
 		<Unit filename="src/Intro.cpp" />
 		<Unit filename="src/Menu.cpp" />
-		<Unit filename="src/Timer.cpp" />
 		<Unit filename="src/globals.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/player.cpp" />
 		<Unit filename="src/tile.cpp" />
 		<Unit filename="src/tileMap.cpp" />
+		<Unit filename="src/ui/Button.cpp" />
+		<Unit filename="src/ui/InputBox.cpp" />
 		<Unit filename="src/utility/KeyListener.cpp" />
 		<Unit filename="src/utility/MouseListener.cpp" />
+		<Unit filename="src/utility/Timer.cpp" />
 		<Unit filename="src/utility/tools.cpp" />
 		<Extensions>
 			<code_completion />

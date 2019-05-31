@@ -7,8 +7,8 @@
 
 #include "TileMap.h"
 #include "tile.h"
-#include "InputBox.h"
-#include "Button.h"
+#include "ui/InputBox.h"
+#include "ui/Button.h"
 
 class Editor : public GameState {
   public:

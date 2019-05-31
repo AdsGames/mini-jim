@@ -1,4 +1,4 @@
-#include "Timer.h"
+#include "utility/Timer.h"
 
 // Available modes, fit to needs
 template double Timer::GetElapsedTime<nanoseconds>();
