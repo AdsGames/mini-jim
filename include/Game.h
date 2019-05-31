@@ -6,7 +6,7 @@
 #include <allegro.h>
 
 #include "TileMap.h"
-#include "player.h"
+#include "Player.h"
 #include "utility/Timer.h"
 #include "Camera.h"
 

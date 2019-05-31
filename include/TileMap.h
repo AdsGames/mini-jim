@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "tile.h"
+#include "Tile.h"
 #include "utility/Timer.h"
 
 class TileMap {
