@@ -136,8 +136,14 @@ void Game::update() {
     player2.spawncommand (tile_map2);
   }
 
+  // Stop timers
+  if (player1.getFinished() && tm_p1.IsRunning())
+    tm_p1.Stop();
+  if (player2.getFinished() && tm_p2.IsRunning())
+    tm_p2.Stop();
+
   // Change level when both are done
-  if (key[KEY_ENTER] &&player1.getFinished() && (player2.getFinished() || single_player)) {
+  if (key[KEY_ENTER] && player1.getFinished() && (player2.getFinished() || single_player)) {
     set_next_state (STATE_MENU);
   }
 
@@ -199,7 +205,6 @@ void Game::draw() {
         }
       }
     }
-
     draw_sprite (darkness, spotlight, player1.getX() - tile_map -> x + 32 - (spotlight->w / 2), player1.getY() - tile_map -> y + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen1, darkness, 0, 0);
 
@@ -215,8 +220,6 @@ void Game::draw() {
         }
       }
     }
-
-
     draw_sprite (darkness, spotlight, player2.getX() - tile_map2 -> x + 32 - (spotlight->w / 2), player2.getY() - tile_map2 -> y + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen2, darkness, 0, 0);
   }
@@ -280,6 +283,9 @@ void Game::draw() {
 
   // Change level when both are done
   if ((player1.getFinished() && player2.getFinished() && !single_player) || (player1.getFinished() && single_player)) {
+    const float p1_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
+    const float p2_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
+
     set_alpha_blender();
 
     if (single_player) {
@@ -289,19 +295,19 @@ void Game::draw() {
       draw_trans_sprite (buffer, results, (SCREEN_W / 2) - 364, (SCREEN_H / 2) - 200);
     }
 
-    textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 60, (SCREEN_H / 2) - 110, makecol (255, 255, 255), -1, "%f", tm_p1.GetElapsedTime<milliseconds>());
+    textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 60, (SCREEN_H / 2) - 110, makecol (255, 255, 255), -1, "%.1f", p1_time);
 
     if (!single_player) {
-      textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 60, (SCREEN_H / 2) - 55, makecol (255, 255, 255), -1, "%f", tm_p2.GetElapsedTime<milliseconds>());
+      textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 60, (SCREEN_H / 2) - 55, makecol (255, 255, 255), -1, "%.1f", p2_time);
 
-      /*if (totalTime[0] < totalTime[1]) {
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 175, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%i", 1);
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 5, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%i", (totalTime[1] - totalTime[0]) / 100);
+      if (p1_time < p2_time) {
+        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 175, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "1");
+        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 5, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%.1f", p2_time - p1_time);
       }
-      else if (totalTime[0] > totalTime[1]) {
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 175, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%i", 2);
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 5, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%i", (totalTime[0] - totalTime[1]) / 100);
-      }*/
+      else if (p1_time > p2_time) {
+        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 175, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "2");
+        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 5, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%.1f", p1_time - p2_time);
+      }
     }
   }
 
