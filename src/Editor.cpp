@@ -1,8 +1,9 @@
 #include "Editor.h"
 
+#include <string>
+
 #include "globals.h"
 #include "utility/tools.h"
-
 #include "utility/KeyListener.h"
 
 Editor::Editor() {
@@ -10,7 +11,7 @@ Editor::Editor() {
   buffer = create_bitmap (SCREEN_W, SCREEN_H);
 
   // Create map
-  tile_map = new tileMap ("data/templates/blank64x48");
+  tile_map = new TileMap ("data/templates/blank64x48");
 
   // Create example tile
   pallette_tile = new tile (0, 0, 0);
@@ -153,7 +154,7 @@ void Editor::draw() {
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, makecol (255, 255, 255));
 
   // Draw tiles
-  tile_map -> draw_map (buffer);
+  tile_map -> draw (buffer);
   pallette_tile -> draw_tile (buffer, 0, 0, 0);
 
   // Map info

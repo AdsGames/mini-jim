@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Tojam" />
+		<Option title="Mini Jim" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -10,13 +10,21 @@
 				<Option output="build/Mini Jim" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build" />
 				<Option object_output="output" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
+					<Add option="-Wredundant-decls" />
+					<Add option="-Wfloat-equal" />
+					<Add option="-Wunreachable-code" />
+					<Add option="-Wmissing-include-dirs" />
+					<Add option="-Wswitch-default" />
+					<Add option="-Wmain" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
 					<Add option="-std=c++14" />
+					<Add option="-g" />
 					<Add option="-static" />
-					<Add directory="C:/Libraries/include" />
-					<Add directory="C:/Libraries/lib" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -31,15 +39,13 @@
 		</Build>
 		<Compiler>
 			<Add option="-static" />
-			<Add directory="C:/Libraries/include" />
-			<Add directory="C:/Libraries/lib" />
-			<Add directory="include" />
 		</Compiler>
 		<Unit filename="include/Button.h" />
 		<Unit filename="include/Editor.h" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/GameState.h" />
 		<Unit filename="include/Init.h" />
+		<Unit filename="include/InputBox.h" />
 		<Unit filename="include/Intro.h" />
 		<Unit filename="include/Menu.h" />
 		<Unit filename="include/globals.h" />
@@ -47,9 +53,9 @@
 		<Unit filename="include/projectile.h" />
 		<Unit filename="include/tile.h" />
 		<Unit filename="include/tileMap.h" />
-		<Unit filename="include/tools.h" />
 		<Unit filename="include/utility/KeyListener.h" />
 		<Unit filename="include/utility/MouseListener.h" />
+		<Unit filename="include/utility/tools.h" />
 		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -58,6 +64,7 @@
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/GameState.cpp" />
 		<Unit filename="src/Init.cpp" />
+		<Unit filename="src/InputBox.cpp" />
 		<Unit filename="src/Intro.cpp" />
 		<Unit filename="src/Menu.cpp" />
 		<Unit filename="src/globals.cpp" />
@@ -66,9 +73,9 @@
 		<Unit filename="src/projectile.cpp" />
 		<Unit filename="src/tile.cpp" />
 		<Unit filename="src/tileMap.cpp" />
-		<Unit filename="src/tools.cpp" />
 		<Unit filename="src/utility/KeyListener.cpp" />
 		<Unit filename="src/utility/MouseListener.cpp" />
+		<Unit filename="src/utility/tools.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

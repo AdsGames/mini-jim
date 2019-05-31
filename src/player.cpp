@@ -30,7 +30,7 @@ player::player() {
   checkpointPosition[0] = 0;
   checkpointPosition[1] = 0;
 
-  newMap = new tileMap ("blank");
+  newMap = new TileMap ();
 }
 
 // 0-3 left, 4-7 right, 8-11 up
@@ -261,7 +261,7 @@ void player::draw (BITMAP *temp, int tile_map_x, int tile_map_y) {
 }
 
 // Spawn
-void player::spawncommand (tileMap *fullMap) {
+void player::spawncommand (TileMap *fullMap) {
   if (checkpointPosition[0] != 0 && checkpointPosition[1] != 0) {
     x = checkpointPosition[0];
     y = checkpointPosition[1];
@@ -277,7 +277,7 @@ void player::spawncommand (tileMap *fullMap) {
 }
 
 //Movement
-void player::update (tileMap *fullMap) {
+void player::update (TileMap *fullMap) {
   //Collision stuff
   bool canMoveLeft = true;
   bool canMoveRight = true;

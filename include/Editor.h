@@ -4,10 +4,8 @@
 #include "GameState.h"
 
 #include <allegro.h>
-#include <string>
-#include <vector>
 
-#include "tileMap.h"
+#include "TileMap.h"
 #include "tile.h"
 #include "InputBox.h"
 #include "Button.h"
@@ -28,7 +26,7 @@ class Editor : public GameState {
 
     BITMAP *buffer;
 
-    tileMap *tile_map;
+    TileMap *tile_map;
     tile *pallette_tile;
 
     //Text input

@@ -7,7 +7,7 @@
 #include "globals.h"
 #include "utility/tools.h"
 
-#include "tileMap.h"
+#include "TileMap.h"
 
 
 class projectile {
@@ -20,7 +20,7 @@ class projectile {
 
     int getType();
     int getContactFrameCounter();
-    bool getContact (tileMap *newMap);
+    bool getContact (TileMap *newMap);
 
     void setType (int newType);
     void setImage (BITMAP *image1, BITMAP *image2, BITMAP *image3);

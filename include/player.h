@@ -8,7 +8,7 @@
 #include "utility/tools.h"
 #include "projectile.h"
 
-#include "tileMap.h"
+#include "TileMap.h"
 
 #define ANIMATION_SPEED 5
 
@@ -34,9 +34,9 @@ class player {
     void setFinished (bool newFinished);
     void setDead (bool newDead);
     void setDeathcount (int newDeathcount);
-    void spawncommand (tileMap *fullMap);
+    void spawncommand (TileMap *fullMap);
 
-    void update (tileMap *fullMap);
+    void update (TileMap *fullMap);
     void draw (BITMAP *temp, int tile_map_x, int tile_map_y);
 
   private:
@@ -76,7 +76,7 @@ class player {
     int joyNumber;
 
     vector<projectile> bullets;
-    tileMap *newMap;
+    TileMap *newMap;
 
     // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27 28-19 is idle
     BITMAP *player_images[30];

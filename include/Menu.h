@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "tilemap.h"
+#include "TileMap.h"
 
 #include "globals.h"
 #include "utility/tools.h"
@@ -34,7 +34,7 @@ class Menu : public GameState {
     SAMPLE *click, *intro, *music;
 
     // Live background
-    tileMap *tile_map;
+    TileMap *tile_map;
     int scrollDirection;
 
     // Menu
