@@ -8,7 +8,7 @@
 #include "utility/tools.h"
 
 #include "TileMap.h"
-#include "Timer.h"
+#include "utility/Timer.h"
 
 class player {
   public:

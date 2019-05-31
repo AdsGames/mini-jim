@@ -13,7 +13,7 @@
 #include "globals.h"
 #include "utility/tools.h"
 
-#include "Button.h"
+#include "ui/Button.h"
 
 class Menu : public GameState {
   public:

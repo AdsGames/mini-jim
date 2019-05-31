@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "tile.h"
-#include "Timer.h"
+#include "utility/Timer.h"
 
 class TileMap {
   public:
