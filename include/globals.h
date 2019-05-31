@@ -122,7 +122,6 @@
 #define enemy_vorticon 0
 
 extern BITMAP *tileSprites[400][8];
-extern BITMAP *projectileSprites[10][3];
 
 //Game states
 enum GameStates {

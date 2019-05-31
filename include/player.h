@@ -6,7 +6,6 @@
 
 #include "globals.h"
 #include "utility/tools.h"
-#include "projectile.h"
 
 #include "TileMap.h"
 
@@ -28,8 +27,6 @@ class player {
     bool getFinished();
 
     bool getDead();
-
-    vector<projectile> getBullets();
 
     void setFinished (bool newFinished);
     void setDead (bool newDead);
@@ -75,7 +72,6 @@ class player {
     int jumpKey;
     int joyNumber;
 
-    vector<projectile> bullets;
     TileMap *newMap;
 
     // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27 28-19 is idle
