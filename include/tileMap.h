@@ -31,6 +31,8 @@ class TileMap {
     void save (std::string file);
 
     tile *get_tile_at (int x, int y, int layer);
+    tile *find_tile_type (int type, int layer);
+    std::vector<tile*> get_tiles_in_range (int x_1, int x_2, int y_1, int y_2);
 
   private:
     void save_layer (std::string file, std::vector<tile> *layer);

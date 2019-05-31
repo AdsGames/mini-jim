@@ -11,10 +11,10 @@ tile::tile (int type, int x, int y) {
 }
 
 //Getters/ setters
-int tile::getX() {
+int tile::getX() const {
   return x;
 }
-int tile::getY() {
+int tile::getY() const {
   return y;
 }
 

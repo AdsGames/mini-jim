@@ -84,25 +84,20 @@ void Game::init() {
   tm_p2.Stop();
   tm_p2.Reset();
 
-  //Reset deathcount
-  player1.setDeathcount (0);
-  player2.setDeathcount (0);
-  player1.setDead (false);
-  player2.setDead (false);
-  player1.spawncommand (tile_map);
-  if (!single_player) {
-    player2.spawncommand (tile_map2);
+  // Find spawn
+  tile *spawnTile = tile_map -> find_tile_type(199, 1);
+  if (spawnTile != nullptr) {
+    player1.set_spawn (spawnTile -> getX(), spawnTile -> getY());
+    player2.set_spawn (spawnTile -> getX(), spawnTile -> getY());
   }
 
   // Draw player two screen initial
   tile_map2 -> y = player2.getY() - 200;
   tile_map2 -> x = player2.getX() - 50;
-  tile_map2 -> draw (screen2);
 
   // Draw player one screen initial
   tile_map -> y = player1.getY() - 200;
   tile_map -> x = player1.getX() - 50;
-  tile_map -> draw (screen1);
 
   // Play music
   play_sample (countdown, 255, 125, 1000, 0);
@@ -126,16 +121,6 @@ void Game::update() {
     }
   }
 
-  // End turn
-  if (player1.getDead() && !player1.getFinished()) {
-    player1.setDead (false);
-    player1.spawncommand (tile_map);
-  }
-  if (player2.getDead() && !player2.getFinished()) {
-    player2.setDead (false);
-    player2.spawncommand (tile_map2);
-  }
-
   // Stop timers
   if (player1.getFinished() && tm_p1.IsRunning())
     tm_p1.Stop();
@@ -149,15 +134,14 @@ void Game::update() {
 
   // Scroll map scroll
   if (player1.getY() - tile_map -> y < 200 && tile_map -> y > 0)
-    tile_map -> y -= 12;
-  if (player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 - (SCREEN_H / 2) && !single_player)
-    tile_map -> y += 12;
-  if (player1.getY() - tile_map -> y > 275 && tile_map -> y < tile_map -> height * 64 -  SCREEN_H && single_player)
-    tile_map -> y += 12;
-  if (player1.getX() - tile_map -> x < SCREEN_H - 400 && tile_map -> x > 0)
-    tile_map -> x -= 12;
-  if (player1.getX() - tile_map -> x > 400 && tile_map -> x < tile_map -> width * 64 - SCREEN_W)
-    tile_map -> x += 12;
+    tile_map -> y -= 8;
+  if (player1.getY() - tile_map -> y > 205 && tile_map -> y < tile_map -> height * 64 - screen1 -> h)
+    tile_map -> y += 8;
+
+  if (player1.getX() - tile_map -> x < 400 && tile_map -> x > 0)
+    tile_map -> x -= 8;
+  if (player1.getX() - tile_map -> x > 400 && tile_map -> x < tile_map -> width * 64 - screen1 -> w)
+    tile_map -> x += 8;
 
   //Map 2 scroll
   if (player2.getY() - tile_map2 -> y < 200 && tile_map2 -> y > 0)

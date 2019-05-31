@@ -17,8 +17,8 @@ class tile {
     tile (int type, int x, int y);
     ~tile();
 
-    int getX();
-    int getY();
+    int getX() const;
+    int getY() const;
 
     int getWidth();
     int getHeight();
