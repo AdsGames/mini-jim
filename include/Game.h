@@ -8,6 +8,7 @@
 #include "TileMap.h"
 #include "player.h"
 #include "utility/Timer.h"
+#include "Camera.h"
 
 // Main game screen
 class Game : public GameState {
@@ -44,8 +45,9 @@ class Game : public GameState {
 
     // Objects
     player player1, player2;
-    TileMap *tile_map, *tile_map2;
+    TileMap *tile_map;
     Timer tm_begin, tm_p1, tm_p2;
+    Camera cam_1, cam_2;
 };
 
 #endif

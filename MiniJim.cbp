@@ -40,6 +40,7 @@
 		<Compiler>
 			<Add option="-static" />
 		</Compiler>
+		<Unit filename="include/Camera.h" />
 		<Unit filename="include/Editor.h" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/GameState.h" />
@@ -59,6 +60,7 @@
 		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Editor.cpp" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/GameState.cpp" />
