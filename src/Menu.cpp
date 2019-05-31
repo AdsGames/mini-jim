@@ -74,22 +74,22 @@ void Menu::change_level(int level) {
   levelOn = (levelOn + level) < 0 ? 2 : (levelOn + level) % 3;
   tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
 
-  scroll_x = random(SCREEN_W, tile_map -> width * 64 - SCREEN_W);
+  scroll_x = random(SCREEN_W, tile_map -> getWidth() - SCREEN_W);
   scroll_dir_x = random (0, 1) ? -3 : 3;
-  scroll_y = random(SCREEN_H, tile_map -> height * 64 - SCREEN_H);
+  scroll_y = random(SCREEN_H, tile_map -> getHeight() - SCREEN_H);
   scroll_dir_y = random (0, 1) ? -3 : 3;
 
   play_sample (click, 255, 125, 1000, 0);
 
-  cam = Camera(SCREEN_W, SCREEN_H, tile_map -> width * 64, tile_map -> height * 64);
+  cam = Camera(SCREEN_W, SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
   cam.SetSpeed(1);
 }
 
 void Menu::update() {
   // Move around live background
-  if (scroll_x + SCREEN_W / 2 >= tile_map -> width * 64 || scroll_x <= SCREEN_W / 2)
+  if (scroll_x + SCREEN_W / 2 >= tile_map -> getWidth() || scroll_x <= SCREEN_W / 2)
     scroll_dir_x *= -1;
-  if (scroll_y + SCREEN_H / 2 >= tile_map -> height * 64 || scroll_y <= SCREEN_H / 2)
+  if (scroll_y + SCREEN_H / 2 >= tile_map -> getHeight() || scroll_y <= SCREEN_H / 2)
     scroll_dir_y *= -1;
   scroll_x += scroll_dir_x;
   scroll_y += scroll_dir_y;
