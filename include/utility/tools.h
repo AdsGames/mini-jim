@@ -19,13 +19,6 @@ extern bool collisionTop (int yMin1, int yMax1, int yMin2, int yMax2);
 extern bool collisionRight (int xMin1, int xMax1, int xMin2, int xMax2);
 extern bool collisionLeft (int xMin1, int xMax1, int xMin2, int xMax2);
 
-// Mouse position including resolution difference
-extern int mouseX();
-extern int mouseY();
-
-//Checks if file exists
-extern bool fexists (const char *filename);
-
 //Random number generator
 extern int random (int newLowest, int newHighest);
 

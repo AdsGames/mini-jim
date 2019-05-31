@@ -66,18 +66,16 @@ Game::Game() {
 void Game::init() {
   // Create map
   delete tile_map;
-  delete tile_map2;
 
   tile_map = new TileMap ();
-  tile_map2 = new TileMap ();
 
   std::string file_name = "data/level_" + std::to_string(levelOn + 1);
-  if (!tile_map -> load (file_name.c_str())) {
+  if (!tile_map -> load (file_name.c_str()))
     abort_on_error(("Could not open level" + file_name).c_str());
-  }
-  if (!tile_map2 -> load (file_name.c_str())) {
-    abort_on_error(("Could not open level" + file_name).c_str());
-  }
+
+
+  cam_1 = Camera(screen1 -> w, screen1 -> h, tile_map -> width * 64, tile_map -> height * 64);
+  cam_2 = Camera(screen2 -> w, screen2 -> h, tile_map -> width * 64, tile_map -> height * 64);
 
   tm_p1.Stop();
   tm_p1.Reset();
@@ -90,10 +88,6 @@ void Game::init() {
     player1.set_spawn (spawnTile -> getX(), spawnTile -> getY());
     player2.set_spawn (spawnTile -> getX(), spawnTile -> getY());
   }
-
-  // Draw player two screen initial
-  tile_map2 -> y = player2.getY() - 200;
-  tile_map2 -> x = player2.getX() - 50;
 
   // Draw player one screen initial
   tile_map -> y = player1.getY() - 200;
@@ -108,6 +102,10 @@ void Game::init() {
 }
 
 void Game::update() {
+  // Camera follow
+  cam_1.Follow(player1.getX(), player1.getY());
+  cam_2.Follow(player2.getX(), player2.getY());
+
   // Starting countdown
   if (!tm_begin.IsRunning()) {
     poll_joystick();
@@ -117,7 +115,7 @@ void Game::update() {
       player1.update (tile_map);
     }
     if (!player2.getFinished() && !single_player) {
-      player2.update (tile_map2);
+      player2.update (tile_map);
     }
   }
 
@@ -132,27 +130,6 @@ void Game::update() {
     set_next_state (STATE_MENU);
   }
 
-  // Scroll map scroll
-  if (player1.getY() - tile_map -> y < 200 && tile_map -> y > 0)
-    tile_map -> y -= 8;
-  if (player1.getY() - tile_map -> y > 205 && tile_map -> y < tile_map -> height * 64 - screen1 -> h)
-    tile_map -> y += 8;
-
-  if (player1.getX() - tile_map -> x < 400 && tile_map -> x > 0)
-    tile_map -> x -= 8;
-  if (player1.getX() - tile_map -> x > 400 && tile_map -> x < tile_map -> width * 64 - screen1 -> w)
-    tile_map -> x += 8;
-
-  //Map 2 scroll
-  if (player2.getY() - tile_map2 -> y < 200 && tile_map2 -> y > 0)
-    tile_map2 -> y -= 12;
-  if (player2.getY() - tile_map2 -> y > 275 && tile_map2 -> y < tile_map2 -> height * 64 - (SCREEN_H / 2))
-    tile_map2 -> y += 12;
-  if (player2.getX() - tile_map2 -> x < SCREEN_H - 400 && tile_map2 -> x > 0)
-    tile_map2 -> x -= 12;
-  if (player2.getX() - tile_map2 -> x > 400 && tile_map2 -> x < tile_map2 -> width * 64 - SCREEN_W)
-    tile_map2 -> x += 12;
-
   // Back to menu
   if (key[KEY_M])
     set_next_state (STATE_MENU);
@@ -163,14 +140,14 @@ void Game::draw() {
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, 0x000000);
 
   // Draw tiles and characters
-  tile_map -> draw (screen1);
-  player2.draw (screen1, tile_map -> x, tile_map -> y);
-  player1.draw (screen1, tile_map -> x, tile_map -> y);
+  tile_map -> draw (screen1, cam_1.GetX(), cam_1.GetY());
+  player1.draw (screen1, cam_1.GetX(), cam_1.GetY());
 
   if (!single_player) {
-    tile_map2 -> draw (screen2);
-    player1.draw (screen2, tile_map2 -> x, tile_map2 -> y);
-    player2.draw (screen2, tile_map2 -> x, tile_map2 -> y);
+    tile_map -> draw (screen2, cam_2.GetX(), cam_2.GetY());
+    player2.draw (screen1, cam_1.GetX(), cam_1.GetY());
+    player1.draw (screen2, cam_1.GetX(), cam_1.GetY());
+    player2.draw (screen2, cam_2.GetX(), cam_2.GetY());
   }
 
   // Lighting
@@ -189,22 +166,9 @@ void Game::draw() {
         }
       }
     }
-    draw_sprite (darkness, spotlight, player1.getX() - tile_map -> x + 32 - (spotlight->w / 2), player1.getY() - tile_map -> y + 32 - (spotlight->h / 2));
+    draw_sprite (darkness, spotlight, player1.getX() - cam_1.GetX() + 32 - (spotlight->w / 2), player1.getY() - cam_2.GetY() + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen1, darkness, 0, 0);
-
-    if (!single_player) { // Player 2
-      for (unsigned int i = 0; i < tile_map2 -> mapTiles.size(); i++) {
-        if ((tile_map2 -> mapTiles.at (i).getX() >= tile_map2 -> x - tile_map2 -> mapTiles.at (i).getWidth()) && (tile_map2 -> mapTiles.at (i).getX() < tile_map2 -> x + 1280) &&
-            (tile_map2 -> mapTiles.at (i).getY() >= tile_map2 -> y - tile_map2 -> mapTiles.at (i).getHeight()) && (tile_map2 -> mapTiles.at (i).getY() < tile_map2 -> y + 960)) {
-          if (tile_map2 -> mapTiles.at (i).containsAttribute (light)) {
-            stretch_sprite (darkness, spotlight, tile_map2 -> mapTiles.at (i).getX() - tile_map2 -> x + 32 - (tile_map2 -> mapTiles.at (i).getWidth() * 3),
-                            tile_map2 -> mapTiles.at (i).getY() - tile_map2 -> y + 32 - (tile_map2 -> mapTiles.at (i).getHeight() * 3), tile_map2 -> mapTiles.at (i).getWidth() * 6,
-                            tile_map2 -> mapTiles.at (i).getHeight() * 6);
-          }
-        }
-      }
-    }
-    draw_sprite (darkness, spotlight, player2.getX() - tile_map2 -> x + 32 - (spotlight->w / 2), player2.getY() - tile_map2 -> y + 32 - (spotlight->h / 2));
+    draw_sprite (darkness, spotlight, player2.getX() - cam_2.GetX() + 32 - (spotlight->w / 2), player2.getY() - cam_2.GetY() + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen2, darkness, 0, 0);
   }
 

@@ -40,12 +40,6 @@ bool collisionLeft (int xMin1, int xMax1, int xMin2, int xMax2) {
   return (xMin1 < xMax2 && xMax1 > xMax2);
 }
 
-//Checks if file exists
-bool fexists (const char *filename) {
-  std::ifstream ifile(filename);
-  return !ifile.fail();
-}
-
 //Random number generator. Use int random(lowest,highest);
 int random (int newLowest, int newHighest) {
   int lowest = newLowest, highest = newHighest;
@@ -112,7 +106,6 @@ void abort_on_error (const char *message) {
   exit (-1);
 }
 
-
 // Load image
 BITMAP *load_png_ex (const char *path) {
   BITMAP *temp = nullptr;
@@ -134,7 +127,6 @@ SAMPLE *load_ogg_ex (const char *path) {
 
   return temp;
 }
-
 
 // Load sample
 SAMPLE *load_sample_ex (const char *path) {
