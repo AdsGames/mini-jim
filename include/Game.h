@@ -11,7 +11,7 @@
 #include "globals.h"
 #include "utility/tools.h"
 
-#include "tileMap.h"
+#include "TileMap.h"
 #include "player.h"
 
 
@@ -62,8 +62,8 @@ class Game : public GameState {
 
     bool deathFrame;
 
-    tileMap *tile_map;
-    tileMap *tile_map2;
+    TileMap *tile_map;
+    TileMap *tile_map2;
 
     static void gameTicker();
 

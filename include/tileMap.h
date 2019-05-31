@@ -1,26 +1,17 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 
-#define FRAME_MILASECONDS 100
-
 #include <allegro.h>
-#include <loadpng.h>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-
-#include "globals.h"
-#include "utility/tools.h"
 
 #include "tile.h"
+#include "Timer.h"
 
-using namespace std;
-
-class tileMap {
+class TileMap {
   public:
-    tileMap (std::string fileName);
+    TileMap (std::string file = "");
+    ~TileMap();
 
     std::vector<tile> mapTiles;
     std::vector<tile> mapTilesBack;
@@ -31,20 +22,20 @@ class tileMap {
     int width;
     int height;
 
-    long getFrame();
+    int getFrame();
 
-    void load_images();
-    void draw_map (BITMAP *tempSprite);
-    void draw_map (BITMAP *tempSprite, int newX, int newY);
-    void load (std::string fileName);
-    void save(std::string file);
+    void draw (BITMAP *buffer);
+    void load (std::string file);
+    void save (std::string file);
 
     tile *get_tile_at (int x, int y, int layer);
 
-    ~tileMap();
   private:
-    static volatile long frame;
-    static void change_frame();
+    void save_layer (std::string file, std::vector<tile> *layer);
+    void draw_layer (BITMAP *buffer, std::vector<tile> *layer);
+
+    Timer frame_timer;
+    int frame;
 };
 
 #endif

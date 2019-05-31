@@ -30,7 +30,7 @@ Menu::Menu() {
   set_alpha_blender();
 
   // Create map for live background
-  tile_map = new tileMap ("data/level_1");
+  tile_map = new TileMap ("data/level_1");
 
   // Buttons
   buttons[BUTTON_START] = Button(60, 630);
@@ -145,7 +145,7 @@ void Menu::draw() {
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, makecol (255, 255, 255));
 
   // Draw live background
-  tile_map -> draw_map (buffer);
+  tile_map -> draw (buffer);
 
   // Overlay
   draw_trans_sprite (buffer, credits, 0, 0);

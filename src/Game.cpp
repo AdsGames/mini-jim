@@ -135,8 +135,8 @@ void Game::init() {
   player2.setDead (false);
 
   // Create map
-  tile_map = new tileMap ("blank");
-  tile_map2 = new tileMap ("blank");
+  tile_map = new TileMap ();
+  tile_map2 = new TileMap ();
 
   if (levelOn == 0) {
     tile_map -> load ("data/bedroom");
@@ -178,12 +178,12 @@ void Game::init() {
   // Draw player two screen initial
   tile_map2 -> y = player2.getY() - 200;
   tile_map2 -> x = player2.getX() - 50;
-  tile_map2 -> draw_map (screen2);
+  tile_map2 -> draw (screen2);
 
   // Draw player one screen initial
   tile_map -> y = player1.getY() - 200;
   tile_map -> x = player1.getX() - 50;
-  tile_map -> draw_map (screen1);
+  tile_map -> draw (screen1);
 
   // Start game
   gameBegin = true;
@@ -323,12 +323,12 @@ void Game::draw() {
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, makecol (0, 0, 0));
 
   // Draw tiles and characters
-  tile_map -> draw_map (screen1);
+  tile_map -> draw (screen1);
   player2.draw (screen1, tile_map -> x, tile_map -> y);
   player1.draw (screen1, tile_map -> x, tile_map -> y);
 
   if (!single_player) {
-    tile_map2 -> draw_map (screen2);
+    tile_map2 -> draw (screen2);
     player1.draw (screen2, tile_map2 -> x, tile_map2 -> y);
     player2.draw (screen2, tile_map2 -> x, tile_map2 -> y);
   }
