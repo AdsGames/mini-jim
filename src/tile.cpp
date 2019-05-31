@@ -36,12 +36,12 @@ void tile::setY (int newY) {
 int tile::getType() {
   return type;
 }
-vector<int> tile::getAttribute() {
+std::vector<int> tile::getAttribute() {
   return attribute;
 }
 // Contains Attribute
 bool tile::containsAttribute (int newAttribute) {
-  if (find (attribute.begin(), attribute.end(), newAttribute) != attribute.end()) {
+  if (std::find (attribute.begin(), attribute.end(), newAttribute) != attribute.end()) {
     return true;
   }
 

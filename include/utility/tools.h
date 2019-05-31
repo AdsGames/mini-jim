@@ -8,8 +8,6 @@
 #include <sstream>
 #include <fstream>
 
-using namespace std;
-
 // Key or joy button pressed
 extern bool key_down();
 extern bool button_down();
@@ -21,8 +19,6 @@ extern bool collisionTop (int yMin1, int yMax1, int yMin2, int yMax2);
 extern bool collisionRight (int xMin1, int xMax1, int xMin2, int xMax2);
 extern bool collisionLeft (int xMin1, int xMax1, int xMin2, int xMax2);
 
-
-
 // Mouse position including resolution difference
 extern int mouseX();
 extern int mouseY();
@@ -32,15 +28,6 @@ extern bool fexists (const char *filename);
 
 //Random number generator
 extern int random (int newLowest, int newHighest);
-
-//Convert int to string
-extern string convertIntToString (int number);
-
-//Convert double to string
-extern string convertDoubleToString (double number);
-
-//Convert bool to string
-extern string convertBoolToString (bool boolean);
 
 // Fade in and out
 extern void highcolor_fade_in (BITMAP *bmp_orig, int speed);

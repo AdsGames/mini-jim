@@ -25,44 +25,24 @@ bool button_down() {
 
 //Collision
 bool collisionAny (int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2) {
-  if (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1) {
-    return true;
-  }
-
-  return false;
+  return (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1);
 }
 bool collisionBottom (int yMin1, int yMax1, int yMin2, int yMax2) {
-  if (yMin1 < yMax2 && yMax1 > yMax2) {
-    return true;
-  }
-
-  return false;
+  return (yMin1 < yMax2 && yMax1 > yMax2);
 }
 bool collisionTop (int yMin1, int yMax1, int yMin2, int yMax2) {
-  if (yMin2 < yMax1 && yMin1 < yMin2) {
-    return true;
-  }
-
-  return false;
+  return (yMin2 < yMax1 && yMin1 < yMin2);
 }
 bool collisionRight (int xMin1, int xMax1, int xMin2, int xMax2) {
-  if (xMin2 < xMax1 && xMin1 < xMin2) {
-    return true;
-  }
-
-  return false;
+  return (xMin2 < xMax1 && xMin1 < xMin2);
 }
 bool collisionLeft (int xMin1, int xMax1, int xMin2, int xMax2) {
-  if (xMin1 < xMax2 && xMax1 > xMax2) {
-    return true;
-  }
-
-  return false;
+  return (xMin1 < xMax2 && xMax1 > xMax2);
 }
 
 //Checks if file exists
 bool fexists (const char *filename) {
-  ifstream ifile (filename);
+  std::ifstream ifile(filename);
   return !ifile.fail();
 }
 
@@ -72,27 +52,6 @@ int random (int newLowest, int newHighest) {
   int range = (highest - lowest) + 1;
   int randomNumber = lowest + int (range * rand() / (RAND_MAX + 1.0));
   return randomNumber;
-}
-
-//Convert int to string
-string convertIntToString (int number) {
-  stringstream ss;
-  ss << number;
-  return ss.str();
-}
-
-//Convert double to string
-string convertDoubleToString (double number) {
-  stringstream ss;
-  ss << number;
-  return ss.str();
-}
-
-//Convert bool to string
-string convertBoolToString (bool boolean) {
-  stringstream ss;
-  ss << boolean;
-  return ss.str();
 }
 
 // Set next state
