@@ -60,18 +60,14 @@ void Editor::open() {
     tile_map -> load ("data/" + ib_open.GetValue().substr (0, ib_open.GetValue().size() - 4));
     opening = false;
   }
+
+  cam = Camera(SCREEN_W, SCREEN_H, tile_map -> width * 64, tile_map -> height * 64);
+  cam.SetSpeed(1);
+  cam.SetBounds(20, 20);
 }
 
 void Editor::edit() {
-  // Scroll Map
-  if (mouse_y < 10 && tile_map -> y > 0)
-    tile_map -> y -= 16;
-  else if (mouse_y > (SCREEN_H - 10) && tile_map -> y < tile_map -> height * 64 -  SCREEN_H)
-    tile_map -> y += 16;
-  else if (mouse_x  < 10 && tile_map -> x > 0)
-    tile_map -> x -= 8;
-  else if (mouse_x   > (SCREEN_W - 10) && tile_map -> x < tile_map -> width * 64 - SCREEN_W)
-    tile_map -> x += 8;
+  cam.Follow(mouse_x + cam.GetX(), mouse_y + cam.GetY());
 
   // Change selected
   if (KeyListener::keyPressed[KEY_UP]) {
@@ -93,7 +89,7 @@ void Editor::edit() {
     layer = !layer;
 
   // Operations
-  tile *temp_tile = tile_map -> get_tile_at(mouse_x, mouse_y, layer);
+  tile *temp_tile = tile_map -> get_tile_at(mouse_x + cam.GetX(), mouse_y + cam.GetY(), layer);
   if (temp_tile) {
     // Place tile
     if (mouse_b & 1)
@@ -154,7 +150,7 @@ void Editor::draw() {
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, makecol (255, 255, 255));
 
   // Draw tiles
-  tile_map -> draw (buffer);
+  tile_map -> draw (buffer, cam.GetX(), cam.GetY());
   pallette_tile -> draw_tile (buffer, 0, 0, 0);
 
   // Map info

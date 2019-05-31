@@ -30,7 +30,9 @@ Menu::Menu() {
   set_alpha_blender();
 
   // Create map for live background
-  tile_map = new TileMap ("data/level_1");
+  levelOn = 0;
+  tile_map = new TileMap();
+  change_level(0);
 
   // Buttons
   buttons[BUTTON_START] = Button(60, 630);
@@ -54,8 +56,6 @@ Menu::Menu() {
   move_to_button = 0;
   target_selector_y = buttons[BUTTON_START].GetY();
   selector_y = target_selector_y;
-  scrollDirection = 1;
-  levelOn = 0;
 
   play_sample (music, 255, 125, 1000, 1);
   play_sample (intro, 255, 128, 1000, 0);
@@ -73,15 +73,28 @@ bool Menu::button_hover() {
 void Menu::change_level(int level) {
   levelOn = (levelOn + level) < 0 ? 2 : (levelOn + level) % 3;
   tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
-  tile_map -> x = 0;
+
+  scroll_x = random(SCREEN_W, tile_map -> width * 64 - SCREEN_W);
+  scroll_dir_x = random (0, 1) ? -3 : 3;
+  scroll_y = random(SCREEN_H, tile_map -> height * 64 - SCREEN_H);
+  scroll_dir_y = random (0, 1) ? -3 : 3;
+
   play_sample (click, 255, 125, 1000, 0);
+
+  cam = Camera(SCREEN_W, SCREEN_H, tile_map -> width * 64, tile_map -> height * 64);
+  cam.SetSpeed(1);
 }
 
 void Menu::update() {
   // Move around live background
-  tile_map -> x += scrollDirection * 2;
-  if (tile_map -> x >= tile_map -> width * 32 || tile_map -> x <= 0)
-    scrollDirection *= -1;
+  if (scroll_x + SCREEN_W / 2 >= tile_map -> width * 64 || scroll_x <= SCREEN_W / 2)
+    scroll_dir_x *= -1;
+  if (scroll_y + SCREEN_H / 2 >= tile_map -> height * 64 || scroll_y <= SCREEN_H / 2)
+    scroll_dir_y *= -1;
+  scroll_x += scroll_dir_x;
+  scroll_y += scroll_dir_y;
+
+  cam.Follow(scroll_x, scroll_y);
 
   // Move selector
   selector_y += (target_selector_y - selector_y) / 3.0f;
@@ -145,7 +158,7 @@ void Menu::draw() {
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, makecol (255, 255, 255));
 
   // Draw live background
-  tile_map -> draw (buffer);
+  tile_map -> draw (buffer, cam.GetX(), cam.GetY());
 
   // Overlay
   draw_trans_sprite (buffer, credits, 0, 0);

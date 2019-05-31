@@ -14,6 +14,7 @@
 #include "utility/tools.h"
 
 #include "ui/Button.h"
+#include "Camera.h"
 
 class Menu : public GameState {
   public:
@@ -35,7 +36,7 @@ class Menu : public GameState {
 
     // Live background
     TileMap *tile_map;
-    int scrollDirection;
+    int scroll_x, scroll_y, scroll_dir_x, scroll_dir_y;
 
     // Menu
     float selector_y, target_selector_y;
@@ -53,6 +54,7 @@ class Menu : public GameState {
     };
 
     Button buttons[7];
+    Camera cam;
 };
 
 #endif // MENU_H

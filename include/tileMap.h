@@ -16,15 +16,11 @@ class TileMap {
     std::vector<tile> mapTiles;
     std::vector<tile> mapTilesBack;
 
-    int x;
-    int y;
-
     int width;
     int height;
 
     int getFrame();
 
-    void draw (BITMAP *buffer);
     void draw (BITMAP *buffer, int x, int y);
 
     bool load (std::string file);

@@ -9,6 +9,7 @@
 #include "tile.h"
 #include "ui/InputBox.h"
 #include "ui/Button.h"
+#include "Camera.h"
 
 class Editor : public GameState {
   public:
@@ -36,6 +37,8 @@ class Editor : public GameState {
     void save();
     void open();
     void edit();
+
+    Camera cam;
 };
 
 #endif // EDITOR_H
