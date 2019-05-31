@@ -20,10 +20,10 @@ using namespace std;
 
 class tileMap {
   public:
-    tileMap (string fileName);
+    tileMap (std::string fileName);
 
-    vector<tile> mapTiles;
-    vector<tile> mapTilesBack;
+    std::vector<tile> mapTiles;
+    std::vector<tile> mapTilesBack;
 
     int x;
     int y;
@@ -36,7 +36,10 @@ class tileMap {
     void load_images();
     void draw_map (BITMAP *tempSprite);
     void draw_map (BITMAP *tempSprite, int newX, int newY);
-    void load (string fileName);
+    void load (std::string fileName);
+    void save(std::string file);
+
+    tile *get_tile_at (int x, int y, int layer);
 
     ~tileMap();
   private:

@@ -29,6 +29,7 @@ volatile int game_time = 0;
 
 int fps;
 int old_time;
+int frames_done;
 
 // FPS system functions
 void ticker() {
@@ -84,6 +85,8 @@ void change_state() {
       case STATE_GAME:
         currentState = new Game();
         break;
+      default:
+        break;
     }
 
     //Change the current state ID
@@ -119,8 +122,8 @@ void setup() {
   set_close_button_callback (close_button_handler);
 
   // Game state
-  int stateID = STATE_NULL;
-  int nextState = STATE_NULL;
+  stateID = STATE_NULL;
+  nextState = STATE_NULL;
 
   // Variables
   closeGame = false;

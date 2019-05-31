@@ -14,6 +14,7 @@
 class tile {
   public:
     tile (int newType);
+    tile (int type, int x, int y);
     ~tile();
 
     int getX();

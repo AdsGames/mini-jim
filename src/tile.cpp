@@ -4,6 +4,12 @@ tile::tile (int newType) {
   setType (newType);
 }
 
+tile::tile (int type, int x, int y) {
+  setX (x);
+  setY (y);
+  setType (type);
+}
+
 //Getters/ setters
 int tile::getX() {
   return x;

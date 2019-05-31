@@ -193,13 +193,13 @@ void Game::init() {
 
 void Game::update() {
   //Mother freaking mousetraps
-  for (int i = 0; i < tile_map2 -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < tile_map2 -> mapTiles.size(); i++) {
     if (tile_map2 -> mapTiles.at (i).getType() == tile_mousetrap_2) {
       tile_map -> mapTiles.at (i).setType (tile_mousetrap_2);
     }
   }
 
-  for (int i = 0; i < tile_map -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < tile_map -> mapTiles.size(); i++) {
     if (tile_map -> mapTiles.at (i).getType() == tile_mousetrap_2) {
       tile_map2 -> mapTiles.at (i).setType (tile_mousetrap_2);
     }
@@ -339,7 +339,7 @@ void Game::draw() {
     draw_sprite (darkness, darkness_old, 0, 0);
 
     // Player 1
-    for (int i = 0; i < tile_map -> mapTiles.size(); i++) {
+    for (unsigned int i = 0; i < tile_map -> mapTiles.size(); i++) {
       if ((tile_map -> mapTiles.at (i).getX() >= tile_map -> x - tile_map -> mapTiles.at (i).getWidth()) && (tile_map -> mapTiles.at (i).getX() < tile_map -> x + 1280) &&
           (tile_map -> mapTiles.at (i).getY() >= tile_map -> y - tile_map -> mapTiles.at (i).getHeight()) && (tile_map -> mapTiles.at (i).getY() < tile_map -> y + 960)) {
         if (tile_map -> mapTiles.at (i).containsAttribute (light)) {
@@ -354,7 +354,7 @@ void Game::draw() {
     draw_trans_sprite (screen1, darkness, 0, 0);
 
     if (!single_player) { // Player 2
-      for (int i = 0; i < tile_map2 -> mapTiles.size(); i++) {
+      for (unsigned int i = 0; i < tile_map2 -> mapTiles.size(); i++) {
         if ((tile_map2 -> mapTiles.at (i).getX() >= tile_map2 -> x - tile_map2 -> mapTiles.at (i).getWidth()) && (tile_map2 -> mapTiles.at (i).getX() < tile_map2 -> x + 1280) &&
             (tile_map2 -> mapTiles.at (i).getY() >= tile_map2 -> y - tile_map2 -> mapTiles.at (i).getHeight()) && (tile_map2 -> mapTiles.at (i).getY() < tile_map2 -> y + 960)) {
           if (tile_map2 -> mapTiles.at (i).containsAttribute (light)) {

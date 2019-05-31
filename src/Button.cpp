@@ -55,4 +55,7 @@ void Button::Draw (BITMAP *buffer) {
   if (images[Hover()]) {
     draw_trans_sprite (buffer, images[Hover()], x, y);
   }
+  else {
+    rectfill (buffer, x, y, x + width, y + height, 0x999999);
+  }
 }

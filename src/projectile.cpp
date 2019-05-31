@@ -32,7 +32,7 @@ int projectile::getContactFrameCounter() {
 
 bool projectile::getContact (tileMap *newMap) {
   //Check for collision
-  for (int i = 0; i < newMap -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < newMap -> mapTiles.size(); i++) {
     if (newMap -> mapTiles.at (i).containsAttribute (solid)) {
       if (collisionAny (x, x + image[0] -> w, newMap -> mapTiles.at (i).getX(), newMap -> mapTiles.at (i).getX() + 64, y, y + image[0] -> h, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() + 64)) {
         contact = true;

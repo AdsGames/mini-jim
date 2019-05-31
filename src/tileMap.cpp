@@ -180,23 +180,21 @@ long tileMap::getFrame() {
   return frame;
 }
 
-void tileMap::load (string fileName) {
+void tileMap::load (std::string fileName) {
   //Change size
-  string fileLoad = fileName + ".txt";
-  ifstream findSize (fileLoad.c_str());
+  std::string fileLoad = fileName + ".txt";
+  std::ifstream read (fileLoad.c_str());
   width = 0;
   height = 0;
   int data;
 
-  while (findSize >> data) {
-    if (height == 0) {
+  while (read >> data) {
+    if (height == 0)
       width++;
-    }
-
-    if (findSize.peek() == '\n') {
+    if (read.peek() == '\n')
       height++;
-    }
   }
+  read.close();
 
   //Setup Map
   if (fileName != "blank") {
@@ -204,53 +202,85 @@ void tileMap::load (string fileName) {
     mapTilesBack.clear();
 
     fileLoad = fileName + ".txt";
-    ifstream read (fileLoad.c_str());
-
+    read.open (fileLoad.c_str());
     for (int t = 0; t < height; t++) {
       for (int i = 0; i < width; i++) {
-        int newTileType;
-        read >> newTileType;
-        // Set tile type
-        tile newTile (newTileType);
-        newTile.setX (i * 64);
-        newTile.setY (t * 64);
-        newTile.setType (newTileType);
-        mapTiles.push_back (newTile);
+        read >> data;
+        mapTiles.push_back (tile (data, i * 64, t * 64));
       }
     }
-
     read.close();
 
     fileLoad = fileName + "_back.txt";
-    ifstream read2 (fileLoad.c_str());
-
+    read.open (fileLoad.c_str());
     for (int t = 0; t < height; t++) {
       for (int i = 0; i < width; i++) {
-        int newTileType;
-        read2 >> newTileType;
-        // Set tile type
-        tile newTile (newTileType);
-        newTile.setX (i * 64);
-        newTile.setY (t * 64);
-        newTile.setType (newTileType);
-        mapTilesBack.push_back (newTile);
+        read >> data;
+        mapTilesBack.push_back (tile (data, i * 64, t * 64));
       }
     }
-
-    read2.close();
+    read.close();
   }
+}
+
+void tileMap::save (std::string file) {
+  //Save fronts
+  int widthCounter = 0;
+  std::ofstream of(file.c_str());
+
+  for (unsigned int i = 0; i < mapTiles.size(); i++) {
+    widthCounter++;
+    of << mapTiles.at (i).getType();
+    if (widthCounter == width) {
+      of << std::endl;
+      widthCounter = 0;
+    }
+    else {
+      of << " ";
+    }
+  }
+  of.close();
+
+  //Save backs
+  widthCounter = 0;
+  of.open(file.substr(0, file.size() - 4) + "_back.txt");
+
+  for (unsigned int i = 0; i < mapTilesBack.size(); i++) {
+    widthCounter++;
+    of << mapTilesBack.at (i).getType();
+    if (widthCounter == width) {
+      of << std::endl;
+      widthCounter = 0;
+    }
+    else {
+      of << " ";
+    }
+  }
+  of.close();
+}
+
+// Get tile at
+tile* tileMap::get_tile_at (int s_x, int s_y, int layer) {
+  vector<tile> *ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
+  for (auto &t: *ttm) {
+    if (collisionAny (s_x + x, s_x + x, t.getX(), t.getX() + 64,
+                      s_y + y, s_y + y, t.getY(), t.getY() + 64)) {
+      return &t;
+    }
+  }
+  return nullptr;
 }
 
 //Draw tile map
 void tileMap::draw_map (BITMAP *tempSprite) {
-  for (int i = 0; i < mapTilesBack.size(); i++) {
+  for (unsigned int i = 0; i < mapTilesBack.size(); i++) {
     if ((mapTilesBack.at (i).getX() >= x - mapTilesBack.at (i).getWidth()) && (mapTilesBack.at (i).getX() < x + SCREEN_W) &&
         (mapTilesBack.at (i).getY() >= y - mapTilesBack.at (i).getHeight()) && (mapTilesBack.at (i).getY() < y + SCREEN_H)) {
       mapTilesBack.at (i).draw_tile (tempSprite, x, y, frame);
     }
   }
 
-  for (int i = 0; i < mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < mapTiles.size(); i++) {
     if ((mapTiles.at (i).getX() >= x - mapTiles.at (i).getWidth()) && (mapTiles.at (i).getX() < x + SCREEN_W) &&
         (mapTiles.at (i).getY() >= y - mapTiles.at (i).getHeight()) && (mapTiles.at (i).getY() < y + SCREEN_H)) {
       mapTiles.at (i).draw_tile (tempSprite, x, y, frame);
@@ -259,14 +289,14 @@ void tileMap::draw_map (BITMAP *tempSprite) {
 }
 
 void tileMap::draw_map (BITMAP *tempSprite, int newX, int newY) {
-  for (int i = 0; i < mapTilesBack.size(); i++) {
+  for (unsigned int i = 0; i < mapTilesBack.size(); i++) {
     if ((mapTilesBack.at (i).getX() >= newX - mapTilesBack.at (i).getWidth()) && (mapTilesBack.at (i).getX() < newX + SCREEN_W) &&
         (mapTilesBack.at (i).getY() >= newY - mapTilesBack.at (i).getHeight()) && (mapTilesBack.at (i).getY() < newY + SCREEN_H)) {
       mapTilesBack.at (i).draw_tile (tempSprite, newX, newY, frame);
     }
   }
 
-  for (int i = 0; i < mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < mapTiles.size(); i++) {
     if ((mapTiles.at (i).getX() >= newX - mapTiles.at (i).getHeight()) && (mapTiles.at (i).getX() < newX + SCREEN_W) &&
         (mapTiles.at (i).getY() >= newY - mapTiles.at (i).getHeight()) && (mapTiles.at (i).getY() < newY + SCREEN_H)) {
       mapTiles.at (i).draw_tile (tempSprite, newX, newY, frame);

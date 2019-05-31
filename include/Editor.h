@@ -4,18 +4,23 @@
 #include "GameState.h"
 
 #include <allegro.h>
-#include <loadpng.h>
 #include <string>
 #include <vector>
 
 #include "tileMap.h"
 #include "tile.h"
-#include "globals.h"
-#include "utility/tools.h"
+#include "InputBox.h"
+#include "Button.h"
 
 class Editor : public GameState {
+  public:
+    Editor();
+    ~Editor();
+
+    virtual void update() override;
+    virtual void draw() override;
+
   private:
-    int selectedTileType;
     int layer;
 
     bool saving;
@@ -24,21 +29,15 @@ class Editor : public GameState {
     BITMAP *buffer;
 
     tileMap *tile_map;
-    tile *exampleTile;
+    tile *pallette_tile;
 
     //Text input
-    string  edittext;
-    string::iterator iter;
+    Button btn_save, btn_open;
+    InputBox ib_save, ib_open;
 
-    void init();
     void save();
     void open();
-  protected:
-  public:
-    Editor();
-    void update();
-    void draw();
-    ~Editor();
+    void edit();
 };
 
 #endif // EDITOR_H

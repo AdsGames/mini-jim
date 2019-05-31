@@ -7,8 +7,6 @@ player::player() {
 
   hasJumped = false;
 
-  deathcount;
-
   canFall = false;
   jumping = false;
   dead = false;
@@ -269,7 +267,7 @@ void player::spawncommand (tileMap *fullMap) {
     y = checkpointPosition[1];
   }
   else {
-    for (int i = 0; i < fullMap -> mapTiles.size(); i++) {
+    for (unsigned int i = 0; i < fullMap -> mapTiles.size(); i++) {
       if (fullMap -> mapTiles.at (i).getType() == 199) {
         x = fullMap -> mapTiles.at (i).getX();
         y = fullMap -> mapTiles.at (i).getY();
@@ -283,9 +281,7 @@ void player::update (tileMap *fullMap) {
   //Collision stuff
   bool canMoveLeft = true;
   bool canMoveRight = true;
-  bool canClimbUp = true;
   bool canClimbDown = true;
-  bool canClimbUp2 = false;
   bool canClimbDown2 = false;
   bool canJump = true;
   bool canJumpUp = true;
@@ -297,7 +293,7 @@ void player::update (tileMap *fullMap) {
   newMap -> height = fullMap -> height;
 
   // Add close elements
-  for (int i = 0; i < fullMap -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < fullMap -> mapTiles.size(); i++) {
     if (collisionAny (x - 140, x + 140, fullMap -> mapTiles.at (i).getX(), fullMap -> mapTiles.at (i).getX() +  fullMap -> mapTiles.at (i).getWidth(), y - 140, y + 140, fullMap -> mapTiles.at (i).getY(), fullMap -> mapTiles.at (i).getY() + fullMap -> mapTiles.at (i).getHeight())) {
       newMap -> mapTiles.push_back (fullMap -> mapTiles.at (i));
 
@@ -305,7 +301,7 @@ void player::update (tileMap *fullMap) {
   }
 
   //Check for collision
-  for (int i = 0; i < newMap -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < newMap -> mapTiles.size(); i++) {
     // Check moving LEFT
     if ((newMap -> mapTiles.at (i).containsAttribute (solid) || newMap -> mapTiles.at (i).containsAttribute (slide)) && !sliding) {
       if (collisionAny (x + 8 - sprintSpeed, x + 56, newMap -> mapTiles.at (i).getX(), newMap -> mapTiles.at (i).getX() +  newMap -> mapTiles.at (i).getWidth(), y, y + 64, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() +  newMap -> mapTiles.at (i).getHeight()) &&
@@ -339,24 +335,10 @@ void player::update (tileMap *fullMap) {
       }
     }
 
-    // Check 2 for climbing up
-    if (newMap -> mapTiles.at (i).containsAttribute (climb)) {
-      if (collisionAny (x + 16, x + 48, newMap -> mapTiles.at (i).getX(), newMap -> mapTiles.at (i).getX() +  newMap -> mapTiles.at (i).getWidth(), y, y + 64, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() +  newMap -> mapTiles.at (i).getHeight())) {
-        canClimbUp2 = true;
-      }
-    }
-
     // Check 2 for climbing down
     if (newMap -> mapTiles.at (i).containsAttribute (climb)) {
       if (collisionAny (x + 16, x + 48, newMap -> mapTiles.at (i).getX(), newMap -> mapTiles.at (i).getX() +  newMap -> mapTiles.at (i).getWidth(), y, y + 72, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() +  newMap -> mapTiles.at (i).getHeight())) {
         canClimbDown2 = true;
-      }
-    }
-
-    // Check 1 for climbing up
-    if (newMap -> mapTiles.at (i).containsAttribute (solid)) {
-      if (collisionAny (x + 16, x + 48, newMap -> mapTiles.at (i).getX(), newMap -> mapTiles.at (i).getX() +  newMap -> mapTiles.at (i).getWidth(), y - 16, y, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() +  newMap -> mapTiles.at (i).getHeight())) {
-        canClimbUp = false;
       }
     }
 
@@ -391,7 +373,7 @@ void player::update (tileMap *fullMap) {
   }
 
   //Check for points and dangers
-  for (int i = 0; i < fullMap -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < fullMap -> mapTiles.size(); i++) {
 
     if (fullMap -> mapTiles.at (i).containsAttribute (harmful)) {
       if (collisionAny (x + 16, x + 48, fullMap -> mapTiles.at (i).getX(), fullMap -> mapTiles.at (i).getX() +  fullMap -> mapTiles.at (i).getWidth(), y - 16, y + 64, fullMap -> mapTiles.at (i).getY(), fullMap -> mapTiles.at (i).getY() +  fullMap -> mapTiles.at (i).getHeight())) {
@@ -425,7 +407,7 @@ void player::update (tileMap *fullMap) {
     }
   }
 
-  for (int i = 0; i < newMap -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < newMap -> mapTiles.size(); i++) {
     // Checkpoint
     if (newMap -> mapTiles.at (i).getType() == tile_checkpoint) {
       if (collisionAny (x + 16, x + 48, newMap -> mapTiles.at (i).getX(), newMap -> mapTiles.at (i).getX() +  newMap -> mapTiles.at (i).getWidth(), y - 16, y + 64, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() +  newMap -> mapTiles.at (i).getHeight())) {
@@ -558,7 +540,7 @@ void player::update (tileMap *fullMap) {
   int instalFallDistance = 0;
 
   //Falling (calculated separately to ensure collision accurate)
-  for (int i = 0; i < newMap -> mapTiles.size(); i++) {
+  for (unsigned int i = 0; i < newMap -> mapTiles.size(); i++) {
     if (newMap -> mapTiles.at (i).containsAttribute (solid) || newMap -> mapTiles.at (i).containsAttribute (climb)) {
       if (collisionAny (x + 16, x + 48, newMap -> mapTiles.at (i).getX(), newMap -> mapTiles.at (i).getX() +  newMap -> mapTiles.at (i).getWidth(), y, y + 96, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() +  newMap -> mapTiles.at (i).getHeight()) &&
           collisionTop (y, y + 96, newMap -> mapTiles.at (i).getY(), newMap -> mapTiles.at (i).getY() +  newMap -> mapTiles.at (i).getHeight())) {
