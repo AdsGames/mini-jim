@@ -6,7 +6,7 @@
 #include <allegro.h>
 
 #include "TileMap.h"
-#include "tile.h"
+#include "Tile.h"
 #include "ui/InputBox.h"
 #include "ui/Button.h"
 #include "Camera.h"
