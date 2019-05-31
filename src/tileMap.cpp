@@ -19,6 +19,16 @@ TileMap::TileMap (std::string file) {
 // Destructor
 TileMap::~TileMap() { }
 
+// Get width
+int TileMap::getWidth() const {
+  return width * 64;
+}
+
+// Get height
+int TileMap::getHeight() const {
+  return height * 64;
+}
+
 // Get frame
 int TileMap::getFrame() {
   return int(frame_timer.GetElapsedTime<milliseconds>() / 100) % 8;

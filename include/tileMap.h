@@ -16,9 +16,8 @@ class TileMap {
     std::vector<tile> mapTiles;
     std::vector<tile> mapTilesBack;
 
-    int width;
-    int height;
-
+    int getWidth() const;
+    int getHeight() const;
     int getFrame();
 
     void draw (BITMAP *buffer, int x, int y);
@@ -33,6 +32,9 @@ class TileMap {
   private:
     void save_layer (std::string file, std::vector<tile> *layer);
     void draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y);
+
+    int width;
+    int height;
 
     Timer frame_timer;
 };

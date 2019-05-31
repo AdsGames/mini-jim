@@ -74,8 +74,8 @@ void Game::init() {
     abort_on_error(("Could not open level" + file_name).c_str());
 
 
-  cam_1 = Camera(screen1 -> w, screen1 -> h, tile_map -> width * 64, tile_map -> height * 64);
-  cam_2 = Camera(screen2 -> w, screen2 -> h, tile_map -> width * 64, tile_map -> height * 64);
+  cam_1 = Camera(screen1 -> w, screen1 -> h, tile_map -> getWidth(), tile_map -> getHeight());
+  cam_2 = Camera(screen2 -> w, screen2 -> h, tile_map -> getWidth(), tile_map -> getHeight());
 
   tm_p1.Stop();
   tm_p1.Reset();

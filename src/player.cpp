@@ -312,7 +312,7 @@ void player::update (TileMap *fullMap) {
   }
 
   // Die
-  if (x > fullMap -> width * 64 || x < 0 || y > fullMap -> height * 64)
+  if (x > fullMap -> getWidth() || x < 0 || y > fullMap -> getHeight())
     Die();
 }
 

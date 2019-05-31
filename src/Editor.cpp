@@ -61,7 +61,7 @@ void Editor::open() {
     opening = false;
   }
 
-  cam = Camera(SCREEN_W, SCREEN_H, tile_map -> width * 64, tile_map -> height * 64);
+  cam = Camera(SCREEN_W, SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
   cam.SetSpeed(1);
   cam.SetBounds(20, 20);
 }
@@ -154,7 +154,7 @@ void Editor::draw() {
   pallette_tile -> draw_tile (buffer, 0, 0, 0);
 
   // Map info
-  textprintf_ex (buffer, font, 0, 80, makecol (255, 255, 255), makecol (0, 0, 0), "height-%i width-%i", tile_map -> height, tile_map -> width);
+  textprintf_ex (buffer, font, 0, 80, makecol (255, 255, 255), makecol (0, 0, 0), "height-%i width-%i", tile_map -> getHeight(), tile_map -> getWidth());
   if (layer == 1)
     textprintf_ex (buffer, font, 0, 130, makecol (255, 255, 255), makecol (0, 0, 0), "Editing Mode: Foreground");
   else
