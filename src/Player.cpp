@@ -144,7 +144,7 @@ void player::update (TileMap *fullMap) {
   for (auto t : ranged_map) {
     // Check moving LEFT
     if (collisionAny (x + 8 + xVelocity, x + 56 + xVelocity, t -> getX(), t -> getX() + t -> getWidth(),
-                      y + yVelocity, y + yVelocity + 64, t -> getY(), t -> getY() + t -> getHeight())) {
+                      y, y + 64, t -> getY(), t -> getY() + t -> getHeight())) {
 
       // Left right
       if (t -> containsAttribute (solid) || (t -> containsAttribute (slide) && player_state != STATE_SLIDING)) {
@@ -206,17 +206,18 @@ void player::update (TileMap *fullMap) {
       if (key[leftKey])
         player_state = STATE_WALKING;
 
-      if (key[rightKey])
+      else if (key[rightKey])
         player_state = STATE_WALKING;
 
       //Jump
-      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+      else if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;
       }
+      else
+        xVelocity = 0;
 
-      xVelocity = 0;
       break;
     }
     case STATE_WALKING: {
@@ -231,6 +232,7 @@ void player::update (TileMap *fullMap) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;
+        xVelocity = 0;
       }
 
       // Animate
@@ -239,25 +241,29 @@ void player::update (TileMap *fullMap) {
       }
 
       if (characterDir == RIGHT) {
-        if (xVelocity < 6)
-          xVelocity = 6;
-        else if (xVelocity < 10)
+        if (xVelocity < 4)
+          xVelocity = 4;
+        else if (xVelocity < 12)
           xVelocity += 0.5;
       }
       else if (characterDir == LEFT) {
-        if (xVelocity > -6)
-          xVelocity = -6;
-        else if (xVelocity > -10)
+        if (xVelocity > -4)
+          xVelocity = -4;
+        else if (xVelocity > -12)
           xVelocity -= 0.5;
       }
 
       break;
     }
     case STATE_JUMPING: {
-      if (key[KEY_RIGHT] && characterDir == RIGHT && xVelocity < 8)
+      if (key[rightKey] && xVelocity < 12)
         xVelocity += 0.5;
-      else if (key[KEY_LEFT] && characterDir == LEFT && xVelocity > -8)
+      else if (key[leftKey] && xVelocity > -12)
         xVelocity -= 0.5;
+
+      if (!key[rightKey] && !key[leftKey])
+        xVelocity *= 0.9;
+
 
       if (canFall) {
         if (!canJumpUp && yVelocity < 0.0f)
