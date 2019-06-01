@@ -1,5 +1,10 @@
 #include "Tile.h"
 
+#include <algorithm>
+
+#include "globals.h"
+#include "utility/tools.h"
+
 tile::tile (int newType) {
   setType (newType);
 }
@@ -10,10 +15,15 @@ tile::tile (int type, int x, int y) {
   setType (type);
 }
 
+tile::~tile() {
+
+}
+
 //Getters/ setters
 int tile::getX() const {
   return x;
 }
+
 int tile::getY() const {
   return y;
 }
@@ -21,6 +31,7 @@ int tile::getY() const {
 int tile::getWidth() {
   return width;
 }
+
 int tile::getHeight() {
   return height;
 }
@@ -29,23 +40,23 @@ void tile::setX (int newX) {
   x = newX;
   initialX = x;
 }
+
 void tile::setY (int newY) {
   y = newY;
   initialY = y;
 }
+
 int tile::getType() {
   return type;
 }
+
 std::vector<int> tile::getAttribute() {
   return attribute;
 }
+
 // Contains Attribute
 bool tile::containsAttribute (int newAttribute) {
-  if (std::find (attribute.begin(), attribute.end(), newAttribute) != attribute.end()) {
-    return true;
-  }
-
-  return false;
+  return std::find (attribute.begin(), attribute.end(), newAttribute) != attribute.end();
 }
 
 BITMAP *tile::getImage() {
@@ -294,7 +305,7 @@ void tile::setImages (BITMAP *image1) {
 
 // Set images dimensions
 void tile::setDimensions() {
-  if (images[0] != NULL) {
+  if (images[0] != nullptr) {
     width = images[0] -> w;
     height = images[0] -> h;
 
@@ -316,43 +327,29 @@ void tile::setDimensions() {
 }
 
 //Draw tile
-void tile::draw_tile (BITMAP *tempSprite, int xOffset, int yOffset, int newFrame) {
-  if (images[0] != NULL) {
+void tile::draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame) {
+  if (images[0] != nullptr) {
     //Not animated
     if (animated == 0) {
-      draw_sprite (tempSprite, images[0], x - xOffset, y - yOffset);
+      draw_sprite (buffer, images[0], x - xOffset, y - yOffset);
     }
     //Animated?
-    else if (animated == 1) {
-      if (newFrame > 3) {
-        newFrame = newFrame - 4;
-      }
-
-      if (images[newFrame] != NULL) {
-        draw_sprite (tempSprite, images[newFrame], x - xOffset, y - yOffset);
+    else {
+      frame = frame % (animated * 4);
+      if (images[frame] != nullptr) {
+        draw_sprite (buffer, images[frame], x - xOffset, y - yOffset);
       }
       else {
-        textprintf_ex (tempSprite, font, x - xOffset, y - yOffset, makecol (0, 0, 0), -1, "frame");
-        textprintf_ex (tempSprite, font, x - xOffset, y - yOffset + 20, makecol (0, 0, 0), -1, "%i NA", newFrame + 1);
-      }
-    }
-    else if (animated == 2) {
-      if (images[newFrame] != NULL) {
-        draw_sprite (tempSprite, images[newFrame], x - xOffset, y - yOffset);
-      }
-      else {
-        textprintf_ex (tempSprite, font, x - xOffset, y - yOffset, makecol (0, 0, 0), -1, "frame");
-        textprintf_ex (tempSprite, font, x - xOffset, y - yOffset + 20, makecol (0, 0, 0), -1, "%i NA", newFrame + 1);
+        textprintf_ex (buffer, font, x - xOffset, y - yOffset, makecol (0, 0, 0), -1, "frame");
+        textprintf_ex (buffer, font, x - xOffset, y - yOffset + 20, makecol (0, 0, 0), -1, "%i NA", frame + 1);
       }
     }
   }
   //Image not available? draw debug
   else {
-    textprintf_ex (tempSprite, font, x - xOffset, y - yOffset, makecol (0, 0, 0), -1, "Image");
-    textprintf_ex (tempSprite, font, x - xOffset, y - yOffset + 20, makecol (0, 0, 0), -1, "%i NA", type);
+    textprintf_ex (buffer, font, x - xOffset, y - yOffset, makecol (0, 0, 0), -1, "Image");
+    textprintf_ex (buffer, font, x - xOffset, y - yOffset + 20, makecol (0, 0, 0), -1, "%i NA", type);
   }
-}
-
-tile::~tile() {
-
+  if (width > 64 || height > 64)
+    rect(buffer, x - xOffset, y - yOffset, x - xOffset + width, y - yOffset + height, makecol(255, 0, 0));
 }

@@ -1,6 +1,6 @@
 #include "Player.h"
 
-#include <iostream>
+#include "utility/KeyListener.h"
 
 player::player() {
 
@@ -31,11 +31,8 @@ player::player() {
 }
 
 player::~player() {
-  for (int i = 0; i < 14; i++) {
-    if (player_images[i]) {
-      destroy_bitmap (player_images[i]);
-    }
-  }
+  for (int i = 0; i < 14; i++)
+    destroy_bitmap (player_images[i]);
 
   destroy_sample (walk[0]);
   destroy_sample (walk[1]);
@@ -146,20 +143,20 @@ void player::update (TileMap *fullMap) {
   //Check for collision
   for (auto t : ranged_map) {
     // Check moving LEFT
-    if (collisionAny (x + 8 + xVelocity, x + 56 + xVelocity, t -> getX(), t -> getX() +  t -> getWidth(),
-                      y + yVelocity, y + yVelocity + 64, t -> getY(), t -> getY() +  t -> getHeight())) {
+    if (collisionAny (x + 8 + xVelocity, x + 56 + xVelocity, t -> getX(), t -> getX() + t -> getWidth(),
+                      y + yVelocity, y + yVelocity + 64, t -> getY(), t -> getY() + t -> getHeight())) {
 
       // Left right
       if (t -> containsAttribute (solid) || (t -> containsAttribute (slide) && player_state != STATE_SLIDING)) {
-        if (collisionLeft (x + 8 + xVelocity, x + 56, t -> getX(), t -> getX() +  t -> getWidth()))
+        if (collisionLeft (x + 8 + xVelocity, x + 56, t -> getX(), t -> getX() + t -> getWidth()))
           canMoveLeft = false;
-        if (collisionRight (x + 8, x + 56 + xVelocity, t -> getX(), t -> getX() +  t -> getWidth()))
+        if (collisionRight (x + 8, x + 56 + xVelocity, t -> getX(), t -> getX() + t -> getWidth()))
           canMoveRight = false;
       }
     }
 
-    if (collisionAny (x + 16 + xVelocity, x + 48 + xVelocity, t -> getX(), t -> getX() +  t -> getWidth(),
-                      y + yVelocity, y + yVelocity + 64, t -> getY(), t -> getY() +  t -> getHeight())) {
+    if (collisionAny (x + 16 + xVelocity, x + 48 + xVelocity, t -> getX(), t -> getX() + t -> getWidth(),
+                      y + yVelocity, y + yVelocity + 64, t -> getY(), t -> getY() + t -> getHeight())) {
       // Jumping
       if (!t -> containsAttribute (gas)) {
         if (collisionTop (t -> getY(), t -> getY() + t -> getHeight(), y + yVelocity, y + 64))
@@ -213,7 +210,7 @@ void player::update (TileMap *fullMap) {
         player_state = STATE_WALKING;
 
       //Jump
-      if (key[jumpKey] || key[upKey]) {
+      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;
@@ -230,7 +227,7 @@ void player::update (TileMap *fullMap) {
         player_state = STATE_STANDING;
 
       //Jump
-      if (key[jumpKey] || key[upKey]) {
+      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;
@@ -282,7 +279,7 @@ void player::update (TileMap *fullMap) {
       (xVelocity < 0.01f && xVelocity > -0.01f) ? xVelocity = 0 : xVelocity *= 0.95f;
 
       //Jump
-      if (key[jumpKey] || key[upKey]) {
+      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;
@@ -300,13 +297,15 @@ void player::update (TileMap *fullMap) {
 
   //Falling (calculated separately to ensure collision accurate)
   canFall = true;
+  floorX = INT_MAX;
   for (auto t : ranged_map) {
     if (t -> containsAttribute (solid)) {
       if (collisionAny (x + 16, x + 48, t -> getX(), t -> getX() + t -> getWidth(),
-                        y, y + 96 + yVelocity, t -> getY(), t -> getY() + t -> getHeight()) &&
-          collisionTop (y, y + 96 + yVelocity, t -> getY(), t -> getY() + t -> getHeight())) {
+                        y, y + 65 + yVelocity, t -> getY(), t -> getY() + t -> getHeight()) &&
+          collisionTop (y, y + 65 + yVelocity, t -> getY(), t -> getY() + t -> getHeight())) {
         canFall = false;
-        floorX = t -> getY();
+        if (t -> getY() < floorX)
+          floorX = t -> getY();
       }
     }
   }
