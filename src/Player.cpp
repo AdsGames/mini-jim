@@ -148,9 +148,9 @@ void player::update (TileMap *fullMap) {
 
       // Left right
       if (t -> containsAttribute (solid) || (t -> containsAttribute (slide) && player_state != STATE_SLIDING)) {
-        if (collisionLeft (x + 8 + xVelocity, x + 56, t -> getX(), t -> getX() + t -> getWidth()))
+        if (collisionLeft (x + 8 + xVelocity, x + 56, t -> getX() + t -> getWidth()))
           canMoveLeft = false;
-        if (collisionRight (x + 8, x + 56 + xVelocity, t -> getX(), t -> getX() + t -> getWidth()))
+        if (collisionRight (x + 8, x + 56 + xVelocity, t -> getX()))
           canMoveRight = false;
       }
     }
@@ -159,7 +159,7 @@ void player::update (TileMap *fullMap) {
                       y + yVelocity, y + yVelocity + 64, t -> getY(), t -> getY() + t -> getHeight())) {
       // Jumping
       if (!t -> containsAttribute (gas)) {
-        if (collisionTop (t -> getY(), t -> getY() + t -> getHeight(), y + yVelocity, y + 64))
+        if (collisionTop (t -> getY(), t -> getY() + t -> getHeight(), y + yVelocity))
           canJumpUp = false;
       }
 
@@ -308,7 +308,7 @@ void player::update (TileMap *fullMap) {
     if (t -> containsAttribute (solid)) {
       if (collisionAny (x + 16, x + 48, t -> getX(), t -> getX() + t -> getWidth(),
                         y, y + 65 + yVelocity, t -> getY(), t -> getY() + t -> getHeight()) &&
-          collisionTop (y, y + 65 + yVelocity, t -> getY(), t -> getY() + t -> getHeight())) {
+          collisionTop (y, y + 65 + yVelocity, t -> getY())) {
         canFall = false;
         if (t -> getY() < floorX)
           floorX = t -> getY();

@@ -4,6 +4,7 @@
 
 #include "utility/KeyListener.h"
 #include "utility/MouseListener.h"
+#include "utility/JoystickListener.h"
 
 // For state engine
 #include "State.h"
@@ -16,6 +17,7 @@ BITMAP *buffer;
 
 KeyListener keyL;
 MouseListener mouseL;
+JoystickListener joyL;
 
 // Close button handler
 volatile int close_button_pressed = FALSE;
@@ -84,6 +86,7 @@ void update() {
   // Update listeners
   keyL.update();
   mouseL.update();
+  joyL.update();
 
   //Do state logic
   game_state.update();
@@ -133,4 +136,4 @@ int main() {
 
   return 0;
 }
-END_OF_MAIN();
+END_OF_MAIN()

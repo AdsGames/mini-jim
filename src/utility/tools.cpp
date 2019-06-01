@@ -27,16 +27,16 @@ bool button_down() {
 bool collisionAny (int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2) {
   return (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1);
 }
-bool collisionBottom (int yMin1, int yMax1, int yMin2, int yMax2) {
+bool collisionBottom (int yMin1, int yMax1, int yMax2) {
   return (yMin1 < yMax2 && yMax1 > yMax2);
 }
-bool collisionTop (int yMin1, int yMax1, int yMin2, int yMax2) {
+bool collisionTop (int yMin1, int yMax1, int yMin2) {
   return (yMin2 < yMax1 && yMin1 < yMin2);
 }
-bool collisionRight (int xMin1, int xMax1, int xMin2, int xMax2) {
+bool collisionRight (int xMin1, int xMax1, int xMin2) {
   return (xMin2 < xMax1 && xMin1 < xMin2);
 }
-bool collisionLeft (int xMin1, int xMax1, int xMin2, int xMax2) {
+bool collisionLeft (int xMin1, int xMax1, int xMax2) {
   return (xMin1 < xMax2 && xMax1 > xMax2);
 }
 

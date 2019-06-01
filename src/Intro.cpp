@@ -37,6 +37,7 @@ Intro::~Intro() {
 
 
 void Intro::update(StateEngine *engine) {
+  poll_joystick();
   frame = (timer.GetElapsedTime<milliseconds>() - 3000) / 100;
   if (frame >= 0 && !sound_played) {
     play_sample(introSound, 255, 128, 1000, 0);
