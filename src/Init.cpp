@@ -8,6 +8,8 @@
 Init::Init() {
   set_window_title ("Setting up");
 
+  set_display_switch_mode(SWITCH_BACKGROUND);
+
   // Setup number generator
   srand (time (nullptr));
 

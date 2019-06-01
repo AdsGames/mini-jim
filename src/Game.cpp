@@ -8,12 +8,12 @@
 Game::Game() {
   // Create screens
   if (single_player) {
-    screen1 = create_bitmap (SCREEN_W, SCREEN_H);
+    screen1 = create_bitmap (NATIVE_SCREEN_W, NATIVE_SCREEN_H);
     screen2 = create_bitmap (0, 0);
   }
   else {
-    screen1 = create_bitmap (SCREEN_W, SCREEN_H / 2);
-    screen2 = create_bitmap (SCREEN_W, SCREEN_H / 2);
+    screen1 = create_bitmap (NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
+    screen2 = create_bitmap (NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
   }
 
   lightingEnabled = (levelOn == 3);
@@ -49,7 +49,6 @@ Game::Game() {
   timeout = load_sample_ex ("sounds/timeout.wav");
 
   // Load music
-  waitingMusic = load_ogg_ex("sounds/music/BasicJim.ogg");
   mainMusic = load_ogg_ex("sounds/music/BasicJimFull.ogg");
 
   tile_map = nullptr;
@@ -129,7 +128,7 @@ void Game::update(StateEngine *engine) {
 
 void Game::draw(BITMAP *buffer) {
   // Black background (just in case)
-  rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, 0x000000);
+  rectfill (buffer, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H, 0x000000);
 
   // Draw tiles and characters
   tile_map -> draw (screen1, cam_1.GetX(), cam_1.GetY());
@@ -138,6 +137,7 @@ void Game::draw(BITMAP *buffer) {
   if (!single_player) {
     tile_map -> draw (screen2, cam_2.GetX(), cam_2.GetY());
     player2.draw (screen1, cam_1.GetX(), cam_1.GetY());
+    player1.draw (screen1, cam_1.GetX(), cam_1.GetY());
     player1.draw (screen2, cam_2.GetX(), cam_2.GetY());
     player2.draw (screen2, cam_2.GetX(), cam_2.GetY());
   }
@@ -166,46 +166,46 @@ void Game::draw(BITMAP *buffer) {
   // Draw split screens
   // Screens
   if (single_player) {
-    stretch_sprite (buffer, screen1, 0, 0, SCREEN_W, SCREEN_H);
+    stretch_sprite (buffer, screen1, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H);
   }
   else {
-    stretch_sprite (buffer, screen1, 0, 0, SCREEN_W, SCREEN_H / 2);
-    stretch_sprite (buffer, screen2, 0, SCREEN_H / 2, SCREEN_W, SCREEN_H / 2);
-    rectfill (buffer, 0, (SCREEN_H / 2) - 8,  SCREEN_W, (SCREEN_H / 2) + 8, makecol (0, 0, 0));
+    stretch_sprite (buffer, screen1, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
+    stretch_sprite (buffer, screen2, 0, NATIVE_SCREEN_H / 2, NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
+    rectfill (buffer, 0, (NATIVE_SCREEN_H / 2) - 8, NATIVE_SCREEN_W, (NATIVE_SCREEN_H / 2) + 8, makecol (0, 0, 0));
   }
 
   // Frame
-  rectfill (buffer, 0, 0, SCREEN_W, 16, makecol (0, 0, 0));
-  rectfill (buffer, 0, 0, 16, SCREEN_H, makecol (0, 0, 0));
-  rectfill (buffer, SCREEN_W - 16, 0, SCREEN_W, SCREEN_H, makecol (0, 0, 0));
-  rectfill (buffer, 0, SCREEN_H - 16, SCREEN_W, SCREEN_H, makecol (0, 0, 0));
+  rectfill (buffer, 0, 0, NATIVE_SCREEN_W, 16, makecol (0, 0, 0));
+  rectfill (buffer, 0, 0, 16, NATIVE_SCREEN_H, makecol (0, 0, 0));
+  rectfill (buffer, NATIVE_SCREEN_W - 16, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H, makecol (0, 0, 0));
+  rectfill (buffer, 0, NATIVE_SCREEN_H - 16, NATIVE_SCREEN_W, NATIVE_SCREEN_H, makecol (0, 0, 0));
 
   // Timers
   rectfill (buffer, 20, 20, 320, 90, makecol (0, 0, 0));
 
   if (!single_player)
-    rectfill (buffer, 20, (SCREEN_H / 2) + 20, 320, (SCREEN_H / 2) + 90, makecol (0, 0, 0));
+    rectfill (buffer, 20, (NATIVE_SCREEN_H / 2) + 20, 320, (NATIVE_SCREEN_H / 2) + 90, makecol (0, 0, 0));
 
   // Draw timer to screen
   textprintf_ex (buffer, cooper, 40, 55, makecol (255, 255, 255), -1, "Time: %.1f", tm_p1.GetElapsedTime<milliseconds>() / 1000);
   textprintf_ex (buffer, cooper, 40, 20, makecol (255, 255, 255), -1, "Deaths:%i", player1.getDeathcount());
 
   if (!single_player) {
-    textprintf_ex (buffer, cooper, 40, (SCREEN_H / 2) + 20 + 35, makecol (255, 255, 255), -1, "Time: %.1f", tm_p2.GetElapsedTime<milliseconds>() / 1000);
-    textprintf_ex (buffer, cooper, 40, (SCREEN_H / 2) + 20, makecol (255, 255, 255), -1, "Deaths:%i", player2.getDeathcount());
+    textprintf_ex (buffer, cooper, 40, (NATIVE_SCREEN_H / 2) + 20 + 35, makecol (255, 255, 255), -1, "Time: %.1f", tm_p2.GetElapsedTime<milliseconds>() / 1000);
+    textprintf_ex (buffer, cooper, 40, (NATIVE_SCREEN_H / 2) + 20, makecol (255, 255, 255), -1, "Deaths:%i", player2.getDeathcount());
   }
 
   // Starting countdown
   else {
     // Timer 3..2..1..GO!
     if (tm_begin.GetElapsedTime<milliseconds>() < 330)
-      masked_stretch_blit (countdownImage, buffer, 0, 0, 14, 18, SCREEN_W / 2 - 100, SCREEN_H / 2 - 100, 140, 180);
+      masked_stretch_blit (countdownImage, buffer, 0, 0, 14, 18, NATIVE_SCREEN_W / 2 - 100, NATIVE_SCREEN_H / 2 - 100, 140, 180);
     else if (tm_begin.GetElapsedTime<milliseconds>() < 660)
-      masked_stretch_blit (countdownImage, buffer, 19, 0, 14, 18, SCREEN_W / 2 - 100, SCREEN_H / 2 - 100, 140, 180);
+      masked_stretch_blit (countdownImage, buffer, 19, 0, 14, 18, NATIVE_SCREEN_W / 2 - 100, NATIVE_SCREEN_H / 2 - 100, 140, 180);
     else if (tm_begin.GetElapsedTime<milliseconds>() < 990)
-      masked_stretch_blit (countdownImage, buffer, 39, 0, 14, 18, SCREEN_W / 2 - 100, SCREEN_H / 2 - 100, 140, 180);
+      masked_stretch_blit (countdownImage, buffer, 39, 0, 14, 18, NATIVE_SCREEN_W / 2 - 100, NATIVE_SCREEN_H / 2 - 100, 140, 180);
     else if (tm_begin.GetElapsedTime<milliseconds>() < 1200)
-      masked_stretch_blit (countdownImage, buffer, 57, 0, 40, 18, SCREEN_W / 2 - 200, SCREEN_H / 2 - 100, 400, 180);
+      masked_stretch_blit (countdownImage, buffer, 57, 0, 40, 18, NATIVE_SCREEN_W / 2 - 200, NATIVE_SCREEN_H / 2 - 100, 400, 180);
   }
 
   // Change level when both are done
@@ -216,22 +216,22 @@ void Game::draw(BITMAP *buffer) {
     set_alpha_blender();
 
     if (single_player)
-      draw_trans_sprite (buffer, results_singleplayer, (SCREEN_W / 2) - 364, (SCREEN_H / 2) - 200);
+      draw_trans_sprite (buffer, results_singleplayer, (NATIVE_SCREEN_W / 2) - 364, (NATIVE_SCREEN_H / 2) - 200);
     else
-      draw_trans_sprite (buffer, results, (SCREEN_W / 2) - 364, (SCREEN_H / 2) - 200);
+      draw_trans_sprite (buffer, results, (NATIVE_SCREEN_W / 2) - 364, (NATIVE_SCREEN_H / 2) - 200);
 
-    textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 60, (SCREEN_H / 2) - 110, makecol (255, 255, 255), -1, "%.1f", p1_time);
+    textprintf_ex (buffer, cooper, (NATIVE_SCREEN_W / 2) - 60, (NATIVE_SCREEN_H / 2) - 110, makecol (255, 255, 255), -1, "%.1f", p1_time);
 
     if (!single_player) {
-      textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 60, (SCREEN_H / 2) - 55, makecol (255, 255, 255), -1, "%.1f", p2_time);
+      textprintf_ex (buffer, cooper, (NATIVE_SCREEN_W / 2) - 60, (NATIVE_SCREEN_H / 2) - 55, makecol (255, 255, 255), -1, "%.1f", p2_time);
 
       if (p1_time < p2_time) {
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 175, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "1");
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 5, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%.1f", p2_time - p1_time);
+        textprintf_ex (buffer, cooper, (NATIVE_SCREEN_W / 2) - 175, (NATIVE_SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "1");
+        textprintf_ex (buffer, cooper, (NATIVE_SCREEN_W / 2) - 5, (NATIVE_SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%.1f", p2_time - p1_time);
       }
       else if (p1_time > p2_time) {
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 175, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "2");
-        textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 5, (SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%.1f", p1_time - p2_time);
+        textprintf_ex (buffer, cooper, (NATIVE_SCREEN_W / 2) - 175, (NATIVE_SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "2");
+        textprintf_ex (buffer, cooper, (NATIVE_SCREEN_W / 2) - 5, (NATIVE_SCREEN_H / 2) + 2, makecol (255, 255, 255), -1, "%.1f", p1_time - p2_time);
       }
     }
   }
@@ -251,7 +251,6 @@ Game::~Game() {
   // Destroy sounds
   destroy_sample (countdown);
   destroy_sample (timeout);
-  destroy_sample (waitingMusic);
   destroy_sample (mainMusic);
 
   // Fade out

@@ -1,6 +1,7 @@
 #include "ui/Button.h"
 
 #include "utility/tools.h"
+#include "utility/MouseListener.h"
 
 Button::Button () {
   images[0] = nullptr;
@@ -11,6 +12,8 @@ Button::Button () {
 
   this -> x = 0;
   this -> y = 0;
+
+  OnClick = nullptr;
 }
 
 Button::Button (int x, int y) :
@@ -25,6 +28,10 @@ Button::~Button() {
   destroy_bitmap (images[1]);
 }
 
+void Button::SetOnClick(std::function<void(void)> func) {
+  OnClick = func;
+}
+
 // Load images from file
 void Button::SetImages (const char *image1, const char *image2) {
   images[0] = load_png_ex (image1);
@@ -36,11 +43,13 @@ void Button::SetImages (const char *image1, const char *image2) {
 }
 
 bool Button::Hover() {
-  return collisionAny(mouse_x, mouse_x, x, x + width, mouse_y, mouse_y, y, y + height);
+  return collisionAny(MouseListener::x, MouseListener::x, x, x + width,
+                      MouseListener::y, MouseListener::y, y, y + height);
 }
 
-bool Button::Clicked() {
-  return Hover() && (mouse_b & 1 || (num_joysticks > 0 && joy[0].button[0].b));
+void Button::Update() {
+  if (Hover() && MouseListener::mouse_pressed & 1 && OnClick != nullptr)
+    OnClick();
 }
 
 int Button::GetX() {

@@ -59,11 +59,11 @@ void highcolor_fade_in (BITMAP *bmp_orig, int speed) {
     set_trans_blender (0, 0, 0, a);
     draw_trans_sprite (bmp_buff, bmp_orig, 0, 0);
     vsync();
-    stretch_sprite (screen, bmp_buff, 0, 0,  SCREEN_W, SCREEN_H);
+    stretch_sprite (screen, bmp_buff, 0, 0, SCREEN_W, SCREEN_H);
   }
 
   destroy_bitmap (bmp_buff);
-  stretch_sprite (screen, bmp_orig, 0, 0,  SCREEN_W, SCREEN_H);
+  stretch_sprite (screen, bmp_orig, 0, 0, SCREEN_W, SCREEN_H);
 }
 
 // Fade out

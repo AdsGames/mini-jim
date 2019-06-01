@@ -16,11 +16,10 @@
 
 class MouseListener {
   public:
-    MouseListener();
-    virtual ~MouseListener();
-
     static void update();
 
+    static unsigned int x;
+    static unsigned int y;
     static unsigned char mouse_button;
     static unsigned char mouse_pressed;
     static unsigned char mouse_released;

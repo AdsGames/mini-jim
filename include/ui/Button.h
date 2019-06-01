@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <allegro.h>
+#include <functional>
 
 class Button {
   public:
@@ -9,17 +10,22 @@ class Button {
     Button (int x, int y);
     ~Button();
 
-    bool Hover();
-    bool Clicked();
+    void Update();
 
     void SetImages (const char *image1, const char *image2);
 
     int GetX();
     int GetY();
 
+    void SetOnClick(std::function<void()> func);
+
     void Draw (BITMAP *buffer);
 
+    bool Hover();
+
   private:
+    std::function<void(void)> OnClick;
+
     int height;
     int width;
 

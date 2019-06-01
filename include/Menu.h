@@ -24,6 +24,15 @@ class Menu : public State {
     virtual void draw(BITMAP *buffer) override;
 
   private:
+    // OnClicks
+    void StartClicked();
+    void StartMPClicked();
+    void EditClicked();
+    void HelpClicked();
+    void ExitClicked();
+    void LeftClicked();
+    void RightClicked();
+
     // Mouse hovering over button
     bool button_hover();
 
@@ -37,10 +46,7 @@ class Menu : public State {
     // Live background
     TileMap *tile_map;
     int scroll_x, scroll_y, scroll_dir_x, scroll_dir_y;
-
-    // Menu
-    float selector_y, target_selector_y;
-    int selected_button, move_to_button;
+    int next_state;
 
     enum button_names {
       BUTTON_START,
