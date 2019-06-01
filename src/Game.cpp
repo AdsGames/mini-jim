@@ -40,10 +40,6 @@ Game::Game() {
   darkness_old = load_png_ex ("images/darkness.png");
 
   spotlight = load_png_ex ("images/spotlight.png");
-  spaceImage[0] = load_png_ex ("images/space0.png");
-  spaceImage[1] = load_png_ex ("images/space1.png");
-  spaceImage[2] = load_png_ex ("images/abutton0.png");
-  spaceImage[3] = load_png_ex ("images/abutton1.png");
 
   results = load_png_ex ("images/gui/winscreen.png");
   results_singleplayer = load_png_ex ("images/gui/winscreen_singleplayer.png");
@@ -248,9 +244,6 @@ Game::~Game() {
   destroy_bitmap (countdownImage);
   destroy_bitmap (results);
   destroy_bitmap (results_singleplayer);
-
-  for (int i = 0; i < 4; i++)
-    destroy_bitmap (spaceImage[0]);
 
   // Destroy fonts
   destroy_font (cooper);

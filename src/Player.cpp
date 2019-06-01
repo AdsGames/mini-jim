@@ -38,8 +38,6 @@ player::~player() {
   destroy_sample (walk[1]);
   destroy_sample (jump);
   destroy_sample (die);
-  destroy_sample (getItem);
-  destroy_sample (getBonus);
 }
 
 // 0-3 left, 4-7 right, 8-11 up
@@ -73,8 +71,6 @@ void player::load_sounds() {
   walk[1] = load_sample_ex ("sounds/walk_2.wav");
   jump = load_sample_ex ("sounds/jump.wav");
   die = load_sample_ex ("sounds/die.wav");
-  getItem = load_sample_ex ("sounds/get_item.wav");
-  getBonus = load_sample_ex ("sounds/get_bonus.wav");
   win = load_sample_ex ("sounds/win.wav");
   trapsnap = load_sample_ex ("sounds/trapsnap.wav");
   checkpoint = load_sample_ex ("sounds/checkpoint.wav");

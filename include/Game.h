@@ -29,7 +29,6 @@ class Game : public State {
     BITMAP *countdownImage;
     BITMAP *results;
     BITMAP *results_singleplayer;
-    BITMAP *spaceImage[4];
 
     SAMPLE *waitingMusic;
     SAMPLE *mainMusic;

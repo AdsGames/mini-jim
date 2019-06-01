@@ -67,8 +67,6 @@ class player {
     SAMPLE *walk[2];
     SAMPLE *jump;
     SAMPLE *die;
-    SAMPLE *getItem;
-    SAMPLE *getBonus;
     SAMPLE *win;
     SAMPLE *trapsnap;
     SAMPLE *chicken;
