@@ -350,6 +350,4 @@ void tile::draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame) {
     textprintf_ex (buffer, font, x - xOffset, y - yOffset, makecol (0, 0, 0), -1, "Image");
     textprintf_ex (buffer, font, x - xOffset, y - yOffset + 20, makecol (0, 0, 0), -1, "%i NA", type);
   }
-  if (width > 64 || height > 64)
-    rect(buffer, x - xOffset, y - yOffset, x - xOffset + width, y - yOffset + height, makecol(255, 0, 0));
 }

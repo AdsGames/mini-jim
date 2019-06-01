@@ -148,24 +148,23 @@ void Game::draw(BITMAP *buffer) {
 
   // Lighting
   if (lightingEnabled) {
-    /*set_alpha_blender();
-    draw_sprite (darkness, darkness_old, 0, 0);
+    set_alpha_blender();
 
     // Player 1
-    for (auto &t: tile_map -> mapTiles) {
-      if ((t.getX() >= tile_map -> x - t.getWidth()) && (t.getX() < tile_map -> x + 1280) &&
-          (t.getY() >= tile_map -> y - t.getHeight()) && (t.getY() < tile_map -> y + 960)) {
-        if (t.containsAttribute (light)) {
-          stretch_sprite (darkness, spotlight, t.getX() - tile_map -> x + 32 - t.getWidth() * 3,
-                          t.getY() - tile_map -> y + 32 - (t.getHeight() * 3), t.getWidth() * 6,
-                          t.getHeight() * 6);
-        }
+    std::vector<tile*> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX(), cam_1.GetX() + cam_1.GetWidth(), cam_1.GetY(), cam_1.GetY() + cam_1.GetHeight());
+
+    //Check for collision
+    draw_sprite (darkness, darkness_old, 0, 0);
+    for (auto t : ranged_map) {
+      if (t -> containsAttribute (light)) {
+        stretch_sprite (darkness, spotlight,
+                        t -> getX() - cam_1.GetX() + t -> getWidth()  / 2 - t -> getWidth() * 3,
+                        t -> getY() - cam_1.GetY() + t -> getHeight() / 2 - t -> getHeight() * 3,
+                        t -> getWidth() * 6, t -> getHeight() * 6);
       }
     }
-    draw_sprite (darkness, spotlight, player1.getX() - cam_1.GetX() + 32 - (spotlight->w / 2), player1.getY() - cam_2.GetY() + 32 - (spotlight->h / 2));
+    draw_sprite (darkness, spotlight, player1.getX() - cam_1.GetX() + 32 - (spotlight->w / 2), player1.getY() - cam_1.GetY() + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen1, darkness, 0, 0);
-    draw_sprite (darkness, spotlight, player2.getX() - cam_2.GetX() + 32 - (spotlight->w / 2), player2.getY() - cam_2.GetY() + 32 - (spotlight->h / 2));
-    draw_trans_sprite (screen2, darkness, 0, 0);*/
   }
 
   // Draw split screens
