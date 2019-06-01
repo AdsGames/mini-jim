@@ -30,7 +30,6 @@ class Game : public State {
     BITMAP *results;
     BITMAP *results_singleplayer;
 
-    SAMPLE *waitingMusic;
     SAMPLE *mainMusic;
 
     // Lighting effects

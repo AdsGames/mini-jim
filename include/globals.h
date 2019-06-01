@@ -118,6 +118,8 @@
 //Spawners
 #define tile_spawn_player 199
 
+extern int NATIVE_SCREEN_W;
+extern int NATIVE_SCREEN_H;
 extern BITMAP *tileSprites[400][8];
 extern bool single_player;
 extern int levelOn;

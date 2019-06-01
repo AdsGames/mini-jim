@@ -141,8 +141,8 @@ std::vector<tile*> TileMap::get_tiles_in_range (int x_1, int x_2, int y_1, int y
 // Draw a layer
 void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y) {
   for (auto &t: *layer) {
-    if ((t.getX() >= x - t.getWidth() ) && (t.getX() < x + SCREEN_W) &&
-        (t.getY() >= y - t.getHeight()) && (t.getY() < y + SCREEN_H)) {
+    if ((t.getX() >= x - t.getWidth() ) && (t.getX() < x + NATIVE_SCREEN_W) &&
+        (t.getY() >= y - t.getHeight()) && (t.getY() < y + NATIVE_SCREEN_H)) {
       t.draw_tile (buffer, x, y, getFrame());
     }
   }

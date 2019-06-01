@@ -19,15 +19,17 @@ class Editor : public State {
     virtual void draw(BITMAP *buffer) override;
 
   private:
+    void SaveClicked();
+    void OpenClicked();
+
     int layer;
 
     bool saving;
     bool opening;
 
-    BITMAP *buffer;
-
     TileMap *tile_map;
     tile *pallette_tile;
+    BITMAP *cursor;
 
     //Text input
     Button btn_save, btn_open;

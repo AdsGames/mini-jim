@@ -1,16 +1,15 @@
 #include "utility/MouseListener.h"
+#include "globals.h"
 
 unsigned char MouseListener::mouse_button = 0;
 unsigned char MouseListener::mouse_pressed = 0;
 unsigned char MouseListener::mouse_released = 0;
 unsigned char MouseListener::mouse_old = 0;
+unsigned int MouseListener::x = 0;
+unsigned int MouseListener::y = 0;
 
 int MouseListener::mouse_z_change = 0;
 int MouseListener::mouse_z_old = 0;
-
-MouseListener::MouseListener() { }
-
-MouseListener::~MouseListener() { }
 
 // Check those buttons!
 void MouseListener::update() {
@@ -43,4 +42,7 @@ void MouseListener::update() {
     mouse_z_change = mouse_z - mouse_z_old;
     mouse_z_old = mouse_z;
   }
+
+  x = mouse_x * NATIVE_SCREEN_W / SCREEN_W;
+  y = mouse_y * NATIVE_SCREEN_H / SCREEN_H;
 }

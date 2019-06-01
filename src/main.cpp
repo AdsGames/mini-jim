@@ -8,6 +8,7 @@
 
 // For state engine
 #include "State.h"
+#include "globals.h"
 
 // State engine
 StateEngine game_state;
@@ -75,10 +76,10 @@ void setup() {
   closeGame = false;
 
   // Create screen
-  set_gfx_mode (GFX_AUTODETECT_WINDOWED, 1280, 960, 0, 0);
+  set_gfx_mode (GFX_AUTODETECT_WINDOWED, NATIVE_SCREEN_W, NATIVE_SCREEN_H, 0, 0);
 
   // Create global buffer
-  buffer = create_bitmap(SCREEN_W, SCREEN_H);
+  buffer = create_bitmap(NATIVE_SCREEN_W, NATIVE_SCREEN_H);
 }
 
 // Update
@@ -99,6 +100,7 @@ void update() {
 //Do state rendering
 void draw() {
   game_state.draw(buffer);
+  vsync();
   stretch_sprite(screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }
 
@@ -129,7 +131,6 @@ int main() {
       frames_done = 0;
       old_time = game_time;
     }
-    vsync();
     draw();
     frames_done++;
   }
