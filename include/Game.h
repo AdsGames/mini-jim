@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "GameState.h"
+#include "State.h"
 
 #include <allegro.h>
 
@@ -11,19 +11,16 @@
 #include "Camera.h"
 
 // Main game screen
-class Game : public GameState {
+class Game : public State {
   public:
     Game();
-    ~Game();
-
+    virtual ~Game();
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
     void init();
-    void update();
-    void draw();
 
   private:
-    BITMAP *buffer;
-    BITMAP *screen1;
-    BITMAP *screen2;
+    BITMAP *screen1, *screen2;
     SAMPLE *countdown;
     SAMPLE *timeout;
 

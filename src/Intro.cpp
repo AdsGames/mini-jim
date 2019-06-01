@@ -18,8 +18,6 @@ Intro::Intro() {
   for (int i = 0; i < INTRO_FRAMES; i++) {
     images[i] = load_png_ex(std::string("images/opening/opening" + std::to_string(i) + ".png").c_str());
   }
-
-  buffer = create_bitmap (SCREEN_W, SCREEN_H);
 }
 
 Intro::~Intro() {
@@ -33,11 +31,11 @@ Intro::~Intro() {
 }
 
 
-void Intro::update() {
-  set_next_state (STATE_MENU);
+void Intro::update(StateEngine *engine) {
+  setNextState (engine, StateEngine::STATE_MENU);
 }
 
-void Intro::draw() {
+void Intro::draw(BITMAP *buffer) {
   // Intro stuffs
   /* highcolor_fade_in( intro, 32);
      rest(3000);

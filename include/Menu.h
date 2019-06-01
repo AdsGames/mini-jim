@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "GameState.h"
+#include "State.h"
 
 #include <allegro.h>
 #include <loadpng.h>
@@ -16,12 +16,12 @@
 #include "ui/Button.h"
 #include "Camera.h"
 
-class Menu : public GameState {
+class Menu : public State {
   public:
     Menu();
     virtual ~Menu();
-    virtual void update() override;
-    virtual void draw() override;
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
 
   private:
     // Mouse hovering over button
@@ -31,7 +31,7 @@ class Menu : public GameState {
     void change_level(int level);
 
     // Menu/GUI
-    BITMAP *buffer, *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright, *credits;
+    BITMAP *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright, *credits;
     SAMPLE *click, *intro, *music;
 
     // Live background

@@ -26,9 +26,6 @@ extern int random (int newLowest, int newHighest);
 extern void highcolor_fade_in (BITMAP *bmp_orig, int speed);
 extern void highcolor_fade_out (int speed);
 
-// Next state
-extern void set_next_state (int newState);
-
 // Error reporting
 extern void abort_on_error (const char *message);
 
