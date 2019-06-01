@@ -18,6 +18,11 @@ Intro::Intro() {
   for (int i = 0; i < INTRO_FRAMES; i++) {
     images[i] = load_png_ex(std::string("images/opening/opening" + std::to_string(i) + ".png").c_str());
   }
+
+  timer.Start();
+  highcolor_fade_in(intro, 32);
+  frame = 0;
+  sound_played = false;
 }
 
 Intro::~Intro() {
@@ -32,36 +37,31 @@ Intro::~Intro() {
 
 
 void Intro::update(StateEngine *engine) {
-  setNextState (engine, StateEngine::STATE_MENU);
+  frame = (timer.GetElapsedTime<milliseconds>() - 3000) / 100;
+  if (frame >= 0 && !sound_played) {
+    play_sample(introSound, 255, 128, 1000, 0);
+    sound_played = true;
+  }
+
+  if (frame >= INTRO_FRAMES || key_down() || button_down()) {
+    setNextState (engine, StateEngine::STATE_MENU);
+    highcolor_fade_out(64);
+  }
 }
 
 void Intro::draw(BITMAP *buffer) {
   // Intro stuffs
-  /* highcolor_fade_in( intro, 32);
-     rest(3000);
-   highcolor_fade_out( 32);
-   highcolor_fade_in( title, 32);
-     rest(3000);
-   highcolor_fade_out( 32);
-   rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 0,0,0));
-   stretch_sprite( buffer, background, 105, 140, 1070, 680);
-   highcolor_fade_in( buffer, 32);
+  if (timer.GetElapsedTime<seconds>() < 1) {
+    draw_sprite(buffer, intro, 0, 0);
+  }
+  else if (timer.GetElapsedTime<seconds>() < 2) {
+    draw_sprite(buffer, title, 0, 0);
+  }
+  else {
+    clear_to_color(buffer, 0x00000);
+    stretch_sprite(buffer, background, 105, 140, 1070, 680);
 
-   clear_keybuf();
-
-   // Show background
-   play_sample( introSound, 255, 128, 1000, 0);
-   for( int i = 0; i < 81; i++){
-     poll_joystick();
-     if(keyboard_keypressed() || joy_buttonpressed()){
-       break;
-     }
-     rectfill( buffer, 0, 0, 1280, 960, makecol( 0,0,0));
-     stretch_sprite( buffer, background, 105, 140, 1070, 680);
-     stretch_sprite( buffer, images[i], 105, 120, 1070, 660);
-     stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
-     // Wheres my car?
-     rest(100);
-   }
-  *///  highcolor_fade_out( 64);
+    if (frame >= 0 && frame < INTRO_FRAMES)
+      stretch_sprite(buffer, images[frame], 105, 120, 1070, 660);
+  }
 }
