@@ -77,11 +77,6 @@ void Game::init() {
   cam_1 = Camera(screen1 -> w, screen1 -> h, tile_map -> getWidth(), tile_map -> getHeight());
   cam_2 = Camera(screen2 -> w, screen2 -> h, tile_map -> getWidth(), tile_map -> getHeight());
 
-  tm_p1.Stop();
-  tm_p1.Reset();
-  tm_p2.Stop();
-  tm_p2.Reset();
-
   // Find spawn
   tile *spawnTile = tile_map -> find_tile_type(199, 1);
   if (spawnTile != nullptr) {
@@ -115,10 +110,15 @@ void Game::update(StateEngine *engine) {
     }
   }
 
-  // Stop timers
-  if (player1.getFinished() && tm_p1.IsRunning())
+  // Timers
+  if (tm_begin.IsRunning() && tm_begin.GetElapsedTime<milliseconds>() > 1200) {
+    tm_begin.Stop();
+    tm_p1.Start();
+    tm_p2.Start();
+  }
+  if (tm_p1.IsRunning() && player1.getFinished())
     tm_p1.Stop();
-  if (player2.getFinished() && tm_p2.IsRunning())
+  if (tm_p2.IsRunning() && player2.getFinished())
     tm_p2.Stop();
 
   // Change level when both are done
@@ -142,7 +142,7 @@ void Game::draw(BITMAP *buffer) {
   if (!single_player) {
     tile_map -> draw (screen2, cam_2.GetX(), cam_2.GetY());
     player2.draw (screen1, cam_1.GetX(), cam_1.GetY());
-    player1.draw (screen2, cam_1.GetX(), cam_1.GetY());
+    player1.draw (screen2, cam_2.GetX(), cam_2.GetY());
     player2.draw (screen2, cam_2.GetX(), cam_2.GetY());
   }
 
@@ -184,59 +184,45 @@ void Game::draw(BITMAP *buffer) {
   rectfill (buffer, SCREEN_W - 16, 0, SCREEN_W, SCREEN_H, makecol (0, 0, 0));
   rectfill (buffer, 0, SCREEN_H - 16, SCREEN_W, SCREEN_H, makecol (0, 0, 0));
 
-  // Only draw timer once game has begun
-  if (!tm_begin.IsRunning()) {
-    // Timers
-    rectfill (buffer, 20, 20, 320, 90, makecol (0, 0, 0));
+  // Timers
+  rectfill (buffer, 20, 20, 320, 90, makecol (0, 0, 0));
 
-    if (!single_player) {
-      rectfill (buffer, 20, (SCREEN_H / 2) + 20, 320, (SCREEN_H / 2) + 90, makecol (0, 0, 0));
-    }
+  if (!single_player)
+    rectfill (buffer, 20, (SCREEN_H / 2) + 20, 320, (SCREEN_H / 2) + 90, makecol (0, 0, 0));
 
-    // Draw timer to screen
-    textprintf_ex (buffer, cooper, 40, 55, makecol (255, 255, 255), -1, "Time: %.1f", tm_p1.GetElapsedTime<milliseconds>() / 1000);
-    textprintf_ex (buffer, cooper, 40, 20, makecol (255, 255, 255), -1, "Deaths:%i", player1.getDeathcount());
+  // Draw timer to screen
+  textprintf_ex (buffer, cooper, 40, 55, makecol (255, 255, 255), -1, "Time: %.1f", tm_p1.GetElapsedTime<milliseconds>() / 1000);
+  textprintf_ex (buffer, cooper, 40, 20, makecol (255, 255, 255), -1, "Deaths:%i", player1.getDeathcount());
 
-    if (!single_player) {
-      textprintf_ex (buffer, cooper, 40, (SCREEN_H / 2) + 20 + 35, makecol (255, 255, 255), -1, "Time: %.1f", tm_p2.GetElapsedTime<milliseconds>() / 1000);
-      textprintf_ex (buffer, cooper, 40, (SCREEN_H / 2) + 20, makecol (255, 255, 255), -1, "Deaths:%i", player2.getDeathcount());
-    }
+  if (!single_player) {
+    textprintf_ex (buffer, cooper, 40, (SCREEN_H / 2) + 20 + 35, makecol (255, 255, 255), -1, "Time: %.1f", tm_p2.GetElapsedTime<milliseconds>() / 1000);
+    textprintf_ex (buffer, cooper, 40, (SCREEN_H / 2) + 20, makecol (255, 255, 255), -1, "Deaths:%i", player2.getDeathcount());
   }
+
   // Starting countdown
   else {
     // Timer 3..2..1..GO!
-    if (tm_begin.GetElapsedTime<milliseconds>() < 330) {
+    if (tm_begin.GetElapsedTime<milliseconds>() < 330)
       masked_stretch_blit (countdownImage, buffer, 0, 0, 14, 18, SCREEN_W / 2 - 100, SCREEN_H / 2 - 100, 140, 180);
-    }
-    else if (tm_begin.GetElapsedTime<milliseconds>() < 660) {
+    else if (tm_begin.GetElapsedTime<milliseconds>() < 660)
       masked_stretch_blit (countdownImage, buffer, 19, 0, 14, 18, SCREEN_W / 2 - 100, SCREEN_H / 2 - 100, 140, 180);
-    }
-    else if (tm_begin.GetElapsedTime<milliseconds>() < 990) {
+    else if (tm_begin.GetElapsedTime<milliseconds>() < 990)
       masked_stretch_blit (countdownImage, buffer, 39, 0, 14, 18, SCREEN_W / 2 - 100, SCREEN_H / 2 - 100, 140, 180);
-    }
-    else if (tm_begin.GetElapsedTime<milliseconds>() < 1200) {
+    else if (tm_begin.GetElapsedTime<milliseconds>() < 1200)
       masked_stretch_blit (countdownImage, buffer, 57, 0, 40, 18, SCREEN_W / 2 - 200, SCREEN_H / 2 - 100, 400, 180);
-    }
-    else {
-      tm_begin.Stop();
-      tm_p1.Start();
-      tm_p2.Start();
-    }
   }
 
   // Change level when both are done
-  if ((player1.getFinished() && player2.getFinished() && !single_player) || (player1.getFinished() && single_player)) {
+  if (player1.getFinished() && (player2.getFinished() || single_player)) {
     const float p1_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
     const float p2_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
 
     set_alpha_blender();
 
-    if (single_player) {
+    if (single_player)
       draw_trans_sprite (buffer, results_singleplayer, (SCREEN_W / 2) - 364, (SCREEN_H / 2) - 200);
-    }
-    else {
+    else
       draw_trans_sprite (buffer, results, (SCREEN_W / 2) - 364, (SCREEN_H / 2) - 200);
-    }
 
     textprintf_ex (buffer, cooper, (SCREEN_W / 2) - 60, (SCREEN_H / 2) - 110, makecol (255, 255, 255), -1, "%.1f", p1_time);
 

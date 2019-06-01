@@ -2,20 +2,11 @@
 // Includes
 #include <allegro.h>
 
-#include "globals.h"
-#include "utility/tools.h"
-
 #include "utility/KeyListener.h"
 #include "utility/MouseListener.h"
 
 // For state engine
 #include "State.h"
-
-#include "Init.h"
-#include "Intro.h"
-#include "Menu.h"
-#include "Editor.h"
-#include "Game.h"
 
 // State engine
 StateEngine game_state;
