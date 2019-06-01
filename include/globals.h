@@ -118,27 +118,8 @@
 //Spawners
 #define tile_spawn_player 199
 
-//Enemies
-#define enemy_vorticon 0
-
 extern BITMAP *tileSprites[400][8];
-
-//Game states
-enum GameStates {
-  STATE_NULL,
-  STATE_INIT,
-  STATE_INTRO,
-  STATE_MENU,
-  STATE_EDIT,
-  STATE_GAME,
-  STATE_EXIT,
-};
-
 extern bool single_player;
-
-//State variables
-extern int stateID;
-extern int nextState;
 extern int levelOn;
 
 #endif

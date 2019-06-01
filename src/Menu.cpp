@@ -5,10 +5,6 @@
 
 // Create menu
 Menu::Menu() {
-
-  // Create buffer image
-  buffer = create_bitmap (SCREEN_W, SCREEN_H);
-
   // Load images
   menu = load_png_ex("images/gui/menu.png");
   menuselect = load_png_ex("images/gui/menuSelector.png");
@@ -61,6 +57,28 @@ Menu::Menu() {
   play_sample (intro, 255, 128, 1000, 0);
 }
 
+Menu::~Menu() {
+  // Destory Bitmaps
+  destroy_bitmap (levelSelectNumber);
+  destroy_bitmap (cursor);
+  destroy_bitmap (menuselect);
+  destroy_bitmap (menu);
+  destroy_bitmap (help);
+  destroy_bitmap (copyright);
+  destroy_bitmap (credits);
+
+  // Destory Samples
+  destroy_sample (click);
+  destroy_sample (intro);
+  destroy_sample (music);
+
+  // Destory background
+  delete tile_map;
+
+  // Fade out
+  highcolor_fade_out (16);
+}
+
 bool Menu::button_hover() {
   for (int i = 0; i < NUM_BUTTONS; i++) {
     if (buttons[i].Hover()) {
@@ -85,7 +103,7 @@ void Menu::change_level(int level) {
   cam.SetSpeed(1);
 }
 
-void Menu::update() {
+void Menu::update(StateEngine *engine) {
   // Move around live background
   if (scroll_x + SCREEN_W / 2 >= tile_map -> getWidth() || scroll_x <= SCREEN_W / 2)
     scroll_dir_x *= -1;
@@ -118,17 +136,17 @@ void Menu::update() {
     switch (selected_button) {
       case 0:
         single_player = true;
-        set_next_state (STATE_GAME);
+        setNextState (engine, StateEngine::STATE_GAME);
         break;
       case 1:
         single_player = false;
-        set_next_state (STATE_GAME);
+        setNextState (engine, StateEngine::STATE_GAME);
         break;
       case 2:
-        set_next_state (STATE_EDIT);
+        setNextState (engine, StateEngine::STATE_EDIT);
         break;
       case 4:
-        set_next_state (STATE_EXIT);
+        setNextState (engine, StateEngine::STATE_EXIT);
         break;
       default:
         break;
@@ -137,11 +155,11 @@ void Menu::update() {
 
   // Change level
   if (KeyListener::keyPressed[KEY_A] || KeyListener::keyPressed[KEY_LEFT] ||
-     (MouseListener::mouse_pressed & 1 && selected_button == 5)) {
+     (MouseListener::mouse_pressed & 1 && buttons[BUTTON_LEFT].Hover())) {
     change_level(-1);
   }
   if (KeyListener::keyPressed[KEY_D] || KeyListener::keyPressed[KEY_RIGHT] ||
-     (MouseListener::mouse_pressed & 1 && selected_button == 6)) {
+     (MouseListener::mouse_pressed & 1 && buttons[BUTTON_RIGHT].Hover())) {
     change_level(1);
   }
 
@@ -153,7 +171,7 @@ void Menu::update() {
   }
 }
 
-void Menu::draw() {
+void Menu::draw(BITMAP *buffer) {
   // Draw background to screen
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, makecol (255, 255, 255));
 
@@ -184,30 +202,4 @@ void Menu::draw() {
 
   draw_trans_sprite (buffer, copyright, SCREEN_W - 350, SCREEN_H - 40);
   draw_sprite (buffer, cursor, mouse_x, mouse_y);
-
-  // Draw buffer
-  stretch_sprite (screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
-}
-
-Menu::~Menu() {
-  // Destory Bitmaps
-  destroy_bitmap (buffer);
-  destroy_bitmap (levelSelectNumber);
-  destroy_bitmap (cursor);
-  destroy_bitmap (menuselect);
-  destroy_bitmap (menu);
-  destroy_bitmap (help);
-  destroy_bitmap (copyright);
-  destroy_bitmap (credits);
-
-  // Destory Samples
-  destroy_sample (click);
-  destroy_sample (intro);
-  destroy_sample (music);
-
-  // Destory background
-  delete tile_map;
-
-  // Fade out
-  highcolor_fade_out (16);
 }

@@ -7,9 +7,8 @@
 
 Init::Init() {
   set_window_title ("Setting up");
-  set_gfx_mode (GFX_AUTODETECT_WINDOWED, 1280, 960, 0, 0);
-  set_window_title ("Mini Jim");
 
+  // Setup number generator
   srand (time (NULL));
 
   // Tile Sprites
@@ -157,13 +156,15 @@ Init::Init() {
   tileSprites[tile_back_grey_dark_top_right][0] = load_png ("images/blocks/backs/grey_dark_top_right.png", NULL);
 
   tileSprites[tile_back_lamp][0] = load_png ("images/blocks/backs/lamp.png", NULL);
+
+  set_window_title ("Mini Jim");
 }
 
-void Init::update() {
-  set_next_state (STATE_INTRO);
+void Init::update(StateEngine *engine) {
+  setNextState (engine, StateEngine::STATE_INTRO);
 }
 
-void Init::draw() {
+void Init::draw(BITMAP *buffer) {
 
 }
 

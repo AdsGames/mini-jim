@@ -43,11 +43,11 @@
 		<Unit filename="include/Camera.h" />
 		<Unit filename="include/Editor.h" />
 		<Unit filename="include/Game.h" />
-		<Unit filename="include/GameState.h" />
 		<Unit filename="include/Init.h" />
 		<Unit filename="include/Intro.h" />
 		<Unit filename="include/Menu.h" />
 		<Unit filename="include/Player.h" />
+		<Unit filename="include/State.h" />
 		<Unit filename="include/Tile.h" />
 		<Unit filename="include/TileMap.h" />
 		<Unit filename="include/globals.h" />
@@ -63,11 +63,11 @@
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Editor.cpp" />
 		<Unit filename="src/Game.cpp" />
-		<Unit filename="src/GameState.cpp" />
 		<Unit filename="src/Init.cpp" />
 		<Unit filename="src/Intro.cpp" />
 		<Unit filename="src/Menu.cpp" />
 		<Unit filename="src/Player.cpp" />
+		<Unit filename="src/State.cpp" />
 		<Unit filename="src/Tile.cpp" />
 		<Unit filename="src/TileMap.cpp" />
 		<Unit filename="src/globals.cpp" />

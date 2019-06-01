@@ -1,7 +1,7 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-#include "GameState.h"
+#include "State.h"
 
 #include <allegro.h>
 
@@ -11,13 +11,12 @@
 #include "ui/Button.h"
 #include "Camera.h"
 
-class Editor : public GameState {
+class Editor : public State {
   public:
     Editor();
-    ~Editor();
-
-    virtual void update() override;
-    virtual void draw() override;
+    virtual ~Editor();
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
 
   private:
     int layer;

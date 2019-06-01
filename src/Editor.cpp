@@ -7,9 +7,6 @@
 #include "utility/KeyListener.h"
 
 Editor::Editor() {
-  // Other Sprites
-  buffer = create_bitmap (SCREEN_W, SCREEN_H);
-
   // Create map
   tile_map = new TileMap ("data/templates/blank64x48");
 
@@ -124,10 +121,10 @@ void Editor::edit() {
   }
 }
 
-void Editor::update() {
+void Editor::update(StateEngine *engine) {
   // Back to menu
   if (KeyListener::keyPressed[KEY_M] && !saving && !opening) {
-    set_next_state (STATE_MENU);
+    setNextState (engine, StateEngine::STATE_MENU);
   }
 
   // Close menu
@@ -145,7 +142,7 @@ void Editor::update() {
     edit();
 }
 
-void Editor::draw() {
+void Editor::draw(BITMAP *buffer) {
   // Background
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, makecol (255, 255, 255));
 
@@ -178,7 +175,4 @@ void Editor::draw() {
   // Cursor
   circlefill (buffer, mouse_x, mouse_y, 10, makecol (0, 0, 0));
   circlefill (buffer, mouse_x, mouse_y, 8, makecol (255, 255, 255));
-
-  // Draw buffer
-  stretch_sprite (screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }

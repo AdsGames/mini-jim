@@ -6,9 +6,6 @@
 #include "utility/tools.h"
 
 Game::Game() {
-  // Other Sprites
-  buffer = create_bitmap (SCREEN_W, SCREEN_H);
-
   // Create screens
   if (single_player) {
     screen1 = create_bitmap (SCREEN_W, SCREEN_H);
@@ -59,13 +56,16 @@ Game::Game() {
   waitingMusic = load_ogg_ex("sounds/music/BasicJim.ogg");
   mainMusic = load_ogg_ex("sounds/music/BasicJimFull.ogg");
 
+  tile_map = nullptr;
+
   // Init
   init();
 }
 
 void Game::init() {
   // Create map
-  delete tile_map;
+  if (tile_map)
+    delete tile_map;
 
   tile_map = new TileMap ();
 
@@ -97,7 +97,7 @@ void Game::init() {
   tm_begin.Start();
 }
 
-void Game::update() {
+void Game::update(StateEngine *engine) {
   // Camera follow
   cam_1.Follow(player1.getX(), player1.getY());
   cam_2.Follow(player2.getX(), player2.getY());
@@ -123,15 +123,15 @@ void Game::update() {
 
   // Change level when both are done
   if (key[KEY_ENTER] && player1.getFinished() && (player2.getFinished() || single_player)) {
-    set_next_state (STATE_MENU);
+    setNextState (engine, StateEngine::STATE_MENU);
   }
 
   // Back to menu
   if (key[KEY_M])
-    set_next_state (STATE_MENU);
+    setNextState (engine, StateEngine::STATE_MENU);
 }
 
-void Game::draw() {
+void Game::draw(BITMAP *buffer) {
   // Black background (just in case)
   rectfill (buffer, 0, 0, SCREEN_W, SCREEN_H, 0x000000);
 
@@ -254,14 +254,10 @@ void Game::draw() {
       }
     }
   }
-
-  // Draw buffer
-  stretch_sprite (screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }
 
 Game::~Game() {
   // Destroy images
-  destroy_bitmap (buffer);
   destroy_bitmap (screen1);
   destroy_bitmap (screen2);
   destroy_bitmap (countdownImage);

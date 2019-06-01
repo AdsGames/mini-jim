@@ -1,19 +1,19 @@
 #ifndef INTRO_H
 #define INTRO_H
 
-#include "GameState.h"
+#include "State.h"
 
 #include <allegro.h>
 
 #define INTRO_FRAMES 82
 
 // Intro screen of game
-class Intro : public GameState {
+class Intro : public State {
   public:
     Intro();
-    void update();
-    void draw();
-    ~Intro();
+    virtual ~Intro();
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
 
   private:
     BITMAP *buffer;

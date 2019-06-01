@@ -48,15 +48,6 @@ int random (int newLowest, int newHighest) {
   return randomNumber;
 }
 
-// Set next state
-void set_next_state (int newState) {
-  //If the user doesn't want to exit
-  if (nextState != STATE_EXIT) {
-    //Set the next state
-    nextState = newState;
-  }
-}
-
 // Fade in
 void highcolor_fade_in (BITMAP *bmp_orig, int speed) {
   BITMAP *bmp_buff = create_bitmap (SCREEN_W, SCREEN_H);
