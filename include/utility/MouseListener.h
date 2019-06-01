@@ -25,8 +25,6 @@ class MouseListener {
     static unsigned char mouse_pressed;
     static unsigned char mouse_released;
     static int mouse_z_change;
-  protected:
-
   private:
     static unsigned char mouse_old;
     static int mouse_z_old;

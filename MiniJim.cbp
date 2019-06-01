@@ -14,12 +14,17 @@
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
 				<Compiler>
+					<Add option="-Wnon-virtual-dtor" />
 					<Add option="-Wredundant-decls" />
+					<Add option="-Wundef" />
 					<Add option="-Wfloat-equal" />
+					<Add option="-Winline" />
 					<Add option="-Wunreachable-code" />
 					<Add option="-Wmissing-include-dirs" />
 					<Add option="-Wswitch-default" />
+					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wmain" />
+					<Add option="-pedantic" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-std=c++14" />
@@ -53,6 +58,7 @@
 		<Unit filename="include/globals.h" />
 		<Unit filename="include/ui/Button.h" />
 		<Unit filename="include/ui/InputBox.h" />
+		<Unit filename="include/utility/JoystickListener.h" />
 		<Unit filename="include/utility/KeyListener.h" />
 		<Unit filename="include/utility/MouseListener.h" />
 		<Unit filename="include/utility/Timer.h" />
@@ -74,6 +80,7 @@
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/ui/Button.cpp" />
 		<Unit filename="src/ui/InputBox.cpp" />
+		<Unit filename="src/utility/JoystickListener.cpp" />
 		<Unit filename="src/utility/KeyListener.cpp" />
 		<Unit filename="src/utility/MouseListener.cpp" />
 		<Unit filename="src/utility/Timer.cpp" />

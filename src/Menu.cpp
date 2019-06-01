@@ -104,6 +104,8 @@ void Menu::change_level(int level) {
 }
 
 void Menu::update(StateEngine *engine) {
+  poll_joystick();
+
   // Move around live background
   if (scroll_x + SCREEN_W / 2 >= tile_map -> getWidth() || scroll_x <= SCREEN_W / 2)
     scroll_dir_x *= -1;

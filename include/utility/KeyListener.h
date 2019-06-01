@@ -20,9 +20,9 @@ class KeyListener {
 
     static bool keyPressed[KL_KEY_MAX];
     static bool keyReleased[KL_KEY_MAX];
-    static bool lastTicksKey[KL_KEY_MAX];
-  protected:
+
   private:
+    static bool lastTicksKey[KL_KEY_MAX];
 };
 
 #endif // KeyListener_H

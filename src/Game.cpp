@@ -29,7 +29,7 @@ Game::Game() {
 
   // Build a color lookup table for lighting effects
   get_palette (pal);
-  create_light_table (&light_table, pal, 0, 0, 0, NULL);
+  create_light_table (&light_table, pal, 0, 0, 0, nullptr);
 
   //Sets Font
   cooper = load_font_ex ("fonts/cooper_black.pcx");
