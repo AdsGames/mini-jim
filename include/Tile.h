@@ -2,14 +2,7 @@
 #define TILE_H
 
 #include <allegro.h>
-#include <loadpng.h>
 #include <vector>
-#include <iostream>
-#include <algorithm>
-#include <iterator>
-
-#include "globals.h"
-#include "utility/tools.h"
 
 class tile {
   public:
@@ -38,19 +31,16 @@ class tile {
     void setImagesAnimated (BITMAP *image1, BITMAP *image2, BITMAP *image3, BITMAP *image4);
     void setImagesAnimatedEight (BITMAP *image1, BITMAP *image2, BITMAP *image3, BITMAP *image4, BITMAP *image5, BITMAP *image6, BITMAP *image7, BITMAP *image8);
 
-    void draw_tile (BITMAP *temp, int xOffset, int yOffset, int newFrame);
+    void draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame);
 
   private:
     void setDimensions();
     int x, y;
     int initialX, initialY;
-    int width;
-    int height;
+    int width, height;
     int type;
     std::vector<int> attribute;
-
     int animated;
-
     BITMAP *images[8];
 };
 
