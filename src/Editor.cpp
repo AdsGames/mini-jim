@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 #include <string>
+#include "TileTypeLoader.h"
 
 #include "globals.h"
 #include "utility/tools.h"
@@ -9,7 +10,7 @@
 
 Editor::Editor() {
   // Create map
-  tile_map = new TileMap ("data/templates/blank64x48");
+  tile_map = new TileMap ();
 
   // Create example tile
   pallette_tile = new tile (0, 0, 0);
@@ -17,20 +18,20 @@ Editor::Editor() {
   font = load_font_ex ("fonts/arial_black.pcx");
   cursor = load_png_ex ("images/gui/cursor1.png");
 
-  ib_save = InputBox(400, 408, 500, 50, ".txt");
-  ib_open = InputBox(400, 408, 500, 50, ".txt");
+  ib_save = InputBox(400, 408, 500, 50, "untitled");
+  ib_open = InputBox(400, 408, 500, 50, "templates/blank64x48");
 
   btn_save = Button(540, 500);
   btn_open = Button(540, 500);
-  btn_save.SetOnClick(std::bind(&Editor::SaveClicked, this));
-  btn_open.SetOnClick(std::bind(&Editor::OpenClicked, this));
+  btn_save.SetOnClick(std::bind(&Editor::Save, this));
+  btn_open.SetOnClick(std::bind(&Editor::Open, this));
   btn_save.SetImages("images/gui/button_save.png", "images/gui/button_save_hover.png");
   btn_open.SetImages("images/gui/button_load.png", "images/gui/button_load_hover.png");
 
   set_alpha_blender();
 
   layer = 1;
-  opening = false;
+  opening = true;
   saving = false;
 }
 
@@ -41,49 +42,36 @@ Editor::~Editor() {
   delete pallette_tile;
 }
 
-void Editor::SaveClicked() {
+void Editor::Save() {
   tile_map -> save ("data/" + ib_save.GetValue());
   saving = false;
 }
 
-void Editor::OpenClicked() {
+void Editor::Open() {
   tile_map -> load ("data/" + ib_open.GetValue().substr (0, ib_open.GetValue().size() - 4));
   opening = false;
-}
-
-void Editor::save() {
-  ib_save.Focus();
-  ib_save.Update();
-  btn_save.Update();
-}
-
-void Editor::open() {
-  ib_open.Focus();
-  ib_open.Update();
-  btn_open.Update();
-
   cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
   cam.SetSpeed(1);
   cam.SetBounds(20, 20);
 }
 
-void Editor::edit() {
+void Editor::Edit() {
   cam.Follow(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY());
 
   // Change selected
-  /*if (KeyListener::keyPressed[KEY_UP]) {
-    pallette_tile -> setType (pallette_tile -> getType() + 1);
-    while (pallette_tile -> getImage() == nullptr && pallette_tile -> getType() < 400) {
-      pallette_tile -> setType (pallette_tile -> getType() + 1);
-    }
+  if (KeyListener::keyPressed[KEY_UP]) {
+    int i = pallette_tile -> getType () + 1;
+    while (!TileTypeLoader::GetTile(i))
+      i = (i + 1) > 400 ? 0 : i + 1;
+    pallette_tile -> setType (i);
   }
 
   if (KeyListener::keyPressed[KEY_DOWN]) {
-    pallette_tile -> setType (pallette_tile -> getType() - 1);
-    while (pallette_tile -> getImage() == nullptr && pallette_tile -> getType() > 1) {
-      pallette_tile -> setType (pallette_tile -> getType() - 1);
-    }
-  }*/
+    int i = pallette_tile -> getType () - 1;
+    while (!TileTypeLoader::GetTile(i))
+      i = (i - 1) < 0 ? 400 : i - 1;
+    pallette_tile -> setType (i);
+  }
 
   // Change Layer
   if (KeyListener::keyPressed[KEY_TAB])
@@ -138,12 +126,19 @@ void Editor::update(StateEngine *engine) {
   }
 
   // Run states
-  if (saving)
-    save();
-  else if (opening)
-    open();
-  else
-    edit();
+  if (saving) {
+    ib_save.Focus();
+    ib_save.Update();
+    btn_save.Update();
+  }
+  else if (opening) {
+    ib_open.Focus();
+    ib_open.Update();
+    btn_open.Update();
+  }
+  else {
+    Edit();
+  }
 }
 
 void Editor::draw(BITMAP *buffer) {
@@ -153,6 +148,7 @@ void Editor::draw(BITMAP *buffer) {
   // Draw tiles
   tile_map -> draw (buffer, cam.GetX(), cam.GetY());
   pallette_tile -> draw_tile (buffer, 0, 0, 0);
+  textprintf_ex (buffer, font, 70, 20, makecol (255, 255, 255), makecol (0, 0, 0), "%s", pallette_tile -> getName().c_str());
 
   // Map info
   textprintf_ex (buffer, font, 0, 80, makecol (255, 255, 255), makecol (0, 0, 0), "height-%i width-%i", tile_map -> getHeight(), tile_map -> getWidth());

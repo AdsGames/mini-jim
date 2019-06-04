@@ -34,14 +34,4 @@ class TileType {
     std::vector<BITMAP*> images;
 };
 
-class TileTypeLoader {
-  public:
-    static void LoadTypes(std::string path);
-    static TileType *GetTile(int id);
-    static int GetID(std::string id_str);
-
-  private:
-    static std::vector<TileType*> types;
-};
-
 #endif // TILETYPE_H

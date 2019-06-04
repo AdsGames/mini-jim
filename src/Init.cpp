@@ -5,7 +5,7 @@
 #include "globals.h"
 #include "utility/tools.h"
 
-#include "TileType.h"
+#include "TileTypeLoader.h"
 
 Init::Init() {
   set_window_title ("Setting up");

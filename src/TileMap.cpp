@@ -99,8 +99,8 @@ void TileMap::save_layer (std::string file, std::vector<tile> *layer) {
 
 // Save file
 void TileMap::save (std::string file) {
-  save_layer (file, &mapTiles);
-  save_layer (file.insert(file.size() - 4, "_back"), &mapTilesBack);
+  save_layer (file + ".txt", &mapTiles);
+  save_layer (file + "_back.txt", &mapTilesBack);
 }
 
 // Get tile at
