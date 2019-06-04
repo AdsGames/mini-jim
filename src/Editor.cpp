@@ -71,7 +71,7 @@ void Editor::edit() {
   cam.Follow(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY());
 
   // Change selected
-  if (KeyListener::keyPressed[KEY_UP]) {
+  /*if (KeyListener::keyPressed[KEY_UP]) {
     pallette_tile -> setType (pallette_tile -> getType() + 1);
     while (pallette_tile -> getImage() == nullptr && pallette_tile -> getType() < 400) {
       pallette_tile -> setType (pallette_tile -> getType() + 1);
@@ -83,7 +83,7 @@ void Editor::edit() {
     while (pallette_tile -> getImage() == nullptr && pallette_tile -> getType() > 1) {
       pallette_tile -> setType (pallette_tile -> getType() - 1);
     }
-  }
+  }*/
 
   // Change Layer
   if (KeyListener::keyPressed[KEY_TAB])

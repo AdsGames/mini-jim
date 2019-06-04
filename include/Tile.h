@@ -2,11 +2,14 @@
 #define TILE_H
 
 #include <allegro.h>
+#include <string>
 #include <vector>
+
+#include "TileType.h"
 
 class tile {
   public:
-    tile (int newType);
+    tile (int type);
     tile (int type, int x, int y);
     ~tile();
 
@@ -20,28 +23,17 @@ class tile {
     void setY (int newY);
 
     int getType();
-    std::vector<int> getAttribute();
     bool containsAttribute (int newAttribute);
 
-    BITMAP *getImage();
-
-    void setType (int newType);
-
-    void setImages (BITMAP *image1);
-    void setImagesAnimated (BITMAP *image1, BITMAP *image2, BITMAP *image3, BITMAP *image4);
-    void setImagesAnimatedEight (BITMAP *image1, BITMAP *image2, BITMAP *image3, BITMAP *image4, BITMAP *image5, BITMAP *image6, BITMAP *image7, BITMAP *image8);
-
+    void setType (int type);
     void draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame);
 
   private:
-    void setDimensions();
     int x, y;
-    int initialX, initialY;
     int width, height;
-    int type;
     std::vector<int> attribute;
-    int animated;
-    BITMAP *images[8];
+
+    TileType *t_type;
 };
 
 #endif

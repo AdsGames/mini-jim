@@ -12,7 +12,6 @@
 				<Option object_output="output" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Wnon-virtual-dtor" />
 					<Add option="-Wredundant-decls" />
@@ -22,7 +21,6 @@
 					<Add option="-Wunreachable-code" />
 					<Add option="-Wmissing-include-dirs" />
 					<Add option="-Wswitch-default" />
-					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wmain" />
 					<Add option="-pedantic" />
 					<Add option="-Wextra" />
@@ -55,6 +53,7 @@
 		<Unit filename="include/State.h" />
 		<Unit filename="include/Tile.h" />
 		<Unit filename="include/TileMap.h" />
+		<Unit filename="include/TileType.h" />
 		<Unit filename="include/globals.h" />
 		<Unit filename="include/ui/Button.h" />
 		<Unit filename="include/ui/InputBox.h" />
@@ -76,6 +75,7 @@
 		<Unit filename="src/State.cpp" />
 		<Unit filename="src/Tile.cpp" />
 		<Unit filename="src/TileMap.cpp" />
+		<Unit filename="src/TileType.cpp" />
 		<Unit filename="src/globals.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/ui/Button.cpp" />

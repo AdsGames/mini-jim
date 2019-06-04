@@ -88,55 +88,51 @@ void highcolor_fade_out (int speed) {
 }
 
 // Error reporting
-void abort_on_error (const char *message) {
+void abort_on_error (std::string message) {
   if (screen != NULL) {
     set_gfx_mode (GFX_TEXT, 0, 0, 0, 0);
   }
 
-  allegro_message ("%s.\n %s\n", message, allegro_error);
+  allegro_message ("%s.\n %s\n", message.c_str(), allegro_error);
   exit (-1);
 }
 
 // Load image
-BITMAP *load_png_ex (const char *path) {
+BITMAP *load_png_ex (std::string path) {
   BITMAP *temp = nullptr;
 
-  if (! (temp = load_png (path, nullptr))) {
-    abort_on_error ((std::string ("Cannot find image (") + path + ") \n Please check your files and try again").c_str());
-  }
+  if (!(temp = load_png (path.c_str(), nullptr)))
+    abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;
 }
 
 // Load ogg
-SAMPLE *load_ogg_ex (const char *path) {
+SAMPLE *load_ogg_ex (std::string path) {
   SAMPLE *temp = nullptr;
 
-  if (! (temp = logg_load (path))) {
-    abort_on_error ((std::string ("Cannot find music (") + path + ") \n Please check your files and try again").c_str());
-  }
+  if (!(temp = logg_load (path.c_str())))
+    abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;
 }
 
 // Load sample
-SAMPLE *load_sample_ex (const char *path) {
+SAMPLE *load_sample_ex (std::string path) {
   SAMPLE *temp = nullptr;
 
-  if (! (temp = load_sample (path))) {
-    abort_on_error ((std::string ("Cannot find sample (") + path + ") \n Please check your files and try again").c_str());
-  }
+  if (!(temp = load_sample (path.c_str())))
+    abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;
 }
 
 // Load font
-FONT *load_font_ex (const char *path) {
+FONT *load_font_ex (std::string path) {
   FONT *temp = nullptr;
 
-  if (! (temp = load_font (path, nullptr, nullptr))) {
-    abort_on_error ((std::string ("Cannot find font (") + path + ") \n Please check your files and try again").c_str());
-  }
+  if (!(temp = load_font (path.c_str(), nullptr, nullptr)))
+    abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;
 }
