@@ -23,6 +23,7 @@ class tile {
     void setY (int newY);
 
     int getType();
+    std::string getName();
     bool containsAttribute (int newAttribute);
 
     void setType (int type);

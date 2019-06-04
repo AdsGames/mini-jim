@@ -35,9 +35,9 @@ class Editor : public State {
     Button btn_save, btn_open;
     InputBox ib_save, ib_open;
 
-    void save();
-    void open();
-    void edit();
+    void Save();
+    void Open();
+    void Edit();
 
     Camera cam;
 };

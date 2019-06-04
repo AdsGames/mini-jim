@@ -2,7 +2,7 @@
 
 #include "utility/KeyListener.h"
 
-#include "TileType.h"
+#include "TileTypeLoader.h"
 
 #define LEFT 0
 #define RIGHT 4

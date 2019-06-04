@@ -3,6 +3,8 @@
 #include "globals.h"
 #include "utility/tools.h"
 
+#include "TileTypeLoader.h"
+
 tile::tile (int type) {
   setType (type);
 }
@@ -50,6 +52,12 @@ int tile::getType() {
   if (t_type)
     return t_type -> GetID();
   return 0;
+}
+
+std::string tile::getName() {
+  if (t_type)
+    return t_type -> GetName();
+  return "";
 }
 
 // Contains Attribute
