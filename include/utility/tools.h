@@ -27,19 +27,19 @@ extern void highcolor_fade_in (BITMAP *bmp_orig, int speed);
 extern void highcolor_fade_out (int speed);
 
 // Error reporting
-extern void abort_on_error (const char *message);
+extern void abort_on_error (std::string path);
 
 // Load image
-extern BITMAP *load_png_ex (const char *path);
+extern BITMAP *load_png_ex (std::string path);
 
 // Load ogg
-extern SAMPLE *load_ogg_ex (const char *path);
+extern SAMPLE *load_ogg_ex (std::string path);
 
 // Load sample
-extern SAMPLE *load_sample_ex (const char *path);
+extern SAMPLE *load_sample_ex (std::string path);
 
 // Load font
-extern FONT *load_font_ex (const char *path);
+extern FONT *load_font_ex (std::string path);
 
 
 #endif // TOOLS_H

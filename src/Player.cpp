@@ -2,6 +2,11 @@
 
 #include "utility/KeyListener.h"
 
+#include "TileType.h"
+
+#define LEFT 0
+#define RIGHT 4
+
 player::player() {
 
   x = 128;
@@ -154,25 +159,25 @@ void player::update (TileMap *fullMap) {
     if (collisionAny (x + 16 + xVelocity, x + 48 + xVelocity, t -> getX(), t -> getX() + t -> getWidth(),
                       y + yVelocity, y + yVelocity + 64, t -> getY(), t -> getY() + t -> getHeight())) {
       // Jumping
-      if (!t -> containsAttribute (gas)) {
+      if (t -> containsAttribute (solid)) {
         if (collisionTop (t -> getY(), t -> getY() + t -> getHeight(), y + yVelocity))
           canJumpUp = false;
       }
 
       // Harmful
       if (t -> containsAttribute (harmful)) {
-        if (t -> getType() == tile_mousetrap_1) {
-          t -> setType (tile_mousetrap_2);
+        if (t -> getType() == TileTypeLoader::GetID("mouse_trap")) {
+          t -> setType (TileTypeLoader::GetID("mouse_trap_snap"));
           play_sample (trapsnap, 255, 125, 1000, 0);
         }
-        else if (t -> getType() == tile_beak) {
+        else if (t -> getType() == TileTypeLoader::GetID("beak")) {
           play_sample (chicken, 255, 128, 1000, 0);
         }
         Die();
       }
 
       // Checkpoint
-      if (t -> getType() == tile_checkpoint) {
+      if (t -> getType() == TileTypeLoader::GetID("checkpoint")) {
         if (checkpointPosition[0] != t -> getX() || checkpointPosition[1] != t -> getY()) {
           checkpointPosition[0] = t -> getX();
           checkpointPosition[1] = t -> getY();
@@ -181,7 +186,7 @@ void player::update (TileMap *fullMap) {
       }
 
       // Finish
-      if (t -> getType() == tile_finish) {
+      if (t -> getType() == TileTypeLoader::GetID("finish")) {
         play_sample (win, 255, 125, 1000, 0);
         finished = true;
       }
