@@ -202,6 +202,8 @@ void Editor::draw(BITMAP *buffer) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
     rect (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (0, 0, 0));
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "New Map");
+    textprintf_centre_ex (buffer, font, 500, 360, makecol (0, 0, 0), -1, "Width");
+    textprintf_centre_ex (buffer, font, 800, 360, makecol (0, 0, 0), -1, "Height");
     ib_width.Draw(buffer);
     ib_height.Draw(buffer);
     btn_new.Draw(buffer);

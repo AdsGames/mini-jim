@@ -10,17 +10,18 @@ InputBox::InputBox() {
   this -> width = 0;
   this -> height = 0;
   this -> text = "";
+  this -> focused = false;
   text_iter = 0;
 }
 
-InputBox::InputBox(int x, int y, int width, int height, std::string value, std::string type) {
+InputBox::InputBox(int x, int y, int width, int height, std::string value, std::string type) :
+  InputBox() {
   this -> x = x;
   this -> y = y;
   this -> width = width;
   this -> height = height;
   this -> text = value;
   this -> type = type;
-  text_iter = 0;
 }
 
 InputBox::~InputBox() {
@@ -43,10 +44,10 @@ void InputBox::Update() {
   // Focus
   if (MouseListener::mouse_pressed & 1) {
     focused = Hover();
-    if (Hover()) {
+    if (focused) {
       int closest = width;
-      for (int i = 0; i <= text.length(); i++) {
-        int distance = abs(text_length(font, text.substr(0, i).c_str()) - (mouse_x - (x + 3)));
+      for (unsigned int i = 0; i <= text.length(); i++) {
+        int distance = abs(text_length(font, text.substr(0, i).c_str()) + x + 3 - mouse_x);
         if (distance < closest) {
           text_iter = i;
           closest = distance;
@@ -65,7 +66,7 @@ void InputBox::Update() {
 
   // a character key was pressed; add it to the string
   if (type == "number") {
-    if (ASCII >= 48 && ASCII <= 57 && text.length() < MAX_LENGTH) {
+    if (ASCII >= 48 && ASCII <= 57 && text_length(font, (text + ASCII).c_str()) < width) {
       text.insert (text.begin() + text_iter, ASCII);
       text_iter++;
       return;
@@ -73,7 +74,7 @@ void InputBox::Update() {
   }
 
   else if (type == "text") {
-    if (ASCII >= 32 && ASCII <= 126 && text.length() < MAX_LENGTH) {
+    if (ASCII >= 32 && ASCII <= 126 && text_length(font, (text + ASCII).c_str()) < width) {
       text.insert (text.begin() + text_iter, ASCII);
       text_iter++;
       return;
@@ -105,7 +106,7 @@ void InputBox::Update() {
 void InputBox::Draw(BITMAP *buffer) {
   rectfill (buffer, x, y, x + width, y + height, makecol (12, 12, 12));
 
-  int col = Hover() ? makecol (230, 230, 230) : makecol (245, 245, 245);
+  int col = (Hover() || focused) ? makecol (230, 230, 230) : makecol (245, 245, 245);
 
   if (focused)
     rectfill (buffer, x + 2, y + 2, x + width - 2, y + height - 2, col);

@@ -25,7 +25,6 @@ class InputBox {
     int x, y;
     int height, width;
     bool focused;
-    static const int MAX_LENGTH = 25;
 };
 
 #endif // INPUTBOX_H
