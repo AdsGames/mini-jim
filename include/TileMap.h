@@ -22,7 +22,9 @@ class TileMap {
 
     void draw (BITMAP *buffer, int x, int y);
 
+    void create(int width, int height);
     bool load (std::string file);
+    bool load_txt (std::string file);
     void save (std::string file);
 
     tile *get_tile_at (int x, int y, int layer);
@@ -30,7 +32,8 @@ class TileMap {
     std::vector<tile*> get_tiles_in_range (int x_1, int x_2, int y_1, int y_2);
 
   private:
-    void save_layer (std::string file, std::vector<tile> *layer);
+    void load_layer(std::ifstream &file, std::vector<tile> &t_map);
+    void save_layer(std::ofstream &file, std::vector<tile> &t_map);
     void draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y);
 
     int width;

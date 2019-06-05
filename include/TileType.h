@@ -7,12 +7,12 @@
 
 class TileType {
   public:
-    TileType(int id, std::string name, std::string id_str);
+    TileType(short id, std::string name, std::string id_str);
     virtual ~TileType();
 
     void Draw(BITMAP *buffer, int x, int y, int frame);
 
-    int GetID();
+    short GetID();
     std::string GetName();
     std::string GetIDStr();
 
@@ -25,7 +25,7 @@ class TileType {
     void AddAttribute(int attribute);
     void SetDimensions(int x_1, int y_1, int x_2, int y_2);
   private:
-    int id;
+    short id;
     int x_1, x_2, y_1, y_2;
     std::string name;
     std::string id_str;

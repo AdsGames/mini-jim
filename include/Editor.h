@@ -24,19 +24,19 @@ class Editor : public State {
 
     int layer;
 
-    bool saving;
-    bool opening;
+    bool saving, opening, creating;
 
     TileMap *tile_map;
     tile *pallette_tile;
     BITMAP *cursor;
 
     //Text input
-    Button btn_save, btn_open;
-    InputBox ib_save, ib_open;
+    Button btn_save, btn_open, btn_new;
+    InputBox ib_save, ib_open, ib_width, ib_height;
 
     void Save();
     void Open();
+    void New();
     void Edit();
 
     Camera cam;

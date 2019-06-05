@@ -5,11 +5,11 @@
 
 #include "TileTypeLoader.h"
 
-tile::tile (int type) {
+tile::tile (short type) {
   setType (type);
 }
 
-tile::tile (int type, int x, int y) {
+tile::tile (short type, int x, int y) {
   setX (x);
   setY (y);
   setType (type);
@@ -48,7 +48,7 @@ void tile::setY (int y) {
   this -> y = y;
 }
 
-int tile::getType() {
+short tile::getType() {
   if (t_type)
     return t_type -> GetID();
   return 0;
@@ -66,7 +66,7 @@ bool tile::containsAttribute (int newAttribute) {
 }
 
 // Set type
-void tile::setType (int type) {
+void tile::setType (short type) {
   t_type = TileTypeLoader::GetTile(type);
 }
 

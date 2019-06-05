@@ -112,7 +112,7 @@ bool Menu::button_hover() {
 
 void Menu::change_level(int level) {
   levelOn = (levelOn + level) < 0 ? 2 : (levelOn + level) % 3;
-  tile_map -> load (std::string("data/level_" + std::to_string(levelOn + 1)).c_str());
+  tile_map -> load ("data/level_" + std::to_string(levelOn + 1));
 
   scroll_x = random(NATIVE_SCREEN_W, tile_map -> getWidth() - NATIVE_SCREEN_W);
   scroll_dir_x = random (0, 1) ? -3 : 3;

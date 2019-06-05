@@ -6,6 +6,7 @@
 #include "globals.h"
 #include "utility/tools.h"
 
+
 // Constructor
 TileMap::TileMap (std::string file) {
   width = 0;
@@ -34,7 +35,21 @@ int TileMap::getFrame() {
   return int(frame_timer.GetElapsedTime<milliseconds>() / 100) % 8;
 }
 
-bool TileMap::load (std::string file) {
+void TileMap::create(int width, int height) {
+  mapTiles.clear();
+  mapTilesBack.clear();
+  this -> width = width;
+  this -> height = height;
+
+  for (int t = 0; t < height; t++) {
+    for (int i = 0; i < width; i++) {
+      mapTiles.push_back(tile (0, i * 64, t * 64));
+      mapTilesBack.push_back(tile (0, i * 64, t * 64));
+    }
+  }
+}
+
+bool TileMap::load_txt (std::string file) {
   //Change size
   std::ifstream read ((file + ".txt").c_str());
 
@@ -78,29 +93,92 @@ bool TileMap::load (std::string file) {
   return true;
 }
 
-// Save individual layer
-void TileMap::save_layer (std::string file, std::vector<tile> *layer) {
-  int i = 0;
-  std::ofstream of(file.c_str());
 
-  for (auto &t: *layer) {
-    i++;
-    of << t.getType();
-    if (i == width) {
-      of << std::endl;
-      i = 0;
-    }
-    else {
-      of << " ";
+void TileMap::load_layer(std::ifstream &file, std::vector<tile> &t_map) {
+  // Unompress similar tiles
+  unsigned char type_count = 0;
+  unsigned short type = 0;
+  int position = 0;
+  while (position < width * height) {
+    file.read((char*)(&type_count), sizeof (type_count));
+    file.read((char*)(&type), sizeof (type));
+    for (int i = 0; i < type_count; i++) {
+      t_map.push_back (tile (type, (position % width) * 64, (position / width) * 64));
+      position ++;
     }
   }
-  of.close();
+}
+
+bool TileMap::load (std::string file) {
+  //Change size
+  std::ifstream rf ((file + ".level").c_str(), std::ios::in | std::ios::binary);
+
+  if (rf.fail()) {
+    rf.close();
+    return false;
+  }
+
+  //Setup Map
+  mapTiles.clear();
+  mapTilesBack.clear();
+  width = 0;
+  height = 0;
+
+  // Dimensions
+  rf.seekg (0);
+  rf.read ((char*)(&width), sizeof (width));
+  rf.seekg (4);
+  rf.read ((char*)(&height), sizeof (height));
+
+  rf.seekg (32);
+
+  load_layer(rf, mapTiles);
+  load_layer(rf, mapTilesBack);
+
+  rf.close();
+
+  return true;
+}
+
+void TileMap::save_layer(std::ofstream &file, std::vector<tile> &t_map) {
+  unsigned char type_count = 0;
+  unsigned short type = 0;
+
+  // Compress similar tiles
+  for (auto &t: t_map) {
+    if ((t.getType() != type || type_count == 255) && type_count != 0) {
+      file.write((char*)(&type_count), sizeof (type_count));
+      file.write((char*)(&type), sizeof (type));
+      type_count = 0;
+    }
+    type = t.getType();
+    type_count ++;
+  }
+  file.write((char*)(&type_count), sizeof (type_count));
+  file.write((char*)(&type), sizeof (type));
 }
 
 // Save file
 void TileMap::save (std::string file) {
-  save_layer (file + ".txt", &mapTiles);
-  save_layer (file + "_back.txt", &mapTilesBack);
+  std::ofstream of((file + ".level").c_str(), std::ios::out | std::ios::binary);
+
+  if (of.fail()) {
+    of.close();
+    return;
+  }
+
+  // Dimensions
+  of.seekp (0);
+  of.write ((char*)&width, sizeof (int));
+  of.seekp (4);
+  of.write ((char*)&height, sizeof (int));
+  of.seekp (32);
+
+  // Layers
+  save_layer(of, mapTiles);
+  save_layer(of, mapTilesBack);
+
+  of.close();
 }
 
 // Get tile at

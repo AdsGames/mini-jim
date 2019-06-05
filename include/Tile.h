@@ -9,8 +9,8 @@
 
 class tile {
   public:
-    tile (int type);
-    tile (int type, int x, int y);
+    tile (short type);
+    tile (short type, int x, int y);
     ~tile();
 
     int getX() const;
@@ -22,11 +22,11 @@ class tile {
     void setX (int newX);
     void setY (int newY);
 
-    int getType();
+    short getType();
     std::string getName();
     bool containsAttribute (int newAttribute);
 
-    void setType (int type);
+    void setType (short type);
     void draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame);
 
   private:
