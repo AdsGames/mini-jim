@@ -73,11 +73,13 @@ void TileTypeLoader::LoadTypes(std::string path) {
     TileType *tile = new TileType (id, name, id_str);
 
     // Images
-    rapidxml::xml_node<> *img = cTile -> first_node("images") -> first_node("image");
-    for (; img != nullptr; img = img -> next_sibling()) {
-      BITMAP *image = load_png_ex ("images/blocks/" + std::string(img -> first_attribute("src") -> value()));
-      tile -> AddImage(image);
-      tile -> SetDimensions(0, 0, image -> w, image -> h);
+    if (cTile -> first_node("images")) {
+      rapidxml::xml_node<> *img = cTile -> first_node("images") -> first_node("image");
+      for (; img != nullptr; img = img -> next_sibling()) {
+        BITMAP *image = load_png_ex ("images/blocks/" + std::string(img -> first_attribute("src") -> value()));
+        tile -> AddImage(image);
+        tile -> SetDimensions(0, 0, image -> w, image -> h);
+      }
     }
 
     // Add special feature

@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <tiles>
-  <tile id="0" name="Air">
-    <images>
-			<image src="air.png"/>
-		</images>
-  </tile>
+  <tile id="0" name="Air" />
   <tile id="1" name="Checkpoint">
     <boundingBox auto="true" />
     <images>

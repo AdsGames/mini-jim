@@ -47,7 +47,7 @@ void InputBox::Update() {
     if (focused) {
       int closest = width;
       for (unsigned int i = 0; i <= text.length(); i++) {
-        int distance = abs(text_length(font, text.substr(0, i).c_str()) + x + 3 - mouse_x);
+        int distance = abs(text_length(font, text.substr(0, i).c_str()) + x + 6 - mouse_x);
         if (distance < closest) {
           text_iter = i;
           closest = distance;
@@ -118,5 +118,5 @@ void InputBox::Draw(BITMAP *buffer) {
 
   // Draw the caret
   if (focused)
-    vline (buffer, text_length(font, text.substr(0, text_iter).c_str()) + x + 3, y + 8, y + height - 8, makecol (0, 0, 0));
+    vline (buffer, text_length(font, text.substr(0, text_iter).c_str()) + x + 6, y + 8, y + height - 8, makecol (0, 0, 0));
 }

@@ -49,51 +49,6 @@ void TileMap::create(int width, int height) {
   }
 }
 
-bool TileMap::load_txt (std::string file) {
-  //Change size
-  std::ifstream read ((file + ".txt").c_str());
-
-  if (read.fail())
-    return false;
-
-  width = 0;
-  height = 0;
-  int data;
-
-  while (read >> data) {
-    if (height == 0)
-      width++;
-    if (read.peek() == '\n')
-      height++;
-  }
-  read.close();
-
-  //Setup Map
-  mapTiles.clear();
-  mapTilesBack.clear();
-
-  read.open ((file + ".txt").c_str());
-  for (int t = 0; t < height; t++) {
-    for (int i = 0; i < width; i++) {
-      read >> data;
-      mapTiles.push_back (tile (data, i * 64, t * 64));
-    }
-  }
-  read.close();
-
-  read.open ((file + "_back.txt").c_str());
-  for (int t = 0; t < height; t++) {
-    for (int i = 0; i < width; i++) {
-      read >> data;
-      mapTilesBack.push_back (tile (data, i * 64, t * 64));
-    }
-  }
-  read.close();
-
-  return true;
-}
-
-
 void TileMap::load_layer(std::ifstream &file, std::vector<tile> &t_map) {
   // Unompress similar tiles
   unsigned char type_count = 0;
@@ -217,17 +172,18 @@ std::vector<tile*> TileMap::get_tiles_in_range (int x_1, int x_2, int y_1, int y
 }
 
 // Draw a layer
-void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y) {
-  for (auto &t: *layer) {
+void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> &t_map, int x, int y) {
+  int frame = getFrame();
+  for (auto &t: t_map) {
     if ((t.getX() >= x - t.getWidth() ) && (t.getX() < x + NATIVE_SCREEN_W) &&
         (t.getY() >= y - t.getHeight()) && (t.getY() < y + NATIVE_SCREEN_H)) {
-      t.draw_tile (buffer, x, y, getFrame());
+      t.draw_tile (buffer, x, y, frame);
     }
   }
 }
 
 // Draw at position
 void TileMap::draw (BITMAP *buffer, int x, int y) {
-  draw_layer (buffer, &mapTilesBack, x, y);
-  draw_layer (buffer, &mapTiles, x, y);
+  draw_layer (buffer, mapTilesBack, x, y);
+  draw_layer (buffer, mapTiles, x, y);
 }
