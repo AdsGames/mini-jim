@@ -34,7 +34,7 @@ class TileMap {
   private:
     void load_layer(std::ifstream &file, std::vector<tile> &t_map);
     void save_layer(std::ofstream &file, std::vector<tile> &t_map);
-    void draw_layer (BITMAP *buffer, std::vector<tile> *layer, int x, int y);
+    void draw_layer (BITMAP *buffer, std::vector<tile> &t_map, int x, int y);
 
     int width;
     int height;

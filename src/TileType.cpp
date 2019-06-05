@@ -41,13 +41,8 @@ void TileType::SetDimensions(int x_1, int y_1, int x_2, int y_2) {
 }
 
 void TileType::Draw(BITMAP *buffer, int x, int y, int frame) {
-  if (images.size() == 0) {
-    textprintf_ex (buffer, font, x, y, makecol (0, 0, 0), -1, "Image");
-    textprintf_ex (buffer, font, x, y + 20, makecol (0, 0, 0), -1, "%i NA", id);
-    return;
-  }
-
-  draw_sprite (buffer, images.at(frame % images.size()), x, y);
+  if (images.size() > 0)
+    draw_sprite (buffer, images.at(frame % images.size()), x, y);
 }
 
 short TileType::GetID() {

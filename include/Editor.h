@@ -31,9 +31,10 @@ class Editor : public State {
     BITMAP *cursor;
 
     //Text input
-    Button btn_save, btn_open, btn_new;
+    Button btn_save, btn_open, btn_new, btn_close;
     InputBox ib_save, ib_open, ib_width, ib_height;
 
+    void Close();
     void Save();
     void Open();
     void New();

@@ -18,20 +18,25 @@ Editor::Editor() {
   font = load_font_ex ("fonts/arial_black.pcx");
   cursor = load_png_ex ("images/gui/cursor1.png");
 
-  ib_save = InputBox(400, 408, 500, 50, "untitled");
-  ib_open = InputBox(400, 408, 500, 50, "level_1");
-  ib_width = InputBox(400, 408, 200, 50, "64", "number");
-  ib_height = InputBox(700, 408, 200, 50, "64", "number");
+  ib_save = InputBox(400, 408, 480, 50, "untitled");
+  ib_open = InputBox(400, 408, 480, 50, "level_1");
+  ib_width = InputBox(400, 408, 220, 50, "64", "number");
+  ib_height = InputBox(660, 408, 220, 50, "64", "number");
 
-  btn_save = Button(540, 500);
-  btn_open = Button(540, 500);
-  btn_new = Button(540, 500);
+  btn_save = Button(400, 500);
+  btn_open = Button(400, 500);
+  btn_new = Button(400, 500);
+  btn_close = Button(663, 500);
+
   btn_save.SetOnClick(std::bind(&Editor::Save, this));
   btn_open.SetOnClick(std::bind(&Editor::Open, this));
   btn_new.SetOnClick(std::bind(&Editor::New, this));
+  btn_close.SetOnClick(std::bind(&Editor::Close, this));
+
   btn_save.SetImages("images/gui/button_save.png", "images/gui/button_save_hover.png");
   btn_open.SetImages("images/gui/button_load.png", "images/gui/button_load_hover.png");
   btn_new.SetImages("images/gui/button_create.png", "images/gui/button_create_hover.png");
+  btn_close.SetImages("images/gui/button_close.png", "images/gui/button_close_hover.png");
 
   set_alpha_blender();
 
@@ -48,6 +53,12 @@ Editor::~Editor() {
   delete pallette_tile;
 }
 
+void Editor::Close() {
+  opening = false;
+  saving = false;
+  creating = false;
+}
+
 void Editor::Save() {
   tile_map -> save ("data/" + ib_save.GetValue());
   saving = false;
@@ -62,11 +73,13 @@ void Editor::Open() {
 }
 
 void Editor::New() {
-  tile_map -> create (stoi(ib_width.GetValue()), stoi(ib_height.GetValue()));
-  creating = false;
-  cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
-  cam.SetSpeed(1);
-  cam.SetBounds(20, 20);
+  if (ib_width.GetValue().length() != 0 && ib_width.GetValue().length() != 0) {
+    creating = false;
+    tile_map -> create (stoi(ib_width.GetValue()), stoi(ib_height.GetValue()));
+    cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
+    cam.SetSpeed(1);
+    cam.SetBounds(20, 20);
+  }
 }
 
 void Editor::Edit() {
@@ -142,26 +155,22 @@ void Editor::update(StateEngine *engine) {
     setNextState (engine, StateEngine::STATE_MENU);
   }
 
-  // Close menu
-  if (KeyListener::keyPressed[KEY_TILDE]) {
-    opening = false;
-    saving = false;
-    creating = false;
-  }
-
   // Run states
   if (saving) {
     ib_save.Update();
     btn_save.Update();
+    btn_close.Update();
   }
   else if (opening) {
     ib_open.Update();
     btn_open.Update();
+    btn_close.Update();
   }
   else if (creating) {
     ib_width.Update();
     ib_height.Update();
     btn_new.Update();
+    btn_close.Update();
   }
   else {
     Edit();
@@ -170,7 +179,7 @@ void Editor::update(StateEngine *engine) {
 
 void Editor::draw(BITMAP *buffer) {
   // Background
-  rectfill (buffer, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H, makecol (255, 255, 255));
+  clear_to_color(buffer, 0x000000);
 
   // Draw tiles
   tile_map -> draw (buffer, cam.GetX(), cam.GetY());
@@ -190,6 +199,7 @@ void Editor::draw(BITMAP *buffer) {
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "Save Map Name");
     ib_save.Draw(buffer);
     btn_save.Draw(buffer);
+    btn_close.Draw(buffer);
   }
   else if (opening) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
@@ -197,6 +207,7 @@ void Editor::draw(BITMAP *buffer) {
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "Open Map Name");
     ib_open.Draw(buffer);
     btn_open.Draw(buffer);
+    btn_close.Draw(buffer);
   }
   else if (creating) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
@@ -207,6 +218,7 @@ void Editor::draw(BITMAP *buffer) {
     ib_width.Draw(buffer);
     ib_height.Draw(buffer);
     btn_new.Draw(buffer);
+    btn_close.Draw(buffer);
   }
 
   // Cursor
