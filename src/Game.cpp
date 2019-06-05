@@ -65,8 +65,8 @@ void Game::init() {
   tile_map = new TileMap ();
 
   std::string file_name = "data/level_" + std::to_string(levelOn + 1);
-  if (!tile_map -> load (file_name.c_str()))
-    abort_on_error(("Could not open level" + file_name).c_str());
+  if (!tile_map -> load (file_name))
+    abort_on_error("Could not open level" + file_name);
 
 
   cam_1 = Camera(screen1 -> w, screen1 -> h, tile_map -> getWidth(), tile_map -> getHeight());

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-TileType::TileType(int id, std::string name, std::string id_str) {
+TileType::TileType(short id, std::string name, std::string id_str) {
   this -> id = id;
   this -> name = name;
   this -> id_str = id_str;
@@ -50,7 +50,7 @@ void TileType::Draw(BITMAP *buffer, int x, int y, int frame) {
   draw_sprite (buffer, images.at(frame % images.size()), x, y);
 }
 
-int TileType::GetID() {
+short TileType::GetID() {
   return id;
 }
 
