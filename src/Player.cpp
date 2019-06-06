@@ -166,18 +166,18 @@ void player::update (TileMap *fullMap) {
 
       // Harmful
       if (t -> containsAttribute (harmful)) {
-        if (t -> getType() == TileTypeLoader::GetID("mouse_trap")) {
-          t -> setType (TileTypeLoader::GetID("mouse_trap_snap"));
+        if (t -> getTypeStr() == "mouse_trap") {
+          t -> setType ("mouse_trap_snapped");
           play_sample (trapsnap, 255, 125, 1000, 0);
         }
-        else if (t -> getType() == TileTypeLoader::GetID("beak")) {
+        else if (t -> getTypeStr() == "beak") {
           play_sample (chicken, 255, 128, 1000, 0);
         }
         Die();
       }
 
       // Checkpoint
-      if (t -> getType() == TileTypeLoader::GetID("checkpoint")) {
+      if (t -> getTypeStr() == "checkpoint") {
         if (checkpointPosition[0] != t -> getX() || checkpointPosition[1] != t -> getY()) {
           checkpointPosition[0] = t -> getX();
           checkpointPosition[1] = t -> getY();
@@ -186,7 +186,7 @@ void player::update (TileMap *fullMap) {
       }
 
       // Finish
-      if (t -> getType() == TileTypeLoader::GetID("finish")) {
+      if (t -> getTypeStr() == "finish") {
         play_sample (win, 255, 125, 1000, 0);
         finished = true;
       }
@@ -204,18 +204,16 @@ void player::update (TileMap *fullMap) {
   // State logic
   switch (player_state) {
     case STATE_STANDING: {
-      if (key[leftKey])
-        player_state = STATE_WALKING;
-
-      if (key[rightKey])
-        player_state = STATE_WALKING;
-
       //Jump
       if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;
       }
+      else if (key[leftKey])
+        player_state = STATE_WALKING;
+      else if (key[rightKey])
+        player_state = STATE_WALKING;
       else
         xVelocity = 0;
 
@@ -233,7 +231,7 @@ void player::update (TileMap *fullMap) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;
-        xVelocity = 0;
+        xVelocity = xVelocity/2;
       }
 
       // Animate

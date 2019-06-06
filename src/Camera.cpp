@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <cmath>
 
 Camera::Camera() {
   x = 0.0f;
@@ -39,12 +40,12 @@ void Camera::Follow (float f_x, float f_y) {
 
   if (y_diff < bound_y)
     y += (y_diff - bound_y) / speed;
-  if (y_diff > height - bound_y)
+  else if (y_diff > height - bound_y)
     y += (y_diff - (height - bound_y)) / speed;
 
   if (x_diff < bound_x)
     x += (x_diff - bound_x) / speed;
-  if (x_diff > width - bound_x)
+  else if (x_diff > width - bound_x)
     x += (x_diff - (width - bound_x)) / speed;
 
   if (y < 0)
@@ -66,9 +67,9 @@ int Camera::GetHeight() {
 }
 
 int Camera::GetX() {
-  return int(x);
+  return round(x);
 }
 
 int Camera::GetY() {
-  return int(y);
+  return round(y);
 }

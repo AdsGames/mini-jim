@@ -58,6 +58,12 @@ short tile::getType() {
   return 0;
 }
 
+std::string tile::getTypeStr() {
+  if (t_type)
+    return t_type -> GetIDStr();
+  return "";
+}
+
 std::string tile::getName() {
   if (t_type)
     return t_type -> GetName();
@@ -66,7 +72,13 @@ std::string tile::getName() {
 
 // Contains Attribute
 bool tile::containsAttribute (int newAttribute) {
-  return t_type -> HasAttribute(newAttribute);
+  if (t_type)
+    return t_type -> HasAttribute(newAttribute);
+  return false;
+}
+
+void tile::setType (std::string type) {
+  t_type = TileTypeLoader::GetTile(type);
 }
 
 // Set type

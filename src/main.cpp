@@ -1,6 +1,7 @@
 
 // Includes
 #include <allegro.h>
+#include <chrono>
 
 #include "utility/KeyListener.h"
 #include "utility/MouseListener.h"
@@ -9,6 +10,10 @@
 // For state engine
 #include "State.h"
 #include "globals.h"
+
+using namespace std::chrono_literals;
+using namespace std::chrono;
+constexpr nanoseconds timestep(16ms);
 
 // State engine
 StateEngine game_state;
@@ -24,26 +29,14 @@ JoystickListener joyL;
 volatile int close_button_pressed = FALSE;
 bool closeGame;
 
-// FPS system
-const int updates_per_second = 60;
-int fps = 0;
-
-volatile int ticks = 0;
-void ticker() {
-  ticks++;
-}
-END_OF_FUNCTION (ticker)
-
-volatile int game_time = 0;
-void game_time_ticker() {
-  game_time++;
-}
-END_OF_FUNCTION (game_time_ticker)
-
 void close_button_handler (void) {
   close_button_pressed = TRUE;
 }
 END_OF_FUNCTION (close_button_handler)
+
+// FPS system
+int fps = 0;
+int frames_done = 0;
 
 // Setup game
 void setup() {
@@ -55,15 +48,6 @@ void setup() {
   install_joystick (JOY_TYPE_AUTODETECT);
   install_sound (DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
   set_color_depth (32);
-
-  // Setup for FPS system
-  LOCK_VARIABLE (ticks);
-  LOCK_FUNCTION (ticker);
-  install_int_ex (ticker, BPS_TO_TIMER (updates_per_second));
-
-  LOCK_VARIABLE (game_time);
-  LOCK_FUNCTION (game_time_ticker);
-  install_int_ex (game_time_ticker, BPS_TO_TIMER (10));
 
   // Close button
   LOCK_FUNCTION (close_button_handler);
@@ -97,10 +81,9 @@ void update() {
 //Do state rendering
 void draw() {
   game_state.draw(buffer);
-  vsync();
+
   // FPS
   textprintf_ex(buffer, font, 0, 145, makecol(255, 255, 255), makecol(0,0,0), "FPS:%d", fps);
-
   stretch_sprite(screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }
 
@@ -112,33 +95,18 @@ int main() {
   //Set the current state ID
   game_state.setNextState(StateEngine::STATE_INIT);
 
-  int frames_done = 0;
-  int old_time = 0;
-  int frames_array[10];
-  int frame_index = 0;
-  for(int i = 0; i < 10; i++)
-    frames_array[i] = 0;
+  using clock = high_resolution_clock;
+  nanoseconds lag(0ns);
+  auto time_start = clock::now();
 
   while (!key[KEY_ESC] && !close_button_pressed) {
-    while (ticks == 0) {
-      rest (1);
-    }
-    while (ticks > 0) {
-      int old_ticks = ticks;
-      update();
-      ticks--;
+    auto delta_time = clock::now() - time_start;
+    time_start = clock::now();
+    lag += duration_cast<nanoseconds>(delta_time);
 
-      if (old_ticks <= ticks) {
-        break;
-      }
-    }
-    if (game_time >= old_time + 1) {
-      fps -= frames_array[frame_index];
-      frames_array[frame_index] = frames_done;
-      fps += frames_done;
-      frame_index = (frame_index + 1) % 10;
-      frames_done = 0;
-      old_time += 1;
+    while(lag >= timestep) {
+      lag -= timestep;
+      update();
     }
 
     draw();

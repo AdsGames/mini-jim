@@ -184,7 +184,11 @@ void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> &t_map, int x, int y
 }
 
 // Draw at position
-void TileMap::draw (BITMAP *buffer, int x, int y) {
-  draw_layer (buffer, mapTilesBack, x, y);
-  draw_layer (buffer, mapTiles, x, y);
+void TileMap::draw (BITMAP *buffer, int x, int y, int layer) {
+  if (layer == 0 || layer == 1) {
+    draw_layer (buffer, mapTilesBack, x, y);
+  }
+  if (layer == 0 || layer == 2) {
+    draw_layer (buffer, mapTiles, x, y);
+  }
 }

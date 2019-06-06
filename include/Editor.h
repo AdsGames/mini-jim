@@ -23,6 +23,7 @@ class Editor : public State {
     void OpenClicked();
 
     int layer;
+    int draw_layer;
 
     bool saving, opening, creating;
 

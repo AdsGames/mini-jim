@@ -10,7 +10,7 @@ class TileTypeLoader {
   public:
     static void LoadTypes(std::string path);
     static TileType *GetTile(int id);
-    static int GetID(std::string id_str);
+    static TileType *GetTile(std::string id_str);
     static int GetCount();
 
   private:

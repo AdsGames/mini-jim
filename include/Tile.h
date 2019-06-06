@@ -24,9 +24,12 @@ class tile {
 
     short getType();
     std::string getName();
+    std::string getTypeStr();
     bool containsAttribute (int newAttribute);
 
     void setType (short type);
+    void setType(std::string type);
+
     void draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame);
 
   private:

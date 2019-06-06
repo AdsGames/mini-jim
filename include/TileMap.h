@@ -20,7 +20,7 @@ class TileMap {
     int getHeight() const;
     int getFrame();
 
-    void draw (BITMAP *buffer, int x, int y);
+    void draw (BITMAP *buffer, int x, int y, int layer = 0);
 
     void create(int width, int height);
     bool load (std::string file);

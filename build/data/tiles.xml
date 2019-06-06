@@ -75,6 +75,7 @@
 		</images>
   </tile>
   <tile id="16" name="Water">
+    <boundingBox x1="0" x2="64" y1="16" y2="64" />
     <images>
 			<image src="water.png"/>
 		</images>
@@ -123,12 +124,14 @@
 		</images>
   </tile>
   <tile id="25" name="Mouse Trap">
+    <boundingBox x1="0" x2="256" y1="52" y2="64" />
     <images>
 			<image src="mousetrap_1.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="26" name="Mouse Trap Snapped">
+    <boundingBox x1="0" x2="256" y1="52" y2="64" />
     <images>
 			<image src="mousetrap_2.png"/>
 		</images>
