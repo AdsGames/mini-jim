@@ -81,9 +81,6 @@ void update() {
 //Do state rendering
 void draw() {
   game_state.draw(buffer);
-
-  // FPS
-  textprintf_ex(buffer, font, 0, 145, makecol(255, 255, 255), makecol(0,0,0), "FPS:%d", fps);
   stretch_sprite(screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }
 
