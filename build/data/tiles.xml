@@ -2,7 +2,6 @@
 <tiles>
   <tile id="0" name="Air" />
   <tile id="1" name="Checkpoint">
-    <boundingBox auto="true" />
     <images>
 			<image src="checkpoint0.png"/>
       <image src="checkpoint1.png"/>
@@ -11,181 +10,155 @@
 		</images>
   </tile>
   <tile id="2" name="Oven Fill">
-    <boundingBox auto="true" />
     <images>
 			<image src="ovenfill.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="3" name="Oven Top">
-    <boundingBox auto="true" />
     <images>
 			<image src="oventop.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="4" name="Red Brick">
-    <boundingBox auto="true" />
     <images>
 			<image src="brick_red.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="7" name="Tack">
-    <boundingBox auto="true" />
+    <boundingBox x1="10" x2="54" y1="32" y2="64" />
     <images>
 			<image src="tack.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="8" name="Carpet">
-    <boundingBox auto="true" />
     <images>
 			<image src="carpet.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="9" name="Carpet Top">
-    <boundingBox auto="true" />
     <images>
 			<image src="carpet_top.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="10" name="Cement">
-    <boundingBox auto="true" />
     <images>
 			<image src="cement.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="11" name="Dice">
-    <boundingBox auto="true" />
     <images>
 			<image src="dice.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="12" name="Tile">
-    <boundingBox auto="true" />
     <images>
 			<image src="tile.png"/>
 		</images>
   </tile>
   <tile id="13" name="Book">
-    <boundingBox auto="true" />
     <images>
 			<image src="book.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="15" name="Finish">
-    <boundingBox auto="true" />
     <images>
 			<image src="finish.png"/>
 		</images>
   </tile>
   <tile id="16" name="Water">
-    <boundingBox auto="true" />
     <images>
 			<image src="water.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="17" name="Deep Water">
-    <boundingBox auto="true" />
     <images>
 			<image src="water_deep.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="18" name="Bottle">
-    <boundingBox auto="true" />
     <images>
 			<image src="bottle.png"/>
 		</images>
   </tile>
   <tile id="19" name="Wood">
-    <boundingBox auto="true" />
     <images>
 			<image src="wood.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="20" name="Stained Glass">
-    <boundingBox auto="true" />
     <images>
 			<image src="glass.png"/>
 		</images>
   </tile>
   <tile id="21" name="White Tile">
-    <boundingBox auto="true" />
     <images>
 			<image src="white_tile.png"/>
 		</images>
   </tile>
   <tile id="22" name="Blue Wallpaper">
-    <boundingBox auto="true" />
     <images>
 			<image src="blue_wallpaper.png"/>
 		</images>
   </tile>
   <tile id="23" name="Blue Wallpaper Bottom">
-    <boundingBox auto="true" />
     <images>
 			<image src="blue_wallpaper_bottom.png"/>
 		</images>
   </tile>
   <tile id="24" name="Faucet">
-    <boundingBox auto="true" />
     <images>
 			<image src="faucet.png"/>
 		</images>
   </tile>
   <tile id="25" name="Mouse Trap">
-    <boundingBox auto="true" />
     <images>
 			<image src="mousetrap_1.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="26" name="Mouse Trap Snapped">
-    <boundingBox auto="true" />
     <images>
 			<image src="mousetrap_2.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="27" name="Toaster Block">
-    <boundingBox auto="true" />
     <images>
 			<image src="toaster_block.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="28" name="Toaster Left">
-    <boundingBox auto="true" />
     <images>
 			<image src="toaster_left.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="29" name="Toaster Right">
-    <boundingBox auto="true" />
     <images>
 			<image src="toaster_right.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="30" name="Toaster Center">
-    <boundingBox auto="true" />
     <images>
 			<image src="toaster_center.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="31" name="Toaster Element">
-    <boundingBox auto="true" />
     <images>
 			<image src="heatPanel1.png"/>
       <image src="heatPanel2.png"/>
@@ -195,13 +168,11 @@
     <harmful />
   </tile>
   <tile id="34" name="Chicken Still">
-    <boundingBox auto="true" />
     <images>
 			<image src="chicken_1.png"/>
 		</images>
   </tile>
   <tile id="35" name="Chicken">
-    <boundingBox auto="true" />
     <images>
 			<image src="chicken_1.png"/>
       <image src="chicken_4.png"/>
@@ -214,41 +185,38 @@
 		</images>
   </tile>
   <tile id="36" name="Beak">
-    <boundingBox auto="true" />
     <images>
 			<image src="beak.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="37" name="Glasses">
-    <boundingBox auto="true" />
     <images>
 			<image src="glasses.png"/>
 		</images>
   </tile>
   <tile id="38" name="Plate">
-    <boundingBox auto="true" />
+    <boundingBox x1="0" x2="448" y1="32" y2="64" />
     <images>
 			<image src="plate.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="39" name="Plate Stack">
-    <boundingBox auto="true" />
     <images>
 			<image src="plate_stack.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="40" name="Blade">
-    <boundingBox auto="true" />
+    <boundingBox x1="0" x2="64" y1="32" y2="64" /> 
     <images>
 			<image src="blade.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="41" name="Fire">
-    <boundingBox auto="true" />
+    <boundingBox x1="0" x2="64" y1="32" y2="64" />
     <images>
 			<image src="fire_0.png"/>
       <image src="fire_1.png"/>
@@ -258,7 +226,6 @@
     <harmful />
   </tile>
   <tile id="42" name="Claw">
-    <boundingBox auto="true" />
     <images>
 			<image src="claw1.png"/>
       <image src="claw2.png"/>
@@ -268,7 +235,6 @@
     <harmful />
   </tile>
   <tile id="43" name="Claw Arm">
-    <boundingBox auto="true" />
     <images>
 			<image src="pawExtension1.png"/>
       <image src="pawExtension2.png"/>
@@ -278,56 +244,50 @@
     <harmful />
   </tile>
   <tile id="44" name="Bed 1">
-    <boundingBox auto="true" />
     <images>
 			<image src="bed1.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="45" name="Bed 2">
-    <boundingBox auto="true" />
     <images>
 			<image src="bed2.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="46" name="Pillow">
-    <boundingBox auto="true" />
     <images>
 			<image src="pillow.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="47" name="Car">
-    <boundingBox auto="true" />
+    <boundingBox x1="0" x2="128" y1="32" y2="64" />
     <images>
 			<image src="car.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="48" name="Coca Ine">
-    <boundingBox auto="true" />
     <images>
 			<image src="coca-ine.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="49" name="Dirt">
-    <boundingBox auto="true" />
     <images>
 			<image src="dirt.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="50" name="Grass">
-    <boundingBox auto="true" />
     <images>
 			<image src="grass.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="51" name="Element">
-    <boundingBox auto="true" />
+    <boundingBox x1="0" x2="64" y1="16" y2="64" />
     <images>
 			<image src="element0.png"/>
       <image src="element1.png"/>
@@ -337,179 +297,152 @@
     <harmful />
   </tile>
   <tile id="52" name="Red Cloth">
-    <boundingBox auto="true" />
     <images>
 			<image src="red_cloth.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="53" name="Light Wood">
-    <boundingBox auto="true" />
     <images>
 			<image src="wood_light.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="56" name="Pipe 1">
-    <boundingBox auto="true" />
     <images>
 			<image src="pipe_1.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="57" name="Pipe 2">
-    <boundingBox auto="true" />
     <images>
 			<image src="pipe_2.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="58" name="Fork 1">
-    <boundingBox auto="true" />
     <images>
 			<image src="fork.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="59" name="Fork 2">
-    <boundingBox auto="true" />
     <images>
 			<image src="fork2.png"/>
 		</images>
     <harmful />
   </tile>
   <tile id="60" name="Bed 3">
-    <boundingBox auto="true" />
     <images>
 			<image src="bed3.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="61" name="Oven Right">
-    <boundingBox auto="true" />
     <images>
 			<image src="ovenright.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="62" name="Oven Left">
-    <boundingBox auto="true" />
     <images>
 			<image src="ovenleft.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="63" name="Oven Center">
-    <boundingBox auto="true" />
     <images>
 			<image src="ovenfill.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="64" name="Light">
-    <boundingBox auto="true" />
     <images>
 			<image src="light.png"/>
 		</images>
     <light />
   </tile>
   <tile id="65" name="Cement Full">
-    <boundingBox auto="true" />
     <images>
 			<image src="cement_full.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="66" name="Wall">
-    <boundingBox auto="true" />
     <images>
 			<image src="wall.png"/>
 		</images>
     <solid />
   </tile>
   <tile id="67" name="Wall Slide">
-    <boundingBox auto="true" />
     <images>
 			<image src="wall_slide.png"/>
 		</images>
     <slide />
   </tile>
   <tile id="100" name="Back Grey">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey.png"/>
 		</images>
   </tile>
   <tile id="101" name="Back Grey Shadow Top">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_shadow_top.png"/>
 		</images>
   </tile>
   <tile id="102" name="Back Grey Shadow Top Right">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_shadow_top_right.png"/>
 		</images>
   </tile>
   <tile id="103" name="Back Grey Shadow Top Left">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_shadow_top_left.png"/>
 		</images>
   </tile>
   <tile id="104" name="Back Grey Shadow Left">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_shadow_left.png"/>
 		</images>
   </tile>
   <tile id="105" name="Back Grey Shadow Bottom Left">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_shadow_bottom_left.png"/>
 		</images>
   </tile>
   <tile id="106" name="Back Grey Shadow Top Left Corner">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_shadow_top_left_corner.png"/>
 		</images>
   </tile>
   <tile id="107" name="Back Grey Dark">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_dark.png"/>
 		</images>
   </tile>
   <tile id="108" name="Back Grey Dark Top Left">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_dark_top_left.png"/>
 		</images>
   </tile>
   <tile id="109" name="Back Grey Dark Top Right">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/grey_dark_top_right.png"/>
 		</images>
   </tile>
   <tile id="110" name="Back Lamp">
-    <boundingBox auto="true" />
     <images>
 			<image src="backs/lamp.png"/>
 		</images>
     <light />
   </tile>
   <tile id="111" name="Wood Light Slide">
-    <boundingBox auto="true" />
     <images>
 			<image src="wood_light_slide.png"/>
 		</images>
     <slide />
   </tile>
   <tile id="199" name="Spawn Player">
-    <boundingBox auto="true" />
     <images>
 			<image src="spawn1.png"/>
       <image src="spawn2.png"/>

@@ -13,11 +13,19 @@ TileType::~TileType() {
 }
 
 int TileType::GetWidth() {
-  return this -> x_2;
+  return x_2 - x_1;
 }
 
 int TileType::GetHeight() {
-  return this -> y_2;
+  return y_2 - y_1;
+}
+
+int TileType::GetBBX() {
+  return x_1;
+}
+
+int TileType::GetBBY() {
+  return y_1;
 }
 
 bool TileType::HasAttribute(int attribute) {

@@ -1,15 +1,15 @@
 #include "Camera.h"
 
 Camera::Camera() {
-  x = 0;
-  y = 0;
+  x = 0.0f;
+  y = 0.0f;
   height = 0;
   width = 0;
   bound_x = 0;
   bound_y = 0;
   max_x = 0;
   max_y = 0;
-  speed = 16;
+  speed = 16.0f;
 }
 
 Camera::Camera(int width, int height, int max_x, int max_y) :
@@ -24,7 +24,7 @@ Camera::Camera(int width, int height, int max_x, int max_y) :
 
 Camera::~Camera() {}
 
-void Camera::SetSpeed(int speed) {
+void Camera::SetSpeed(float speed) {
   this -> speed = speed;
 }
 
@@ -33,7 +33,7 @@ void Camera::SetBounds(int x, int y) {
   bound_y = y;
 }
 
-void Camera::Follow (int f_x, int f_y) {
+void Camera::Follow (float f_x, float f_y) {
   float y_diff = f_y - y;
   float x_diff = f_x - x;
 

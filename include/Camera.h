@@ -1,15 +1,14 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-
 class Camera {
   public:
     Camera();
     Camera(int width, int height, int max_x, int max_y);
     virtual ~Camera();
 
-    void SetSpeed(int speed);
-    void Follow (int x, int y);
+    void SetSpeed(float speed);
+    void Follow (float x, float y);
     void SetBounds(int x, int y);
 
     int GetWidth();
@@ -23,7 +22,7 @@ class Camera {
     int width, height;
     int bound_x, bound_y;
     int max_x, max_y;
-    int speed;
+    float speed;
 };
 
 #endif // CAMERA_H
