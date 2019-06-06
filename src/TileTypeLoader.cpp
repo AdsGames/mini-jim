@@ -26,13 +26,13 @@ TileType* TileTypeLoader::GetTile(int id) {
   return nullptr;
 }
 
-int TileTypeLoader::GetID(std::string id_str) {
+TileType* TileTypeLoader::GetTile(std::string id_str) {
   for (const auto& t : types) {
     if (t -> GetIDStr() == id_str) {
-      return t -> GetID();
+      return t;
     }
   }
-  return -1;
+  return nullptr;
 }
 
 int TileTypeLoader::GetCount() {

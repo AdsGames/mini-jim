@@ -41,6 +41,7 @@ Editor::Editor() {
   set_alpha_blender();
 
   layer = 1;
+  draw_layer = 2;
   opening = false;
   saving = false;
   creating = true;
@@ -101,8 +102,10 @@ void Editor::Edit() {
   }
 
   // Change Layer
-  if (KeyListener::keyPressed[KEY_TAB])
+  if (KeyListener::keyPressed[KEY_TAB]) {
     layer = !layer;
+    draw_layer = layer + 1;
+  }
 
   // Operations
   tile *temp_tile = tile_map -> get_tile_at(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY(), layer);
@@ -147,6 +150,10 @@ void Editor::Edit() {
       t.setType (pallette_tile -> getType());
     }
   }
+
+  // Draw specific layers
+  if (key[KEY_0])
+    draw_layer = 0;
 }
 
 void Editor::update(StateEngine *engine) {
@@ -182,7 +189,8 @@ void Editor::draw(BITMAP *buffer) {
   clear_to_color(buffer, 0x000000);
 
   // Draw tiles
-  tile_map -> draw (buffer, cam.GetX(), cam.GetY());
+  tile_map -> draw (buffer, cam.GetX(), cam.GetY(), draw_layer);
+
   pallette_tile -> draw_tile (buffer, 0, 0, 0);
   textprintf_ex (buffer, font, 70, 20, makecol (255, 255, 255), makecol (0, 0, 0), "%s", pallette_tile -> getName().c_str());
 

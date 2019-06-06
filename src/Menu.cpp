@@ -123,7 +123,7 @@ void Menu::change_level(int level) {
   play_sample (click, 255, 125, 1000, 0);
 
   cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
-  cam.SetSpeed(1);
+  cam.SetSpeed(5);
 }
 
 void Menu::update(StateEngine *engine) {

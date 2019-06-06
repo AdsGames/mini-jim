@@ -45,7 +45,8 @@ class Menu : public State {
 
     // Live background
     TileMap *tile_map;
-    int scroll_x, scroll_y, scroll_dir_x, scroll_dir_y;
+    float scroll_x, scroll_y;
+    int scroll_dir_x, scroll_dir_y;
     int next_state;
 
     enum button_names {
