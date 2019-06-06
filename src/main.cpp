@@ -24,24 +24,21 @@ JoystickListener joyL;
 volatile int close_button_pressed = FALSE;
 bool closeGame;
 
-// FPS system vars
-volatile int ticks = 0;
+// FPS system
 const int updates_per_second = 60;
-volatile int game_time = 0;
-int frames_done = 0;
 int fps = 0;
-int old_time = 0;
 
-// FPS system functions
+volatile int ticks = 0;
 void ticker() {
   ticks++;
 }
 END_OF_FUNCTION (ticker)
 
+volatile int game_time = 0;
 void game_time_ticker() {
   game_time++;
 }
-END_OF_FUNCTION (ticker)
+END_OF_FUNCTION (game_time_ticker)
 
 void close_button_handler (void) {
   close_button_pressed = TRUE;
@@ -100,6 +97,10 @@ void update() {
 //Do state rendering
 void draw() {
   game_state.draw(buffer);
+  vsync();
+  // FPS
+  textprintf_ex(buffer, font, 0, 145, makecol(255, 255, 255), makecol(0,0,0), "FPS:%d", fps);
+
   stretch_sprite(screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }
 
@@ -111,25 +112,35 @@ int main() {
   //Set the current state ID
   game_state.setNextState(StateEngine::STATE_INIT);
 
+  int frames_done = 0;
+  int old_time = 0;
+  int frames_array[10];
+  int frame_index = 0;
+  for(int i = 0; i < 10; i++)
+    frames_array[i] = 0;
+
   while (!key[KEY_ESC] && !close_button_pressed) {
     while (ticks == 0) {
       rest (1);
     }
     while (ticks > 0) {
       int old_ticks = ticks;
-
       update();
-
       ticks--;
+
       if (old_ticks <= ticks) {
         break;
       }
     }
-    if (game_time - old_time >= 10) {
-      fps = frames_done;
+    if (game_time >= old_time + 1) {
+      fps -= frames_array[frame_index];
+      frames_array[frame_index] = frames_done;
+      fps += frames_done;
+      frame_index = (frame_index + 1) % 10;
       frames_done = 0;
-      old_time = game_time;
+      old_time += 1;
     }
+
     draw();
     frames_done++;
   }

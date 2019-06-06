@@ -138,7 +138,7 @@ void player::update (TileMap *fullMap) {
   bool canJumpUp = true;
 
   // Get map around player
-  const int collision_range = 140;
+  const int collision_range = 128;
   std::vector<tile*> ranged_map = fullMap -> get_tiles_in_range(x - collision_range, x + collision_range, y - collision_range, y + collision_range);
 
   //Check for collision
@@ -207,11 +207,11 @@ void player::update (TileMap *fullMap) {
       if (key[leftKey])
         player_state = STATE_WALKING;
 
-      else if (key[rightKey])
+      if (key[rightKey])
         player_state = STATE_WALKING;
 
       //Jump
-      else if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
         play_sample (jump, 255, 125, 1000, 0);
         player_state = STATE_JUMPING;

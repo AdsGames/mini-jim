@@ -21,10 +21,14 @@ tile::~tile() {
 
 //Getters/ setters
 int tile::getX() const {
+  if (t_type)
+    return x + t_type -> GetBBX();
   return x;
 }
 
 int tile::getY() const {
+  if (t_type)
+    return y + t_type -> GetBBY();
   return y;
 }
 

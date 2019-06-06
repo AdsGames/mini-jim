@@ -19,11 +19,15 @@ class TileType {
     int GetWidth();
     int GetHeight();
 
+    int GetBBX();
+    int GetBBY();
+
     bool HasAttribute(int attribute);
 
     void AddImage(BITMAP *image);
     void AddAttribute(int attribute);
     void SetDimensions(int x_1, int y_1, int x_2, int y_2);
+
   private:
     short id;
     int x_1, x_2, y_1, y_2;

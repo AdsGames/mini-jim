@@ -82,6 +82,16 @@ void TileTypeLoader::LoadTypes(std::string path) {
       }
     }
 
+    // Bounding box
+    rapidxml::xml_node<> *bounding_box = cTile -> first_node("boundingBox");
+    if (bounding_box) {
+      int x_1 = atoi(bounding_box -> first_attribute("x1") -> value());
+      int x_2 = atoi(bounding_box -> first_attribute("x2") -> value());
+      int y_1 = atoi(bounding_box -> first_attribute("y1") -> value());
+      int y_2 = atoi(bounding_box -> first_attribute("y2") -> value());
+      tile -> SetDimensions(x_1, y_1, x_2, y_2);
+    }
+
     // Add special feature
     if (cTile -> first_node("solid"))
       tile -> AddAttribute(solid);
