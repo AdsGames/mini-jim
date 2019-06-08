@@ -46,3 +46,4 @@ output/
 *.exe
 *.depend
 *.layout
+build/Mini*Jim
