@@ -1,5 +1,5 @@
 # MiniJim
-After being microfied Jim must find a way to become regular size again. Guide Jim through epic trials in order to fight the epic boss.
+After being microfied Jim must find a way to become regular size again. Race through levels in singleplayer or multiplayer modes while avoiding new dangers.
 
 ## Compiling
 
