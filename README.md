@@ -4,10 +4,10 @@ After being microfied Jim must find a way to become regular size again. Guide Ji
 ## Compiling
 
 ### Linux
-```sudo apt-get install liballegro4.4```
+```sudo apt-get install liballegro4-dev```
 
-```sudo apt-get install libloadpng4.4```
+```sudo apt-get install libloadpng4-dev```
 
-```sudo apt-get install liblogg4.4```
+```sudo apt-get install liblogg4-dev```
 
 Open code blocks project and build
