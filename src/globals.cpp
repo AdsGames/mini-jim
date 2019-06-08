@@ -1,16 +1,7 @@
 #include "globals.h"
 
-BITMAP* tileSprites[400][8];
-BITMAP* projectileSprites[10][3];
-
 // Frames
-int frames_done;
+int NATIVE_SCREEN_W = 1280;
+int NATIVE_SCREEN_H = 960;
 bool single_player = false;
-
-// Resdiv
-int resDiv;
-
-//State variables
-int stateID;
-int nextState;
 int levelOn;

@@ -1,57 +1,67 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "GameState.h"
+#include "State.h"
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <string>
 #include <vector>
 
-#include "fmod/fmod.h"
-#include "fmod/fmod_errors.h"
-
-#include "tilemap.h"
+#include "TileMap.h"
 
 #include "globals.h"
-#include "tools.h"
+#include "utility/tools.h"
 
-class Menu : public GameState
-{
+#include "ui/Button.h"
+#include "Camera.h"
+
+class Menu : public State {
+  public:
+    Menu();
+    virtual ~Menu();
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
+
   private:
+    // OnClicks
+    void StartClicked();
+    void StartMPClicked();
+    void EditClicked();
+    void HelpClicked();
+    void ExitClicked();
+    void LeftClicked();
+    void RightClicked();
+
+    // Mouse hovering over button
+    bool button_hover();
+
+    // Change level (background)
+    void change_level(int level);
+
     // Menu/GUI
-    BITMAP *buffer, *levelSelectLeft, *levelSelectRight, *levelSelectNumber, *cursor[2], *menuselect, *menu, *help, *copyright, *credits, *menu_player_select, * playerSelector;
-
-    SAMPLE *click, *intro;
-    FSOUND_STREAM* music;
-
-
-    int selectorHovering;
-    int step;
-
-    int old_mouse_x;
-    int old_mouse_y;
-
-    bool mouse_control;
-    bool player_select;
+    BITMAP *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright, *credits;
+    SAMPLE *click, *intro, *music;
 
     // Live background
-    int animationFrame;
-    tileMap *tile_map;
-    int scrollDirection;
+    TileMap *tile_map;
+    float scroll_x, scroll_y;
+    int scroll_dir_x, scroll_dir_y;
+    int next_state;
 
-    // Menu
-    int selectorY, selectorX, newSelectorY, selected_object;
-    int cursor_x, cursor_y;
-    int menu_view_x, menu_view_y;
-    bool menuOpen;
-  protected:
-  public:
-    //Main loop functions
-    Menu();
-    void update();
-    void draw();
-    ~Menu();
+    enum button_names {
+      BUTTON_START,
+      BUTTON_START_MP,
+      BUTTON_EDIT,
+      BUTTON_HELP,
+      BUTTON_EXIT,
+      BUTTON_LEFT,
+      BUTTON_RIGHT,
+      NUM_BUTTONS
+    };
+
+    Button buttons[7];
+    Camera cam;
 };
 
 #endif // MENU_H

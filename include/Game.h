@@ -1,54 +1,36 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "GameState.h"
+#include "State.h"
 
 #include <allegro.h>
-#include <alpng.h>
-#include <string>
-#include <vector>
 
-#include "fmod/fmod.h"
-#include "fmod/fmod_errors.h"
-
-#include "globals.h"
-#include "tools.h"
-
-#include "tileMap.h"
-#include "player.h"
-
-
-using namespace std;
+#include "TileMap.h"
+#include "Player.h"
+#include "utility/Timer.h"
+#include "Camera.h"
 
 // Main game screen
-class Game : public GameState
-{
-  private:
-    BITMAP* buffer;
-    BITMAP* screen1;
-    BITMAP* screen2;
+class Game : public State {
+  public:
+    Game();
+    virtual ~Game();
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
+    void init();
 
+  private:
+    BITMAP *screen1, *screen2;
     SAMPLE *countdown;
     SAMPLE *timeout;
 
     FONT *cooper;
 
-    BITMAP* countdownImage;
-    BITMAP* results;
-    BITMAP* results_singleplayer;
-    BITMAP* spaceImage[4];
+    BITMAP *countdownImage;
+    BITMAP *results;
+    BITMAP *results_singleplayer;
 
-    FSOUND_STREAM* waitingMusic;
-    FSOUND_STREAM* mainMusic;
-
-    // Variables
-    int animationFrame;
-    static volatile int timer1;
-    bool gameBegin;
-    int totalTime[2];
-
-    int old_player_x;
-    int old_player_y;
+    SAMPLE *mainMusic;
 
     // Lighting effects
     COLOR_MAP light_table;
@@ -57,27 +39,10 @@ class Game : public GameState
     BITMAP *darkness, *darkness_old, *lightBuffer, *spotlight;
 
     // Objects
-    player player1;
-    player player2;
-    player *currentPlayer;
-
-    bool player_1_ready;
-    bool player_2_ready;
-
-    bool deathFrame;
-
-    tileMap *tile_map;
-    tileMap *tile_map2;
-
-    static void gameTicker();
-
-  public:
-    //Main loop functions
-    Game();
-    void init();
-    void update();
-    void draw();
-    ~Game();
+    player player1, player2;
+    TileMap *tile_map;
+    Timer tm_begin, tm_p1, tm_p2;
+    Camera cam_1, cam_2;
 };
 
 #endif

@@ -1,71 +1,68 @@
 #include "Intro.h"
-#include "tools.h"
+#include "utility/tools.h"
 
-Intro::Intro()
-{
-  // Load background
-  background = load_bitmap( "images/opening/background.png", NULL);
-  intro = load_bitmap( "images/opening/intro.png", NULL);
-  title = load_bitmap( "images/opening/title.png", NULL);
-  introSound = load_sample( "sounds/introSound.wav");
+#include <loadpng.h>
+#include <string>
+#include <vector>
+#include <string>
 
-  string fileName;
-  for( int i = 0; i < 81; i++){
-    fileName = "images/opening/opening" + convertIntToString( i) + ".png";
-    images[i] = load_bitmap( fileName.c_str(), NULL);
+#include "globals.h"
+#include "utility/tools.h"
+
+Intro::Intro() {
+  background = load_png_ex("images/opening/background.png");
+  intro = load_png_ex("images/opening/intro.png");
+  title = load_png_ex("images/opening/title.png");
+  introSound = load_sample_ex("sounds/introSound.wav");
+
+  for (int i = 0; i < INTRO_FRAMES; i++) {
+    images[i] = load_png_ex(std::string("images/opening/opening" + std::to_string(i) + ".png").c_str());
   }
 
-  buffer = create_bitmap( 1280, 960);
+  timer.Start();
+  highcolor_fade_in(intro, 32);
+  frame = 0;
+  sound_played = false;
 }
 
-void Intro::update()
-{
-  // Wait 2 seconds then go to the menu
-  set_next_state(STATE_MENU);
+Intro::~Intro() {
+  for (int i = 0; i < INTRO_FRAMES; i++)
+    destroy_bitmap (images[i]);
+
+  destroy_bitmap (background);
+  destroy_bitmap (title);
+  destroy_bitmap (intro);
+  destroy_sample (introSound);
 }
 
-void Intro::draw()
-{
+
+void Intro::update(StateEngine *engine) {
+  poll_joystick();
+  frame = (timer.GetElapsedTime<milliseconds>() - 3000) / 100;
+  if (frame >= 0 && !sound_played) {
+    play_sample(introSound, 255, 128, 1000, 0);
+    sound_played = true;
+  }
+
+  if (frame >= INTRO_FRAMES || key_down() || button_down()) {
+    setNextState (engine, StateEngine::STATE_MENU);
+    highcolor_fade_out(64);
+  }
+}
+
+void Intro::draw(BITMAP *buffer) {
   // Intro stuffs
- /* highcolor_fade_in( intro, 32);
-    rest(3000);
-  highcolor_fade_out( 32);
-  highcolor_fade_in( title, 32);
-    rest(3000);
-  highcolor_fade_out( 32);
-  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 0,0,0));
-  stretch_sprite( buffer, background, 105, 140, 1070, 680);
-  highcolor_fade_in( buffer, 32);
-
-  clear_keybuf();
-
-  // Show background
-  play_sample( introSound, 255, 128, 1000, 0);
-  for( int i = 0; i < 81; i++){
-    poll_joystick();
-    if(keyboard_keypressed() || joy_buttonpressed()){
-      break;
-    }
-    rectfill( buffer, 0, 0, 1280, 960, makecol( 0,0,0));
-    stretch_sprite( buffer, background, 105, 140, 1070, 680);
-    stretch_sprite( buffer, images[i], 105, 120, 1070, 660);
-    stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
-    // Wheres my car?
-    rest(100);
+  if (timer.GetElapsedTime<seconds>() < 1) {
+    draw_sprite(buffer, intro, 0, 0);
   }
-*///  highcolor_fade_out( 64);
-}
-
-Intro::~Intro()
-{
-  // Clear memory
-  for( int i = 0; i < 81; i++){
-    if(images[i]){
-      destroy_bitmap( images[i]);
-    }
+  else if (timer.GetElapsedTime<seconds>() < 2) {
+    draw_sprite(buffer, title, 0, 0);
   }
-  destroy_bitmap( background);
-  destroy_bitmap( title);
-  destroy_bitmap( intro);
-  destroy_sample( introSound);
+  else {
+    clear_to_color(buffer, 0x00000);
+    stretch_sprite(buffer, background, 105, 140, 1070, 680);
+
+    if (frame >= 0 && frame < INTRO_FRAMES)
+      stretch_sprite(buffer, images[frame], 105, 120, 1070, 660);
+  }
 }

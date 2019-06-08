@@ -1,45 +1,47 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-#include "GameState.h"
+#include "State.h"
 
 #include <allegro.h>
-#include <alpng.h>
-#include <string>
-#include <vector>
 
-#include "tileMap.h"
-#include "tile.h"
-#include "globals.h"
-#include "tools.h"
+#include "TileMap.h"
+#include "Tile.h"
+#include "ui/InputBox.h"
+#include "ui/Button.h"
+#include "Camera.h"
 
-class Editor : public GameState
-{
-  private:
-    int selectedTileType;
-    int layer;
-
-    bool saving;
-    bool opening;
-
-    BITMAP* buffer;
-
-    tileMap *tile_map;
-    tile *exampleTile;
-
-    //Text input
-    string  edittext;
-    string::iterator iter;
-
-    void init();
-    void save();
-    void open();
-  protected:
+class Editor : public State {
   public:
     Editor();
-    void update();
-    void draw();
-    ~Editor();
+    virtual ~Editor();
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
+
+  private:
+    void SaveClicked();
+    void OpenClicked();
+
+    int layer;
+    int draw_layer;
+
+    bool saving, opening, creating;
+
+    TileMap *tile_map;
+    tile *pallette_tile;
+    BITMAP *cursor;
+
+    //Text input
+    Button btn_save, btn_open, btn_new, btn_close;
+    InputBox ib_save, ib_open, ib_width, ib_height;
+
+    void Close();
+    void Save();
+    void Open();
+    void New();
+    void Edit();
+
+    Camera cam;
 };
 
 #endif // EDITOR_H

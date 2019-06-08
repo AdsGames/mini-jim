@@ -1,36 +1,32 @@
 #ifndef INTRO_H
 #define INTRO_H
 
-#include "GameState.h"
-
 #include <allegro.h>
-#include <alpng.h>
-#include <string>
-#include <vector>
-#include <string>
 
-#include "globals.h"
-#include "tools.h"
+#include "State.h"
+#include "utility/Timer.h"
+
+#define INTRO_FRAMES 84
 
 // Intro screen of game
-class Intro : public GameState
-{
+class Intro : public State {
+  public:
+    Intro();
+    virtual ~Intro();
+    virtual void update(StateEngine *engine) override;
+    virtual void draw(BITMAP *buffer) override;
+
   private:
-    //Intro background
-    BITMAP *buffer;
     BITMAP *intro;
     BITMAP *title;
     BITMAP *background;
-    BITMAP *images[100];
-
+    BITMAP *images[INTRO_FRAMES];
     SAMPLE *introSound;
 
-  public:
-    //Main loop functions
-    Intro();
-    void update();
-    void draw();
-    ~Intro();
+    int frame;
+    bool sound_played;
+
+    Timer timer;
 };
 
 #endif // INTRO_H

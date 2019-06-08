@@ -1,31 +1,33 @@
 #include "Init.h"
 
-Init::Init()
-{
-  // Set window title
-  set_window_title( "Setting up");
+#include <allegro.h>
 
-  int width;
-  int height;
-  get_desktop_resolution( &width, &height);
+#include "globals.h"
+#include "utility/tools.h"
 
-  set_gfx_mode( GFX_AUTODETECT_WINDOWED, 1280, 960, 0, 0);
+#include "TileTypeLoader.h"
 
-  set_window_title( "Mini Jim");
+Init::Init() {
+  set_window_title ("Setting up");
+
+  set_display_switch_mode(SWITCH_BACKGROUND);
+
+  // Setup number generator
+  srand (time (nullptr));
+
+  TileTypeLoader::LoadTypes("data/tiles.xml");
+
+  set_window_title ("Mini Jim");
 }
 
-void Init::update()
-{
-  // Change to splash screen
-  set_next_state(STATE_INTRO);
+void Init::update(StateEngine *engine) {
+  setNextState (engine, StateEngine::STATE_INTRO);
 }
 
-void Init::draw()
-{
-
+void Init::draw(BITMAP *buffer) {
+  clear_to_color(buffer, 0x000000);
 }
 
-Init::~Init()
-{
+Init::~Init() {
 
 }
