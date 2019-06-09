@@ -42,7 +42,7 @@ bool TileMap::hasLighting() const {
 }
 
 // Toggle lighting effects
-int TileMap::toggleLights() {
+void TileMap::toggleLights() {
   lighting = !lighting;
 }
 

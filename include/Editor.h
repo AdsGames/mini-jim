@@ -25,7 +25,14 @@ class Editor : public State {
     int layer;
     int draw_layer;
 
-    bool saving, opening, creating;
+    enum editor_states {
+      SAVE,
+      OPEN,
+      CREATE,
+      EDIT
+    };
+
+    char editor_state;
 
     TileMap *tile_map;
     tile *pallette_tile;

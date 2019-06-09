@@ -21,7 +21,7 @@ class TileMap {
     int getFrame();
 
     bool hasLighting() const;
-    int toggleLights();
+    void toggleLights();
 
     void draw (BITMAP *buffer, int x, int y, int layer = 0);
 

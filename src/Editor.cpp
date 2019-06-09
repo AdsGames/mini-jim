@@ -42,9 +42,7 @@ Editor::Editor() {
 
   layer = 1;
   draw_layer = 2;
-  opening = false;
-  saving = false;
-  creating = true;
+  editor_state = OPEN;
 }
 
 Editor::~Editor() {
@@ -55,19 +53,17 @@ Editor::~Editor() {
 }
 
 void Editor::Close() {
-  opening = false;
-  saving = false;
-  creating = false;
+  editor_state = EDIT;
 }
 
 void Editor::Save() {
   tile_map -> save ("data/" + ib_save.GetValue());
-  saving = false;
+  editor_state = EDIT;
 }
 
 void Editor::Open() {
   tile_map -> load ("data/" + ib_open.GetValue());
-  opening = false;
+  editor_state = EDIT;
   cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
   cam.SetSpeed(1);
   cam.SetBounds(20, 20);
@@ -75,7 +71,7 @@ void Editor::Open() {
 
 void Editor::New() {
   if (ib_width.GetValue().length() != 0 && ib_width.GetValue().length() != 0) {
-    creating = false;
+    editor_state = EDIT;
     tile_map -> create (stoi(ib_width.GetValue()), stoi(ib_height.GetValue()));
     cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
     cam.SetSpeed(1);
@@ -137,21 +133,21 @@ void Editor::Edit() {
   if (KeyListener::keyPressed[KEY_S]) {
     clear_keybuf();
     ib_save.Focus();
-    saving = true;
+    editor_state = SAVE;
   }
 
   // Open map
   if (KeyListener::keyPressed[KEY_O]) {
     clear_keybuf();
     ib_open.Focus();
-    opening = true;
+    editor_state = OPEN;
   }
 
   // New map
   if (KeyListener::keyPressed[KEY_N]) {
     clear_keybuf();
     ib_width.Update();
-    creating = true;
+    editor_state = CREATE;
   }
 
   //Fill map
@@ -168,22 +164,22 @@ void Editor::Edit() {
 
 void Editor::update(StateEngine *engine) {
   // Back to menu
-  if (KeyListener::keyPressed[KEY_M] && !saving && !opening) {
+  if (KeyListener::keyPressed[KEY_M] && editor_state == EDIT) {
     setNextState (engine, StateEngine::STATE_MENU);
   }
 
   // Run states
-  if (saving) {
+  if (editor_state == SAVE) {
     ib_save.Update();
     btn_save.Update();
     btn_close.Update();
   }
-  else if (opening) {
+  else if (editor_state == OPEN) {
     ib_open.Update();
     btn_open.Update();
     btn_close.Update();
   }
-  else if (creating) {
+  else if (editor_state == CREATE) {
     ib_width.Update();
     ib_height.Update();
     btn_new.Update();
@@ -212,7 +208,7 @@ void Editor::draw(BITMAP *buffer) {
   else
     textprintf_ex (buffer, font, 0, 130, makecol (255, 255, 255), makecol (0, 0, 0), "Editing Mode: Background");
 
-  if (saving) {
+  if (editor_state == SAVE) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
     rect (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (0, 0, 0));
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "Save Map Name");
@@ -220,7 +216,7 @@ void Editor::draw(BITMAP *buffer) {
     btn_save.Draw(buffer);
     btn_close.Draw(buffer);
   }
-  else if (opening) {
+  else if (editor_state == OPEN) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
     rect (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (0, 0, 0));
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "Open Map Name");
@@ -228,7 +224,7 @@ void Editor::draw(BITMAP *buffer) {
     btn_open.Draw(buffer);
     btn_close.Draw(buffer);
   }
-  else if (creating) {
+  else if (editor_state == CREATE) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
     rect (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (0, 0, 0));
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "New Map");
