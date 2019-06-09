@@ -31,6 +31,14 @@ Menu::Menu() {
   change_level(0);
   next_state = -1;
 
+  // Lighting
+  // Build a color lookup table for lighting effects
+  get_palette (pal);
+  create_light_table (&light_table, pal, 0, 0, 0, nullptr);
+  darkness = load_png_ex ("images/darkness.png");
+  darkness_old = load_png_ex ("images/darkness.png");
+  spotlight = load_png_ex ("images/spotlight.png");
+
   // Buttons
   buttons[BUTTON_START] = Button(60, 630);
   buttons[BUTTON_START_MP] = Button(60, 690);
@@ -157,6 +165,29 @@ void Menu::draw(BITMAP *buffer) {
 
   // Draw live background
   tile_map -> draw (buffer, cam.GetX(), cam.GetY());
+
+  // Lighting
+  if (tile_map -> hasLighting()) {
+    set_alpha_blender();
+    draw_sprite (darkness, darkness_old, 0, 0);
+
+    // Get map area
+    std::vector<tile *> ranged_map = tile_map -> get_tiles_in_range(cam.GetX() - spotlight -> w,
+                                     cam.GetX() + cam.GetWidth() + spotlight -> w,
+                                     cam.GetY() - spotlight -> h,
+                                     cam.GetY() + cam.GetHeight() + spotlight -> w);
+
+    for (auto t : ranged_map) {
+      if (t -> containsAttribute (light)) {
+        stretch_sprite (darkness, spotlight,
+                        t -> getX() - cam.GetX() + t -> getWidth()  / 2 - t -> getWidth() * 3,
+                        t -> getY() - cam.GetY() + t -> getHeight() / 2 - t -> getHeight() * 3,
+                        t -> getWidth() * 6, t -> getHeight() * 6);
+      }
+    }
+
+    draw_trans_sprite (buffer, darkness, 0, 0);
+  }
 
   // Overlay
   draw_trans_sprite (buffer, credits, 0, 0);

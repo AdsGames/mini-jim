@@ -16,8 +16,6 @@ Game::Game() {
     screen2 = create_bitmap (NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
   }
 
-  lightingEnabled = (levelOn == 3);
-
   // Player
   player1.load_images (1);
   player1.load_sounds();
@@ -148,14 +146,15 @@ void Game::draw(BITMAP *buffer) {
   }
 
   // Lighting
-  if (lightingEnabled) {
+  if (tile_map -> hasLighting()) {
     set_alpha_blender();
-
-    // Player 1
-    std::vector<tile *> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX(), cam_1.GetX() + cam_1.GetWidth(), cam_1.GetY(), cam_1.GetY() + cam_1.GetHeight());
-
-    //Check for collision
     draw_sprite (darkness, darkness_old, 0, 0);
+
+    // Get map area
+    std::vector<tile *> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX() - spotlight -> w,
+                                     cam_1.GetX() + cam_1.GetWidth() + spotlight -> w,
+                                     cam_1.GetY() - spotlight -> h,
+                                     cam_1.GetY() + cam_1.GetHeight() + spotlight -> w);
 
     for (auto t : ranged_map) {
       if (t -> containsAttribute (light)) {

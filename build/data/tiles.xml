@@ -169,6 +169,7 @@
       <image src="heatPanel4.png"/>
 		</images>
     <harmful />
+    <light />
   </tile>
   <tile id="34" name="Chicken Still">
     <images>
@@ -227,6 +228,7 @@
       <image src="fire_3.png"/>
 		</images>
     <harmful />
+    <light />
   </tile>
   <tile id="42" name="Claw">
     <images>
@@ -298,6 +300,7 @@
       <image src="element3.png"/>
 		</images>
     <harmful />
+    <light />
   </tile>
   <tile id="52" name="Red Cloth">
     <images>
@@ -361,7 +364,8 @@
   </tile>
   <tile id="64" name="Light">
     <images>
-			<image src="light.png"/>
+			<image src="light1.png"/>
+      <image src="light2.png"/>
 		</images>
     <light />
   </tile>

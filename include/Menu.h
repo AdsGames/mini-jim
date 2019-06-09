@@ -49,6 +49,11 @@ class Menu : public State {
     int scroll_dir_x, scroll_dir_y;
     int next_state;
 
+    // Lighting effects
+    COLOR_MAP light_table;
+    PALLETE pal;
+    BITMAP *darkness, *darkness_old, *lightBuffer, *spotlight;
+
     enum button_names {
       BUTTON_START,
       BUTTON_START_MP,

@@ -32,10 +32,8 @@ class Game : public State {
 
     SAMPLE *mainMusic;
 
-    // Lighting effects
     COLOR_MAP light_table;
     PALLETE pal;
-    bool lightingEnabled;
     BITMAP *darkness, *darkness_old, *lightBuffer, *spotlight;
 
     // Objects

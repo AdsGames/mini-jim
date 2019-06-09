@@ -20,6 +20,9 @@ class TileMap {
     int getHeight() const;
     int getFrame();
 
+    bool hasLighting() const;
+    int toggleLights();
+
     void draw (BITMAP *buffer, int x, int y, int layer = 0);
 
     void create(int width, int height);
@@ -38,6 +41,7 @@ class TileMap {
 
     int width;
     int height;
+    bool lighting;
 
     Timer frame_timer;
 };

@@ -111,6 +111,11 @@ void Editor::Edit() {
     draw_layer = layer + 1;
   }
 
+  // Toggle lights
+  if (KeyListener::keyPressed[KEY_L]) {
+    tile_map -> toggleLights();
+  }
+
   // Operations
   tile *temp_tile = tile_map -> get_tile_at(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY(), layer);
 
@@ -200,7 +205,7 @@ void Editor::draw(BITMAP *buffer) {
   textprintf_ex (buffer, font, 70, 20, makecol (255, 255, 255), makecol (0, 0, 0), "%s", pallette_tile -> getName().c_str());
 
   // Map info
-  textprintf_ex (buffer, font, 0, 80, makecol (255, 255, 255), makecol (0, 0, 0), "height-%i width-%i", tile_map -> getHeight(), tile_map -> getWidth());
+  textprintf_ex (buffer, font, 0, 80, makecol (255, 255, 255), makecol (0, 0, 0), "height-%i width-%i lighting-%i", tile_map -> getHeight(), tile_map -> getWidth(), tile_map -> hasLighting());
 
   if (layer == 1)
     textprintf_ex (buffer, font, 0, 130, makecol (255, 255, 255), makecol (0, 0, 0), "Editing Mode: Foreground");

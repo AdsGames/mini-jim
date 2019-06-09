@@ -11,6 +11,7 @@
 TileMap::TileMap (std::string file) {
   width = 0;
   height = 0;
+  lighting = false;
   frame_timer.Start();
 
   if (file != "")
@@ -35,11 +36,22 @@ int TileMap::getFrame() {
   return int(frame_timer.GetElapsedTime<milliseconds>() / 100) % 8;
 }
 
+// Has lighting enabled
+bool TileMap::hasLighting() const {
+  return lighting;
+}
+
+// Toggle lighting effects
+int TileMap::toggleLights() {
+  lighting = !lighting;
+}
+
 void TileMap::create(int width, int height) {
   mapTiles.clear();
   mapTilesBack.clear();
   this -> width = width;
   this -> height = height;
+  this -> lighting = false;
 
   for (int t = 0; t < height; t++) {
     for (int i = 0; i < width; i++) {
@@ -80,12 +92,15 @@ bool TileMap::load (std::string file) {
   mapTilesBack.clear();
   width = 0;
   height = 0;
+  lighting = false;
 
   // Dimensions
   rf.seekg (0);
   rf.read ((char *)(&width), sizeof (width));
   rf.seekg (4);
   rf.read ((char *)(&height), sizeof (height));
+  rf.seekg (8);
+  rf.read ((char *)(&lighting), sizeof (lighting));
 
   rf.seekg (32);
 
@@ -128,9 +143,11 @@ void TileMap::save (std::string file) {
 
   // Dimensions
   of.seekp (0);
-  of.write ((char *)&width, sizeof (int));
+  of.write ((char *)&width, sizeof (width));
   of.seekp (4);
-  of.write ((char *)&height, sizeof (int));
+  of.write ((char *)&height, sizeof (height));
+  of.seekp (8);
+  of.write ((char *)&lighting, sizeof (int));
   of.seekp (32);
 
   // Layers
