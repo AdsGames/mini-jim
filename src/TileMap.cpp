@@ -54,9 +54,11 @@ void TileMap::load_layer(std::ifstream &file, std::vector<tile> &t_map) {
   unsigned char type_count = 0;
   unsigned short type = 0;
   int position = 0;
+
   while (position < width * height) {
-    file.read((char*)(&type_count), sizeof (type_count));
-    file.read((char*)(&type), sizeof (type));
+    file.read((char *)(&type_count), sizeof (type_count));
+    file.read((char *)(&type), sizeof (type));
+
     for (int i = 0; i < type_count; i++) {
       t_map.push_back (tile (type, (position % width) * 64, (position / width) * 64));
       position ++;
@@ -81,9 +83,9 @@ bool TileMap::load (std::string file) {
 
   // Dimensions
   rf.seekg (0);
-  rf.read ((char*)(&width), sizeof (width));
+  rf.read ((char *)(&width), sizeof (width));
   rf.seekg (4);
-  rf.read ((char*)(&height), sizeof (height));
+  rf.read ((char *)(&height), sizeof (height));
 
   rf.seekg (32);
 
@@ -100,17 +102,19 @@ void TileMap::save_layer(std::ofstream &file, std::vector<tile> &t_map) {
   unsigned short type = 0;
 
   // Compress similar tiles
-  for (auto &t: t_map) {
+  for (auto &t : t_map) {
     if ((t.getType() != type || type_count == 255) && type_count != 0) {
-      file.write((char*)(&type_count), sizeof (type_count));
-      file.write((char*)(&type), sizeof (type));
+      file.write((char *)(&type_count), sizeof (type_count));
+      file.write((char *)(&type), sizeof (type));
       type_count = 0;
     }
+
     type = t.getType();
     type_count ++;
   }
-  file.write((char*)(&type_count), sizeof (type_count));
-  file.write((char*)(&type), sizeof (type));
+
+  file.write((char *)(&type_count), sizeof (type_count));
+  file.write((char *)(&type), sizeof (type));
 }
 
 // Save file
@@ -124,9 +128,9 @@ void TileMap::save (std::string file) {
 
   // Dimensions
   of.seekp (0);
-  of.write ((char*)&width, sizeof (int));
+  of.write ((char *)&width, sizeof (int));
   of.seekp (4);
-  of.write ((char*)&height, sizeof (int));
+  of.write ((char *)&height, sizeof (int));
   of.seekp (32);
 
   // Layers
@@ -137,31 +141,36 @@ void TileMap::save (std::string file) {
 }
 
 // Get tile at
-tile* TileMap::get_tile_at (int s_x, int s_y, int layer) {
+tile *TileMap::get_tile_at (int s_x, int s_y, int layer) {
   std::vector<tile> *ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
-  for (auto &t: *ttm) {
+
+  for (auto &t : *ttm) {
     if (collisionAny (s_x, s_x, t.getX(), t.getX() + 64,
                       s_y, s_y, t.getY(), t.getY() + 64)) {
       return &t;
     }
   }
+
   return nullptr;
 }
 
 // Find tile type
-tile* TileMap::find_tile_type (int type, int layer) {
+tile *TileMap::find_tile_type (int type, int layer) {
   std::vector<tile> *ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
-  for (auto &t: *ttm) {
+
+  for (auto &t : *ttm) {
     if (t.getType() == type) {
       return &t;
     }
   }
+
   return nullptr;
 }
 
 // Get tile at
-std::vector<tile*> TileMap::get_tiles_in_range (int x_1, int x_2, int y_1, int y_2) {
-  std::vector<tile*> ranged_map;
+std::vector<tile *> TileMap::get_tiles_in_range (int x_1, int x_2, int y_1, int y_2) {
+  std::vector<tile *> ranged_map;
+
   for (auto &t : mapTiles) {
     if (t.getType() != 0 &&
         collisionAny (x_1, x_2, t.getX(), t.getX() + t.getWidth(),
@@ -169,13 +178,15 @@ std::vector<tile*> TileMap::get_tiles_in_range (int x_1, int x_2, int y_1, int y
       ranged_map.push_back(&t);
     }
   }
+
   return ranged_map;
 }
 
 // Draw a layer
 void TileMap::draw_layer (BITMAP *buffer, std::vector<tile> &t_map, int x, int y) {
   int frame = getFrame();
-  for (auto &t: t_map) {
+
+  for (auto &t : t_map) {
     if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + NATIVE_SCREEN_W) &&
         (t.getY() + t.getHeight() >= y) && (t.getY() < y + NATIVE_SCREEN_H)) {
       t.draw_tile (buffer, x, y, frame);
@@ -188,6 +199,7 @@ void TileMap::draw (BITMAP *buffer, int x, int y, int layer) {
   if (layer == 0 || layer == 1) {
     draw_layer (buffer, mapTilesBack, x, y);
   }
+
   if (layer == 0 || layer == 2) {
     draw_layer (buffer, mapTiles, x, y);
   }

@@ -38,6 +38,7 @@ void MouseListener::update() {
 
   // Update scroll wheel
   mouse_z_change = 0;
+
   if (mouse_z != mouse_z_old) {
     mouse_z_change = mouse_z - mouse_z_old;
     mouse_z_old = mouse_z;

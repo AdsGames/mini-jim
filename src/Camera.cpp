@@ -50,10 +50,13 @@ void Camera::Follow (float f_x, float f_y) {
 
   if (y < 0)
     y = 0;
+
   if (y + height > max_y)
     y = max_y - height;
+
   if (x < 0)
     x = 0;
+
   if (x + width > max_x)
     x = max_x - width;
 }

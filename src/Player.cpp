@@ -139,7 +139,7 @@ void player::update (TileMap *fullMap) {
 
   // Get map around player
   const int collision_range = 128;
-  std::vector<tile*> ranged_map = fullMap -> get_tiles_in_range(x - collision_range, x + collision_range, y - collision_range, y + collision_range);
+  std::vector<tile *> ranged_map = fullMap -> get_tiles_in_range(x - collision_range, x + collision_range, y - collision_range, y + collision_range);
 
   //Check for collision
   for (auto t : ranged_map) {
@@ -151,6 +151,7 @@ void player::update (TileMap *fullMap) {
       if (t -> containsAttribute (solid) || (t -> containsAttribute (slide) && player_state != STATE_SLIDING)) {
         if (collisionLeft (x + 8 + xVelocity, x + 56, t -> getX() + t -> getWidth()))
           canMoveLeft = false;
+
         if (collisionRight (x + 8, x + 56 + xVelocity, t -> getX()))
           canMoveRight = false;
       }
@@ -173,6 +174,7 @@ void player::update (TileMap *fullMap) {
         else if (t -> getTypeStr() == "beak") {
           play_sample (chicken, 255, 128, 1000, 0);
         }
+
         Die();
       }
 
@@ -196,119 +198,130 @@ void player::update (TileMap *fullMap) {
   // Falling
   if (canFall)
     player_state = STATE_JUMPING;
+
   if (key[rightKey])
     characterDir = RIGHT;
+
   if (key[leftKey])
     characterDir = LEFT;
 
   // State logic
   switch (player_state) {
     case STATE_STANDING: {
-      //Jump
-      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
-        yVelocity = -24;
-        play_sample (jump, 255, 125, 1000, 0);
-        player_state = STATE_JUMPING;
-      }
-      else if (key[leftKey])
-        player_state = STATE_WALKING;
-      else if (key[rightKey])
-        player_state = STATE_WALKING;
-      else
-        xVelocity = 0;
+        //Jump
+        if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+          yVelocity = -24;
+          play_sample (jump, 255, 125, 1000, 0);
+          player_state = STATE_JUMPING;
+        }
+        else if (key[leftKey])
+          player_state = STATE_WALKING;
+        else if (key[rightKey])
+          player_state = STATE_WALKING;
+        else
+          xVelocity = 0;
 
-      break;
-    }
+        break;
+      }
+
     case STATE_WALKING: {
-      if (key[downKey])
-        player_state = STATE_SLIDING;
+        if (key[downKey])
+          player_state = STATE_SLIDING;
 
-      if (!(key[leftKey] || key[rightKey]))
-        player_state = STATE_STANDING;
+        if (!(key[leftKey] || key[rightKey]))
+          player_state = STATE_STANDING;
 
-      //Jump
-      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
-        yVelocity = -24;
-        play_sample (jump, 255, 125, 1000, 0);
-        player_state = STATE_JUMPING;
-        xVelocity = xVelocity/2;
+        //Jump
+        if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+          yVelocity = -24;
+          play_sample (jump, 255, 125, 1000, 0);
+          player_state = STATE_JUMPING;
+          xVelocity = xVelocity / 2;
+        }
+
+        // Animate
+        if (int(tm_animation.GetElapsedTime<milliseconds>()) % 50 == 0) {
+          play_sample (walk[random(0, 1)], 255, 125, 1000, 0);
+        }
+
+        if (characterDir == RIGHT) {
+          if (xVelocity < 4)
+            xVelocity = 4;
+          else if (xVelocity < 12)
+            xVelocity += 0.5;
+        }
+        else if (characterDir == LEFT) {
+          if (xVelocity > -4)
+            xVelocity = -4;
+          else if (xVelocity > -12)
+            xVelocity -= 0.5;
+        }
+
+        break;
       }
 
-      // Animate
-      if (int(tm_animation.GetElapsedTime<milliseconds>()) % 50 == 0) {
-        play_sample (walk[random(0, 1)], 255, 125, 1000, 0);
-      }
-
-      if (characterDir == RIGHT) {
-        if (xVelocity < 4)
-          xVelocity = 4;
-        else if (xVelocity < 12)
-          xVelocity += 0.5;
-      }
-      else if (characterDir == LEFT) {
-        if (xVelocity > -4)
-          xVelocity = -4;
-        else if (xVelocity > -12)
-          xVelocity -= 0.5;
-      }
-
-      break;
-    }
     case STATE_JUMPING: {
-      if (key[rightKey] && xVelocity < 12)
-        xVelocity += 0.5;
-      else if (key[leftKey] && xVelocity > -12)
-        xVelocity -= 0.5;
+        if (key[rightKey] && xVelocity < 12)
+          xVelocity += 0.5;
+        else if (key[leftKey] && xVelocity > -12)
+          xVelocity -= 0.5;
 
-      if (!key[rightKey] && !key[leftKey])
-        xVelocity *= 0.9;
+        if (!key[rightKey] && !key[leftKey])
+          xVelocity *= 0.9;
 
 
-      if (canFall) {
-        if (!canJumpUp && yVelocity < 0.0f)
+        if (canFall) {
+          if (!canJumpUp && yVelocity < 0.0f)
+            yVelocity = 0;
+
+          yVelocity += GRAVITY;
+        }
+        else {
+          y = floorX - 64;
           yVelocity = 0;
-        yVelocity += GRAVITY;
-      }
-      else {
-        y = floorX - 64;
-        yVelocity = 0;
-        player_state = STATE_STANDING;
+          player_state = STATE_STANDING;
+        }
+
+        break;
       }
 
-      break;
-    }
     case STATE_SLIDING: {
-      if (!key[downKey])
-        player_state = STATE_STANDING;
+        if (!key[downKey])
+          player_state = STATE_STANDING;
 
-      (xVelocity < 0.01f && xVelocity > -0.01f) ? xVelocity = 0 : xVelocity *= 0.95f;
+        (xVelocity < 0.01f && xVelocity > -0.01f) ? xVelocity = 0 : xVelocity *= 0.95f;
 
-      //Jump
-      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
-        yVelocity = -24;
-        play_sample (jump, 255, 125, 1000, 0);
-        player_state = STATE_JUMPING;
+        //Jump
+        if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+          yVelocity = -24;
+          play_sample (jump, 255, 125, 1000, 0);
+          player_state = STATE_JUMPING;
+        }
+
+        break;
       }
-      break;
-    }
+
     default:
       break;
   }
 
   if (!((canMoveRight && xVelocity > 0) || (canMoveLeft && xVelocity < 0)))
     xVelocity = 0;
+
   x += xVelocity;
   y += yVelocity;
 
   //Falling (calculated separately to ensure collision accurate)
   canFall = true;
   floorX = INT_MAX;
+
   for (auto t : ranged_map) {
     if (t -> containsAttribute (solid)) {
       if (collisionAny (x + 16, x + 48, t -> getX(), t -> getX() + t -> getWidth(),
                         y, y + 65 + yVelocity, t -> getY(), t -> getY() + t -> getHeight()) &&
           collisionTop (y, y + 65 + yVelocity, t -> getY())) {
         canFall = false;
+
         if (t -> getY() < floorX)
           floorX = t -> getY();
       }

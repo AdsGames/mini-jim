@@ -51,7 +51,7 @@ class StateEngine {
     void changeState();
 
     // Stores states
-    State* state;
+    State *state;
 
     // Next state
     int nextState = STATE_NULL;
@@ -73,10 +73,10 @@ class State {
     virtual void draw(BITMAP *buffer) = 0;
 
     // Update logic
-    virtual void update(StateEngine* engine) = 0;
+    virtual void update(StateEngine *engine) = 0;
 
     // Change state
-    void setNextState(StateEngine* engine, int state);
+    void setNextState(StateEngine *engine, int state);
 
     // Get status
     int getStatus();

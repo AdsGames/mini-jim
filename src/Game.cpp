@@ -65,6 +65,7 @@ void Game::init() {
   tile_map = new TileMap ();
 
   std::string file_name = "data/level_" + std::to_string(levelOn + 1);
+
   if (!tile_map -> load (file_name))
     abort_on_error("Could not open level" + file_name);
 
@@ -74,6 +75,7 @@ void Game::init() {
 
   // Find spawn
   tile *spawnTile = tile_map -> find_tile_type(199, 1);
+
   if (spawnTile != nullptr) {
     player1.set_spawn (spawnTile -> getX(), spawnTile -> getY());
     player2.set_spawn (spawnTile -> getX(), spawnTile -> getY());
@@ -100,6 +102,7 @@ void Game::update(StateEngine *engine) {
     if (!player1.getFinished()) {
       player1.update (tile_map);
     }
+
     if (!player2.getFinished() && !single_player) {
       player2.update (tile_map);
     }
@@ -111,8 +114,10 @@ void Game::update(StateEngine *engine) {
     tm_p1.Start();
     tm_p2.Start();
   }
+
   if (tm_p1.IsRunning() && player1.getFinished())
     tm_p1.Stop();
+
   if (tm_p2.IsRunning() && player2.getFinished())
     tm_p2.Stop();
 
@@ -147,10 +152,11 @@ void Game::draw(BITMAP *buffer) {
     set_alpha_blender();
 
     // Player 1
-    std::vector<tile*> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX(), cam_1.GetX() + cam_1.GetWidth(), cam_1.GetY(), cam_1.GetY() + cam_1.GetHeight());
+    std::vector<tile *> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX(), cam_1.GetX() + cam_1.GetWidth(), cam_1.GetY(), cam_1.GetY() + cam_1.GetHeight());
 
     //Check for collision
     draw_sprite (darkness, darkness_old, 0, 0);
+
     for (auto t : ranged_map) {
       if (t -> containsAttribute (light)) {
         stretch_sprite (darkness, spotlight,
@@ -159,6 +165,7 @@ void Game::draw(BITMAP *buffer) {
                         t -> getWidth() * 6, t -> getHeight() * 6);
       }
     }
+
     draw_sprite (darkness, spotlight, player1.getX() - cam_1.GetX() + 32 - (spotlight->w / 2), player1.getY() - cam_1.GetY() + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen1, darkness, 0, 0);
   }

@@ -14,7 +14,7 @@ class TileTypeLoader {
     static int GetCount();
 
   private:
-    static std::vector<TileType*> types;
+    static std::vector<TileType *> types;
 };
 
 #endif // TILETYPELOADER_H

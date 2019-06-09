@@ -44,16 +44,20 @@ void InputBox::Update() {
   // Focus
   if (MouseListener::mouse_pressed & 1) {
     focused = Hover();
+
     if (focused) {
       int closest = width;
+
       for (unsigned int i = 0; i <= text.length(); i++) {
         int distance = abs(text_length(font, text.substr(0, i).c_str()) + x + 6 - mouse_x);
+
         if (distance < closest) {
           text_iter = i;
           closest = distance;
         }
       }
     }
+
     clear_keybuf();
   }
 

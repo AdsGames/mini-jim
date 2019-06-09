@@ -89,15 +89,19 @@ void Editor::Edit() {
   // Change selected
   if (KeyListener::keyPressed[KEY_UP]) {
     int i = pallette_tile -> getType () + 1;
+
     while (!TileTypeLoader::GetTile(i))
       i = (i + 1) > 400 ? 0 : i + 1;
+
     pallette_tile -> setType (i);
   }
 
   if (KeyListener::keyPressed[KEY_DOWN]) {
     int i = pallette_tile -> getType () - 1;
+
     while (!TileTypeLoader::GetTile(i))
       i = (i - 1) < 0 ? 400 : i - 1;
+
     pallette_tile -> setType (i);
   }
 
@@ -109,6 +113,7 @@ void Editor::Edit() {
 
   // Operations
   tile *temp_tile = tile_map -> get_tile_at(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY(), layer);
+
   if (temp_tile) {
     // Place tile
     if (mouse_b & 1)
@@ -146,7 +151,7 @@ void Editor::Edit() {
 
   //Fill map
   if (KeyListener::keyPressed[KEY_F]) {
-    for (auto &t: tile_map -> mapTilesBack) {
+    for (auto &t : tile_map -> mapTilesBack) {
       t.setType (pallette_tile -> getType());
     }
   }
@@ -196,6 +201,7 @@ void Editor::draw(BITMAP *buffer) {
 
   // Map info
   textprintf_ex (buffer, font, 0, 80, makecol (255, 255, 255), makecol (0, 0, 0), "height-%i width-%i", tile_map -> getHeight(), tile_map -> getWidth());
+
   if (layer == 1)
     textprintf_ex (buffer, font, 0, 130, makecol (255, 255, 255), makecol (0, 0, 0), "Editing Mode: Foreground");
   else

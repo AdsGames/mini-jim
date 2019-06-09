@@ -23,24 +23,28 @@ tile::~tile() {
 int tile::getX() const {
   if (t_type)
     return x + t_type -> GetBBX();
+
   return x;
 }
 
 int tile::getY() const {
   if (t_type)
     return y + t_type -> GetBBY();
+
   return y;
 }
 
 int tile::getWidth() {
   if (t_type)
     return t_type -> GetWidth();
+
   return 0;
 }
 
 int tile::getHeight() {
   if (t_type)
     return t_type -> GetHeight();
+
   return 0;
 }
 
@@ -55,18 +59,21 @@ void tile::setY (int y) {
 short tile::getType() {
   if (t_type)
     return t_type -> GetID();
+
   return 0;
 }
 
 std::string tile::getTypeStr() {
   if (t_type)
     return t_type -> GetIDStr();
+
   return "";
 }
 
 std::string tile::getName() {
   if (t_type)
     return t_type -> GetName();
+
   return "";
 }
 
@@ -74,6 +81,7 @@ std::string tile::getName() {
 bool tile::containsAttribute (int newAttribute) {
   if (t_type)
     return t_type -> HasAttribute(newAttribute);
+
   return false;
 }
 

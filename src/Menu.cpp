@@ -107,6 +107,7 @@ bool Menu::button_hover() {
       return true;
     }
   }
+
   return false;
 }
 
@@ -132,8 +133,10 @@ void Menu::update(StateEngine *engine) {
   // Move around live background
   if (scroll_x + NATIVE_SCREEN_W / 2 >= tile_map -> getWidth() || scroll_x <= NATIVE_SCREEN_W / 2)
     scroll_dir_x *= -1;
+
   if (scroll_y + NATIVE_SCREEN_H / 2 >= tile_map -> getHeight() || scroll_y <= NATIVE_SCREEN_H / 2)
     scroll_dir_y *= -1;
+
   scroll_x += scroll_dir_x;
   scroll_y += scroll_dir_y;
 

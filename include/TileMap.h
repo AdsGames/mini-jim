@@ -29,7 +29,7 @@ class TileMap {
 
     tile *get_tile_at (int x, int y, int layer);
     tile *find_tile_type (int type, int layer);
-    std::vector<tile*> get_tiles_in_range (int x_1, int x_2, int y_1, int y_2);
+    std::vector<tile *> get_tiles_in_range (int x_1, int x_2, int y_1, int y_2);
 
   private:
     void load_layer(std::ifstream &file, std::vector<tile> &t_map);

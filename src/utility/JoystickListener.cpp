@@ -10,12 +10,12 @@ bool JoystickListener::lastTicksButton[MAX_JOYSTICK_BUTTONS] = {false};
 bool JoystickListener::anyButtonPressed = false;
 
 // Check those joys!
-void JoystickListener::update(){
+void JoystickListener::update() {
   // Reset button pressed
   anyButtonPressed = false;
 
   // Check button just pressed
-  for( int i = 0; i < MAX_JOYSTICK_BUTTONS; i++){
+  for( int i = 0; i < MAX_JOYSTICK_BUTTONS; i++) {
     // Clear old values
     buttonPressed[i] = false;
     buttonReleased[i] = false;

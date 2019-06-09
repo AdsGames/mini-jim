@@ -35,7 +35,7 @@ class TileType {
     std::string id_str;
 
     std::vector<int> attributes;
-    std::vector<BITMAP*> images;
+    std::vector<BITMAP *> images;
 };
 
 #endif // TILETYPE_H

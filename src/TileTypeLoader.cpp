@@ -15,23 +15,25 @@
 #include "rapidxml/rapidxml_print.hpp"
 #pragma GCC diagnostic pop
 
-std::vector<TileType*> TileTypeLoader::types;
+std::vector<TileType *> TileTypeLoader::types;
 
-TileType* TileTypeLoader::GetTile(int id) {
-  for (const auto& t : types) {
+TileType *TileTypeLoader::GetTile(int id) {
+  for (const auto &t : types) {
     if (t -> GetID() == id) {
       return t;
     }
   }
+
   return nullptr;
 }
 
-TileType* TileTypeLoader::GetTile(std::string id_str) {
-  for (const auto& t : types) {
+TileType *TileTypeLoader::GetTile(std::string id_str) {
+  for (const auto &t : types) {
     if (t -> GetIDStr() == id_str) {
       return t;
     }
   }
+
   return nullptr;
 }
 
@@ -42,6 +44,7 @@ int TileTypeLoader::GetCount() {
 void TileTypeLoader::LoadTypes(std::string path) {
   // Open file or abort if it does not exist
   std::ifstream file(path);
+
   if (file.fail())
     return;
 
@@ -75,6 +78,7 @@ void TileTypeLoader::LoadTypes(std::string path) {
     // Images
     if (cTile -> first_node("images")) {
       rapidxml::xml_node<> *img = cTile -> first_node("images") -> first_node("image");
+
       for (; img != nullptr; img = img -> next_sibling()) {
         BITMAP *image = load_png_ex ("images/blocks/" + std::string(img -> first_attribute("src") -> value()));
         tile -> AddImage(image);
@@ -84,6 +88,7 @@ void TileTypeLoader::LoadTypes(std::string path) {
 
     // Bounding box
     rapidxml::xml_node<> *bounding_box = cTile -> first_node("boundingBox");
+
     if (bounding_box) {
       int x_1 = atoi(bounding_box -> first_attribute("x1") -> value());
       int x_2 = atoi(bounding_box -> first_attribute("x2") -> value());

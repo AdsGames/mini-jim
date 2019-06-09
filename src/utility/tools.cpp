@@ -10,6 +10,7 @@ bool key_down() {
       return true;
     }
   }
+
   return false;
 }
 
@@ -20,6 +21,7 @@ bool button_down() {
       return true;
     }
   }
+
   return false;
 }
 

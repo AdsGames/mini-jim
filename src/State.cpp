@@ -31,6 +31,7 @@ void StateEngine::update() {
   if (state) {
     state -> update(this);
   }
+
   changeState();
 }
 
@@ -64,22 +65,27 @@ void StateEngine::changeState() {
       state = new Game();
       std::cout << ("Switched state to game.\n");
       break;
+
     case STATE_MENU:
       state = new Menu();
       std::cout << ("Switched state to main menu.\n");
       break;
+
     case STATE_INIT:
       state = new Init();
       std::cout << ("Switched state to init.\n");
       break;
+
     case STATE_INTRO:
       state = new Intro();
       std::cout << ("Switched state to intro.\n");
       break;
+
     case STATE_EDIT:
       state = new Editor();
       std::cout << ("Switched state to edit.\n");
       break;
+
     default:
       std::cout << ("Exiting program.");
       break;
@@ -98,6 +104,6 @@ void StateEngine::changeState() {
  *********/
 
 // Change state
-void State::setNextState(StateEngine* engine, int state) {
+void State::setNextState(StateEngine *engine, int state) {
   engine -> setNextState(state);
 }
