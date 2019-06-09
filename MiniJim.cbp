@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="debug">
-				<Option output="build/Mini Jim" prefix_auto="1" extension_auto="1" />
+				<Option output="build/Mini Jim Debug" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build" />
 				<Option object_output="output" />
 				<Option type="1" />
@@ -21,7 +21,7 @@
 				</Linker>
 			</Target>
 			<Target title="debug-linux">
-				<Option output="build/MiniJim" prefix_auto="1" extension_auto="1" />
+				<Option output="build/MiniJimDebug" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build" />
 				<Option object_output="output" />
 				<Option type="1" />
@@ -41,9 +41,11 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-O3" />
 					<Add option="-static" />
 				</Compiler>
 				<Linker>
+					<Add option="-s" />
 					<Add option="-lalleg44" />
 				</Linker>
 			</Target>
@@ -54,9 +56,11 @@
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-O3" />
 					<Add option="-static" />
 				</Compiler>
 				<Linker>
+					<Add option="-s" />
 					<Add option="-lalleg" />
 				</Linker>
 			</Target>
@@ -67,7 +71,9 @@
 			<Add option="-Wcast-align" />
 			<Add option="-Wundef" />
 			<Add option="-Wfloat-equal" />
+			<Add option="-Winline" />
 			<Add option="-Wunreachable-code" />
+			<Add option="-Wmissing-declarations" />
 			<Add option="-Wmissing-include-dirs" />
 			<Add option="-Wswitch-enum" />
 			<Add option="-Wswitch-default" />

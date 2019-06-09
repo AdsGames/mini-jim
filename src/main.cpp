@@ -25,6 +25,12 @@ KeyListener keyL;
 MouseListener mouseL;
 JoystickListener joyL;
 
+// Functions
+void close_button_handler (void);
+void setup();
+void draw();
+void update();
+
 // Close button handler
 volatile int close_button_pressed = FALSE;
 bool closeGame;
