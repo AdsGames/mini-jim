@@ -2,6 +2,7 @@
 #include "globals.h"
 
 #include <logg.h>
+#include <random>
 
 //Iterates through the number of buttons in a joystick and returns true if any keys are pressed
 bool key_down() {
@@ -43,11 +44,11 @@ bool collisionLeft (int xMin1, int xMax1, int xMax2) {
 }
 
 //Random number generator. Use int random(lowest,highest);
-int random (int newLowest, int newHighest) {
-  int lowest = newLowest, highest = newHighest;
-  int range = (highest - lowest) + 1;
-  int randomNumber = lowest + int (range * rand() / (RAND_MAX + 1.0));
-  return randomNumber;
+int random (int low, int high) {
+  std::random_device dev;
+  std::mt19937 rng(dev());
+  std::uniform_int_distribution<std::mt19937::result_type> dist6(low,high); // distribution in range [1, 6]
+  return dist6(rng);
 }
 
 // Fade in

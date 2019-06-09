@@ -20,7 +20,7 @@ extern bool collisionRight (int xMin1, int xMax1, int xMin2);
 extern bool collisionLeft (int xMin1, int xMax1, int xMax2);
 
 //Random number generator
-extern int random (int newLowest, int newHighest);
+extern int random (int low, int high);
 
 // Fade in and out
 extern void highcolor_fade_in (BITMAP *bmp_orig, int speed);
