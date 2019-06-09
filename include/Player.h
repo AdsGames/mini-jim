@@ -10,12 +10,12 @@
 #include "TileMap.h"
 #include "utility/Timer.h"
 
-class player {
+class Player {
   public:
-    player();
-    ~player();
+    explicit Player(int number);
+    ~Player();
 
-    void load_images (int player);
+    void load_images (int number);
     void load_sounds();
     void set_keys (int up, int down, int left, int right, int jump, int joy_number);
     void set_spawn (int x, int y);
@@ -43,6 +43,7 @@ class player {
     const float GRAVITY = 1.5f;
     bool canFall;
     int floorX;
+    int joy_number;
 
     float x, y;
 
@@ -56,7 +57,6 @@ class player {
 
     // Keys
     int upKey, downKey, leftKey, rightKey, jumpKey;
-    int joyNumber;
 
     Timer tm_animation;
 

@@ -22,9 +22,6 @@ class Timer {
     // Start time
     void Start();
 
-    // Reset timer
-    void Reset();
-
     // Stop
     void Stop();
 

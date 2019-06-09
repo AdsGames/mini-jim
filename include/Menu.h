@@ -20,7 +20,7 @@ class Menu : public State {
   public:
     Menu();
     virtual ~Menu();
-    virtual void update(StateEngine *engine) override;
+    virtual void update(StateEngine &engine) override;
     virtual void draw(BITMAP *buffer) override;
 
   private:
@@ -52,7 +52,7 @@ class Menu : public State {
     // Lighting effects
     COLOR_MAP light_table;
     PALLETE pal;
-    BITMAP *darkness, *darkness_old, *lightBuffer, *spotlight;
+    BITMAP *darkness, *darkness_old, *spotlight;
 
     enum button_names {
       BUTTON_START,

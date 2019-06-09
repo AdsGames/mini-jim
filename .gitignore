@@ -47,4 +47,5 @@ output/
 *.depend
 *.layout
 build/Mini*Jim*
+*.dll
 CppCheckResults.xml

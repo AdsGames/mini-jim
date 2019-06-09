@@ -13,7 +13,7 @@ class Intro : public State {
   public:
     Intro();
     virtual ~Intro();
-    virtual void update(StateEngine *engine) override;
+    virtual void update(StateEngine &engine) override;
     virtual void draw(BITMAP *buffer) override;
 
   private:

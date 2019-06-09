@@ -15,7 +15,7 @@ class Game : public State {
   public:
     Game();
     virtual ~Game();
-    virtual void update(StateEngine *engine) override;
+    virtual void update(StateEngine &engine) override;
     virtual void draw(BITMAP *buffer) override;
     void init();
 
@@ -34,10 +34,10 @@ class Game : public State {
 
     COLOR_MAP light_table;
     PALLETE pal;
-    BITMAP *darkness, *darkness_old, *lightBuffer, *spotlight;
+    BITMAP *darkness, *darkness_old, *spotlight;
 
     // Objects
-    player player1, player2;
+    Player *player1, *player2;
     TileMap *tile_map;
     Timer tm_begin, tm_p1, tm_p2;
     Camera cam_1, cam_2;

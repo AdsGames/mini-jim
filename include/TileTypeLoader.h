@@ -8,10 +8,9 @@
 
 class TileTypeLoader {
   public:
-    static void LoadTypes(std::string path);
+    static void LoadTypes(const std::string &path);
     static TileType *GetTile(int id);
-    static TileType *GetTile(std::string id_str);
-    static int GetCount();
+    static TileType *GetTile(const std::string &id_str);
 
   private:
     static std::vector<TileType *> types;

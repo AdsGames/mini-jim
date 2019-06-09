@@ -29,14 +29,14 @@ void StateEngine::draw(BITMAP *buffer) {
 // Update
 void StateEngine::update() {
   if (state) {
-    state -> update(this);
+    state -> update(*this);
   }
 
   changeState();
 }
 
 // Set next state
-void StateEngine::setNextState(int newState) {
+void StateEngine::setNextState(const int newState) {
   nextState = newState;
 }
 
@@ -104,6 +104,6 @@ void StateEngine::changeState() {
  *********/
 
 // Change state
-void State::setNextState(StateEngine *engine, int state) {
-  engine -> setNextState(state);
+void State::setNextState(StateEngine &engine, int state) {
+  engine.setNextState(state);
 }

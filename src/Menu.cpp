@@ -109,16 +109,6 @@ Menu::~Menu() {
   highcolor_fade_out (16);
 }
 
-bool Menu::button_hover() {
-  for (int i = 0; i < NUM_BUTTONS; i++) {
-    if (buttons[i].Hover()) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 void Menu::change_level(int level) {
   levelOn = (levelOn + level) < 0 ? 4 : (levelOn + level) % 5;
 
@@ -135,7 +125,7 @@ void Menu::change_level(int level) {
   cam.SetSpeed(5);
 }
 
-void Menu::update(StateEngine *engine) {
+void Menu::update(StateEngine &engine) {
   poll_joystick();
 
   // Move around live background
@@ -172,7 +162,7 @@ void Menu::draw(BITMAP *buffer) {
     draw_sprite (darkness, darkness_old, 0, 0);
 
     // Get map area
-    std::vector<tile *> ranged_map = tile_map -> get_tiles_in_range(cam.GetX() - spotlight -> w,
+    std::vector<Tile *> ranged_map = tile_map -> get_tiles_in_range(cam.GetX() - spotlight -> w,
                                      cam.GetX() + cam.GetWidth() + spotlight -> w,
                                      cam.GetY() - spotlight -> h,
                                      cam.GetY() + cam.GetHeight() + spotlight -> w);

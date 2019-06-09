@@ -2,10 +2,12 @@
 
 #include <algorithm>
 
-TileType::TileType(short id, std::string name, std::string id_str) {
-  this -> id = id;
-  this -> name = name;
-  this -> id_str = id_str;
+TileType::TileType(short id, const std::string &name, const std::string &id_str)
+  : id(id), name(name), id_str(id_str) {
+  x_1 = 0;
+  x_2 = 0;
+  y_1 = 0;
+  y_2 = 0;
 }
 
 TileType::~TileType() {

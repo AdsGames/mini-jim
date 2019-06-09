@@ -30,7 +30,7 @@ class StateEngine {
     void draw(BITMAP *buffer);
 
     // Set next state
-    void setNextState(int newState);
+    void setNextState(const int newState);
 
     // Get state id
     int getStateId();
@@ -67,23 +67,21 @@ class StateEngine {
 class State {
   public:
     // Virtual destructor
+    State() {};
     virtual ~State() {};
 
     // Draw to screen
     virtual void draw(BITMAP *buffer) = 0;
 
     // Update logic
-    virtual void update(StateEngine *engine) = 0;
+    virtual void update(StateEngine &engine) = 0;
 
     // Change state
-    void setNextState(StateEngine *engine, int state);
-
-    // Get status
-    int getStatus();
-
+    void setNextState(StateEngine &engine, int state);
   private:
-    // State status
-    int status;
+    // Disallow copy
+    State(const State &);
+    State &operator=(const State &);
 };
 
 #endif // STATE_H

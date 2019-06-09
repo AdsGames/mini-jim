@@ -14,30 +14,22 @@
 std::vector<TileType *> TileTypeLoader::types;
 
 TileType *TileTypeLoader::GetTile(int id) {
-  for (const auto &t : types) {
-    if (t -> GetID() == id) {
-      return t;
-    }
-  }
+  auto found = std::find_if (types.begin(), types.end(), [&id] (auto & t) {
+    return t -> GetID() == id;
+  });
 
-  return nullptr;
+  return (found != types.end()) ? *found : nullptr;
 }
 
-TileType *TileTypeLoader::GetTile(std::string id_str) {
-  for (const auto &t : types) {
-    if (t -> GetIDStr() == id_str) {
-      return t;
-    }
-  }
+TileType *TileTypeLoader::GetTile(const std::string &id_str) {
+  auto found = std::find_if (types.begin(), types.end(), [&id_str] (auto & t) {
+    return t -> GetIDStr() == id_str;
+  });
 
-  return nullptr;
+  return (found != types.end()) ? *found : nullptr;
 }
 
-int TileTypeLoader::GetCount() {
-  return types.size();
-}
-
-void TileTypeLoader::LoadTypes(std::string path) {
+void TileTypeLoader::LoadTypes(const std::string &path) {
   // Open file or abort if it does not exist
   std::ifstream file(path);
 

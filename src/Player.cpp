@@ -7,12 +7,13 @@
 #define LEFT 0
 #define RIGHT 4
 
-player::player() {
-
+Player::Player(int number) {
   x = 128;
   y = 128;
 
   finished = false;
+  canFall = false;
+  floorX = 0;
 
   characterDir = RIGHT;
 
@@ -33,9 +34,19 @@ player::player() {
   player_state = STATE_STANDING;
 
   tm_animation.Start();
+
+  load_images (number);
+  load_sounds ();
+
+  if (number == 1) {
+    set_keys (KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_ENTER_PAD, 0);
+  }
+  else {
+    set_keys (KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, 1);
+  }
 }
 
-player::~player() {
+Player::~Player() {
   for (int i = 0; i < 14; i++)
     destroy_bitmap (player_images[i]);
 
@@ -46,7 +57,7 @@ player::~player() {
 }
 
 // 0-3 left, 4-7 right, 8-11 up
-void player::load_images (int player) {
+void Player::load_images (int player) {
   std::string prefix = "images/character/character_" + std::to_string(player) + "_";
 
   player_images[0] = load_png_ex ((prefix + "left_1.png").c_str());
@@ -70,7 +81,7 @@ void player::load_images (int player) {
 }
 
 // Load sounds
-void player::load_sounds() {
+void Player::load_sounds() {
   chicken = load_sample_ex ("sounds/chicken.wav");
   walk[0] = load_sample_ex ("sounds/walk_1.wav");
   walk[1] = load_sample_ex ("sounds/walk_2.wav");
@@ -82,17 +93,17 @@ void player::load_sounds() {
 }
 
 // Set keys
-void player::set_keys (int up, int down, int left, int right, int jump, int joy_number) {
+void Player::set_keys (int up, int down, int left, int right, int jump, int joy_number) {
   upKey = up;
   downKey = down;
   leftKey = left;
   rightKey = right;
   jumpKey = jump;
-  joyNumber = joy_number;
+  this -> joy_number = joy_number;
 }
 
 // Set spawn
-void player::set_spawn (int x, int y) {
+void Player::set_spawn (int x, int y) {
   checkpointPosition[0] = x;
   checkpointPosition[1] = y;
   this -> x = checkpointPosition[0];
@@ -100,27 +111,27 @@ void player::set_spawn (int x, int y) {
 }
 
 // Deathcount
-int player::getDeathcount() {
+int Player::getDeathcount() {
   return deathcount;
 }
 
 // Return X
-int player::getX() {
+int Player::getX() {
   return x;
 }
 
 // Return Y
-int player::getY() {
+int Player::getY() {
   return y;
 }
 
 // Get finished
-bool player::getFinished() {
+bool Player::getFinished() {
   return finished;
 }
 
 // Dead?
-void player::Die() {
+void Player::Die() {
   play_sample (die, 255, 125, 1000, 0);
   player_state = STATE_STANDING;
   deathcount++;
@@ -131,7 +142,7 @@ void player::Die() {
 }
 
 //Movement
-void player::update (TileMap *fullMap) {
+void Player::update (TileMap *fullMap) {
   //Collision stuff
   bool canMoveLeft = true;
   bool canMoveRight = true;
@@ -139,7 +150,7 @@ void player::update (TileMap *fullMap) {
 
   // Get map around player
   const int collision_range = 128;
-  std::vector<tile *> ranged_map = fullMap -> get_tiles_in_range(x - collision_range, x + collision_range, y - collision_range, y + collision_range);
+  std::vector<Tile *> ranged_map = fullMap -> get_tiles_in_range(x - collision_range, x + collision_range, y - collision_range, y + collision_range);
 
   //Check for collision
   for (auto t : ranged_map) {
@@ -334,7 +345,7 @@ void player::update (TileMap *fullMap) {
 }
 
 // Draw character
-void player::draw (BITMAP *temp, int tile_map_x, int tile_map_y) {
+void Player::draw (BITMAP *temp, int tile_map_x, int tile_map_y) {
   int ani_ticker = int(tm_animation.GetElapsedTime<milliseconds>()) / 100;
 
   if (player_state == STATE_JUMPING) {

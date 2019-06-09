@@ -13,7 +13,7 @@ Editor::Editor() {
   tile_map = new TileMap ();
 
   // Create example tile
-  pallette_tile = new tile (0, 0, 0);
+  pallette_tile = new Tile (0, 0, 0);
 
   font = load_font_ex ("fonts/arial_black.pcx");
   cursor = load_png_ex ("images/gui/cursor1.png");
@@ -113,7 +113,7 @@ void Editor::Edit() {
   }
 
   // Operations
-  tile *temp_tile = tile_map -> get_tile_at(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY(), layer);
+  Tile *temp_tile = tile_map -> get_tile_at(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY(), layer);
 
   if (temp_tile) {
     // Place tile
@@ -162,7 +162,7 @@ void Editor::Edit() {
     draw_layer = 0;
 }
 
-void Editor::update(StateEngine *engine) {
+void Editor::update(StateEngine &engine) {
   // Back to menu
   if (KeyListener::keyPressed[KEY_M] && editor_state == EDIT) {
     setNextState (engine, StateEngine::STATE_MENU);
@@ -197,7 +197,7 @@ void Editor::draw(BITMAP *buffer) {
   // Draw tiles
   tile_map -> draw (buffer, cam.GetX(), cam.GetY(), draw_layer);
 
-  pallette_tile -> draw_tile (buffer, 0, 0, 0);
+  pallette_tile -> draw (buffer, 0, 0, 0);
   textprintf_ex (buffer, font, 70, 20, makecol (255, 255, 255), makecol (0, 0, 0), "%s", pallette_tile -> getName().c_str());
 
   // Map info

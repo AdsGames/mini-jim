@@ -4,24 +4,16 @@
 
 #include "utility/MouseListener.h"
 
-InputBox::InputBox() {
-  this -> x = 0;
-  this -> y = 0;
-  this -> width = 0;
-  this -> height = 0;
-  this -> text = "";
-  this -> focused = false;
-  text_iter = 0;
+InputBox::InputBox()
+  : InputBox(0, 0, 0, 0, "") {
+
 }
 
-InputBox::InputBox(int x, int y, int width, int height, std::string value, std::string type) :
-  InputBox() {
-  this -> x = x;
-  this -> y = y;
-  this -> width = width;
-  this -> height = height;
-  this -> text = value;
-  this -> type = type;
+InputBox::InputBox(int x, int y, int width, int height, const std::string &value, const std::string &type)
+  : x(x), y(y), width(width), height(height), text(value), type(type) {
+
+  this -> focused = false;
+  text_iter = 0;
 }
 
 InputBox::~InputBox() {

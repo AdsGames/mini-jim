@@ -17,13 +17,8 @@ Game::Game() {
   }
 
   // Player
-  player1.load_images (1);
-  player1.load_sounds();
-  player1.set_keys (KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_ENTER_PAD, 0);
-
-  player2.load_images (2);
-  player2.load_sounds();
-  player2.set_keys (KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, 1);
+  player1 = new Player(1);
+  player2 = new Player(2);
 
   // Build a color lookup table for lighting effects
   get_palette (pal);
@@ -72,11 +67,11 @@ void Game::init() {
   cam_2 = Camera(screen2 -> w, screen2 -> h, tile_map -> getWidth(), tile_map -> getHeight());
 
   // Find spawn
-  tile *spawnTile = tile_map -> find_tile_type(199, 1);
+  Tile *spawnTile = tile_map -> find_tile_type(199, 1);
 
   if (spawnTile != nullptr) {
-    player1.set_spawn (spawnTile -> getX(), spawnTile -> getY());
-    player2.set_spawn (spawnTile -> getX(), spawnTile -> getY());
+    player1 -> set_spawn (spawnTile -> getX(), spawnTile -> getY());
+    player2 -> set_spawn (spawnTile -> getX(), spawnTile -> getY());
   }
 
   // Play music
@@ -87,22 +82,22 @@ void Game::init() {
   tm_begin.Start();
 }
 
-void Game::update(StateEngine *engine) {
+void Game::update(StateEngine &engine) {
   // Camera follow
-  cam_1.Follow(player1.getX(), player1.getY());
-  cam_2.Follow(player2.getX(), player2.getY());
+  cam_1.Follow(player1 -> getX(), player1 -> getY());
+  cam_2.Follow(player2 -> getX(), player2 -> getY());
 
   // Starting countdown
   if (!tm_begin.IsRunning()) {
     poll_joystick();
 
     // Stop from moving once done
-    if (!player1.getFinished()) {
-      player1.update (tile_map);
+    if (!player1 -> getFinished()) {
+      player1 -> update (tile_map);
     }
 
-    if (!player2.getFinished() && !single_player) {
-      player2.update (tile_map);
+    if (!player2 -> getFinished() && !single_player) {
+      player2 -> update (tile_map);
     }
   }
 
@@ -113,14 +108,14 @@ void Game::update(StateEngine *engine) {
     tm_p2.Start();
   }
 
-  if (tm_p1.IsRunning() && player1.getFinished())
+  if (tm_p1.IsRunning() && player1 -> getFinished())
     tm_p1.Stop();
 
-  if (tm_p2.IsRunning() && player2.getFinished())
+  if (tm_p2.IsRunning() && player2 -> getFinished())
     tm_p2.Stop();
 
   // Change level when both are done
-  if (key[KEY_ENTER] && player1.getFinished() && (player2.getFinished() || single_player)) {
+  if (key[KEY_ENTER] && player1 -> getFinished() && (player2 -> getFinished() || single_player)) {
     setNextState (engine, StateEngine::STATE_MENU);
   }
 
@@ -135,14 +130,14 @@ void Game::draw(BITMAP *buffer) {
 
   // Draw tiles and characters
   tile_map -> draw (screen1, cam_1.GetX(), cam_1.GetY());
-  player1.draw (screen1, cam_1.GetX(), cam_1.GetY());
+  player1 -> draw (screen1, cam_1.GetX(), cam_1.GetY());
 
   if (!single_player) {
     tile_map -> draw (screen2, cam_2.GetX(), cam_2.GetY());
-    player2.draw (screen1, cam_1.GetX(), cam_1.GetY());
-    player1.draw (screen1, cam_1.GetX(), cam_1.GetY());
-    player1.draw (screen2, cam_2.GetX(), cam_2.GetY());
-    player2.draw (screen2, cam_2.GetX(), cam_2.GetY());
+    player2 -> draw (screen1, cam_1.GetX(), cam_1.GetY());
+    player1 -> draw (screen1, cam_1.GetX(), cam_1.GetY());
+    player1 -> draw (screen2, cam_2.GetX(), cam_2.GetY());
+    player2 -> draw (screen2, cam_2.GetX(), cam_2.GetY());
   }
 
   // Lighting
@@ -151,7 +146,7 @@ void Game::draw(BITMAP *buffer) {
     draw_sprite (darkness, darkness_old, 0, 0);
 
     // Get map area
-    std::vector<tile *> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX() - spotlight -> w,
+    std::vector<Tile *> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX() - spotlight -> w,
                                      cam_1.GetX() + cam_1.GetWidth() + spotlight -> w,
                                      cam_1.GetY() - spotlight -> h,
                                      cam_1.GetY() + cam_1.GetHeight() + spotlight -> w);
@@ -165,7 +160,7 @@ void Game::draw(BITMAP *buffer) {
       }
     }
 
-    draw_sprite (darkness, spotlight, player1.getX() - cam_1.GetX() + 32 - (spotlight->w / 2), player1.getY() - cam_1.GetY() + 32 - (spotlight->h / 2));
+    draw_sprite (darkness, spotlight, player1 -> getX() - cam_1.GetX() + 32 - (spotlight->w / 2), player1 -> getY() - cam_1.GetY() + 32 - (spotlight->h / 2));
     draw_trans_sprite (screen1, darkness, 0, 0);
   }
 
@@ -194,11 +189,11 @@ void Game::draw(BITMAP *buffer) {
 
   // Draw timer to screen
   textprintf_ex (buffer, cooper, 40, 55, makecol (255, 255, 255), -1, "Time: %.1f", tm_p1.GetElapsedTime<milliseconds>() / 1000);
-  textprintf_ex (buffer, cooper, 40, 20, makecol (255, 255, 255), -1, "Deaths:%i", player1.getDeathcount());
+  textprintf_ex (buffer, cooper, 40, 20, makecol (255, 255, 255), -1, "Deaths:%i", player1 -> getDeathcount());
 
   if (!single_player) {
     textprintf_ex (buffer, cooper, 40, (NATIVE_SCREEN_H / 2) + 20 + 35, makecol (255, 255, 255), -1, "Time: %.1f", tm_p2.GetElapsedTime<milliseconds>() / 1000);
-    textprintf_ex (buffer, cooper, 40, (NATIVE_SCREEN_H / 2) + 20, makecol (255, 255, 255), -1, "Deaths:%i", player2.getDeathcount());
+    textprintf_ex (buffer, cooper, 40, (NATIVE_SCREEN_H / 2) + 20, makecol (255, 255, 255), -1, "Deaths:%i", player2 -> getDeathcount());
   }
 
   // Starting countdown
@@ -215,7 +210,7 @@ void Game::draw(BITMAP *buffer) {
   }
 
   // Change level when both are done
-  if (player1.getFinished() && (player2.getFinished() || single_player)) {
+  if (player1 -> getFinished() && (player2 -> getFinished() || single_player)) {
     const float p1_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
     const float p2_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
 

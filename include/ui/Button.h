@@ -26,11 +26,8 @@ class Button {
   private:
     std::function<void(void)> OnClick;
 
-    int height;
-    int width;
-
-    int x;
-    int y;
+    int x, y;
+    int width, height;
 
     BITMAP *images[2];
 };

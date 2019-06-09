@@ -7,11 +7,11 @@
 
 #include "TileType.h"
 
-class tile {
+class Tile {
   public:
-    tile (short type);
-    tile (short type, int x, int y);
-    ~tile();
+    explicit Tile (short type);
+    Tile (short type, int x, int y);
+    ~Tile();
 
     int getX() const;
     int getY() const;
@@ -30,11 +30,10 @@ class tile {
     void setType (short type);
     void setType(std::string type);
 
-    void draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame);
+    void draw (BITMAP *buffer, int xOffset, int yOffset, int frame);
 
   private:
     int x, y;
-    int width, height;
     std::vector<int> attribute;
 
     TileType *t_type;

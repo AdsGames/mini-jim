@@ -5,72 +5,72 @@
 
 #include "TileTypeLoader.h"
 
-tile::tile (short type) {
-  setType (type);
+Tile::Tile (short type) :
+  Tile (type, 0, 0) {
 }
 
-tile::tile (short type, int x, int y) {
+Tile::Tile (short type, int x, int y) {
   setX (x);
   setY (y);
   setType (type);
 }
 
-tile::~tile() {
+Tile::~Tile() {
 
 }
 
 //Getters/ setters
-int tile::getX() const {
+int Tile::getX() const {
   if (t_type)
     return x + t_type -> GetBBX();
 
   return x;
 }
 
-int tile::getY() const {
+int Tile::getY() const {
   if (t_type)
     return y + t_type -> GetBBY();
 
   return y;
 }
 
-int tile::getWidth() {
+int Tile::getWidth() {
   if (t_type)
     return t_type -> GetWidth();
 
   return 0;
 }
 
-int tile::getHeight() {
+int Tile::getHeight() {
   if (t_type)
     return t_type -> GetHeight();
 
   return 0;
 }
 
-void tile::setX (int x) {
+void Tile::setX (int x) {
   this -> x = x;
 }
 
-void tile::setY (int y) {
+void Tile::setY (int y) {
   this -> y = y;
 }
 
-short tile::getType() {
+short Tile::getType() {
   if (t_type)
     return t_type -> GetID();
 
   return 0;
 }
 
-std::string tile::getTypeStr() {
+std::string Tile::getTypeStr() {
   if (t_type)
     return t_type -> GetIDStr();
 
   return "";
 }
 
-std::string tile::getName() {
+std::string Tile::getName() {
   if (t_type)
     return t_type -> GetName();
 
@@ -78,24 +78,24 @@ std::string tile::getName() {
 }
 
 // Contains Attribute
-bool tile::containsAttribute (int newAttribute) {
+bool Tile::containsAttribute (int newAttribute) {
   if (t_type)
     return t_type -> HasAttribute(newAttribute);
 
   return false;
 }
 
-void tile::setType (std::string type) {
+void Tile::setType (std::string type) {
   t_type = TileTypeLoader::GetTile(type);
 }
 
 // Set type
-void tile::setType (short type) {
+void Tile::setType (short type) {
   t_type = TileTypeLoader::GetTile(type);
 }
 
 // Draw tile
-void tile::draw_tile (BITMAP *buffer, int xOffset, int yOffset, int frame) {
+void Tile::draw (BITMAP *buffer, int xOffset, int yOffset, int frame) {
   if (t_type)
     t_type -> Draw(buffer, x - xOffset, y - yOffset, frame);
 }

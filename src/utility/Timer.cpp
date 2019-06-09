@@ -1,18 +1,15 @@
 #include "utility/Timer.h"
 
 // Available modes, fit to needs
-template double Timer::GetElapsedTime<nanoseconds>();
-template double Timer::GetElapsedTime<microseconds>();
 template double Timer::GetElapsedTime<milliseconds>();
 template double Timer::GetElapsedTime<seconds>();
-template double Timer::GetElapsedTime<minutes>();
-template double Timer::GetElapsedTime<hours>();
 
 // Init
-Timer::Timer() {
-  t1 = high_resolution_clock::now();
-  t2 = high_resolution_clock::now();
-  running = false;
+Timer::Timer() :
+  t1(high_resolution_clock::now()),
+  t2(high_resolution_clock::now()),
+  running(false) {
+
 }
 
 // Start Timer
@@ -20,11 +17,6 @@ void Timer::Start() {
   t1 = high_resolution_clock::now();
   t2 = high_resolution_clock::now();
   running = true;
-}
-
-// Reset (just calls start)
-void Timer::Reset() {
-  Start();
 }
 
 // Stop

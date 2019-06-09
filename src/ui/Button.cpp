@@ -3,24 +3,20 @@
 #include "utility/tools.h"
 #include "utility/MouseListener.h"
 
-Button::Button () {
-  images[0] = nullptr;
-  images[1] = nullptr;
+Button::Button ()
+  : Button(0, 0) {
 
-  height = 10;
-  width = 10;
-
-  this -> x = 0;
-  this -> y = 0;
-
-  OnClick = nullptr;
 }
 
-Button::Button (int x, int y) :
-  Button () {
+Button::Button (int x, int y)
+  : OnClick(nullptr),
+    x(x),
+    y(y),
+    width(10),
+    height(10) {
 
-  this -> x = x;
-  this -> y = y;
+  images[0] = nullptr;
+  images[1] = nullptr;
 }
 
 Button::~Button() {

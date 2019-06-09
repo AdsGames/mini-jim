@@ -20,7 +20,7 @@ Init::Init() {
   set_window_title ("Mini Jim");
 }
 
-void Init::update(StateEngine *engine) {
+void Init::update(StateEngine &engine) {
   setNextState (engine, StateEngine::STATE_INTRO);
 }
 

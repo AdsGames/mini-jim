@@ -15,7 +15,7 @@ class Editor : public State {
   public:
     Editor();
     virtual ~Editor();
-    virtual void update(StateEngine *engine) override;
+    virtual void update(StateEngine &engine) override;
     virtual void draw(BITMAP *buffer) override;
 
   private:
@@ -35,7 +35,7 @@ class Editor : public State {
     char editor_state;
 
     TileMap *tile_map;
-    tile *pallette_tile;
+    Tile *pallette_tile;
     BITMAP *cursor;
 
     //Text input

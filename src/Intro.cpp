@@ -36,7 +36,7 @@ Intro::~Intro() {
 }
 
 
-void Intro::update(StateEngine *engine) {
+void Intro::update(StateEngine &engine) {
   poll_joystick();
   frame = (timer.GetElapsedTime<milliseconds>() - 3000) / 100;
 
