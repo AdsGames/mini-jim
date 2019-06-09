@@ -8,12 +8,8 @@
 #include "utility/tools.h"
 #include "globals.h"
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma GCC diagnostic ignored "-Wswitch-default"
 #include "rapidxml/rapidxml.hpp"
 #include "rapidxml/rapidxml_print.hpp"
-#pragma GCC diagnostic pop
 
 std::vector<TileType *> TileTypeLoader::types;
 

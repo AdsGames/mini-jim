@@ -60,7 +60,7 @@ void setup() {
   if (set_gfx_mode (GFX_AUTODETECT_WINDOWED, NATIVE_SCREEN_W, NATIVE_SCREEN_H, 0, 0)) {
     if (set_gfx_mode (GFX_AUTODETECT_WINDOWED, NATIVE_SCREEN_W / 2, NATIVE_SCREEN_H / 2, 0, 0)) {
       set_gfx_mode (GFX_TEXT, 0, 0, 0, 0);
-      allegro_message ("Could not create screen. Exiting", -1, allegro_error);
+      allegro_message ("Could not create screen. Exiting...");
       exit (-1);
     }
   }

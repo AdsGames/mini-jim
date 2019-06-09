@@ -20,8 +20,8 @@
 					<Add option="-lalleg44" />
 				</Linker>
 			</Target>
-			<Target title="linux">
-				<Option output="build/Mini Jim" prefix_auto="1" extension_auto="1" />
+			<Target title="debug-linux">
+				<Option output="build/MiniJim" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build" />
 				<Option object_output="output" />
 				<Option type="1" />
@@ -45,6 +45,19 @@
 				</Compiler>
 				<Linker>
 					<Add option="-lalleg44" />
+				</Linker>
+			</Target>
+			<Target title="release-linux">
+				<Option output="build/Mini Jim" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="build" />
+				<Option object_output="output" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-static" />
+				</Compiler>
+				<Linker>
+					<Add option="-lalleg" />
 				</Linker>
 			</Target>
 		</Build>
