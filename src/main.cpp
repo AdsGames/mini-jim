@@ -1,4 +1,3 @@
-
 // Includes
 #include <allegro.h>
 #include <chrono>

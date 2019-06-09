@@ -47,7 +47,7 @@ bool collisionLeft (int xMin1, int xMax1, int xMax2) {
 int random (int low, int high) {
   std::random_device dev;
   std::mt19937 rng(dev());
-  std::uniform_int_distribution<std::mt19937::result_type> dist6(low,high); // distribution in range [1, 6]
+  std::uniform_int_distribution<std::mt19937::result_type> dist6(low, high); // distribution in range [1, 6]
   return dist6(rng);
 }
 
