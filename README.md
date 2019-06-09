@@ -24,9 +24,6 @@ Open code blocks project, select debug-linux as the build target and build
 In case you are not using the code blocks project provided
 ```
 -llogg
--lvorbisfile
--lvorbis
--logg
 -lloadpng
 -lalleg44 or -lalleg
 ```
