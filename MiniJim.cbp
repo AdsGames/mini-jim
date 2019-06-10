@@ -14,7 +14,6 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="-static" />
 				</Compiler>
 				<Linker>
 					<Add option="-lalleg44" />
@@ -28,7 +27,6 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="-static" />
 				</Compiler>
 				<Linker>
 					<Add option="-lalleg" />
@@ -42,7 +40,6 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O3" />
-					<Add option="-static" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -57,7 +54,6 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O3" />
-					<Add option="-static" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -83,7 +79,6 @@
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-std=c++14" />
-			<Add option="-static" />
 			<Add directory="include" />
 		</Compiler>
 		<Linker>

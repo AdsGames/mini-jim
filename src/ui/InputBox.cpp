@@ -29,7 +29,10 @@ std::string InputBox::GetValue() {
 }
 
 bool InputBox::Hover() {
-  return mouse_x > x && mouse_x < x + width && mouse_y > y && mouse_y < y + height;
+  return (signed)MouseListener::x > x &&
+         (signed)MouseListener::x < x + width &&
+         (signed)MouseListener::y > y &&
+         (signed)MouseListener::y < y + height;
 }
 
 void InputBox::Update() {
@@ -41,7 +44,7 @@ void InputBox::Update() {
       int closest = width;
 
       for (unsigned int i = 0; i <= text.length(); i++) {
-        int distance = abs(text_length(font, text.substr(0, i).c_str()) + x + 6 - mouse_x);
+        int distance = abs(text_length(font, text.substr(0, i).c_str()) + x + 6 - (signed)MouseListener::x);
 
         if (distance < closest) {
           text_iter = i;
