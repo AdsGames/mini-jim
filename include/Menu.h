@@ -20,24 +20,19 @@ class Menu : public State {
   public:
     Menu();
     virtual ~Menu();
-    virtual void update(StateEngine &engine) override;
-    virtual void draw(BITMAP *buffer) override;
+    virtual void update (StateEngine &engine) override;
+    virtual void draw (BITMAP *buffer) override;
 
   private:
-    // OnClicks
-    void StartClicked();
-    void StartMPClicked();
-    void EditClicked();
-    void HelpClicked();
-    void ExitClicked();
-    void LeftClicked();
-    void RightClicked();
+    // Disallow copy
+    Menu (const Menu &);
+    Menu &operator= (const Menu &);
 
     // Mouse hovering over button
     bool button_hover();
 
     // Change level (background)
-    void change_level(int level);
+    void change_level (int level);
 
     // Menu/GUI
     BITMAP *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright, *credits;

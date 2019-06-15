@@ -27,7 +27,7 @@ extern void highcolor_fade_in (BITMAP *bmp_orig, int speed);
 extern void highcolor_fade_out (int speed);
 
 // Error reporting
-extern void abort_on_error (std::string path);
+extern void abort_on_error (std::string message);
 
 // Load image
 extern BITMAP *load_png_ex (std::string path);

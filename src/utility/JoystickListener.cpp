@@ -15,7 +15,7 @@ void JoystickListener::update() {
   anyButtonPressed = false;
 
   // Check button just pressed
-  for( int i = 0; i < MAX_JOYSTICK_BUTTONS; i++) {
+  for (int i = 0; i < MAX_JOYSTICK_BUTTONS; i++) {
     // Clear old values
     buttonPressed[i] = false;
     buttonReleased[i] = false;

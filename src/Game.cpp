@@ -17,8 +17,8 @@ Game::Game() {
   }
 
   // Player
-  player1 = new Player(1);
-  player2 = new Player(2);
+  player1 = new Player (1);
+  player2 = new Player (2);
 
   // Build a color lookup table for lighting effects
   get_palette (pal);
@@ -42,7 +42,7 @@ Game::Game() {
   timeout = load_sample_ex ("sounds/timeout.wav");
 
   // Load music
-  mainMusic = load_ogg_ex("sounds/music/BasicJimFull.ogg");
+  mainMusic = load_ogg_ex ("sounds/music/BasicJimFull.ogg");
 
   tile_map = nullptr;
 
@@ -55,19 +55,19 @@ void Game::init() {
   if (tile_map)
     delete tile_map;
 
-  tile_map = new TileMap ();
+  tile_map = new TileMap();
 
-  std::string file_name = "data/level_" + std::to_string(levelOn + 1);
+  std::string file_name = "data/level_" + std::to_string (levelOn + 1);
 
   if (!tile_map -> load (file_name))
-    abort_on_error("Could not open level" + file_name);
+    abort_on_error ("Could not open level" + file_name);
 
 
-  cam_1 = Camera(screen1 -> w, screen1 -> h, tile_map -> getWidth(), tile_map -> getHeight());
-  cam_2 = Camera(screen2 -> w, screen2 -> h, tile_map -> getWidth(), tile_map -> getHeight());
+  cam_1 = Camera (screen1 -> w, screen1 -> h, tile_map -> getWidth(), tile_map -> getHeight());
+  cam_2 = Camera (screen2 -> w, screen2 -> h, tile_map -> getWidth(), tile_map -> getHeight());
 
   // Find spawn
-  Tile *spawnTile = tile_map -> find_tile_type(199, 1);
+  Tile *spawnTile = tile_map -> find_tile_type (199, 1);
 
   if (spawnTile != nullptr) {
     player1 -> set_spawn (spawnTile -> getX(), spawnTile -> getY());
@@ -82,10 +82,10 @@ void Game::init() {
   tm_begin.Start();
 }
 
-void Game::update(StateEngine &engine) {
+void Game::update (StateEngine &engine) {
   // Camera follow
-  cam_1.Follow(player1 -> getX(), player1 -> getY());
-  cam_2.Follow(player2 -> getX(), player2 -> getY());
+  cam_1.Follow (player1 -> getX(), player1 -> getY());
+  cam_2.Follow (player2 -> getX(), player2 -> getY());
 
   // Starting countdown
   if (!tm_begin.IsRunning()) {
@@ -124,7 +124,7 @@ void Game::update(StateEngine &engine) {
     setNextState (engine, StateEngine::STATE_MENU);
 }
 
-void Game::draw(BITMAP *buffer) {
+void Game::draw (BITMAP *buffer) {
   // Black background (just in case)
   rectfill (buffer, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H, 0x000000);
 
@@ -146,7 +146,7 @@ void Game::draw(BITMAP *buffer) {
     draw_sprite (darkness, darkness_old, 0, 0);
 
     // Get map area
-    std::vector<Tile *> ranged_map = tile_map -> get_tiles_in_range(cam_1.GetX() - spotlight -> w,
+    std::vector<Tile *> ranged_map = tile_map -> get_tiles_in_range (cam_1.GetX() - spotlight -> w,
                                      cam_1.GetX() + cam_1.GetWidth() + spotlight -> w,
                                      cam_1.GetY() - spotlight -> h,
                                      cam_1.GetY() + cam_1.GetHeight() + spotlight -> w);

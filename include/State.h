@@ -27,13 +27,13 @@ class StateEngine {
     void update();
 
     // Draw
-    void draw(BITMAP *buffer);
+    void draw (BITMAP *buffer);
 
     // Set next state
-    void setNextState(const int newState);
+    void setNextState (const int newState);
 
     // Get state id
-    int getStateId();
+    int getStateId() const;
 
     // Game states
     enum programStates {
@@ -50,15 +50,14 @@ class StateEngine {
     // Change state
     void changeState();
 
-    // Stores states
-    State *state;
-
     // Next state
     int nextState = STATE_NULL;
 
     // State id
     int currentState = STATE_NULL;
 
+    // Stores states
+    State *state;
 };
 
 /*********
@@ -71,17 +70,17 @@ class State {
     virtual ~State() {};
 
     // Draw to screen
-    virtual void draw(BITMAP *buffer) = 0;
+    virtual void draw (BITMAP *buffer) = 0;
 
     // Update logic
-    virtual void update(StateEngine &engine) = 0;
+    virtual void update (StateEngine &engine) = 0;
 
     // Change state
-    void setNextState(StateEngine &engine, int state);
+    static void setNextState (StateEngine &engine, int state);
   private:
     // Disallow copy
-    State(const State &);
-    State &operator=(const State &);
+    State (const State &);
+    State &operator= (const State &);
 };
 
 #endif // STATE_H

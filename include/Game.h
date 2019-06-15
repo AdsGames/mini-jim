@@ -15,11 +15,15 @@ class Game : public State {
   public:
     Game();
     virtual ~Game();
-    virtual void update(StateEngine &engine) override;
-    virtual void draw(BITMAP *buffer) override;
+    virtual void update (StateEngine &engine) override;
+    virtual void draw (BITMAP *buffer) override;
     void init();
 
   private:
+    // Disallow copy
+    Game (const Game &);
+    Game &operator= (const Game &);
+
     BITMAP *screen1, *screen2;
     SAMPLE *countdown;
     SAMPLE *timeout;

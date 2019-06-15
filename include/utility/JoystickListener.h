@@ -16,7 +16,7 @@ class JoystickListener {
     JoystickListener() {};
     virtual ~JoystickListener() {};
 
-    void update();
+    static void update();
 
     static bool button[MAX_JOYSTICK_BUTTONS];
     static bool buttonPressed[MAX_JOYSTICK_BUTTONS];

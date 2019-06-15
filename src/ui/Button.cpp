@@ -3,17 +3,17 @@
 #include "utility/tools.h"
 #include "utility/MouseListener.h"
 
-Button::Button ()
-  : Button(0, 0) {
+Button::Button()
+  : Button (0, 0) {
 
 }
 
 Button::Button (int x, int y)
-  : OnClick(nullptr),
-    x(x),
-    y(y),
-    width(10),
-    height(10) {
+  : OnClick (nullptr),
+    x (x),
+    y (y),
+    width (10),
+    height (10) {
 
   images[0] = nullptr;
   images[1] = nullptr;
@@ -24,7 +24,7 @@ Button::~Button() {
   destroy_bitmap (images[1]);
 }
 
-void Button::SetOnClick(std::function<void(void)> func) {
+void Button::SetOnClick (std::function<void (void)> func) {
   OnClick = func;
 }
 
@@ -38,9 +38,9 @@ void Button::SetImages (const char *image1, const char *image2) {
   width = images[0] -> w;
 }
 
-bool Button::Hover() {
-  return collisionAny(MouseListener::x, MouseListener::x, x, x + width,
-                      MouseListener::y, MouseListener::y, y, y + height);
+bool Button::Hover() const {
+  return collisionAny (MouseListener::x, MouseListener::x, x, x + width,
+                       MouseListener::y, MouseListener::y, y, y + height);
 }
 
 void Button::Update() {
@@ -48,11 +48,11 @@ void Button::Update() {
     OnClick();
 }
 
-int Button::GetX() {
+int Button::GetX() const {
   return x;
 }
 
-int Button::GetY() {
+int Button::GetY() const {
   return y;
 }
 

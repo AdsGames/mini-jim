@@ -13,10 +13,14 @@ class Intro : public State {
   public:
     Intro();
     virtual ~Intro();
-    virtual void update(StateEngine &engine) override;
-    virtual void draw(BITMAP *buffer) override;
+    virtual void update (StateEngine &engine) override;
+    virtual void draw (BITMAP *buffer) override;
 
   private:
+    // Disallow copy
+    Intro (const Intro &);
+    Intro &operator= (const Intro &);
+
     BITMAP *intro;
     BITMAP *title;
     BITMAP *background;

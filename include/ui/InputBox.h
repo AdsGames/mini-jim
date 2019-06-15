@@ -7,15 +7,15 @@
 class InputBox {
   public:
     InputBox();
-    InputBox(int x, int y, int width, int height, const std::string &value = "", const std::string &type = "text");
+    InputBox (int x, int y, int width, int height, const std::string &value = "", const std::string &type = "text");
     virtual ~InputBox();
 
     void Focus();
 
-    std::string GetValue();
+    std::string GetValue() const;
     void Update();
-    void Draw(BITMAP *buffer);
-    bool Hover();
+    void Draw (BITMAP *buffer);
+    bool Hover() const;
   private:
     int x, y;
     int width, height;

@@ -34,14 +34,14 @@ int Tile::getY() const {
   return y;
 }
 
-int Tile::getWidth() {
+int Tile::getWidth() const {
   if (t_type)
     return t_type -> GetWidth();
 
   return 0;
 }
 
-int Tile::getHeight() {
+int Tile::getHeight() const {
   if (t_type)
     return t_type -> GetHeight();
 
@@ -56,21 +56,21 @@ void Tile::setY (int y) {
   this -> y = y;
 }
 
-short Tile::getType() {
+short Tile::getType() const {
   if (t_type)
     return t_type -> GetID();
 
   return 0;
 }
 
-std::string Tile::getTypeStr() {
+std::string Tile::getTypeStr() const {
   if (t_type)
     return t_type -> GetIDStr();
 
   return "";
 }
 
-std::string Tile::getName() {
+std::string Tile::getName() const {
   if (t_type)
     return t_type -> GetName();
 
@@ -80,22 +80,22 @@ std::string Tile::getName() {
 // Contains Attribute
 bool Tile::containsAttribute (int newAttribute) {
   if (t_type)
-    return t_type -> HasAttribute(newAttribute);
+    return t_type -> HasAttribute (newAttribute);
 
   return false;
 }
 
 void Tile::setType (std::string type) {
-  t_type = TileTypeLoader::GetTile(type);
+  t_type = TileTypeLoader::GetTile (type);
 }
 
 // Set type
 void Tile::setType (short type) {
-  t_type = TileTypeLoader::GetTile(type);
+  t_type = TileTypeLoader::GetTile (type);
 }
 
 // Draw tile
 void Tile::draw (BITMAP *buffer, int xOffset, int yOffset, int frame) {
   if (t_type)
-    t_type -> Draw(buffer, x - xOffset, y - yOffset, frame);
+    t_type -> Draw (buffer, x - xOffset, y - yOffset, frame);
 }

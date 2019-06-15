@@ -5,15 +5,13 @@
 #include "utility/MouseListener.h"
 
 InputBox::InputBox()
-  : InputBox(0, 0, 0, 0, "") {
+  : InputBox (0, 0, 0, 0, "") {
 
 }
 
-InputBox::InputBox(int x, int y, int width, int height, const std::string &value, const std::string &type)
-  : x(x), y(y), width(width), height(height), text(value), type(type) {
+InputBox::InputBox (int x, int y, int width, int height, const std::string &value, const std::string &type)
+  : x (x), y (y), width (width), height (height), text (value), type (type), text_iter(0), focused(false) {
 
-  this -> focused = false;
-  text_iter = 0;
 }
 
 InputBox::~InputBox() {
@@ -24,11 +22,11 @@ void InputBox::Focus() {
   focused = true;
 }
 
-std::string InputBox::GetValue() {
+std::string InputBox::GetValue() const {
   return text;
 }
 
-bool InputBox::Hover() {
+bool InputBox::Hover() const {
   return (signed)MouseListener::x > x &&
          (signed)MouseListener::x < x + width &&
          (signed)MouseListener::y > y &&
@@ -44,7 +42,7 @@ void InputBox::Update() {
       int closest = width;
 
       for (unsigned int i = 0; i <= text.length(); i++) {
-        int distance = abs(text_length(font, text.substr(0, i).c_str()) + x + 6 - (signed)MouseListener::x);
+        int distance = abs (text_length (font, text.substr (0, i).c_str()) + x + 6 - (signed)MouseListener::x);
 
         if (distance < closest) {
           text_iter = i;
@@ -65,7 +63,7 @@ void InputBox::Update() {
 
   // a character key was pressed; add it to the string
   if (type == "number") {
-    if (ASCII >= 48 && ASCII <= 57 && text_length(font, (text + ASCII).c_str()) < width) {
+    if (ASCII >= 48 && ASCII <= 57 && text_length (font, (text + ASCII).c_str()) < width) {
       text.insert (text.begin() + text_iter, ASCII);
       text_iter++;
       return;
@@ -73,7 +71,7 @@ void InputBox::Update() {
   }
 
   else if (type == "text") {
-    if (ASCII >= 32 && ASCII <= 126 && text_length(font, (text + ASCII).c_str()) < width) {
+    if (ASCII >= 32 && ASCII <= 126 && text_length (font, (text + ASCII).c_str()) < width) {
       text.insert (text.begin() + text_iter, ASCII);
       text_iter++;
       return;
@@ -102,7 +100,7 @@ void InputBox::Update() {
 }
 
 // Draw box
-void InputBox::Draw(BITMAP *buffer) {
+void InputBox::Draw (BITMAP *buffer) {
   rectfill (buffer, x, y, x + width, y + height, makecol (12, 12, 12));
 
   int col = (Hover() || focused) ? makecol (230, 230, 230) : makecol (245, 245, 245);
@@ -117,5 +115,5 @@ void InputBox::Draw(BITMAP *buffer) {
 
   // Draw the caret
   if (focused)
-    vline (buffer, text_length(font, text.substr(0, text_iter).c_str()) + x + 6, y + 8, y + height - 8, makecol (0, 0, 0));
+    vline (buffer, text_length (font, text.substr (0, text_iter).c_str()) + x + 6, y + 8, y + height - 8, makecol (0, 0, 0));
 }

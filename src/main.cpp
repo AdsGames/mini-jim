@@ -12,17 +12,13 @@
 
 using namespace std::chrono_literals;
 using namespace std::chrono;
-constexpr nanoseconds timestep(16ms);
+constexpr nanoseconds timestep (16ms);
 
 // State engine
 StateEngine game_state;
 
 // Buffer
 BITMAP *buffer;
-
-KeyListener keyL;
-MouseListener mouseL;
-JoystickListener joyL;
 
 // Functions
 void close_button_handler (void);
@@ -71,15 +67,15 @@ void setup() {
   }
 
   // Create global buffer
-  buffer = create_bitmap(NATIVE_SCREEN_W, NATIVE_SCREEN_H);
+  buffer = create_bitmap (NATIVE_SCREEN_W, NATIVE_SCREEN_H);
 }
 
 // Update
 void update() {
   // Update listeners
-  keyL.update();
-  mouseL.update();
-  joyL.update();
+  KeyListener::update();
+  MouseListener::update();
+  JoystickListener::update();
 
   //Do state logic
   game_state.update();
@@ -91,8 +87,8 @@ void update() {
 
 //Do state rendering
 void draw() {
-  game_state.draw(buffer);
-  stretch_sprite(screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
+  game_state.draw (buffer);
+  stretch_sprite (screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }
 
 //Main function*/
@@ -101,18 +97,18 @@ int main() {
   setup();
 
   //Set the current state ID
-  game_state.setNextState(StateEngine::STATE_INIT);
+  game_state.setNextState (StateEngine::STATE_INIT);
 
   using clock = high_resolution_clock;
-  nanoseconds lag(0ns);
+  nanoseconds lag (0ns);
   auto time_start = clock::now();
 
   while (!key[KEY_ESC] && !close_button_pressed) {
     auto delta_time = clock::now() - time_start;
     time_start = clock::now();
-    lag += duration_cast<nanoseconds>(delta_time);
+    lag += duration_cast<nanoseconds> (delta_time);
 
-    while(lag >= timestep) {
+    while (lag >= timestep) {
       lag -= timestep;
       update();
     }

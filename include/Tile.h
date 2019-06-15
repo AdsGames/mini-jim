@@ -16,19 +16,19 @@ class Tile {
     int getX() const;
     int getY() const;
 
-    int getWidth();
-    int getHeight();
+    int getWidth() const;
+    int getHeight() const;
 
-    void setX (int newX);
-    void setY (int newY);
+    void setX (int x);
+    void setY (int y);
 
-    short getType();
-    std::string getName();
-    std::string getTypeStr();
+    short getType() const;
+    std::string getName() const;
+    std::string getTypeStr() const;
     bool containsAttribute (int newAttribute);
 
     void setType (short type);
-    void setType(std::string type);
+    void setType (std::string type);
 
     void draw (BITMAP *buffer, int xOffset, int yOffset, int frame);
 

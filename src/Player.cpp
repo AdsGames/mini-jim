@@ -7,7 +7,7 @@
 #define LEFT 0
 #define RIGHT 4
 
-Player::Player(int number) {
+Player::Player (int number) {
   x = 128;
   y = 128;
 
@@ -36,7 +36,7 @@ Player::Player(int number) {
   tm_animation.Start();
 
   load_images (number);
-  load_sounds ();
+  load_sounds();
 
   if (number == 1) {
     set_keys (KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_ENTER_PAD, 0);
@@ -57,8 +57,8 @@ Player::~Player() {
 }
 
 // 0-3 left, 4-7 right, 8-11 up
-void Player::load_images (int player) {
-  std::string prefix = "images/character/character_" + std::to_string(player) + "_";
+void Player::load_images (int type) {
+  std::string prefix = "images/character/character_" + std::to_string (type) + "_";
 
   player_images[0] = load_png_ex ((prefix + "left_1.png").c_str());
   player_images[1] = load_png_ex ((prefix + "left_2.png").c_str());
@@ -111,22 +111,22 @@ void Player::set_spawn (int x, int y) {
 }
 
 // Deathcount
-int Player::getDeathcount() {
+int Player::getDeathcount() const {
   return deathcount;
 }
 
 // Return X
-int Player::getX() {
+int Player::getX() const {
   return x;
 }
 
 // Return Y
-int Player::getY() {
+int Player::getY() const {
   return y;
 }
 
 // Get finished
-bool Player::getFinished() {
+bool Player::getFinished() const {
   return finished;
 }
 
@@ -150,7 +150,7 @@ void Player::update (TileMap *fullMap) {
 
   // Get map around player
   const int collision_range = 128;
-  std::vector<Tile *> ranged_map = fullMap -> get_tiles_in_range(x - collision_range, x + collision_range, y - collision_range, y + collision_range);
+  std::vector<Tile *> ranged_map = fullMap -> get_tiles_in_range (x - collision_range, x + collision_range, y - collision_range, y + collision_range);
 
   //Check for collision
   for (auto t : ranged_map) {
@@ -239,7 +239,7 @@ void Player::update (TileMap *fullMap) {
         if (key[downKey])
           player_state = STATE_SLIDING;
 
-        if (!(key[leftKey] || key[rightKey]))
+        if (! (key[leftKey] || key[rightKey]))
           player_state = STATE_STANDING;
 
         //Jump
@@ -251,8 +251,8 @@ void Player::update (TileMap *fullMap) {
         }
 
         // Animate
-        if (int(tm_animation.GetElapsedTime<milliseconds>()) % 50 == 0) {
-          play_sample (walk[random(0, 1)], 255, 125, 1000, 0);
+        if (int (tm_animation.GetElapsedTime<milliseconds>()) % 50 == 0) {
+          play_sample (walk[random (0, 1)], 255, 125, 1000, 0);
         }
 
         if (characterDir == RIGHT) {
@@ -316,7 +316,7 @@ void Player::update (TileMap *fullMap) {
       break;
   }
 
-  if (!((canMoveRight && xVelocity > 0) || (canMoveLeft && xVelocity < 0)))
+  if (! ((canMoveRight && xVelocity > 0) || (canMoveLeft && xVelocity < 0)))
     xVelocity = 0;
 
   x += xVelocity;
@@ -346,7 +346,7 @@ void Player::update (TileMap *fullMap) {
 
 // Draw character
 void Player::draw (BITMAP *temp, int tile_map_x, int tile_map_y) {
-  int ani_ticker = int(tm_animation.GetElapsedTime<milliseconds>()) / 100;
+  int ani_ticker = int (tm_animation.GetElapsedTime<milliseconds>()) / 100;
 
   if (player_state == STATE_JUMPING) {
     if (characterDir == LEFT)

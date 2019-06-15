@@ -12,19 +12,19 @@
 
 class Player {
   public:
-    explicit Player(int number);
+    explicit Player (int number);
     ~Player();
 
-    void load_images (int number);
+    void load_images (int type);
     void load_sounds();
     void set_keys (int up, int down, int left, int right, int jump, int joy_number);
     void set_spawn (int x, int y);
 
-    int getX();
-    int getY();
-    int getDeathcount();
+    int getX() const;
+    int getY() const;
+    int getDeathcount() const;
 
-    bool getFinished();
+    bool getFinished() const;
 
     void update (TileMap *fullMap);
     void draw (BITMAP *temp, int tile_map_x, int tile_map_y);

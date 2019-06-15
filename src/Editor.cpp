@@ -10,7 +10,7 @@
 
 Editor::Editor() {
   // Create map
-  tile_map = new TileMap ();
+  tile_map = new TileMap();
 
   // Create example tile
   pallette_tile = new Tile (0, 0, 0);
@@ -18,25 +18,25 @@ Editor::Editor() {
   font = load_font_ex ("fonts/arial_black.pcx");
   cursor = load_png_ex ("images/gui/cursor1.png");
 
-  ib_save = InputBox(400, 408, 480, 50, "untitled");
-  ib_open = InputBox(400, 408, 480, 50, "level_1");
-  ib_width = InputBox(400, 408, 220, 50, "64", "number");
-  ib_height = InputBox(660, 408, 220, 50, "64", "number");
+  ib_save = InputBox (400, 408, 480, 50, "untitled");
+  ib_open = InputBox (400, 408, 480, 50, "level_1");
+  ib_width = InputBox (400, 408, 220, 50, "64", "number");
+  ib_height = InputBox (660, 408, 220, 50, "64", "number");
 
-  btn_save = Button(400, 500);
-  btn_open = Button(400, 500);
-  btn_new = Button(400, 500);
-  btn_close = Button(663, 500);
+  btn_save = Button (400, 500);
+  btn_open = Button (400, 500);
+  btn_new = Button (400, 500);
+  btn_close = Button (663, 500);
 
-  btn_save.SetOnClick(std::bind(&Editor::Save, this));
-  btn_open.SetOnClick(std::bind(&Editor::Open, this));
-  btn_new.SetOnClick(std::bind(&Editor::New, this));
-  btn_close.SetOnClick(std::bind(&Editor::Close, this));
+  btn_save.SetOnClick (std::bind (&Editor::Save, this));
+  btn_open.SetOnClick (std::bind (&Editor::Open, this));
+  btn_new.SetOnClick (std::bind (&Editor::New, this));
+  btn_close.SetOnClick (std::bind (&Editor::Close, this));
 
-  btn_save.SetImages("images/gui/button_save.png", "images/gui/button_save_hover.png");
-  btn_open.SetImages("images/gui/button_load.png", "images/gui/button_load_hover.png");
-  btn_new.SetImages("images/gui/button_create.png", "images/gui/button_create_hover.png");
-  btn_close.SetImages("images/gui/button_close.png", "images/gui/button_close_hover.png");
+  btn_save.SetImages ("images/gui/button_save.png", "images/gui/button_save_hover.png");
+  btn_open.SetImages ("images/gui/button_load.png", "images/gui/button_load_hover.png");
+  btn_new.SetImages ("images/gui/button_create.png", "images/gui/button_create_hover.png");
+  btn_close.SetImages ("images/gui/button_close.png", "images/gui/button_close_hover.png");
 
   set_alpha_blender();
 
@@ -64,38 +64,38 @@ void Editor::Save() {
 void Editor::Open() {
   tile_map -> load ("data/" + ib_open.GetValue());
   editor_state = EDIT;
-  cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
-  cam.SetSpeed(1);
-  cam.SetBounds(20, 20);
+  cam = Camera (NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
+  cam.SetSpeed (1);
+  cam.SetBounds (20, 20);
 }
 
 void Editor::New() {
   if (ib_width.GetValue().length() != 0 && ib_width.GetValue().length() != 0) {
     editor_state = EDIT;
-    tile_map -> create (stoi(ib_width.GetValue()), stoi(ib_height.GetValue()));
-    cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
-    cam.SetSpeed(1);
-    cam.SetBounds(20, 20);
+    tile_map -> create (stoi (ib_width.GetValue()), stoi (ib_height.GetValue()));
+    cam = Camera (NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map -> getWidth(), tile_map -> getHeight());
+    cam.SetSpeed (1);
+    cam.SetBounds (20, 20);
   }
 }
 
 void Editor::Edit() {
-  cam.Follow(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY());
+  cam.Follow (MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY());
 
   // Change selected
   if (KeyListener::keyPressed[KEY_UP]) {
-    int i = pallette_tile -> getType () + 1;
+    int i = pallette_tile -> getType() + 1;
 
-    while (!TileTypeLoader::GetTile(i))
+    while (!TileTypeLoader::GetTile (i))
       i = (i + 1) > 400 ? 0 : i + 1;
 
     pallette_tile -> setType (i);
   }
 
   if (KeyListener::keyPressed[KEY_DOWN]) {
-    int i = pallette_tile -> getType () - 1;
+    int i = pallette_tile -> getType() - 1;
 
-    while (!TileTypeLoader::GetTile(i))
+    while (!TileTypeLoader::GetTile (i))
       i = (i - 1) < 0 ? 400 : i - 1;
 
     pallette_tile -> setType (i);
@@ -113,7 +113,7 @@ void Editor::Edit() {
   }
 
   // Operations
-  Tile *temp_tile = tile_map -> get_tile_at(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY(), layer);
+  Tile *temp_tile = tile_map -> get_tile_at (MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY(), layer);
 
   if (temp_tile) {
     // Place tile
@@ -126,7 +126,7 @@ void Editor::Edit() {
 
     // Get tile type tile
     if (KeyListener::keyPressed[KEY_K])
-      pallette_tile -> setType(temp_tile -> getType());
+      pallette_tile -> setType (temp_tile -> getType());
   }
 
   // Save map
@@ -162,7 +162,7 @@ void Editor::Edit() {
     draw_layer = 0;
 }
 
-void Editor::update(StateEngine &engine) {
+void Editor::update (StateEngine &engine) {
   // Back to menu
   if (KeyListener::keyPressed[KEY_M] && editor_state == EDIT) {
     setNextState (engine, StateEngine::STATE_MENU);
@@ -190,9 +190,9 @@ void Editor::update(StateEngine &engine) {
   }
 }
 
-void Editor::draw(BITMAP *buffer) {
+void Editor::draw (BITMAP *buffer) {
   // Background
-  clear_to_color(buffer, 0x000000);
+  clear_to_color (buffer, 0x000000);
 
   // Draw tiles
   tile_map -> draw (buffer, cam.GetX(), cam.GetY(), draw_layer);
@@ -212,17 +212,17 @@ void Editor::draw(BITMAP *buffer) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
     rect (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (0, 0, 0));
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "Save Map Name");
-    ib_save.Draw(buffer);
-    btn_save.Draw(buffer);
-    btn_close.Draw(buffer);
+    ib_save.Draw (buffer);
+    btn_save.Draw (buffer);
+    btn_close.Draw (buffer);
   }
   else if (editor_state == OPEN) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
     rect (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (0, 0, 0));
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "Open Map Name");
-    ib_open.Draw(buffer);
-    btn_open.Draw(buffer);
-    btn_close.Draw(buffer);
+    ib_open.Draw (buffer);
+    btn_open.Draw (buffer);
+    btn_close.Draw (buffer);
   }
   else if (editor_state == CREATE) {
     rectfill (buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400, makecol (255, 255, 255));
@@ -230,10 +230,10 @@ void Editor::draw(BITMAP *buffer) {
     textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "New Map");
     textprintf_centre_ex (buffer, font, 500, 360, makecol (0, 0, 0), -1, "Width");
     textprintf_centre_ex (buffer, font, 800, 360, makecol (0, 0, 0), -1, "Height");
-    ib_width.Draw(buffer);
-    ib_height.Draw(buffer);
-    btn_new.Draw(buffer);
-    btn_close.Draw(buffer);
+    ib_width.Draw (buffer);
+    ib_height.Draw (buffer);
+    btn_new.Draw (buffer);
+    btn_close.Draw (buffer);
   }
 
   // Cursor

@@ -15,10 +15,14 @@ class Editor : public State {
   public:
     Editor();
     virtual ~Editor();
-    virtual void update(StateEngine &engine) override;
-    virtual void draw(BITMAP *buffer) override;
+    virtual void update (StateEngine &engine) override;
+    virtual void draw (BITMAP *buffer) override;
 
   private:
+    // Disallow copy
+    Editor (const Editor &);
+    Editor &operator= (const Editor &);
+
     void SaveClicked();
     void OpenClicked();
 

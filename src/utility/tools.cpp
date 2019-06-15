@@ -5,7 +5,7 @@
 #include <random>
 
 // Random device
-std::random_device dev;
+std::mt19937 rng (time (nullptr));
 
 //Iterates through the number of buttons in a joystick and returns true if any keys are pressed
 bool key_down() {
@@ -48,9 +48,8 @@ bool collisionLeft (int xMin1, int xMax1, int xMax2) {
 
 //Random number generator. Use int random(lowest,highest);
 int random (int low, int high) {
-  std::mt19937 rng(dev());
-  std::uniform_int_distribution<std::mt19937::result_type> dist6(low, high); // distribution in range [1, 6]
-  return dist6(rng);
+  std::uniform_int_distribution<int> dist6 (low, high); // distribution in range [1, 6]
+  return dist6 (rng);
 }
 
 // Fade in
@@ -106,7 +105,7 @@ void abort_on_error (std::string message) {
 BITMAP *load_png_ex (std::string path) {
   BITMAP *temp = nullptr;
 
-  if (!(temp = load_png (path.c_str(), nullptr)))
+  if (! (temp = load_png (path.c_str(), nullptr)))
     abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;
@@ -116,7 +115,7 @@ BITMAP *load_png_ex (std::string path) {
 SAMPLE *load_ogg_ex (std::string path) {
   SAMPLE *temp = nullptr;
 
-  if (!(temp = logg_load (path.c_str())))
+  if (! (temp = logg_load (path.c_str())))
     abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;
@@ -126,7 +125,7 @@ SAMPLE *load_ogg_ex (std::string path) {
 SAMPLE *load_sample_ex (std::string path) {
   SAMPLE *temp = nullptr;
 
-  if (!(temp = load_sample (path.c_str())))
+  if (! (temp = load_sample (path.c_str())))
     abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;
@@ -136,7 +135,7 @@ SAMPLE *load_sample_ex (std::string path) {
 FONT *load_font_ex (std::string path) {
   FONT *temp = nullptr;
 
-  if (!(temp = load_font (path.c_str(), nullptr, nullptr)))
+  if (! (temp = load_font (path.c_str(), nullptr, nullptr)))
     abort_on_error ("Cannot find image (" + path + ") \n Please check your files and try again");
 
   return temp;

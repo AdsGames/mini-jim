@@ -6,7 +6,7 @@
 
 class Button {
   public:
-    Button ();
+    Button();
     Button (int x, int y);
     ~Button();
 
@@ -14,17 +14,17 @@ class Button {
 
     void SetImages (const char *image1, const char *image2);
 
-    int GetX();
-    int GetY();
+    int GetX() const;
+    int GetY() const;
 
-    void SetOnClick(std::function<void()> func);
+    void SetOnClick (std::function<void()> func);
 
     void Draw (BITMAP *buffer);
 
-    bool Hover();
+    bool Hover() const;
 
   private:
-    std::function<void(void)> OnClick;
+    std::function<void (void)> OnClick;
 
     int x, y;
     int width, height;

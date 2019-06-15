@@ -26,11 +26,23 @@ class Timer {
     void Stop();
 
     // Is running
-    bool IsRunning();
+    bool IsRunning() const;
 
     // Get ms since started
     template <typename Precision>
-    double GetElapsedTime();
+    double GetElapsedTime() {
+      // Get time now
+      if (running) {
+        t2 = high_resolution_clock::now();
+      }
+
+      // Choose precision
+      auto time_diff = duration_cast<Precision> (t2 - t1);
+
+      // Return time as double
+      return time_diff.count();
+    }
+
 
   private:
     // Holds time points for start and end
