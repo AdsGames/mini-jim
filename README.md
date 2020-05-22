@@ -12,11 +12,7 @@ Open code blocks project, select debug as the build target and build
 
 
 ### Linux
-```sudo apt-get install liballegro4-dev```
-
-```sudo apt-get install libloadpng4-dev```
-
-```sudo apt-get install liblogg4-dev```
+```sudo apt-get install liballegro4-dev libloadpng4-dev liblogg4-dev```
 
 Open code blocks project, select debug-linux as the build target and build
 
