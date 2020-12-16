@@ -1,5 +1,5 @@
-#include "utility/MouseListener.h"
-#include "globals.h"
+#include "MouseListener.h"
+#include "../globals.h"
 
 unsigned char MouseListener::mouse_button = 0;
 unsigned char MouseListener::mouse_pressed = 0;

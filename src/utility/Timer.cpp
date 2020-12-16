@@ -1,4 +1,4 @@
-#include "utility/Timer.h"
+#include "Timer.h"
 
 // Init
 Timer::Timer() :

@@ -1,4 +1,4 @@
-#include "utility/JoystickListener.h"
+#include "JoystickListener.h"
 
 #include <allegro.h>
 

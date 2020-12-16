@@ -1,4 +1,4 @@
-#include "utility/KeyListener.h"
+#include "KeyListener.h"
 
 #include <allegro.h>
 

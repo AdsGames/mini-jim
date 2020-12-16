@@ -1,8 +1,8 @@
-#include "ui/InputBox.h"
+#include "InputBox.h"
 
 #include <iostream>
 
-#include "utility/MouseListener.h"
+#include "../utility/MouseListener.h"
 
 InputBox::InputBox()
   : InputBox (0, 0, 0, 0, "") {
