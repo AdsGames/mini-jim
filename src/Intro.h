@@ -10,27 +10,27 @@
 
 // Intro screen of game
 class Intro : public State {
-  public:
-    Intro();
-    virtual ~Intro();
-    virtual void update (StateEngine &engine) override;
-    virtual void draw (BITMAP *buffer) override;
+ public:
+  Intro();
+  virtual ~Intro();
+  virtual void update(StateEngine& engine) override;
+  virtual void draw(BITMAP* buffer) override;
 
-  private:
-    // Disallow copy
-    Intro (const Intro &);
-    Intro &operator= (const Intro &);
+ private:
+  // Disallow copy
+  Intro(const Intro&);
+  Intro& operator=(const Intro&);
 
-    BITMAP *intro;
-    BITMAP *title;
-    BITMAP *background;
-    BITMAP *images[INTRO_FRAMES];
-    SAMPLE *introSound;
+  BITMAP* intro;
+  BITMAP* title;
+  BITMAP* background;
+  BITMAP* images[INTRO_FRAMES];
+  SAMPLE* introSound;
 
-    int frame;
-    bool sound_played;
+  int frame;
+  bool sound_played;
 
-    Timer timer;
+  Timer timer;
 };
 
-#endif // INTRO_H
+#endif  // INTRO_H

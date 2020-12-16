@@ -5,54 +5,49 @@
 
 #include <allegro.h>
 
-#include "TileMap.h"
-#include "Tile.h"
-#include "ui/InputBox.h"
-#include "ui/Button.h"
 #include "Camera.h"
+#include "Tile.h"
+#include "TileMap.h"
+#include "ui/Button.h"
+#include "ui/InputBox.h"
 
 class Editor : public State {
-  public:
-    Editor();
-    virtual ~Editor();
-    virtual void update (StateEngine &engine) override;
-    virtual void draw (BITMAP *buffer) override;
+ public:
+  Editor();
+  virtual ~Editor();
+  virtual void update(StateEngine& engine) override;
+  virtual void draw(BITMAP* buffer) override;
 
-  private:
-    // Disallow copy
-    Editor (const Editor &);
-    Editor &operator= (const Editor &);
+ private:
+  // Disallow copy
+  Editor(const Editor&);
+  Editor& operator=(const Editor&);
 
-    void SaveClicked();
-    void OpenClicked();
+  void SaveClicked();
+  void OpenClicked();
 
-    int layer;
-    int draw_layer;
+  int layer;
+  int draw_layer;
 
-    enum editor_states {
-      SAVE,
-      OPEN,
-      CREATE,
-      EDIT
-    };
+  enum editor_states { SAVE, OPEN, CREATE, EDIT };
 
-    char editor_state;
+  char editor_state;
 
-    TileMap *tile_map;
-    Tile *pallette_tile;
-    BITMAP *cursor;
+  TileMap* tile_map;
+  Tile* pallette_tile;
+  BITMAP* cursor;
 
-    //Text input
-    Button btn_save, btn_open, btn_new, btn_close;
-    InputBox ib_save, ib_open, ib_width, ib_height;
+  // Text input
+  Button btn_save, btn_open, btn_new, btn_close;
+  InputBox ib_save, ib_open, ib_width, ib_height;
 
-    void Close();
-    void Save();
-    void Open();
-    void New();
-    void Edit();
+  void Close();
+  void Save();
+  void Open();
+  void New();
+  void Edit();
 
-    Camera cam;
+  Camera cam;
 };
 
-#endif // EDITOR_H
+#endif  // EDITOR_H

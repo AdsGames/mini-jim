@@ -1,11 +1,11 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-//All libaries
+// All libaries
 #include <allegro.h>
 
-//All defined presets put here
-//tile Attributes
+// All defined presets put here
+// tile Attributes
 #define solid 1
 #define harmful 2
 #define light 3

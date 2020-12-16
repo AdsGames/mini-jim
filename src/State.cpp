@@ -2,11 +2,11 @@
 
 #include <iostream>
 
-#include "Game.h"
-#include "Menu.h"
 #include "Editor.h"
+#include "Game.h"
 #include "Init.h"
 #include "Intro.h"
+#include "Menu.h"
 
 /*****************
  * STATE ENGINE
@@ -14,28 +14,26 @@
 
 // Init
 StateEngine::StateEngine()
-  : nextState(STATE_NULL), currentState(STATE_NULL), state(nullptr) {
-
-}
+    : nextState(STATE_NULL), currentState(STATE_NULL), state(nullptr) {}
 
 // Draw
-void StateEngine::draw (BITMAP *buffer) {
+void StateEngine::draw(BITMAP* buffer) {
   if (state) {
-    state -> draw (buffer);
+    state->draw(buffer);
   }
 }
 
 // Update
 void StateEngine::update() {
   if (state) {
-    state -> update (*this);
+    state->update(*this);
   }
 
   changeState();
 }
 
 // Set next state
-void StateEngine::setNextState (const int newState) {
+void StateEngine::setNextState(const int newState) {
   nextState = newState;
 }
 
@@ -56,7 +54,6 @@ void StateEngine::changeState() {
     delete state;
     state = nullptr;
   }
-
 
   // Change the state
   switch (nextState) {
@@ -97,12 +94,11 @@ void StateEngine::changeState() {
   nextState = STATE_NULL;
 }
 
-
 /*********
  * STATE
  *********/
 
 // Change state
-void State::setNextState (StateEngine &engine, int state) {
-  engine.setNextState (state);
+void State::setNextState(StateEngine& engine, int state) {
+  engine.setNextState(state);
 }

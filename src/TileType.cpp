@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-TileType::TileType (short id, const std::string &name, const std::string &id_str)
-  : id (id), name (name), id_str (id_str) {
+TileType::TileType(short id, const std::string& name, const std::string& id_str)
+    : id(id), name(name), id_str(id_str) {
   x_1 = 0;
   x_2 = 0;
   y_1 = 0;
@@ -11,7 +11,7 @@ TileType::TileType (short id, const std::string &name, const std::string &id_str
 }
 
 TileType::~TileType() {
-  //dtor
+  // dtor
 }
 
 short TileType::GetID() const {
@@ -42,27 +42,28 @@ int TileType::GetBBY() const {
   return y_1;
 }
 
-bool TileType::HasAttribute (int attribute) {
-  return std::find (attributes.begin(), attributes.end(), attribute) != attributes.end();
+bool TileType::HasAttribute(int attribute) {
+  return std::find(attributes.begin(), attributes.end(), attribute) !=
+         attributes.end();
 }
 
-void TileType::AddImage (BITMAP *image) {
+void TileType::AddImage(BITMAP* image) {
   if (image)
-    images.push_back (image);
+    images.push_back(image);
 }
 
-void TileType::AddAttribute (int attribute) {
-  attributes.push_back (attribute);
+void TileType::AddAttribute(int attribute) {
+  attributes.push_back(attribute);
 }
 
-void TileType::SetDimensions (int x_1, int y_1, int x_2, int y_2) {
-  this -> x_1 = x_1;
-  this -> x_2 = x_2;
-  this -> y_1 = y_1;
-  this -> y_2 = y_2;
+void TileType::SetDimensions(int x_1, int y_1, int x_2, int y_2) {
+  this->x_1 = x_1;
+  this->x_2 = x_2;
+  this->y_1 = y_1;
+  this->y_2 = y_2;
 }
 
-void TileType::Draw (BITMAP *buffer, int x, int y, int frame) {
+void TileType::Draw(BITMAP* buffer, int x, int y, int frame) {
   if (images.size() > 0)
-    draw_sprite (buffer, images.at (frame % images.size()), x, y);
+    draw_sprite(buffer, images.at(frame % images.size()), x, y);
 }

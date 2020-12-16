@@ -8,35 +8,35 @@
 #include "TileType.h"
 
 class Tile {
-  public:
-    explicit Tile (short type);
-    Tile (short type, int x, int y);
-    ~Tile();
+ public:
+  explicit Tile(short type);
+  Tile(short type, int x, int y);
+  ~Tile();
 
-    int getX() const;
-    int getY() const;
+  int getX() const;
+  int getY() const;
 
-    int getWidth() const;
-    int getHeight() const;
+  int getWidth() const;
+  int getHeight() const;
 
-    void setX (int x);
-    void setY (int y);
+  void setX(int x);
+  void setY(int y);
 
-    short getType() const;
-    std::string getName() const;
-    std::string getTypeStr() const;
-    bool containsAttribute (int newAttribute);
+  short getType() const;
+  std::string getName() const;
+  std::string getTypeStr() const;
+  bool containsAttribute(int newAttribute);
 
-    void setType (short type);
-    void setType (std::string type);
+  void setType(short type);
+  void setType(std::string type);
 
-    void draw (BITMAP *buffer, int xOffset, int yOffset, int frame);
+  void draw(BITMAP* buffer, int xOffset, int yOffset, int frame);
 
-  private:
-    int x, y;
-    std::vector<int> attribute;
+ private:
+  int x, y;
+  std::vector<int> attribute;
 
-    TileType *t_type;
+  TileType* t_type;
 };
 
 #endif

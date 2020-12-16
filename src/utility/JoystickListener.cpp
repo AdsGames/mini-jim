@@ -24,7 +24,6 @@ void JoystickListener::update() {
     if (button[i] == true && lastTicksButton[i] == false) {
       buttonPressed[i] = true;
       anyButtonPressed = true;
-
     }
 
     // Released since last tick?
@@ -42,4 +41,3 @@ void JoystickListener::update() {
       lastTicksButton[i] = key[i];
   }
 }
-
