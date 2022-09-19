@@ -50,3 +50,8 @@ bin
 docs
 lib
 build/MiniJim*
+
+.ninja*
+build.ninja
+*.exe
+/build

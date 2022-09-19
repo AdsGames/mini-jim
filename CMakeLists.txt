@@ -21,7 +21,10 @@ find_library(ALLEGRO_OGG_LIBRARY NAMES logg REQUIRED)
 
 
 # Link Libs
-target_link_libraries(${PROJECT_NAME} ${ALLEGRO_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${ALLEGRO_PNG_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${ALLEGRO_OGG_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ALLEGRO_LIBRARY} ${ALLEGRO_PNG_LIBRARY} ${ALLEGRO_OGG_LIBRARY})
 
+if(MINGW)
+  target_link_libraries(${PROJECT_NAME} PRIVATE -lmingw32)
+endif(MINGW)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/assets/ DESTINATION ${CMAKE_BINARY_DIR}/build)
