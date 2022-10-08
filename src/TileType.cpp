@@ -47,9 +47,10 @@ bool TileType::HasAttribute(int attribute) {
          attributes.end();
 }
 
-void TileType::AddImage(BITMAP* image) {
-  if (image)
+void TileType::AddImage(aar::Texture* image) {
+  if (image) {
     images.push_back(image);
+  }
 }
 
 void TileType::AddAttribute(int attribute) {
@@ -63,7 +64,8 @@ void TileType::SetDimensions(int x_1, int y_1, int x_2, int y_2) {
   this->y_2 = y_2;
 }
 
-void TileType::Draw(BITMAP* buffer, int x, int y, int frame) {
-  if (images.size() > 0)
-    draw_sprite(buffer, images.at(frame % images.size()), x, y);
+void TileType::Draw(int x, int y, int frame) {
+  if (images.size() > 0) {
+    aar::draw::sprite(images.at(frame % images.size()), x, y);
+  }
 }

@@ -5,10 +5,11 @@
 
 class Init : public State {
  public:
-  Init();
   virtual ~Init();
+
+  virtual void init(aar::Window* window);
   virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
+  virtual void draw(aar::Renderer* buffer) override;
 };
 
 #endif  // INIT_H

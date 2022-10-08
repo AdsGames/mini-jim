@@ -13,13 +13,22 @@
  *****************/
 
 // Init
-StateEngine::StateEngine()
-    : nextState(STATE_NULL), currentState(STATE_NULL), state(nullptr) {}
+StateEngine::StateEngine(aar::Window* window)
+    : window(window),
+      nextState(STATE_NULL),
+      currentState(STATE_NULL),
+      state(nullptr) {}
 
 // Draw
-void StateEngine::draw(BITMAP* buffer) {
+void StateEngine::draw(aar::Renderer* renderer) {
   if (state) {
-    state->draw(buffer);
+    // Clear screen
+    SDL_RenderClear(renderer);
+
+    state->draw(renderer);
+
+    // Update screen
+    SDL_RenderPresent(renderer);
   }
 }
 
@@ -86,6 +95,8 @@ void StateEngine::changeState() {
       std::cout << ("Exiting program.");
       break;
   }
+
+  state->init(window);
 
   // Change the current state ID
   currentState = nextState;

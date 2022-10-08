@@ -1,10 +1,15 @@
 // Includes
-#include <allegro.h>
 #include <chrono>
+#include "./lib/aar/aar.h"
 
 #include "utility/JoystickListener.h"
 #include "utility/KeyListener.h"
 #include "utility/MouseListener.h"
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
 
 // For state engine
 #include "State.h"
@@ -15,25 +20,20 @@ using namespace std::chrono;
 constexpr nanoseconds timestep(16ms);
 
 // State engine
-StateEngine game_state;
+StateEngine* game_state;
 
 // Buffer
-BITMAP* buffer;
+SDL_Window* gWindow = nullptr;
 
 // Functions
-void close_button_handler(void);
+// void close_button_handler(void);
 void setup();
 void draw();
 void update();
 
 // Close button handler
-volatile int close_button_pressed = FALSE;
+bool close_button_pressed = false;
 bool closeGame;
-
-void close_button_handler(void) {
-  close_button_pressed = TRUE;
-}
-END_OF_FUNCTION(close_button_handler)
 
 // FPS system
 int fps = 0;
@@ -42,34 +42,25 @@ int frames_done = 0;
 // Setup game
 void setup() {
   // Load allegro library
-  allegro_init();
-  install_timer();
-  install_keyboard();
-  install_mouse();
-  install_joystick(JOY_TYPE_AUTODETECT);
-  install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".");
-  set_color_depth(32);
+  aar::util::init();
 
-  // Close button
-  LOCK_FUNCTION(close_button_handler);
-  set_close_button_callback(close_button_handler);
+  gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED, SCREEN_W, SCREEN_H,
+                             SDL_WINDOW_SHOWN);
+
+  if (!gWindow) {
+    aar::util::abortOnError("WINDOW");
+  }
+
+  // Get window surface
+  aar::renderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+
+  SDL_SetRenderDrawBlendMode(aar::renderer, SDL_BLENDMODE_BLEND);
 
   // Variables
   closeGame = false;
 
-  // Create screen
-  if (set_gfx_mode(GFX_AUTODETECT_WINDOWED, NATIVE_SCREEN_W, NATIVE_SCREEN_H, 0,
-                   0)) {
-    if (set_gfx_mode(GFX_AUTODETECT_WINDOWED, NATIVE_SCREEN_W / 2,
-                     NATIVE_SCREEN_H / 2, 0, 0)) {
-      set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-      allegro_message("Could not create screen. Exiting...");
-      exit(-1);
-    }
-  }
-
-  // Create global buffer
-  buffer = create_bitmap(NATIVE_SCREEN_W, NATIVE_SCREEN_H);
+  game_state = new StateEngine(gWindow);
 }
 
 // Update
@@ -80,32 +71,46 @@ void update() {
   JoystickListener::update();
 
   // Do state logic
-  game_state.update();
+  game_state->update();
 
   // Handle exit
-  if (game_state.getStateId() == StateEngine::STATE_EXIT)
+  if (game_state->getStateId() == StateEngine::STATE_EXIT) {
     close_button_pressed = true;
+  }
 }
 
 // Do state rendering
 void draw() {
-  game_state.draw(buffer);
-  stretch_sprite(screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
+  game_state->draw(aar::renderer);
+  // aar::draw::stretchSprite(screenRenderer, buffer, 0, 0, SCREEN_W, SCREEN_H);
+  SDL_UpdateWindowSurface(gWindow);
 }
 
+// Loop (emscripten compatibility)
+#ifdef __EMSCRIPTEN__
+void loop() {
+  update();
+  draw();
+}
+#endif
+
 // Main function*/
-int main() {
+int main(int argc, char* argv[]) {
   // Setup basic functionality
   setup();
 
   // Set the current state ID
-  game_state.setNextState(StateEngine::STATE_INIT);
+  game_state->setNextState(StateEngine::STATE_INIT);
+
+#ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(loop, 0, 1);
+#else
 
   using clock = high_resolution_clock;
   nanoseconds lag(0ns);
   auto time_start = clock::now();
 
-  while (!key[KEY_ESC] && !close_button_pressed) {
+  while (!KeyListener::keyDown[SDL_SCANCODE_ESCAPE] && !close_button_pressed) {
     auto delta_time = clock::now() - time_start;
     time_start = clock::now();
     lag += duration_cast<nanoseconds>(delta_time);
@@ -118,7 +123,7 @@ int main() {
     draw();
     frames_done++;
   }
+#endif
 
   return 0;
 }
-END_OF_MAIN()

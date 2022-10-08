@@ -1,9 +1,9 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <allegro.h>
 #include <string>
 #include <vector>
+#include "./lib/aar/aar.h"
 
 #include "TileType.h"
 
@@ -30,7 +30,7 @@ class Tile {
   void setType(short type);
   void setType(std::string type);
 
-  void draw(BITMAP* buffer, int xOffset, int yOffset, int frame);
+  void draw(int xOffset, int yOffset, int frame);
 
  private:
   int x, y;

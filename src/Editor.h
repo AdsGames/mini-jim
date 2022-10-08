@@ -3,7 +3,7 @@
 
 #include "State.h"
 
-#include <allegro.h>
+#include "./lib/aar/aar.h"
 
 #include "Camera.h"
 #include "Tile.h"
@@ -13,16 +13,13 @@
 
 class Editor : public State {
  public:
-  Editor();
   virtual ~Editor();
+
+  virtual void init(aar::Window* window);
   virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
+  virtual void draw(aar::Renderer* buffer) override;
 
  private:
-  // Disallow copy
-  Editor(const Editor&);
-  Editor& operator=(const Editor&);
-
   void SaveClicked();
   void OpenClicked();
 
@@ -35,7 +32,9 @@ class Editor : public State {
 
   TileMap* tile_map;
   Tile* pallette_tile;
-  BITMAP* cursor;
+  aar::Texture* cursor;
+
+  aar::Font* editorFont;
 
   // Text input
   Button btn_save, btn_open, btn_new, btn_close;

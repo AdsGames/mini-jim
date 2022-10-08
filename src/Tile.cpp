@@ -91,7 +91,8 @@ void Tile::setType(short type) {
 }
 
 // Draw tile
-void Tile::draw(BITMAP* buffer, int xOffset, int yOffset, int frame) {
-  if (t_type)
-    t_type->Draw(buffer, x - xOffset, y - yOffset, frame);
+void Tile::draw(int xOffset, int yOffset, int frame) {
+  if (t_type) {
+    t_type->Draw(x - xOffset, y - yOffset, frame);
+  }
 }

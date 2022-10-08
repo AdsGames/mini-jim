@@ -203,27 +203,24 @@ std::vector<Tile*> TileMap::get_tiles_in_range(int x_1,
 }
 
 // Draw a layer
-void TileMap::draw_layer(BITMAP* buffer,
-                         std::vector<Tile>& t_map,
-                         int x,
-                         int y) {
+void TileMap::draw_layer(std::vector<Tile>& t_map, int x, int y) {
   int frame = getFrame();
 
   for (auto& t : t_map) {
     if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + NATIVE_SCREEN_W) &&
         (t.getY() + t.getHeight() >= y) && (t.getY() < y + NATIVE_SCREEN_H)) {
-      t.draw(buffer, x, y, frame);
+      t.draw(x, y, frame);
     }
   }
 }
 
 // Draw at position
-void TileMap::draw(BITMAP* buffer, int x, int y, int layer) {
+void TileMap::draw(int x, int y, int layer) {
   if (layer == 0 || layer == 1) {
-    draw_layer(buffer, mapTilesBack, x, y);
+    draw_layer(mapTilesBack, x, y);
   }
 
   if (layer == 0 || layer == 2) {
-    draw_layer(buffer, mapTiles, x, y);
+    draw_layer(mapTiles, x, y);
   }
 }

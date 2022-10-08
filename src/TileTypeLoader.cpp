@@ -1,6 +1,6 @@
 #include "TileTypeLoader.h"
 
-#include <allegro.h>
+#include "./lib/aar/aar.h"
 
 #include <algorithm>
 #include <fstream>
@@ -67,11 +67,13 @@ void TileTypeLoader::LoadTypes(const std::string& path) {
           cTile->first_node("images")->first_node("image");
 
       for (; img != nullptr; img = img->next_sibling()) {
-        BITMAP* image =
-            load_png_ex("images/blocks/" +
-                        std::string(img->first_attribute("src")->value()));
+        aar::Texture* image = aar::load::bitmap(
+            "assets/images/blocks/" +
+            std::string(img->first_attribute("src")->value()));
         tile->AddImage(image);
-        tile->SetDimensions(0, 0, image->w, image->h);
+
+        SDL_Point size = aar::util::getTextureSize(image);
+        tile->SetDimensions(0, 0, size.x, size.y);
       }
     }
 

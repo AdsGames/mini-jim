@@ -15,16 +15,66 @@ add_executable (${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
 
 # Find libs
-find_library(ALLEGRO_LIBRARY NAMES alleg44 alleg REQUIRED)
-find_library(ALLEGRO_PNG_LIBRARY NAMES loadpng REQUIRED)
-find_library(ALLEGRO_OGG_LIBRARY NAMES logg REQUIRED)
+if(NOT EMSCRIPTEN)
+  find_library(SDL_LIBRARY NAMES SDL2 REQUIRED)
+  find_library(SDL_MIXER_LIBRARY NAMES SDL2_mixer REQUIRED)
+  find_library(SDL_IMAGE_LIBRARY NAMES SDL2_image REQUIRED)
+  find_library(SDL_TTF_LIBRARY NAMES SDL2_ttf REQUIRED)
+  find_library(SDL_GFX_LIBRARY NAMES SDL2_gfx REQUIRED)
+  find_library(SDL_MAIN_LIBRARY NAMES SDL2main REQUIRED)
+endif(NOT EMSCRIPTEN)
 
 
 # Link Libs
-target_link_libraries(${PROJECT_NAME} PRIVATE ${ALLEGRO_LIBRARY} ${ALLEGRO_PNG_LIBRARY} ${ALLEGRO_OGG_LIBRARY})
+# Emscripten support
+if(EMSCRIPTEN)
+set(CMAKE_EXECUTABLE_SUFFIX ".html")
+target_compile_options(
+  ${PROJECT_NAME}
+  PRIVATE  
+  -sUSE_SDL=2 
+  -sUSE_SDL_IMAGE=2 
+  -sUSE_SDL_TTF=2 
+  -sUSE_SDL_MIXER=2 
+  -sUSE_SDL_GFX=2 
+  -sSDL2_IMAGE_FORMATS=["png"]
+)
+target_link_libraries(
+  ${PROJECT_NAME} 
+  -sWASM=1 
+  -sUSE_SDL=2 
+  -sUSE_SDL_IMAGE=2 
+  -sUSE_SDL_TTF=2 
+  -sUSE_SDL_MIXER=2 
+  -sUSE_SDL_GFX=2 
+  -sSDL2_IMAGE_FORMATS=["png"] 
+  -sDEMANGLE_SUPPORT=1
+  -sTOTAL_MEMORY=512MB
+)
+set_target_properties(
+  ${PROJECT_NAME} 
+  PROPERTIES 
+  LINK_FLAGS
+  "--preload-file ${CMAKE_CURRENT_LIST_DIR}/assets@/assets --use-preload-plugins"
+)
 
+# Run of the mill executable
+else(EMSCRIPTEN)
 if(MINGW)
-  target_link_libraries(${PROJECT_NAME} PRIVATE -lmingw32)
+  target_link_libraries(${PROJECT_NAME} -lmingw32)
 endif(MINGW)
+target_link_libraries(
+  ${PROJECT_NAME} 
+  -lm 
+  ${SDL_MAIN_LIBRARY} 
+  ${SDL_LIBRARY} 
+  ${SDL_MIXER_LIBRARY} 
+  ${SDL_IMAGE_LIBRARY} 
+  ${SDL_TTF_LIBRARY} 
+  ${SDL_GFX_LIBRARY} 
+  afk
+)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/assets/ DESTINATION ${CMAKE_BINARY_DIR}/build)
+endif(EMSCRIPTEN)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/assets/ DESTINATION ${CMAKE_BINARY_DIR}/build/assets/)

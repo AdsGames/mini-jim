@@ -1,6 +1,6 @@
 #include "JoystickListener.h"
 
-#include <allegro.h>
+#include "../lib/aar/aar.h"
 
 bool JoystickListener::button[MAX_JOYSTICK_BUTTONS] = {false};
 bool JoystickListener::buttonPressed[MAX_JOYSTICK_BUTTONS] = {false};
@@ -27,17 +27,20 @@ void JoystickListener::update() {
     }
 
     // Released since last tick?
-    if (button[i] == false && lastTicksButton[i] == true)
+    if (button[i] == false && lastTicksButton[i] == true) {
       buttonReleased[i] = true;
+    }
 
     // Button changed
-    if (lastTicksButton[i] != button[i])
-      lastTicksButton[i] = button[i];
+    // if (lastTicksButton[i] != button[i]) {
+    //   lastTicksButton[i] = button[i];
+    // }
   }
 
   // Get new values
   for (int i = 0; i < MAX_JOYSTICK_BUTTONS; i++) {
-    if (lastTicksButton[i] != (bool)joy[0].button[i].b)
-      lastTicksButton[i] = key[i];
+    // if (lastTicksButton[i] != (bool)joy[0].button[i].b) {
+    //   lastTicksButton[i] = key[i];
+    // }
   }
 }

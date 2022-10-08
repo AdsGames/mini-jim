@@ -1,7 +1,7 @@
 #ifndef INTRO_H
 #define INTRO_H
 
-#include <allegro.h>
+#include "./lib/aar/aar.h"
 
 #include "State.h"
 #include "utility/Timer.h"
@@ -11,21 +11,18 @@
 // Intro screen of game
 class Intro : public State {
  public:
-  Intro();
   virtual ~Intro();
+
+  virtual void init(aar::Window* window);
   virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
+  virtual void draw(aar::Renderer* buffer) override;
 
  private:
-  // Disallow copy
-  Intro(const Intro&);
-  Intro& operator=(const Intro&);
-
-  BITMAP* intro;
-  BITMAP* title;
-  BITMAP* background;
-  BITMAP* images[INTRO_FRAMES];
-  SAMPLE* introSound;
+  aar::Texture* intro;
+  aar::Texture* title;
+  aar::Texture* background;
+  aar::Texture* images[INTRO_FRAMES];
+  aar::Sample* introSound;
 
   int frame;
   bool sound_played;

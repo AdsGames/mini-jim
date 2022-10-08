@@ -1,23 +1,23 @@
 #include "Intro.h"
 #include "utility/tools.h"
 
-#include <loadpng.h>
 #include <string>
 #include <vector>
 
 #include "globals.h"
+#include "utility/KeyListener.h"
 #include "utility/tools.h"
 
-Intro::Intro() {
-  background = load_png_ex("images/opening/background.png");
-  intro = load_png_ex("images/opening/intro.png");
-  title = load_png_ex("images/opening/title.png");
-  introSound = load_sample_ex("sounds/introSound.wav");
+void Intro::init(aar::Window* window) {
+  background = aar::load::bitmap("assets/images/opening/background.png");
+  intro = aar::load::bitmap("assets/images/opening/intro.png");
+  title = aar::load::bitmap("assets/images/opening/title.png");
+  introSound = aar::load::sample("assets/sounds/introSound.wav");
 
   for (int i = 0; i < INTRO_FRAMES; i++) {
-    images[i] = load_png_ex(
-        std::string("images/opening/opening" + std::to_string(i) + ".png")
-            .c_str());
+    images[i] = aar::load::bitmap(std::string("assets/images/opening/opening" +
+                                              std::to_string(i) + ".png")
+                                      .c_str());
   }
 
   timer.Start();
@@ -28,40 +28,41 @@ Intro::Intro() {
 
 Intro::~Intro() {
   for (int i = 0; i < INTRO_FRAMES; i++)
-    destroy_bitmap(images[i]);
+    aar::load::destroyBitmap(images[i]);
 
-  destroy_bitmap(background);
-  destroy_bitmap(title);
-  destroy_bitmap(intro);
-  destroy_sample(introSound);
+  aar::load::destroyBitmap(background);
+  aar::load::destroyBitmap(title);
+  aar::load::destroyBitmap(intro);
+  aar::load::destroySample(introSound);
 }
 
 void Intro::update(StateEngine& engine) {
-  poll_joystick();
+  // poll_joystick();
   frame = (timer.GetElapsedTime<milliseconds>() - 3000) / 100;
 
   if (frame >= 0 && !sound_played) {
-    play_sample(introSound, 255, 128, 1000, 0);
+    aar::sound::play(introSound, 255, 128, 1000, 0);
     sound_played = true;
   }
 
-  if (frame >= INTRO_FRAMES || key_down() || button_down()) {
+  if (frame >= INTRO_FRAMES || KeyListener::anyKeyPressed) {
     setNextState(engine, StateEngine::STATE_MENU);
     highcolor_fade_out(64);
   }
 }
 
-void Intro::draw(BITMAP* buffer) {
+void Intro::draw(aar::Renderer* buffer) {
   // Intro stuffs
   if (timer.GetElapsedTime<seconds>() < 1) {
-    draw_sprite(buffer, intro, 0, 0);
+    aar::draw::sprite(intro, 0, 0);
   } else if (timer.GetElapsedTime<seconds>() < 2) {
-    draw_sprite(buffer, title, 0, 0);
+    aar::draw::sprite(title, 0, 0);
   } else {
-    clear_to_color(buffer, 0x00000);
-    stretch_sprite(buffer, background, 105, 140, 1070, 680);
+    aar::draw::clearColor(aar::util::makeColor(0, 0, 0, 255));
+    aar::draw::stretchSprite(background, 105, 140, 1070, 680);
 
-    if (frame >= 0 && frame < INTRO_FRAMES)
-      stretch_sprite(buffer, images[frame], 105, 120, 1070, 660);
+    if (frame >= 0 && frame < INTRO_FRAMES) {
+      aar::draw::stretchSprite(images[frame], 105, 120, 1070, 660);
+    }
   }
 }

@@ -1,31 +1,47 @@
 #include "KeyListener.h"
 
-#include <allegro.h>
+#include "../lib/aar/aar.h"
 
 bool KeyListener::keyPressed[KL_KEY_MAX] = {false};
 bool KeyListener::keyReleased[KL_KEY_MAX] = {false};
+bool KeyListener::keyDown[KL_KEY_MAX] = {false};
 bool KeyListener::lastTicksKey[KL_KEY_MAX] = {false};
+bool KeyListener::anyKeyPressed = false;
 
 // Check those keys!
 void KeyListener::update() {
+  SDL_PumpEvents();
+  const Uint8* key = SDL_GetKeyboardState(NULL);
+
   // Check key just pressed
   for (int i = 0; i < KL_KEY_MAX; i++) {
     // Clear old values
     keyPressed[i] = false;
     keyReleased[i] = false;
+    keyDown[i] = false;
+    anyKeyPressed = false;
+
+    // Is down
+    if (key[i]) {
+      keyDown[i] = true;
+      anyKeyPressed = true;
+    }
 
     // Pressed since last tick?
-    if ((bool)key[i] == true && lastTicksKey[i] == false)
+    if (key[i] && !lastTicksKey[i]) {
       keyPressed[i] = true;
+    }
 
     // Released since last tick?
-    if ((bool)key[i] == false && lastTicksKey[i] == true)
+    if (!key[i] && lastTicksKey[i]) {
       keyReleased[i] = true;
+    }
   }
 
   // Get new values
   for (int i = 0; i < KL_KEY_MAX; i++) {
-    if (lastTicksKey[i] != (bool)key[i])
+    if (lastTicksKey[i] != (bool)key[i]) {
       lastTicksKey[i] = key[i];
+    }
   }
 }

@@ -3,10 +3,9 @@
 
 #include "State.h"
 
-#include <allegro.h>
-#include <loadpng.h>
 #include <string>
 #include <vector>
+#include "./lib/aar/aar.h"
 
 #include "TileMap.h"
 
@@ -18,16 +17,13 @@
 
 class Menu : public State {
  public:
-  Menu();
   virtual ~Menu();
+
+  virtual void init(aar::Window* window);
   virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
+  virtual void draw(aar::Renderer* buffer) override;
 
  private:
-  // Disallow copy
-  Menu(const Menu&);
-  Menu& operator=(const Menu&);
-
   // Mouse hovering over button
   bool button_hover();
 
@@ -35,9 +31,9 @@ class Menu : public State {
   void change_level(int level);
 
   // Menu/GUI
-  BITMAP *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright,
-      *credits;
-  SAMPLE *click, *intro, *music;
+  aar::Texture *levelSelectNumber, *cursor, *menuselect, *menu, *help,
+      *copyright, *credits;
+  aar::Sample *click, *intro, *music;
 
   // Live background
   TileMap* tile_map;
@@ -46,9 +42,9 @@ class Menu : public State {
   int next_state;
 
   // Lighting effects
-  COLOR_MAP light_table;
-  PALLETE pal;
-  BITMAP *darkness, *darkness_old, *spotlight;
+  aar::Texture *darkness, *darkness_old, *spotlight;
+
+  aar::Font* menuFont;
 
   enum button_names {
     BUTTON_START,

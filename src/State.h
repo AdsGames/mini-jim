@@ -10,7 +10,7 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include <allegro.h>
+#include "./lib/aar/aar.h"
 
 // Class
 class State;
@@ -21,13 +21,13 @@ class State;
 class StateEngine {
  public:
   // Init
-  StateEngine();
+  StateEngine(aar::Window* window);
 
   // Update
   void update();
 
   // Draw
-  void draw(BITMAP* buffer);
+  void draw(aar::Renderer* buffer);
 
   // Set next state
   void setNextState(const int newState);
@@ -58,6 +58,9 @@ class StateEngine {
 
   // Stores states
   State* state;
+
+  // Window
+  aar::Window* window;
 };
 
 /*********
@@ -69,19 +72,17 @@ class State {
   State(){};
   virtual ~State(){};
 
+  // Init the state
+  virtual void init(aar::Window* window) = 0;
+
   // Draw to screen
-  virtual void draw(BITMAP* buffer) = 0;
+  virtual void draw(aar::Renderer* buffer) = 0;
 
   // Update logic
   virtual void update(StateEngine& engine) = 0;
 
   // Change state
   static void setNextState(StateEngine& engine, int state);
-
- private:
-  // Disallow copy
-  State(const State&);
-  State& operator=(const State&);
 };
 
 #endif  // STATE_H

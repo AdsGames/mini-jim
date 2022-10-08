@@ -1,8 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <allegro.h>
-#include <loadpng.h>
+#include "./lib/aar/aar.h"
 
 #include "globals.h"
 #include "utility/tools.h"
@@ -32,7 +31,7 @@ class Player {
   bool getFinished() const;
 
   void update(TileMap* fullMap);
-  void draw(BITMAP* temp, int tile_map_x, int tile_map_y);
+  void draw(int tile_map_x, int tile_map_y);
 
  private:
   enum State {
@@ -67,16 +66,16 @@ class Player {
 
   // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27 28-29
   // is idle
-  BITMAP* player_images[14];
+  aar::Texture* player_images[14];
 
   // Sounds
-  SAMPLE* walk[2];
-  SAMPLE* jump;
-  SAMPLE* die;
-  SAMPLE* win;
-  SAMPLE* trapsnap;
-  SAMPLE* chicken;
-  SAMPLE* checkpoint;
+  aar::Sample* walk[2];
+  aar::Sample* jump;
+  aar::Sample* die;
+  aar::Sample* win;
+  aar::Sample* trapsnap;
+  aar::Sample* chicken;
+  aar::Sample* checkpoint;
 };
 
 #endif

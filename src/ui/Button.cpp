@@ -12,8 +12,8 @@ Button::Button(int x, int y)
 }
 
 Button::~Button() {
-  destroy_bitmap(images[0]);
-  destroy_bitmap(images[1]);
+  aar::load::destroyBitmap(images[0]);
+  aar::load::destroyBitmap(images[1]);
 }
 
 void Button::SetOnClick(std::function<void(void)> func) {
@@ -22,12 +22,13 @@ void Button::SetOnClick(std::function<void(void)> func) {
 
 // Load images from file
 void Button::SetImages(const char* image1, const char* image2) {
-  images[0] = load_png_ex(image1);
-  images[1] = load_png_ex(image2);
+  images[0] = aar::load::bitmap(image1);
+  images[1] = aar::load::bitmap(image2);
 
   // Size
-  height = images[0]->h;
-  width = images[0]->w;
+  SDL_Point size = aar::util::getTextureSize(images[0]);
+  height = size.y;
+  width = size.x;
 }
 
 bool Button::Hover() const {
@@ -36,8 +37,9 @@ bool Button::Hover() const {
 }
 
 void Button::Update() {
-  if (Hover() && MouseListener::mouse_pressed & 1 && OnClick != nullptr)
+  if (Hover() && MouseListener::mouse_pressed & 1 && OnClick != nullptr) {
     OnClick();
+  }
 }
 
 int Button::GetX() const {
@@ -48,10 +50,11 @@ int Button::GetY() const {
   return y;
 }
 
-void Button::Draw(BITMAP* buffer) {
+void Button::Draw() {
   if (images[Hover()]) {
-    draw_trans_sprite(buffer, images[Hover()], x, y);
+    aar::draw::sprite(images[Hover()], x, y);
   } else {
-    rectfill(buffer, x, y, x + width, y + height, 0x999999);
+    aar::draw::primRectFill(x, y, x + width, y + height,
+                            aar::util::makeColor(60, 60, 60));
   }
 }

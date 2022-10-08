@@ -1,9 +1,9 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 
-#include <allegro.h>
 #include <string>
 #include <vector>
+#include "./lib/aar/aar.h"
 
 #include "Tile.h"
 #include "utility/Timer.h"
@@ -23,7 +23,7 @@ class TileMap {
   bool hasLighting() const;
   void toggleLights();
 
-  void draw(BITMAP* buffer, int x, int y, int layer = 0);
+  void draw(int x, int y, int layer = 0);
 
   void create(int width, int height);
   bool load(const std::string& file);
@@ -36,7 +36,7 @@ class TileMap {
  private:
   void load_layer(std::ifstream& file, std::vector<Tile>& t_map);
   void save_layer(std::ofstream& file, std::vector<Tile>& t_map);
-  void draw_layer(BITMAP* buffer, std::vector<Tile>& t_map, int x, int y);
+  void draw_layer(std::vector<Tile>& t_map, int x, int y);
 
   int width, height;
   bool lighting;

@@ -9,7 +9,11 @@
 #ifndef JOYSTICKLISTENER_H
 #define JOYSTICKLISTENER_H
 
-#include <allegro.h>
+#ifndef MAX_JOYSTICK_BUTTONS
+#define MAX_JOYSTICK_BUTTONS 32
+#endif
+
+#include "../lib/aar/aar.h"
 
 class JoystickListener {
  public:

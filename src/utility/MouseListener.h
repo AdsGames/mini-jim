@@ -7,7 +7,7 @@
  **/
 
 //#include <iostream>
-#include <allegro.h>
+#include "../lib/aar/aar.h"
 
 #ifndef MouseListener_H
 #define MouseListener_H

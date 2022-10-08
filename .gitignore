@@ -48,10 +48,11 @@ Makefile
 install_manifest.txt
 bin
 docs
-lib
 build/MiniJim*
 
 .ninja*
 build.ninja
 *.exe
 /build
+.idea
+Testing/

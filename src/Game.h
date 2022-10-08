@@ -3,7 +3,7 @@
 
 #include "State.h"
 
-#include <allegro.h>
+#include "./lib/aar/aar.h"
 
 #include "Camera.h"
 #include "Player.h"
@@ -13,32 +13,28 @@
 // Main game screen
 class Game : public State {
  public:
-  Game();
   virtual ~Game();
+
+  virtual void init(aar::Window* window);
   virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
-  void init();
+  virtual void draw(aar::Renderer* buffer) override;
+  void setup();
 
  private:
-  // Disallow copy
-  Game(const Game&);
-  Game& operator=(const Game&);
+  aar::Sample* countdown;
+  aar::Sample* timeout;
 
-  BITMAP *screen1, *screen2;
-  SAMPLE* countdown;
-  SAMPLE* timeout;
+  aar::Font* cooper;
 
-  FONT* cooper;
+  aar::Texture* countdownImage;
+  aar::Texture* results;
+  aar::Texture* results_singleplayer;
 
-  BITMAP* countdownImage;
-  BITMAP* results;
-  BITMAP* results_singleplayer;
+  aar::Sample* mainMusic;
 
-  SAMPLE* mainMusic;
-
-  COLOR_MAP light_table;
-  PALLETE pal;
-  BITMAP *darkness, *darkness_old, *spotlight;
+  // COLOR_MAP light_table;
+  // PALLETE pal;
+  aar::Texture *darkness, *darkness_old, *spotlight;
 
   // Objects
   Player *player1, *player2;

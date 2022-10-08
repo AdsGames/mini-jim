@@ -1,8 +1,8 @@
 #ifndef INPUTBOX_H
 #define INPUTBOX_H
 
-#include <allegro.h>
 #include <string>
+#include "../lib/aar/aar.h"
 
 class InputBox {
  public:
@@ -19,7 +19,7 @@ class InputBox {
 
   std::string GetValue() const;
   void Update();
-  void Draw(BITMAP* buffer);
+  void Draw();
   bool Hover() const;
 
  private:
