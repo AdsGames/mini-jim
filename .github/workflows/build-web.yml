@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  EM_VERSION: "latest"
+  EM_CACHE_FOLDER: "emsdk-cache"
+
 jobs:
   build:
     name: Build Web
@@ -13,10 +17,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Emscripten
-        uses: mymindstorm/setup-emsdk@v7
+      - name: Setup cache
+        id: cache-system-libraries
+        uses: actions/cache@v2
         with:
-          actions-cache-folder: "emsdk-cache"
+          path: ${{env.EM_CACHE_FOLDER}}
+          key: ${{env.EM_VERSION}}-${{ runner.os }}
+
+      - uses: mymindstorm/setup-emsdk@v11
+        with:
+          version: ${{env.EM_VERSION}}
+          actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
 
       - name: Run CMake
         run: emcmake cmake -G "Unix Makefiles" .
