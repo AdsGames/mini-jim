@@ -10,10 +10,6 @@ TileType::TileType(short id, const std::string& name, const std::string& id_str)
   y_2 = 0;
 }
 
-TileType::~TileType() {
-  // dtor
-}
-
 short TileType::GetID() const {
   return id;
 }

@@ -9,7 +9,6 @@
 class TileType {
  public:
   TileType(short id, const std::string& name, const std::string& id_str);
-  virtual ~TileType();
 
   void Draw(int x, int y, int frame);
 

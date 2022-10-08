@@ -73,7 +73,7 @@ void TileTypeLoader::LoadTypes(const std::string& path) {
             std::string(img->first_attribute("src")->value()));
         tile->AddImage(image);
 
-        SDL_Point size = aar::util::getTextureSize(image);
+        auto size = aar::util::getTextureSize(image);
         tile->SetDimensions(0, 0, size.x, size.y);
       }
     }

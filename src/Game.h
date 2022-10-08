@@ -13,11 +13,11 @@
 // Main game screen
 class Game : public State {
  public:
-  virtual ~Game();
-
-  virtual void init();
+  virtual void init() override;
   virtual void update(StateEngine& engine) override;
   virtual void draw() override;
+  virtual void cleanup() override;
+
   void setup();
 
  private:

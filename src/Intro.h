@@ -11,11 +11,10 @@
 // Intro screen of game
 class Intro : public State {
  public:
-  virtual ~Intro();
-
-  virtual void init();
+  virtual void init() override;
   virtual void update(StateEngine& engine) override;
   virtual void draw() override;
+  virtual void cleanup() override;
 
  private:
   aar::Texture* intro;

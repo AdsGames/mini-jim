@@ -17,11 +17,10 @@
 
 class Menu : public State {
  public:
-  virtual ~Menu();
-
-  virtual void init();
+  virtual void init() override;
   virtual void update(StateEngine& engine) override;
   virtual void draw() override;
+  virtual void cleanup() override;
 
  private:
   // Mouse hovering over button

@@ -48,9 +48,11 @@ void Editor::init() {
   editor_state = OPEN;
 }
 
-Editor::~Editor() {
+void Editor::cleanup() {
   delete tile_map;
   delete pallette_tile;
+
+  aar::load::destroyFont(editorFont);
 }
 
 void Editor::Close() {

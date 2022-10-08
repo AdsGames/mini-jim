@@ -8,24 +8,19 @@
 #include "TileTypeLoader.h"
 
 void Init::init() {
-  // set_window_title("Setting up");
-
-  // set_display_switch_mode(SWITCH_BACKGROUND);
-
-  // Setup number generator
-  srand(time(nullptr));
+  aar::display::setTitle("Setting up");
 
   TileTypeLoader::LoadTypes("assets/data/tiles.xml");
 
-  // set_window_title("Mini Jim");
+  aar::display::setTitle("Mini Jim");
 }
 
+void Init::cleanup() {}
+
 void Init::update(StateEngine& engine) {
-  setNextState(engine, StateEngine::STATE_MENU);
+  setNextState(engine, StateEngine::STATE_INTRO);
 }
 
 void Init::draw() {
   aar::draw::clearColor(aar::util::makeColor(0, 0, 0));
 }
-
-Init::~Init() {}

@@ -277,11 +277,14 @@ void Game::draw() {
   }
 }
 
-Game::~Game() {
+void Game::cleanup() {
   // Destroy images
   aar::load::destroyTexture(countdownImage);
   aar::load::destroyTexture(results);
   aar::load::destroyTexture(results_singleplayer);
+  aar::load::destroyTexture(darkness);
+  aar::load::destroyTexture(darkness_old);
+  aar::load::destroyTexture(spotlight);
 
   // Destroy fonts
   aar::load::destroyFont(cooper);
@@ -290,4 +293,8 @@ Game::~Game() {
   aar::load::destroySample(countdown);
   aar::load::destroySample(timeout);
   aar::load::destroySample(mainMusic);
+
+  delete player1;
+  delete player2;
+  delete tile_map;
 }

@@ -207,8 +207,6 @@ void TileMap::draw_layer(std::vector<Tile>& t_map,
                          int height,
                          int destX,
                          int destY) {
-  auto screenSize = aar::display::getLogicalSize();
-
   int frame = getFrame();
 
   for (auto& t : t_map) {

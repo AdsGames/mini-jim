@@ -65,15 +65,14 @@ class StateEngine {
  *********/
 class State {
  public:
-  // Virtual destructor
-  State(){};
-  virtual ~State(){};
-
   // Init the state
   virtual void init() = 0;
 
   // Draw to screen
   virtual void draw() = 0;
+
+  // Cleanup
+  virtual void cleanup() = 0;
 
   // Update logic
   virtual void update(StateEngine& engine) = 0;

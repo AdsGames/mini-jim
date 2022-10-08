@@ -26,7 +26,7 @@ void Button::SetImages(const char* image1, const char* image2) {
   images[1] = aar::load::bitmap(image2);
 
   // Size
-  SDL_Point size = aar::util::getTextureSize(images[0]);
+  auto size = aar::util::getTextureSize(images[0]);
   height = size.y;
   width = size.x;
 }

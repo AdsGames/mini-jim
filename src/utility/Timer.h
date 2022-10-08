@@ -17,7 +17,6 @@ using namespace std::chrono;
 class Timer {
  public:
   Timer();
-  virtual ~Timer(){};
 
   // Start time
   void Start();

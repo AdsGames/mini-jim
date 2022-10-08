@@ -57,6 +57,7 @@ void StateEngine::changeState() {
 
   // Delete the current state
   if (state) {
+    state->cleanup();
     delete state;
     state = nullptr;
   }

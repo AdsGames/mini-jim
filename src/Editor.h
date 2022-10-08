@@ -13,11 +13,10 @@
 
 class Editor : public State {
  public:
-  virtual ~Editor();
-
-  virtual void init();
+  virtual void init() override;
   virtual void update(StateEngine& engine) override;
   virtual void draw() override;
+  virtual void cleanup() override;
 
  private:
   void SaveClicked();

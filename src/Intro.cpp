@@ -24,13 +24,15 @@ void Intro::init() {
   sound_played = false;
 }
 
-Intro::~Intro() {
-  for (int i = 0; i < INTRO_FRAMES; i++)
+void Intro::cleanup() {
+  for (int i = 0; i < INTRO_FRAMES; i++) {
     aar::load::destroyTexture(images[i]);
+  }
 
   aar::load::destroyTexture(background);
   aar::load::destroyTexture(title);
   aar::load::destroyTexture(intro);
+
   aar::load::destroySample(introSound);
 }
 

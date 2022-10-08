@@ -5,11 +5,10 @@
 
 class Init : public State {
  public:
-  virtual ~Init();
-
-  virtual void init();
+  virtual void init() override;
   virtual void update(StateEngine& engine) override;
   virtual void draw() override;
+  virtual void cleanup() override;
 };
 
 #endif  // INIT_H

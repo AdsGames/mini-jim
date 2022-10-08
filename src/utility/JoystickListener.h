@@ -18,7 +18,6 @@
 class JoystickListener {
  public:
   JoystickListener(){};
-  virtual ~JoystickListener(){};
 
   static void update();
 

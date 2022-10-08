@@ -14,7 +14,6 @@
 class KeyListener {
  public:
   KeyListener(){};
-  virtual ~KeyListener(){};
 
   static void update();
 

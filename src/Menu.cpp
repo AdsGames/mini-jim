@@ -89,7 +89,7 @@ void Menu::init() {
   aar::sound::play(intro);
 }
 
-Menu::~Menu() {
+void Menu::cleanup() {
   // Destory Bitmaps
   aar::load::destroyTexture(levelSelectNumber);
   aar::load::destroyTexture(cursor);
@@ -99,10 +99,17 @@ Menu::~Menu() {
   aar::load::destroyTexture(copyright);
   aar::load::destroyTexture(credits);
 
+  aar::load::destroyTexture(darkness);
+  aar::load::destroyTexture(darkness_old);
+  aar::load::destroyTexture(spotlight);
+
   // Destory Samples
   aar::load::destroySample(click);
   aar::load::destroySample(intro);
   aar::load::destroySample(music);
+
+  // Destory Fonts
+  aar::load::destroyFont(menuFont);
 
   // Destory background
   delete tile_map;
