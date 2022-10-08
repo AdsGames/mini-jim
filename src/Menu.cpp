@@ -4,7 +4,9 @@
 #include "utility/MouseListener.h"
 
 // Create menu
-void Menu::init(aar::Window* window) {
+void Menu::init() {
+  auto screenSize = aar::display::getLogicalSize();
+
   // Load images
   menu = aar::load::bitmap("assets/images/gui/menu.png");
   menuselect = aar::load::bitmap("assets/images/gui/menuSelector.png");
@@ -43,8 +45,8 @@ void Menu::init(aar::Window* window) {
   buttons[BUTTON_EDIT] = Button(60, 750);
   buttons[BUTTON_HELP] = Button(60, 810);
   buttons[BUTTON_EXIT] = Button(60, 870);
-  buttons[BUTTON_LEFT] = Button(NATIVE_SCREEN_W - 180, 80);
-  buttons[BUTTON_RIGHT] = Button(NATIVE_SCREEN_W - 80, 80);
+  buttons[BUTTON_LEFT] = Button(screenSize.x - 180, 80);
+  buttons[BUTTON_RIGHT] = Button(screenSize.x - 80, 80);
 
   buttons[BUTTON_START].SetImages("assets/images/gui/button_start.png",
                                   "assets/images/gui/button_start_hover.png");
@@ -83,19 +85,19 @@ void Menu::init(aar::Window* window) {
   buttons[BUTTON_RIGHT].SetOnClick([this]() { change_level(1); });
 
   // Variables
-  aar::sound::play(music, 255, 125, 1000, 1);
-  aar::sound::play(intro, 255, 128, 1000, 0);
+  aar::sound::play(music, 255, 128, 1);
+  aar::sound::play(intro);
 }
 
 Menu::~Menu() {
   // Destory Bitmaps
-  aar::load::destroyBitmap(levelSelectNumber);
-  aar::load::destroyBitmap(cursor);
-  aar::load::destroyBitmap(menuselect);
-  aar::load::destroyBitmap(menu);
-  aar::load::destroyBitmap(help);
-  aar::load::destroyBitmap(copyright);
-  aar::load::destroyBitmap(credits);
+  aar::load::destroyTexture(levelSelectNumber);
+  aar::load::destroyTexture(cursor);
+  aar::load::destroyTexture(menuselect);
+  aar::load::destroyTexture(menu);
+  aar::load::destroyTexture(help);
+  aar::load::destroyTexture(copyright);
+  aar::load::destroyTexture(credits);
 
   // Destory Samples
   aar::load::destroySample(click);
@@ -104,38 +106,37 @@ Menu::~Menu() {
 
   // Destory background
   delete tile_map;
-
-  // Fade out
-  highcolor_fade_out(16);
 }
 
 void Menu::change_level(int level) {
+  auto screenSize = aar::display::getLogicalSize();
+
   levelOn = (levelOn + level) < 0 ? 4 : (levelOn + level) % 5;
 
   tile_map->load("assets/data/level_" + std::to_string(levelOn + 1));
 
-  scroll_x = random(NATIVE_SCREEN_W, tile_map->getWidth() - NATIVE_SCREEN_W);
+  scroll_x = random(screenSize.x, tile_map->getWidth() - screenSize.x);
   scroll_dir_x = random(0, 1) ? -3 : 3;
-  scroll_y = random(NATIVE_SCREEN_H, tile_map->getHeight() - NATIVE_SCREEN_H);
+  scroll_y = random(screenSize.y, tile_map->getHeight() - screenSize.y);
   scroll_dir_y = random(0, 1) ? -3 : 3;
 
-  aar::sound::play(click, 255, 125, 1000, 0);
+  aar::sound::play(click);
 
-  cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map->getWidth(),
+  cam = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
                tile_map->getHeight());
   cam.SetSpeed(5);
 }
 
 void Menu::update(StateEngine& engine) {
-  // poll_joystick();
+  auto screenSize = aar::display::getLogicalSize();
 
   // Move around live background
-  if (scroll_x + NATIVE_SCREEN_W / 2 >= tile_map->getWidth() ||
-      scroll_x <= NATIVE_SCREEN_W / 2)
+  if (scroll_x + screenSize.x / 2 >= tile_map->getWidth() ||
+      scroll_x <= screenSize.x / 2)
     scroll_dir_x *= -1;
 
-  if (scroll_y + NATIVE_SCREEN_H / 2 >= tile_map->getHeight() ||
-      scroll_y <= NATIVE_SCREEN_H / 2)
+  if (scroll_y + screenSize.y / 2 >= tile_map->getHeight() ||
+      scroll_y <= screenSize.y / 2)
     scroll_dir_y *= -1;
 
   scroll_x += scroll_dir_x;
@@ -152,13 +153,15 @@ void Menu::update(StateEngine& engine) {
     buttons[i].Update();
 }
 
-void Menu::draw(aar::Renderer* buffer) {
+void Menu::draw() {
+  auto screenSize = aar::display::getLogicalSize();
+
   // Draw background to screen
-  aar::draw::primRectFill(0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H,
+  aar::draw::primRectFill(0, 0, screenSize.x, screenSize.y,
                           aar::util::makeColor(255, 255, 255, 255));
 
   // Draw live background
-  tile_map->draw(cam.GetX(), cam.GetY());
+  tile_map->draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y);
 
   // Lighting
   if (tile_map->hasLighting()) {
@@ -195,9 +198,9 @@ void Menu::draw(aar::Renderer* buffer) {
     buttons[i].Draw();
 
   // Level selection
-  aar::draw::sprite(levelSelectNumber, NATIVE_SCREEN_W - 160, 80);
-  aar::draw::text(menuFont, std::to_string(levelOn + 1), NATIVE_SCREEN_W - 120,
-                  80, aar::util::makeColor(255, 255, 255, 255));
+  aar::draw::sprite(levelSelectNumber, screenSize.x - 160, 80);
+  aar::draw::text(menuFont, std::to_string(levelOn + 1), screenSize.x - 120, 80,
+                  aar::util::makeColor(0, 0, 0));
 
   // Cursor
   aar::draw::sprite(cursor, MouseListener::x, MouseListener::y);
@@ -207,7 +210,7 @@ void Menu::draw(aar::Renderer* buffer) {
     aar::draw::sprite(help, 0, 0);
   }
 
-  aar::draw::sprite(copyright, NATIVE_SCREEN_W - 350, NATIVE_SCREEN_H - 40);
+  aar::draw::sprite(copyright, screenSize.x - 350, screenSize.y - 40);
 
   aar::draw::sprite(cursor, MouseListener::x, MouseListener::y);
 }

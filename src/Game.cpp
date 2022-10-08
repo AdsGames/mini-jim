@@ -6,7 +6,7 @@
 #include "utility/KeyListener.h"
 #include "utility/tools.h"
 
-void Game::init(aar::Window* window) {
+void Game::init() {
   // Player
   player1 = new Player(1);
   player2 = new Player(2);
@@ -51,10 +51,19 @@ void Game::setup() {
     aar::util::abortOnError("Could not open level" + file_name);
   }
 
-  cam_1 =
-      Camera(SCREEN_W, SCREEN_H, tile_map->getWidth(), tile_map->getHeight());
-  cam_2 =
-      Camera(SCREEN_W, SCREEN_H, tile_map->getWidth(), tile_map->getHeight());
+  auto screenSize = aar::display::getLogicalSize();
+
+  if (single_player) {
+    cam_1 = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
+                   tile_map->getHeight());
+    cam_2 = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
+                   tile_map->getHeight());
+  } else {
+    cam_1 = Camera(screenSize.x, screenSize.y / 2, tile_map->getWidth(),
+                   tile_map->getHeight());
+    cam_2 = Camera(screenSize.x, screenSize.y / 2, tile_map->getWidth(),
+                   tile_map->getHeight());
+  }
 
   // Find spawn
   Tile* spawnTile = tile_map->find_tile_type(199, 1);
@@ -65,8 +74,8 @@ void Game::setup() {
   }
 
   // Play music
-  aar::sound::play(countdown, 255, 125, 1000, 0);
-  aar::sound::play(mainMusic, 255, 125, 1000, 1);
+  aar::sound::play(countdown, 255, 128, 0);
+  aar::sound::play(mainMusic, 255, 128, 1);
 
   // Start game
   tm_begin.Start();
@@ -105,33 +114,39 @@ void Game::update(StateEngine& engine) {
     tm_p2.Stop();
 
   // Change level when both are done
-  if (KeyListener::keyDown[SDLK_RETURN] && player1->getFinished() &&
+  if (KeyListener::keyDown[SDL_SCANCODE_RETURN] && player1->getFinished() &&
       (player2->getFinished() || single_player)) {
     setNextState(engine, StateEngine::STATE_MENU);
   }
 
   // Back to menu
-  if (KeyListener::keyDown[SDLK_m]) {
+  if (KeyListener::keyDown[SDL_SCANCODE_M]) {
     setNextState(engine, StateEngine::STATE_MENU);
   }
 }
 
-void Game::draw(aar::Renderer* buffer) {
-  // Black background (just in case)
-  aar::draw::primRectFill(0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H,
-                          aar::util::makeColor(0, 0, 0, 255));
+void Game::draw() {
+  auto screenSize = aar::display::getLogicalSize();
 
   // Draw tiles and characters
-  tile_map->draw(cam_1.GetX(), cam_1.GetY());
-  player1->draw(cam_1.GetX(), cam_1.GetY());
 
-  // if (!single_player) {
-  //   tile_map->draw(screen2, cam_2.GetX(), cam_2.GetY());
-  //   player2->draw(screen1, cam_1.GetX(), cam_1.GetY());
-  //   player1->draw(screen1, cam_1.GetX(), cam_1.GetY());
-  //   player1->draw(screen2, cam_2.GetX(), cam_2.GetY());
-  //   player2->draw(screen2, cam_2.GetX(), cam_2.GetY());
-  // }
+  if (single_player) {
+    tile_map->draw(cam_1.GetX(), cam_1.GetY(), cam_1.GetWidth(),
+                   cam_1.GetHeight());
+    player1->draw(cam_1.GetX(), cam_1.GetY());
+  }
+
+  else {
+    tile_map->draw(cam_1.GetX(), cam_1.GetY(), cam_1.GetWidth(),
+                   cam_1.GetHeight(), 0, 0);
+    player1->draw(cam_1.GetX(), cam_1.GetY());
+    player2->draw(cam_1.GetX(), cam_1.GetY());
+
+    tile_map->draw(cam_2.GetX(), cam_2.GetY(), cam_2.GetWidth(),
+                   cam_2.GetHeight(), 0, screenSize.y / 2);
+    player1->draw(cam_2.GetX(), cam_2.GetY() - screenSize.y / 2);
+    player2->draw(cam_2.GetX(), cam_2.GetY() - screenSize.y / 2);
+  }
 
   // Lighting
   // if (tile_map->hasLighting()) {
@@ -162,39 +177,23 @@ void Game::draw(aar::Renderer* buffer) {
   //   aar::draw::sprite(screen1, darkness, 0, 0);
   // }
 
-  // Draw split screens
-  // Screens
-  // if (single_player) {
-  //   aar::draw::stretchSprite(screen1, 0, 0, NATIVE_SCREEN_W,
-  //   NATIVE_SCREEN_H);
-  // } else {
-  //   aar::draw::stretchSprite(screen1, 0, 0, NATIVE_SCREEN_W,
-  //                            NATIVE_SCREEN_H / 2);
-  //   aar::draw::stretchSprite(screen2, 0, NATIVE_SCREEN_H / 2,
-  //   NATIVE_SCREEN_W,
-  //                            NATIVE_SCREEN_H / 2);
-  //   aar::draw::primRectFill(0, (NATIVE_SCREEN_H / 2) - 8, NATIVE_SCREEN_W,
-  //                           (NATIVE_SCREEN_H / 2) + 8,
-  //                           aar::util::makeColor(0, 0, 0, 255));
-  // }
-
   // Frame
-  aar::draw::primRectFill(0, 0, NATIVE_SCREEN_W, 16,
-                          aar::util::makeColor(0, 0, 0, 255));
-  aar::draw::primRectFill(0, 0, 16, NATIVE_SCREEN_H,
-                          aar::util::makeColor(0, 0, 0, 255));
-  aar::draw::primRectFill(NATIVE_SCREEN_W - 16, 0, NATIVE_SCREEN_W,
-                          NATIVE_SCREEN_H, aar::util::makeColor(0, 0, 0, 255));
-  aar::draw::primRectFill(0, NATIVE_SCREEN_H - 16, NATIVE_SCREEN_W,
-                          NATIVE_SCREEN_H, aar::util::makeColor(0, 0, 0, 255));
+  aar::draw::primRectFill(0, 0, screenSize.x, 16,
+                          aar::util::makeColor(0, 0, 0));
+  aar::draw::primRectFill(0, 0, 16, screenSize.y,
+                          aar::util::makeColor(0, 0, 0));
+  aar::draw::primRectFill(screenSize.x - 16, 0, screenSize.x, screenSize.y,
+                          aar::util::makeColor(0, 0, 0));
+  aar::draw::primRectFill(0, screenSize.y - 16, screenSize.x, screenSize.y,
+                          aar::util::makeColor(0, 0, 0));
 
   // Timers
-  aar::draw::primRectFill(20, 20, 320, 90, aar::util::makeColor(0, 0, 0, 255));
+  aar::draw::primRectFill(20, 20, 320, 90, aar::util::makeColor(0, 0, 0));
 
   if (!single_player) {
-    aar::draw::primRectFill(20, (NATIVE_SCREEN_H / 2) + 20, 320,
-                            (NATIVE_SCREEN_H / 2) + 90,
-                            aar::util::makeColor(0, 0, 0, 255));
+    aar::draw::primRectFill(20, (screenSize.y / 2) + 20, 320,
+                            (screenSize.y / 2) + 90,
+                            aar::util::makeColor(0, 0, 0));
   }
 
   // Draw timer to screen
@@ -209,11 +208,11 @@ void Game::draw(aar::Renderer* buffer) {
     aar::draw::text(
         cooper,
         "Time: " + std::to_string(tm_p2.GetElapsedTime<milliseconds>() / 1000),
-        40, (NATIVE_SCREEN_H / 2) + 20 + 35,
+        40, (screenSize.y / 2) + 20 + 35,
         aar::util::makeColor(255, 255, 255, 255));
     aar::draw::text(
         cooper, "Deaths:" + std::to_string(player2->getDeathcount()), 40,
-        (NATIVE_SCREEN_H / 2) + 20, aar::util::makeColor(255, 255, 255, 255));
+        (screenSize.y / 2) + 20, aar::util::makeColor(255, 255, 255, 255));
   }
 
   // Starting countdown
@@ -221,20 +220,20 @@ void Game::draw(aar::Renderer* buffer) {
     // Timer 3..2..1..GO!
     if (tm_begin.GetElapsedTime<milliseconds>() < 330) {
       aar::draw::stretchSpriteBlit(countdownImage, 0, 0, 14, 18,
-                                   NATIVE_SCREEN_W / 2 - 100,
-                                   NATIVE_SCREEN_H / 2 - 100, 140, 180);
+                                   screenSize.x / 2 - 100,
+                                   screenSize.y / 2 - 100, 140, 180);
     } else if (tm_begin.GetElapsedTime<milliseconds>() < 660) {
       aar::draw::stretchSpriteBlit(countdownImage, 19, 0, 14, 18,
-                                   NATIVE_SCREEN_W / 2 - 100,
-                                   NATIVE_SCREEN_H / 2 - 100, 140, 180);
+                                   screenSize.x / 2 - 100,
+                                   screenSize.y / 2 - 100, 140, 180);
     } else if (tm_begin.GetElapsedTime<milliseconds>() < 990) {
       aar::draw::stretchSpriteBlit(countdownImage, 39, 0, 14, 18,
-                                   NATIVE_SCREEN_W / 2 - 100,
-                                   NATIVE_SCREEN_H / 2 - 100, 140, 180);
+                                   screenSize.x / 2 - 100,
+                                   screenSize.y / 2 - 100, 140, 180);
     } else if (tm_begin.GetElapsedTime<milliseconds>() < 1200) {
       aar::draw::stretchSpriteBlit(countdownImage, 57, 0, 40, 18,
-                                   NATIVE_SCREEN_W / 2 - 200,
-                                   NATIVE_SCREEN_H / 2 - 100, 400, 180);
+                                   screenSize.x / 2 - 200,
+                                   screenSize.y / 2 - 100, 400, 180);
     }
   }
 
@@ -244,34 +243,34 @@ void Game::draw(aar::Renderer* buffer) {
     const float p2_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
 
     if (single_player)
-      aar::draw::sprite(results_singleplayer, (NATIVE_SCREEN_W / 2) - 364,
-                        (NATIVE_SCREEN_H / 2) - 200);
+      aar::draw::sprite(results_singleplayer, (screenSize.x / 2) - 364,
+                        (screenSize.y / 2) - 200);
     else
-      aar::draw::sprite(results, (NATIVE_SCREEN_W / 2) - 364,
-                        (NATIVE_SCREEN_H / 2) - 200);
+      aar::draw::sprite(results, (screenSize.x / 2) - 364,
+                        (screenSize.y / 2) - 200);
 
-    aar::draw::text(cooper, std::to_string(p1_time), (NATIVE_SCREEN_W / 2) - 60,
-                    (NATIVE_SCREEN_H / 2) - 110,
+    aar::draw::text(cooper, std::to_string(p1_time), (screenSize.x / 2) - 60,
+                    (screenSize.y / 2) - 110,
                     aar::util::makeColor(255, 255, 255, 255));
 
     if (!single_player) {
-      aar::draw::text(cooper, std::to_string(p2_time),
-                      (NATIVE_SCREEN_W / 2) - 60, (NATIVE_SCREEN_H / 2) - 55,
+      aar::draw::text(cooper, std::to_string(p2_time), (screenSize.x / 2) - 60,
+                      (screenSize.y / 2) - 55,
                       aar::util::makeColor(255, 255, 255, 255));
 
       if (p1_time < p2_time) {
-        aar::draw::text(cooper, "1", (NATIVE_SCREEN_W / 2) - 175,
-                        (NATIVE_SCREEN_H / 2) + 2,
+        aar::draw::text(cooper, "1", (screenSize.x / 2) - 175,
+                        (screenSize.y / 2) + 2,
                         aar::util::makeColor(255, 255, 255, 255));
         aar::draw::text(cooper, std::to_string(p2_time - p1_time),
-                        (NATIVE_SCREEN_W / 2) - 5, (NATIVE_SCREEN_H / 2) + 2,
+                        (screenSize.x / 2) - 5, (screenSize.y / 2) + 2,
                         aar::util::makeColor(255, 255, 255, 255));
       } else if (p1_time > p2_time) {
-        aar::draw::text(cooper, "2", (NATIVE_SCREEN_W / 2) - 175,
-                        (NATIVE_SCREEN_H / 2) + 2,
+        aar::draw::text(cooper, "2", (screenSize.x / 2) - 175,
+                        (screenSize.y / 2) + 2,
                         aar::util::makeColor(255, 255, 255, 255));
         aar::draw::text(cooper, std::to_string(p1_time - p2_time),
-                        (NATIVE_SCREEN_W / 2) - 5, (NATIVE_SCREEN_H / 2) + 2,
+                        (screenSize.x / 2) - 5, (screenSize.y / 2) + 2,
                         aar::util::makeColor(255, 255, 255, 255));
       }
     }
@@ -280,9 +279,9 @@ void Game::draw(aar::Renderer* buffer) {
 
 Game::~Game() {
   // Destroy images
-  aar::load::destroyBitmap(countdownImage);
-  aar::load::destroyBitmap(results);
-  aar::load::destroyBitmap(results_singleplayer);
+  aar::load::destroyTexture(countdownImage);
+  aar::load::destroyTexture(results);
+  aar::load::destroyTexture(results_singleplayer);
 
   // Destroy fonts
   aar::load::destroyFont(cooper);
@@ -291,7 +290,4 @@ Game::~Game() {
   aar::load::destroySample(countdown);
   aar::load::destroySample(timeout);
   aar::load::destroySample(mainMusic);
-
-  // Fade out
-  highcolor_fade_out(16);
 }

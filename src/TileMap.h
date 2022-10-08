@@ -11,7 +11,6 @@
 class TileMap {
  public:
   explicit TileMap(const std::string& file = "");
-  ~TileMap();
 
   std::vector<Tile> mapTiles;
   std::vector<Tile> mapTilesBack;
@@ -23,7 +22,13 @@ class TileMap {
   bool hasLighting() const;
   void toggleLights();
 
-  void draw(int x, int y, int layer = 0);
+  void draw(int x,
+            int y,
+            int width,
+            int height,
+            int destX = 0,
+            int destY = 0,
+            int layer = 0);
 
   void create(int width, int height);
   bool load(const std::string& file);
@@ -36,7 +41,13 @@ class TileMap {
  private:
   void load_layer(std::ifstream& file, std::vector<Tile>& t_map);
   void save_layer(std::ofstream& file, std::vector<Tile>& t_map);
-  void draw_layer(std::vector<Tile>& t_map, int x, int y);
+  void draw_layer(std::vector<Tile>& t_map,
+                  int x,
+                  int y,
+                  int width,
+                  int height,
+                  int destX = 0,
+                  int destY = 0);
 
   int width, height;
   bool lighting;

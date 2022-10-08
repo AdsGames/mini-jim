@@ -12,8 +12,8 @@ Button::Button(int x, int y)
 }
 
 Button::~Button() {
-  aar::load::destroyBitmap(images[0]);
-  aar::load::destroyBitmap(images[1]);
+  aar::load::destroyTexture(images[0]);
+  aar::load::destroyTexture(images[1]);
 }
 
 void Button::SetOnClick(std::function<void(void)> func) {

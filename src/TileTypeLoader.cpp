@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 
 #include "globals.h"
 #include "utility/tools.h"

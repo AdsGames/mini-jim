@@ -7,7 +7,7 @@
 
 #include "TileTypeLoader.h"
 
-void Init::init(aar::Window* window) {
+void Init::init() {
   // set_window_title("Setting up");
 
   // set_display_switch_mode(SWITCH_BACKGROUND);
@@ -24,8 +24,8 @@ void Init::update(StateEngine& engine) {
   setNextState(engine, StateEngine::STATE_MENU);
 }
 
-void Init::draw(aar::Renderer* buffer) {
-  aar::draw::clearColor(aar::util::makeColor(0, 0, 0, 255));
+void Init::draw() {
+  aar::draw::clearColor(aar::util::makeColor(0, 0, 0));
 }
 
 Init::~Init() {}

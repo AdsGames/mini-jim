@@ -22,18 +22,10 @@ constexpr nanoseconds timestep(16ms);
 // State engine
 StateEngine* game_state;
 
-// Buffer
-SDL_Window* gWindow = nullptr;
-
 // Functions
-// void close_button_handler(void);
 void setup();
 void draw();
 void update();
-
-// Close button handler
-bool close_button_pressed = false;
-bool closeGame;
 
 // FPS system
 int fps = 0;
@@ -42,25 +34,9 @@ int frames_done = 0;
 // Setup game
 void setup() {
   // Load allegro library
-  aar::util::init();
+  aar::util::init(1280, 960, "AAR Game Engine");
 
-  gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED, SCREEN_W, SCREEN_H,
-                             SDL_WINDOW_SHOWN);
-
-  if (!gWindow) {
-    aar::util::abortOnError("WINDOW");
-  }
-
-  // Get window surface
-  aar::renderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-
-  SDL_SetRenderDrawBlendMode(aar::renderer, SDL_BLENDMODE_BLEND);
-
-  // Variables
-  closeGame = false;
-
-  game_state = new StateEngine(gWindow);
+  game_state = new StateEngine();
 }
 
 // Update
@@ -70,20 +46,20 @@ void update() {
   MouseListener::update();
   JoystickListener::update();
 
+  aar::core::update();
+
   // Do state logic
   game_state->update();
 
   // Handle exit
   if (game_state->getStateId() == StateEngine::STATE_EXIT) {
-    close_button_pressed = true;
+    aar::core::exit = true;
   }
 }
 
 // Do state rendering
 void draw() {
-  game_state->draw(aar::renderer);
-  // aar::draw::stretchSprite(screenRenderer, buffer, 0, 0, SCREEN_W, SCREEN_H);
-  SDL_UpdateWindowSurface(gWindow);
+  game_state->draw();
 }
 
 // Loop (emscripten compatibility)
@@ -110,7 +86,7 @@ int main(int argc, char* argv[]) {
   nanoseconds lag(0ns);
   auto time_start = clock::now();
 
-  while (!KeyListener::keyDown[SDL_SCANCODE_ESCAPE] && !close_button_pressed) {
+  while (!KeyListener::keyDown[SDL_SCANCODE_ESCAPE] && !aar::core::exit) {
     auto delta_time = clock::now() - time_start;
     time_start = clock::now();
     lag += duration_cast<nanoseconds>(delta_time);

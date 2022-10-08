@@ -10,8 +10,8 @@
 class Tile {
  public:
   explicit Tile(short type);
+
   Tile(short type, int x, int y);
-  ~Tile();
 
   int getX() const;
   int getY() const;

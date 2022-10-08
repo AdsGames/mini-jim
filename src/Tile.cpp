@@ -13,8 +13,6 @@ Tile::Tile(short type, int x, int y) {
   setType(type);
 }
 
-Tile::~Tile() {}
-
 // Getters/ setters
 int Tile::getX() const {
   if (t_type)

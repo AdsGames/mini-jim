@@ -21,13 +21,13 @@ class State;
 class StateEngine {
  public:
   // Init
-  StateEngine(aar::Window* window);
+  StateEngine();
 
   // Update
   void update();
 
   // Draw
-  void draw(aar::Renderer* buffer);
+  void draw();
 
   // Set next state
   void setNextState(const int newState);
@@ -58,9 +58,6 @@ class StateEngine {
 
   // Stores states
   State* state;
-
-  // Window
-  aar::Window* window;
 };
 
 /*********
@@ -73,10 +70,10 @@ class State {
   virtual ~State(){};
 
   // Init the state
-  virtual void init(aar::Window* window) = 0;
+  virtual void init() = 0;
 
   // Draw to screen
-  virtual void draw(aar::Renderer* buffer) = 0;
+  virtual void draw() = 0;
 
   // Update logic
   virtual void update(StateEngine& engine) = 0;

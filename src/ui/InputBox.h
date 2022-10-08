@@ -6,14 +6,13 @@
 
 class InputBox {
  public:
-  InputBox();
-  InputBox(int x,
-           int y,
-           int width,
-           int height,
-           const std::string& value = "",
-           const std::string& type = "text");
-  virtual ~InputBox();
+  explicit InputBox(int x = 0,
+                    int y = 0,
+                    int width = 100,
+                    int height = 20,
+                    aar::Font* font = nullptr,
+                    const std::string& value = "",
+                    const std::string& type = "text");
 
   void Focus();
 
@@ -25,6 +24,8 @@ class InputBox {
  private:
   int x, y;
   int width, height;
+
+  aar::Font* font;
 
   std::string text;
   std::string type;

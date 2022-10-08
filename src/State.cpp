@@ -13,22 +13,19 @@
  *****************/
 
 // Init
-StateEngine::StateEngine(aar::Window* window)
-    : window(window),
-      nextState(STATE_NULL),
-      currentState(STATE_NULL),
-      state(nullptr) {}
+StateEngine::StateEngine()
+    : nextState(STATE_NULL), currentState(STATE_NULL), state(nullptr) {}
 
 // Draw
-void StateEngine::draw(aar::Renderer* renderer) {
+void StateEngine::draw() {
   if (state) {
     // Clear screen
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(aar::display::renderer);
 
-    state->draw(renderer);
+    state->draw();
 
     // Update screen
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(aar::display::renderer);
   }
 }
 
@@ -96,7 +93,7 @@ void StateEngine::changeState() {
       break;
   }
 
-  state->init(window);
+  state->init();
 
   // Change the current state ID
   currentState = nextState;

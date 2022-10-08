@@ -19,9 +19,9 @@ class Menu : public State {
  public:
   virtual ~Menu();
 
-  virtual void init(aar::Window* window);
+  virtual void init();
   virtual void update(StateEngine& engine) override;
-  virtual void draw(aar::Renderer* buffer) override;
+  virtual void draw() override;
 
  private:
   // Mouse hovering over button

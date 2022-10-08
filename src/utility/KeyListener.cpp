@@ -7,11 +7,15 @@ bool KeyListener::keyReleased[KL_KEY_MAX] = {false};
 bool KeyListener::keyDown[KL_KEY_MAX] = {false};
 bool KeyListener::lastTicksKey[KL_KEY_MAX] = {false};
 bool KeyListener::anyKeyPressed = false;
+int KeyListener::lastKeyPressed = -1;
 
 // Check those keys!
 void KeyListener::update() {
   SDL_PumpEvents();
   const Uint8* key = SDL_GetKeyboardState(NULL);
+
+  lastKeyPressed = -1;
+  anyKeyPressed = false;
 
   // Check key just pressed
   for (int i = 0; i < KL_KEY_MAX; i++) {
@@ -19,7 +23,6 @@ void KeyListener::update() {
     keyPressed[i] = false;
     keyReleased[i] = false;
     keyDown[i] = false;
-    anyKeyPressed = false;
 
     // Is down
     if (key[i]) {
@@ -30,6 +33,7 @@ void KeyListener::update() {
     // Pressed since last tick?
     if (key[i] && !lastTicksKey[i]) {
       keyPressed[i] = true;
+      lastKeyPressed = i;
     }
 
     // Released since last tick?

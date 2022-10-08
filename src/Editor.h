@@ -15,9 +15,9 @@ class Editor : public State {
  public:
   virtual ~Editor();
 
-  virtual void init(aar::Window* window);
+  virtual void init();
   virtual void update(StateEngine& engine) override;
-  virtual void draw(aar::Renderer* buffer) override;
+  virtual void draw() override;
 
  private:
   void SaveClicked();
@@ -32,7 +32,6 @@ class Editor : public State {
 
   TileMap* tile_map;
   Tile* pallette_tile;
-  aar::Texture* cursor;
 
   aar::Font* editorFont;
 

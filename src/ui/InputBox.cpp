@@ -2,26 +2,25 @@
 
 #include <iostream>
 
+#include "../utility/KeyListener.h"
 #include "../utility/MouseListener.h"
-
-InputBox::InputBox() : InputBox(0, 0, 0, 0, "") {}
 
 InputBox::InputBox(int x,
                    int y,
                    int width,
                    int height,
+                   aar::Font* font,
                    const std::string& value,
                    const std::string& type)
     : x(x),
       y(y),
       width(width),
       height(height),
+      font(font),
       text(value),
       type(type),
       text_iter(0),
       focused(false) {}
-
-InputBox::~InputBox() {}
 
 void InputBox::Focus() {
   focused = true;
@@ -38,71 +37,79 @@ bool InputBox::Hover() const {
 
 void InputBox::Update() {
   // Focus
-  // if (MouseListener::mouse_pressed & 1) {
-  //   focused = Hover();
+  if (MouseListener::mouse_pressed & 1) {
+    focused = Hover();
 
-  //   if (focused) {
-  //     int closest = width;
+    if (focused) {
+      int closest = width;
 
-  //     for (unsigned int i = 0; i <= text.length(); i++) {
-  //       int distance = abs(text_length(font, text.substr(0, i).c_str()) + x +
-  //                          6 - (signed)MouseListener::x);
+      for (unsigned int i = 0; i <= text.length(); i++) {
+        int textSize = aar::util::getTextSize(font, text.substr(0, i)).x;
 
-  //       if (distance < closest) {
-  //         text_iter = i;
-  //         closest = distance;
-  //       }
-  //     }
-  //   }
+        int distance = abs(textSize + x + 6 - (signed)MouseListener::x);
 
-  //   clear_keybuf();
-  // }
+        if (distance < closest) {
+          text_iter = i;
+          closest = distance;
+        }
+      }
+    }
+  }
 
-  // if (!focused || !keypressed())
-  //   return;
+  int lastKey = KeyListener::lastKeyPressed;
 
-  // int newkey = readkey();
-  // char ASCII = newkey & 0xff;
-  // char scancode = newkey >> 8;
+  if (!focused || lastKey == -1) {
+    return;
+  }
+
+  std::cout << "Key: " << lastKey << std::endl;
 
   // a character key was pressed; add it to the string
-  if (type == "number") {
-    // if (ASCII >= 48 && ASCII <= 57 &&
-    //     text_length(font, (text + ASCII).c_str()) < width) {
-    //   text.insert(text.begin() + text_iter, ASCII);
-    //   text_iter++;
-    //   return;
-    // }
+  if (type == "number" || type == "text") {
+    // Numeric only
+    if (lastKey >= 30 && lastKey <= 38) {
+      text.insert(text.begin() + text_iter, lastKey + 19);
+      text_iter++;
+    }
+
+    if (lastKey == 39) {
+      text.insert(text.begin() + text_iter, lastKey + 9);
+      text_iter++;
+    }
   }
 
-  else if (type == "text") {
-    // if (ASCII >= 32 && ASCII <= 126 &&
-    //     text_length(font, (text + ASCII).c_str()) < width) {
-    //   text.insert(text.begin() + text_iter, ASCII);
-    //   text_iter++;
-    //   return;
-    // }
+  if (type == "text") {
+    if (lastKey >= 4 && lastKey <= 29) {
+      if (KeyListener::keyDown[SDL_SCANCODE_LSHIFT] ||
+          KeyListener::keyDown[SDL_SCANCODE_RSHIFT]) {
+        text.insert(text.begin() + text_iter, 'A' - 4 + lastKey);
+      } else {
+        text.insert(text.begin() + text_iter, 'a' - 4 + lastKey);
+      }
+
+      text_iter++;
+    }
   }
 
-  // // some other, "special" key was pressed; handle it here
-  // if (scancode == KEY_BACKSPACE) {
-  //   if (text_iter != 0) {
-  //     text_iter--;
-  //     text.erase(text.begin() + text_iter);
-  //   }
-  // }
+  // some other, "special" key was pressed; handle it here
+  if (KeyListener::keyPressed[SDL_SCANCODE_BACKSPACE]) {
+    if (text_iter != 0) {
+      text_iter--;
+      text.erase(text.begin() + text_iter);
+    }
+  }
 
-  // else if (scancode == KEY_RIGHT) {
-  //   if (text_iter != text.size()) {
-  //     text_iter++;
-  //   }
-  // }
+  if (KeyListener::keyPressed[SDL_SCANCODE_RIGHT]) {
+    if (text_iter != text.size()) {
+      text_iter++;
+    }
+  }
 
-  // else if (scancode == KEY_LEFT) {
-  //   if (text_iter != 0) {
-  //     text_iter--;
-  //   }
-  // }
+  if (KeyListener::keyPressed[SDL_SCANCODE_LEFT]) {
+    if (text_iter != 0) {
+      text_iter--;
+    }
+  }
 }
 
 // Draw box
@@ -119,12 +126,14 @@ void InputBox::Draw() {
     aar::draw::primRectFill(x + 1, y + 1, x + width - 1, y + height - 1, col);
 
   // Output the string to the screen
-  // aar::draw::text(font, text.c_str(), x + 6, y, 0x0C0C0C, -1);
+  aar::draw::text(font, text.c_str(), x + 6, y,
+                  aar::util::makeColor(22, 22, 22));
 
   // Draw the caret
-  // if (focused) {
-  //   vline(text_length(font, text.substr(0, text_iter).c_str()) + x +
-  //   6,
-  //         y + 8, y + height - 8, aar::util::makeColor(0,0,0));
-  // }
+  if (focused) {
+    int textSize = aar::util::getTextSize(font, text.substr(0, text_iter)).x;
+
+    aar::draw::primRectFill(textSize + x + 6, y + 8, textSize + x + 7,
+                            y + height - 8, aar::util::makeColor(0, 0, 0));
+  }
 }

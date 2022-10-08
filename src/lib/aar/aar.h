@@ -21,8 +21,97 @@ typedef SDL_Renderer Renderer;
 typedef SDL_Color Color;
 typedef SDL_Window Window;
 
+/**
+ * @brief Display
+ *
+ */
+namespace display {
+
 // Renderer
 extern aar::Renderer* renderer;
+extern aar::Window* window;
+
+inline void setTitle(const std::string& title) {
+  SDL_SetWindowTitle(aar::display::window, title.c_str());
+}
+
+inline void setIcon(const std::string& path) {
+  SDL_Surface* icon = IMG_Load(path.c_str());
+
+  if (!icon) {
+    return;
+  }
+
+  SDL_SetWindowIcon(aar::display::window, icon);
+}
+
+inline void setFullscreen(bool fullscreen) {
+  if (fullscreen) {
+    SDL_SetWindowFullscreen(aar::display::window, SDL_WINDOW_FULLSCREEN);
+  } else {
+    SDL_SetWindowFullscreen(aar::display::window, 0);
+  }
+}
+
+inline void setResolution(int w, int h) {
+  SDL_SetWindowSize(aar::display::window, w, h);
+}
+
+inline SDL_Point getSize() {
+  SDL_Point size;
+  SDL_GetWindowSize(aar::display::window, &size.x, &size.y);
+  return size;
+}
+
+inline SDL_Point getLogicalSize() {
+  SDL_Point size;
+  SDL_RenderGetLogicalSize(aar::display::renderer, &size.x, &size.y);
+  return size;
+}
+
+inline SDL_FPoint getScale() {
+  SDL_FPoint scale;
+  SDL_RenderGetScale(aar::display::renderer, &scale.x, &scale.y);
+  return scale;
+}
+
+}  // namespace display
+
+namespace core {
+
+extern bool exit;
+
+inline void update() {
+  SDL_Event e;
+  while (SDL_PollEvent(&e)) {
+    switch (e.type) {
+      case SDL_WINDOWEVENT:
+        switch (e.window.event) {
+          case SDL_WINDOWEVENT_RESIZED: {
+            // Maintain aspect ratio
+            SDL_FPoint scale;
+            SDL_RenderGetScale(aar::display::renderer, &scale.x, &scale.y);
+
+            SDL_Point size;
+            SDL_RenderGetLogicalSize(aar::display::renderer, &size.x, &size.y);
+
+            SDL_SetWindowSize(aar::display::window, size.x * scale.x,
+                              size.y * scale.y);
+            break;
+          }
+        }
+        break;
+
+      case SDL_QUIT:
+        exit = true;
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+}  // namespace core
 
 /**
  * @brief Utility routines
@@ -36,7 +125,9 @@ inline void abortOnError(const std::string& message) {
   exit(-1);
 }
 
-inline void init() {
+inline void init(int width = 640,
+                 int height = 480,
+                 const std::string& windowTitle = "AAR Game") {
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
     abortOnError("SDL_Init");
   }
@@ -55,6 +146,22 @@ inline void init() {
   if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
     abortOnError("Mix_OpenAudio");
   }
+
+  aar::display::window = SDL_CreateWindow(
+      windowTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+  if (!aar::display::window) {
+    aar::util::abortOnError("WINDOW");
+  }
+
+  // Get window surface
+  aar::display::renderer =
+      SDL_CreateRenderer(aar::display::window, -1, SDL_RENDERER_ACCELERATED);
+
+  SDL_RenderSetLogicalSize(aar::display::renderer, width, height);
+
+  SDL_SetRenderDrawBlendMode(aar::display::renderer, SDL_BLENDMODE_BLEND);
 }
 
 inline Color makeColor(int r, int g, int b) {
@@ -81,6 +188,12 @@ inline SDL_Point getTextureSize(Texture* texture) {
   return size;
 }
 
+inline SDL_Point getTextSize(Font* font, const std::string& text) {
+  SDL_Point size;
+  TTF_SizeText(font, text.c_str(), &size.x, &size.y);
+  return size;
+}
+
 }  // namespace util
 
 /**
@@ -90,37 +203,38 @@ inline SDL_Point getTextureSize(Texture* texture) {
 namespace draw {
 
 inline void clearColor(aar::Color color) {
-  SDL_SetRenderDrawColor(aar::renderer, color.r, color.g, color.b, color.a);
-  SDL_RenderClear(aar::renderer);
+  SDL_SetRenderDrawColor(aar::display::renderer, color.r, color.g, color.b,
+                         color.a);
+  SDL_RenderClear(aar::display::renderer);
 }
 
 inline void sprite(aar::Texture* bmp, int x, int y) {
   SDL_Point size = aar::util::getTextureSize(bmp);
   SDL_Rect dest = {x, y, size.x, size.y};
-  SDL_RenderCopy(aar::renderer, bmp, nullptr, &dest);
+  SDL_RenderCopy(aar::display::renderer, bmp, nullptr, &dest);
 }
 
 inline void spriteHFlip(aar::Texture* bmp, int x, int y) {
   SDL_Point size = aar::util::getTextureSize(bmp);
   SDL_Rect dest = {x, y, size.x, size.y};
-  SDL_RenderCopy(aar::renderer, bmp, nullptr, &dest);
+  SDL_RenderCopy(aar::display::renderer, bmp, nullptr, &dest);
 }
 
 inline void spriteVFlip(aar::Texture* bmp, int x, int y) {
   SDL_Point size = aar::util::getTextureSize(bmp);
   SDL_Rect dest = {x, y, size.x, size.y};
-  SDL_RenderCopy(aar::renderer, bmp, nullptr, &dest);
+  SDL_RenderCopy(aar::display::renderer, bmp, nullptr, &dest);
 }
 
 inline void spriteVHFlip(aar::Texture* bmp, int x, int y) {
   SDL_Point size = aar::util::getTextureSize(bmp);
   SDL_Rect dest = {x, y, size.x, size.y};
-  SDL_RenderCopy(aar::renderer, bmp, nullptr, &dest);
+  SDL_RenderCopy(aar::display::renderer, bmp, nullptr, &dest);
 }
 
 inline void stretchSprite(aar::Texture* bmp, int x, int y, int w, int h) {
   SDL_Rect dest = {x, y, w, h};
-  SDL_RenderCopy(aar::renderer, bmp, nullptr, &dest);
+  SDL_RenderCopy(aar::display::renderer, bmp, nullptr, &dest);
 }
 
 inline void stretchSpriteBlit(aar::Texture* bmp,
@@ -134,7 +248,7 @@ inline void stretchSpriteBlit(aar::Texture* bmp,
                               int h2) {
   const SDL_Rect src = {x1, y1, w1, h1};
   SDL_Rect dest = {x2, y2, w2, h2};
-  SDL_RenderCopy(aar::renderer, bmp, &src, &dest);
+  SDL_RenderCopy(aar::display::renderer, bmp, &src, &dest);
 }
 
 inline void text(aar::Font* font,
@@ -145,23 +259,34 @@ inline void text(aar::Font* font,
   SDL_Color sdlColor = {color.r, color.g, color.b, color.a};
   SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), sdlColor);
   SDL_Texture* textTexture =
-      SDL_CreateTextureFromSurface(aar::renderer, textSurface);
-
+      SDL_CreateTextureFromSurface(aar::display::renderer, textSurface);
   SDL_Rect dest = {x, y, textSurface->w, textSurface->h};
-  SDL_RenderCopy(aar::renderer, textTexture, nullptr, &dest);
+  SDL_RenderCopy(aar::display::renderer, textTexture, nullptr, &dest);
   SDL_FreeSurface(textSurface);
+  SDL_DestroyTexture(textTexture);
+}
+
+inline void textCenter(aar::Font* font,
+                       std::string text,
+                       int x,
+                       int y,
+                       aar::Color color) {
+  auto size = aar::util::getTextSize(font, text);
+  aar::draw::text(font, text, x - size.x / 2, y, color);
 }
 
 inline void primRectFill(int x1, int y1, int x2, int y2, aar::Color color) {
   SDL_Rect rect = {x1, y1, x2 - x1, y2 - y1};
-  SDL_SetRenderDrawColor(aar::renderer, color.r, color.g, color.b, color.a);
-  SDL_RenderFillRect(aar::renderer, &rect);
+  SDL_SetRenderDrawColor(aar::display::renderer, color.r, color.g, color.b,
+                         color.a);
+  SDL_RenderFillRect(aar::display::renderer, &rect);
 }
 
 inline void primRect(int x1, int y1, int x2, int y2, aar::Color color) {
   SDL_Rect rect = {x1, y1, x2 - x1, y2 - y1};
-  SDL_SetRenderDrawColor(aar::renderer, color.r, color.g, color.b, color.a);
-  SDL_RenderDrawRect(aar::renderer, &rect);
+  SDL_SetRenderDrawColor(aar::display::renderer, color.r, color.g, color.b,
+                         color.a);
+  SDL_RenderDrawRect(aar::display::renderer, &rect);
 }
 
 }  // namespace draw
@@ -173,7 +298,7 @@ inline void primRect(int x1, int y1, int x2, int y2, aar::Color color) {
 namespace load {
 
 inline aar::Texture* bitmap(const std::string& filename) {
-  SDL_Texture* text = IMG_LoadTexture(aar::renderer, filename.c_str());
+  SDL_Texture* text = IMG_LoadTexture(aar::display::renderer, filename.c_str());
 
   if (!text) {
     util::abortOnError("Failed to load bitmap: " + filename);
@@ -211,7 +336,7 @@ inline aar::Sample* sampleOgg(const std::string& filename) {
   return temp;
 }
 
-inline void destroyBitmap(aar::Texture* bitmap) {
+inline void destroyTexture(aar::Texture* bitmap) {
   SDL_DestroyTexture(bitmap);
 }
 
@@ -225,7 +350,8 @@ inline void destroySample(aar::Sample* sample) {
 
 inline Texture* createBitmap(int w, int h) {
   SDL_Surface* temp = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
-  SDL_Texture* text = SDL_CreateTextureFromSurface(aar::renderer, temp);
+  SDL_Texture* text =
+      SDL_CreateTextureFromSurface(aar::display::renderer, temp);
   return text;
 }
 }  // namespace load
@@ -238,7 +364,6 @@ namespace sound {
 inline void play(aar::Sample* sample,
                  int volume = 255,
                  int pan = 128,
-                 int freq = 1000,
                  int loop = 0) {
   int channel = Mix_GroupAvailable(0);
   Mix_VolumeChunk(sample, volume);

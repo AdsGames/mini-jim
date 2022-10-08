@@ -17,9 +17,6 @@ TileMap::TileMap(const std::string& file) {
     load(file);
 }
 
-// Destructor
-TileMap::~TileMap() {}
-
 // Get width
 int TileMap::getWidth() const {
   return width * 64;
@@ -80,7 +77,7 @@ void TileMap::load_layer(std::ifstream& file, std::vector<Tile>& t_map) {
 
 bool TileMap::load(const std::string& file) {
   // Change size
-  std::ifstream rf((file + ".level").c_str(), std::ios::in | std::ios::binary);
+  std::ifstream rf(file + ".level", std::ios::in | std::ios::binary);
 
   if (rf.fail()) {
     rf.close();
@@ -134,7 +131,7 @@ void TileMap::save_layer(std::ofstream& file, std::vector<Tile>& t_map) {
 
 // Save file
 void TileMap::save(const std::string& file) {
-  std::ofstream of((file + ".level").c_str(), std::ios::out | std::ios::binary);
+  std::ofstream of(file + ".level", std::ios::out | std::ios::binary);
 
   if (of.fail()) {
     of.close();
@@ -203,24 +200,38 @@ std::vector<Tile*> TileMap::get_tiles_in_range(int x_1,
 }
 
 // Draw a layer
-void TileMap::draw_layer(std::vector<Tile>& t_map, int x, int y) {
+void TileMap::draw_layer(std::vector<Tile>& t_map,
+                         int x,
+                         int y,
+                         int width,
+                         int height,
+                         int destX,
+                         int destY) {
+  auto screenSize = aar::display::getLogicalSize();
+
   int frame = getFrame();
 
   for (auto& t : t_map) {
-    if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + NATIVE_SCREEN_W) &&
-        (t.getY() + t.getHeight() >= y) && (t.getY() < y + NATIVE_SCREEN_H)) {
-      t.draw(x, y, frame);
+    if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + width) &&
+        (t.getY() + t.getHeight() >= y) && (t.getY() < y + height)) {
+      t.draw(x - destX, y - destY, frame);
     }
   }
 }
 
 // Draw at position
-void TileMap::draw(int x, int y, int layer) {
+void TileMap::draw(int x,
+                   int y,
+                   int width,
+                   int height,
+                   int destX,
+                   int destY,
+                   int layer) {
   if (layer == 0 || layer == 1) {
-    draw_layer(mapTilesBack, x, y);
+    draw_layer(mapTilesBack, x, y, width, height, destX, destY);
   }
 
   if (layer == 0 || layer == 2) {
-    draw_layer(mapTiles, x, y);
+    draw_layer(mapTiles, x, y, width, height, destX, destY);
   }
 }

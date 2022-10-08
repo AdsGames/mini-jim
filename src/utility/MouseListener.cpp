@@ -3,6 +3,8 @@
 #include "../globals.h"
 #include "../lib/aar/aar.h"
 
+#include <iostream>
+
 unsigned char MouseListener::mouse_button = 0;
 unsigned char MouseListener::mouse_pressed = 0;
 unsigned char MouseListener::mouse_released = 0;
@@ -53,6 +55,8 @@ void MouseListener::update() {
   //   mouse_z_old = mouse_z;
   // }
 
-  x = mouse_x * NATIVE_SCREEN_W / SCREEN_W;
-  y = mouse_y * NATIVE_SCREEN_H / SCREEN_H;
+  auto scale = aar::display::getScale();
+
+  x = mouse_x / scale.x;
+  y = mouse_y / scale.y;
 }

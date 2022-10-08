@@ -22,6 +22,7 @@ class KeyListener {
   static bool keyReleased[KL_KEY_MAX];
   static bool keyDown[KL_KEY_MAX];
   static bool anyKeyPressed;
+  static int lastKeyPressed;
 
  private:
   static bool lastTicksKey[KL_KEY_MAX];
