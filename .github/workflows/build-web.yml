@@ -2,7 +2,8 @@ name: Build Web
 
 on:
   pull_request:
-    branches: [master]
+    branches:
+      - main
 
 env:
   EM_VERSION: "latest"
@@ -16,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Setup cache
         id: cache-system-libraries
