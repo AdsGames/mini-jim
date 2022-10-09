@@ -1,14 +1,13 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <asw/asw.h>
 #include <functional>
-#include "../lib/aar/aar.h"
 
 class Button {
  public:
   Button();
   Button(int x, int y);
-  ~Button();
 
   void Update();
 
@@ -29,7 +28,7 @@ class Button {
   int x, y;
   int width, height;
 
-  aar::Texture* images[2];
+  asw::Texture images[2];
 };
 
 #endif

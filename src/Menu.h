@@ -3,9 +3,9 @@
 
 #include "State.h"
 
+#include <asw/asw.h>
 #include <string>
 #include <vector>
-#include "./lib/aar/aar.h"
 
 #include "TileMap.h"
 
@@ -17,8 +17,10 @@
 
 class Menu : public State {
  public:
+  explicit Menu(StateEngine& engine) : State(engine) {}
+
   virtual void init() override;
-  virtual void update(StateEngine& engine) override;
+  virtual void update() override;
   virtual void draw() override;
   virtual void cleanup() override;
 
@@ -30,9 +32,9 @@ class Menu : public State {
   void change_level(int level);
 
   // Menu/GUI
-  aar::Texture *levelSelectNumber, *cursor, *menuselect, *menu, *help,
-      *copyright, *credits;
-  aar::Sample *click, *intro, *music;
+  asw::Texture levelSelectNumber, cursor, menuselect, menu, help, copyright,
+      credits;
+  asw::Sample click, intro, music;
 
   // Live background
   TileMap* tile_map;
@@ -41,9 +43,9 @@ class Menu : public State {
   int next_state;
 
   // Lighting effects
-  aar::Texture *darkness, *darkness_old, *spotlight;
+  asw::Texture darkness, darkness_old, spotlight;
 
-  aar::Font* menuFont;
+  asw::Font menuFont;
 
   enum button_names {
     BUTTON_START,

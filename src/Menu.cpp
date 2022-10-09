@@ -1,29 +1,29 @@
 #include "Menu.h"
 
-#include "utility/KeyListener.h"
-#include "utility/MouseListener.h"
+#include <asw/util/KeyListener.h>
+#include <asw/util/MouseListener.h>
 
 // Create menu
 void Menu::init() {
-  auto screenSize = aar::display::getLogicalSize();
+  auto screenSize = asw::display::getLogicalSize();
 
   // Load images
-  menu = aar::load::bitmap("assets/images/gui/menu.png");
-  menuselect = aar::load::bitmap("assets/images/gui/menuSelector.png");
-  help = aar::load::bitmap("assets/images/gui/help.png");
-  cursor = aar::load::bitmap("assets/images/gui/cursor1.png");
+  menu = asw::load::texture("assets/images/gui/menu.png");
+  menuselect = asw::load::texture("assets/images/gui/menuSelector.png");
+  help = asw::load::texture("assets/images/gui/help.png");
+  cursor = asw::load::texture("assets/images/gui/cursor1.png");
   levelSelectNumber =
-      aar::load::bitmap("assets/images/gui/levelSelectNumber.png");
-  copyright = aar::load::bitmap("assets/images/gui/copyright.png");
-  credits = aar::load::bitmap("assets/images/gui/credits.png");
+      asw::load::texture("assets/images/gui/levelSelectNumber.png");
+  copyright = asw::load::texture("assets/images/gui/copyright.png");
+  credits = asw::load::texture("assets/images/gui/credits.png");
 
   // Load sound
-  click = aar::load::sample("assets/sounds/click.wav");
-  intro = aar::load::sample("assets/sounds/intro.wav");
-  music = aar::load::sampleOgg("assets/sounds/music/MiniJim.ogg");
+  click = asw::load::sample("assets/sounds/click.wav");
+  intro = asw::load::sample("assets/sounds/intro.wav");
+  music = asw::load::sample("assets/sounds/music/MiniJim.ogg");
 
   // Sets Font
-  menuFont = aar::load::font("assets/fonts/ariblk.ttf", 24);
+  menuFont = asw::load::font("assets/fonts/ariblk.ttf", 24);
 
   // Create map for live background
   levelOn = 0;
@@ -35,9 +35,9 @@ void Menu::init() {
   // Build a color lookup table for lighting effects
   // get_palette(pal);
   // create_light_table(&light_table, pal, 0, 0, 0, nullptr);
-  darkness = aar::load::bitmap("assets/images/darkness.png");
-  darkness_old = aar::load::bitmap("assets/images/darkness.png");
-  spotlight = aar::load::bitmap("assets/images/spotlight.png");
+  darkness = asw::load::texture("assets/images/darkness.png");
+  darkness_old = asw::load::texture("assets/images/darkness.png");
+  spotlight = asw::load::texture("assets/images/spotlight.png");
 
   // Buttons
   buttons[BUTTON_START] = Button(60, 630);
@@ -85,38 +85,17 @@ void Menu::init() {
   buttons[BUTTON_RIGHT].SetOnClick([this]() { change_level(1); });
 
   // Variables
-  aar::sound::play(music, 255, 128, 1);
-  aar::sound::play(intro);
+  asw::sound::play(music, 255, 128, 1);
+  asw::sound::play(intro);
 }
 
 void Menu::cleanup() {
-  // Destory Bitmaps
-  aar::load::destroyTexture(levelSelectNumber);
-  aar::load::destroyTexture(cursor);
-  aar::load::destroyTexture(menuselect);
-  aar::load::destroyTexture(menu);
-  aar::load::destroyTexture(help);
-  aar::load::destroyTexture(copyright);
-  aar::load::destroyTexture(credits);
-
-  aar::load::destroyTexture(darkness);
-  aar::load::destroyTexture(darkness_old);
-  aar::load::destroyTexture(spotlight);
-
-  // Destory Samples
-  aar::load::destroySample(click);
-  aar::load::destroySample(intro);
-  aar::load::destroySample(music);
-
-  // Destory Fonts
-  aar::load::destroyFont(menuFont);
-
   // Destory background
   delete tile_map;
 }
 
 void Menu::change_level(int level) {
-  auto screenSize = aar::display::getLogicalSize();
+  auto screenSize = asw::display::getLogicalSize();
 
   levelOn = (levelOn + level) < 0 ? 4 : (levelOn + level) % 5;
 
@@ -127,15 +106,15 @@ void Menu::change_level(int level) {
   scroll_y = random(screenSize.y, tile_map->getHeight() - screenSize.y);
   scroll_dir_y = random(0, 1) ? -3 : 3;
 
-  aar::sound::play(click);
+  asw::sound::play(click);
 
   cam = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
                tile_map->getHeight());
   cam.SetSpeed(5);
 }
 
-void Menu::update(StateEngine& engine) {
-  auto screenSize = aar::display::getLogicalSize();
+void Menu::update() {
+  auto screenSize = asw::display::getLogicalSize();
 
   // Move around live background
   if (scroll_x + screenSize.x / 2 >= tile_map->getWidth() ||
@@ -153,7 +132,7 @@ void Menu::update(StateEngine& engine) {
 
   // State change
   if (next_state != -1)
-    setNextState(engine, next_state);
+    setNextState(next_state);
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++)
@@ -161,11 +140,11 @@ void Menu::update(StateEngine& engine) {
 }
 
 void Menu::draw() {
-  auto screenSize = aar::display::getLogicalSize();
+  auto screenSize = asw::display::getLogicalSize();
 
   // Draw background to screen
-  aar::draw::primRectFill(0, 0, screenSize.x, screenSize.y,
-                          aar::util::makeColor(255, 255, 255, 255));
+  asw::draw::primRectFill(0, 0, screenSize.x, screenSize.y,
+                          asw::util::makeColor(255, 255, 255, 255));
 
   // Draw live background
   tile_map->draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y);
@@ -173,7 +152,7 @@ void Menu::draw() {
   // Lighting
   if (tile_map->hasLighting()) {
     // // set_alpha_blender();
-    // aar::draw::sprite(darkness, darkness_old, 0, 0);
+    // asw::draw::sprite(darkness, darkness_old, 0, 0);
 
     // // Get map area
     // std::vector<Tile*> ranged_map = tile_map->get_tiles_in_range(
@@ -183,7 +162,7 @@ void Menu::draw() {
 
     // for (auto t : ranged_map) {
     //   if (t->containsAttribute(light)) {
-    //     // aar::draw::stretchSprite(
+    //     // asw::draw::stretchSprite(
     //     //     darkness, spotlight,
     //     //     t->getX() - cam.GetX() + t->getWidth() / 2 - t->getWidth() *
     //     3,
@@ -193,31 +172,31 @@ void Menu::draw() {
     //   }
     // }
 
-    aar::draw::sprite(darkness, 0, 0);
+    asw::draw::sprite(darkness, 0, 0);
   }
 
   // Overlay
-  aar::draw::sprite(credits, 0, 0);
-  aar::draw::sprite(menu, 40, 480);
+  asw::draw::sprite(credits, 0, 0);
+  asw::draw::sprite(menu, 40, 480);
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++)
     buttons[i].Draw();
 
   // Level selection
-  aar::draw::sprite(levelSelectNumber, screenSize.x - 160, 80);
-  aar::draw::text(menuFont, std::to_string(levelOn + 1), screenSize.x - 120, 80,
-                  aar::util::makeColor(0, 0, 0));
+  asw::draw::sprite(levelSelectNumber, screenSize.x - 160, 80);
+  asw::draw::text(menuFont, std::to_string(levelOn + 1), screenSize.x - 120, 80,
+                  asw::util::makeColor(0, 0, 0));
 
   // Cursor
-  aar::draw::sprite(cursor, MouseListener::x, MouseListener::y);
+  asw::draw::sprite(cursor, MouseListener::x, MouseListener::y);
 
   // Help menu
   if (buttons[BUTTON_HELP].Hover()) {
-    aar::draw::sprite(help, 0, 0);
+    asw::draw::sprite(help, 0, 0);
   }
 
-  aar::draw::sprite(copyright, screenSize.x - 350, screenSize.y - 40);
+  asw::draw::sprite(copyright, screenSize.x - 350, screenSize.y - 40);
 
-  aar::draw::sprite(cursor, MouseListener::x, MouseListener::y);
+  asw::draw::sprite(cursor, MouseListener::x, MouseListener::y);
 }

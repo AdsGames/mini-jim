@@ -10,7 +10,8 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "./lib/aar/aar.h"
+#include <asw/asw.h>
+#include <memory>
 
 // Class
 class State;
@@ -30,19 +31,19 @@ class StateEngine {
   void draw();
 
   // Set next state
-  void setNextState(const int newState);
+  void setNextState(const int state);
 
   // Get state id
   int getStateId() const;
 
   // Game states
-  enum programStates {
+  enum ProgramState {
     STATE_NULL,
     STATE_INIT,
     STATE_INTRO,
     STATE_MENU,
-    STATE_EDIT,
     STATE_GAME,
+    STATE_EDIT,
     STATE_EXIT,
   };
 
@@ -57,7 +58,7 @@ class StateEngine {
   int currentState = STATE_NULL;
 
   // Stores states
-  State* state;
+  std::unique_ptr<State> state;
 };
 
 /*********
@@ -65,6 +66,11 @@ class StateEngine {
  *********/
 class State {
  public:
+  // Constructor
+  explicit State(StateEngine& engine) : engine(engine){};
+
+  virtual ~State() = default;
+
   // Init the state
   virtual void init() = 0;
 
@@ -75,10 +81,13 @@ class State {
   virtual void cleanup() = 0;
 
   // Update logic
-  virtual void update(StateEngine& engine) = 0;
+  virtual void update() = 0;
 
   // Change state
-  static void setNextState(StateEngine& engine, int state);
+  void setNextState(const int state);
+
+ private:
+  StateEngine& engine;
 };
 
 #endif  // STATE_H

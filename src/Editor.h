@@ -3,7 +3,7 @@
 
 #include "State.h"
 
-#include "./lib/aar/aar.h"
+#include <asw/asw.h>
 
 #include "Camera.h"
 #include "Tile.h"
@@ -13,8 +13,10 @@
 
 class Editor : public State {
  public:
+  explicit Editor(StateEngine& engine) : State(engine) {}
+
   virtual void init() override;
-  virtual void update(StateEngine& engine) override;
+  virtual void update() override;
   virtual void draw() override;
   virtual void cleanup() override;
 
@@ -32,7 +34,7 @@ class Editor : public State {
   TileMap* tile_map;
   Tile* pallette_tile;
 
-  aar::Font* editorFont;
+  asw::Font editorFont;
 
   // Text input
   Button btn_save, btn_open, btn_new, btn_close;

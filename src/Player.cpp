@@ -1,6 +1,6 @@
 #include "Player.h"
 
-#include "utility/KeyListener.h"
+#include <asw/util/KeyListener.h>
 
 #include "TileTypeLoader.h"
 
@@ -47,51 +47,41 @@ Player::Player(int number) {
   }
 }
 
-Player::~Player() {
-  for (int i = 0; i < 14; i++)
-    aar::load::destroyTexture(player_images[i]);
-
-  aar::load::destroySample(walk[0]);
-  aar::load::destroySample(walk[1]);
-  aar::load::destroySample(jump);
-  aar::load::destroySample(die);
-}
-
 // 0-3 left, 4-7 right, 8-11 up
 void Player::load_images(int type) {
   std::string prefix =
       "assets/images/character/character_" + std::to_string(type) + "_";
 
-  player_images[0] = aar::load::bitmap(prefix + "left_1.png");
-  player_images[1] = aar::load::bitmap(prefix + "left_2.png");
-  player_images[2] = aar::load::bitmap(prefix + "left_3.png");
-  player_images[3] = aar::load::bitmap(prefix + "left_4.png");
+  player_images[0] = asw::load::texture(prefix + "left_1.png");
+  player_images[1] = asw::load::texture(prefix + "left_2.png");
+  player_images[2] = asw::load::texture(prefix + "left_3.png");
+  player_images[3] = asw::load::texture(prefix + "left_4.png");
 
-  player_images[4] = aar::load::bitmap(prefix + "right_1.png");
-  player_images[5] = aar::load::bitmap(prefix + "right_2.png");
-  player_images[6] = aar::load::bitmap(prefix + "right_3.png");
-  player_images[7] = aar::load::bitmap(prefix + "right_4.png");
+  player_images[4] = asw::load::texture(prefix + "right_1.png");
+  player_images[5] = asw::load::texture(prefix + "right_2.png");
+  player_images[6] = asw::load::texture(prefix + "right_3.png");
+  player_images[7] = asw::load::texture(prefix + "right_4.png");
 
-  player_images[8] = aar::load::bitmap(prefix + "left_jump.png");
-  player_images[9] = aar::load::bitmap(prefix + "right_jump.png");
+  player_images[8] = asw::load::texture(prefix + "left_jump.png");
+  player_images[9] = asw::load::texture(prefix + "right_jump.png");
 
-  player_images[10] = aar::load::bitmap(prefix + "slide_left.png");
-  player_images[11] = aar::load::bitmap(prefix + "slide_right.png");
+  player_images[10] = asw::load::texture(prefix + "slide_left.png");
+  player_images[11] = asw::load::texture(prefix + "slide_right.png");
 
-  player_images[12] = aar::load::bitmap(prefix + "left_idle.png");
-  player_images[13] = aar::load::bitmap(prefix + "right_idle.png");
+  player_images[12] = asw::load::texture(prefix + "left_idle.png");
+  player_images[13] = asw::load::texture(prefix + "right_idle.png");
 }
 
 // Load sounds
 void Player::load_sounds() {
-  chicken = aar::load::sample("assets/sounds/chicken.wav");
-  walk[0] = aar::load::sample("assets/sounds/walk_1.wav");
-  walk[1] = aar::load::sample("assets/sounds/walk_2.wav");
-  jump = aar::load::sample("assets/sounds/jump.wav");
-  die = aar::load::sample("assets/sounds/die.wav");
-  win = aar::load::sample("assets/sounds/win.wav");
-  trapsnap = aar::load::sample("assets/sounds/trapsnap.wav");
-  checkpoint = aar::load::sample("assets/sounds/checkpoint.wav");
+  chicken = asw::load::sample("assets/sounds/chicken.wav");
+  walk[0] = asw::load::sample("assets/sounds/walk_1.wav");
+  walk[1] = asw::load::sample("assets/sounds/walk_2.wav");
+  jump = asw::load::sample("assets/sounds/jump.wav");
+  die = asw::load::sample("assets/sounds/die.wav");
+  win = asw::load::sample("assets/sounds/win.wav");
+  trapsnap = asw::load::sample("assets/sounds/trapsnap.wav");
+  checkpoint = asw::load::sample("assets/sounds/checkpoint.wav");
 }
 
 // Set keys
@@ -139,7 +129,7 @@ bool Player::getFinished() const {
 
 // Dead?
 void Player::Die() {
-  aar::sound::play(die);
+  asw::sound::play(die);
   player_state = STATE_STANDING;
   deathcount++;
   x = checkpointPosition[0];
@@ -192,9 +182,9 @@ void Player::update(TileMap* fullMap) {
       if (t->containsAttribute(harmful)) {
         if (t->getTypeStr() == "mouse_trap") {
           t->setType("mouse_trap_snapped");
-          aar::sound::play(trapsnap);
+          asw::sound::play(trapsnap);
         } else if (t->getTypeStr() == "beak") {
-          aar::sound::play(chicken);
+          asw::sound::play(chicken);
         }
 
         Die();
@@ -206,13 +196,13 @@ void Player::update(TileMap* fullMap) {
             checkpointPosition[1] != t->getY()) {
           checkpointPosition[0] = t->getX();
           checkpointPosition[1] = t->getY();
-          aar::sound::play(checkpoint);
+          asw::sound::play(checkpoint);
         }
       }
 
       // Finish
       if (t->getTypeStr() == "finish") {
-        aar::sound::play(win);
+        asw::sound::play(win);
         finished = true;
       }
     }
@@ -234,7 +224,7 @@ void Player::update(TileMap* fullMap) {
       // Jump
       if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
-        aar::sound::play(jump);
+        asw::sound::play(jump);
         player_state = STATE_JUMPING;
       } else if (KeyListener::keyDown[leftKey])
         player_state = STATE_WALKING;
@@ -256,14 +246,14 @@ void Player::update(TileMap* fullMap) {
       // Jump
       if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
-        aar::sound::play(jump);
+        asw::sound::play(jump);
         player_state = STATE_JUMPING;
         xVelocity = xVelocity / 2;
       }
 
       // Animate
       if (int(tm_animation.GetElapsedTime<milliseconds>()) % 50 == 0) {
-        aar::sound::play(walk[random(0, 1)]);
+        asw::sound::play(walk[random(0, 1)]);
       }
 
       if (characterDir == RIGHT) {
@@ -314,7 +304,7 @@ void Player::update(TileMap* fullMap) {
       // Jump
       if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
         yVelocity = -24;
-        aar::sound::play(jump);
+        asw::sound::play(jump);
         player_state = STATE_JUMPING;
       }
 
@@ -360,28 +350,28 @@ void Player::draw(int tile_map_x, int tile_map_y) {
 
   if (player_state == STATE_JUMPING) {
     if (characterDir == LEFT)
-      aar::draw::sprite(player_images[8], x - tile_map_x, y - tile_map_y);
+      asw::draw::sprite(player_images[8], x - tile_map_x, y - tile_map_y);
     else
-      aar::draw::sprite(player_images[9], x - tile_map_x, y - tile_map_y);
+      asw::draw::sprite(player_images[9], x - tile_map_x, y - tile_map_y);
   } else if (player_state == STATE_WALKING) {
-    aar::draw::sprite(player_images[characterDir + ani_ticker % 4],
+    asw::draw::sprite(player_images[characterDir + ani_ticker % 4],
                       x - tile_map_x, y - tile_map_y);
   } else if (player_state == STATE_STANDING) {
     if (characterDir == LEFT) {
       if (ani_ticker % 10 < 5)
-        aar::draw::sprite(player_images[0], x - tile_map_x, y - tile_map_y);
+        asw::draw::sprite(player_images[0], x - tile_map_x, y - tile_map_y);
       else
-        aar::draw::sprite(player_images[12], x - tile_map_x, y - tile_map_y);
+        asw::draw::sprite(player_images[12], x - tile_map_x, y - tile_map_y);
     } else {
       if (ani_ticker % 10 < 5)
-        aar::draw::sprite(player_images[4], x - tile_map_x, y - tile_map_y);
+        asw::draw::sprite(player_images[4], x - tile_map_x, y - tile_map_y);
       else
-        aar::draw::sprite(player_images[13], x - tile_map_x, y - tile_map_y);
+        asw::draw::sprite(player_images[13], x - tile_map_x, y - tile_map_y);
     }
   } else if (player_state == STATE_SLIDING) {
     if (characterDir == LEFT)
-      aar::draw::sprite(player_images[10], x - tile_map_x, y - tile_map_y);
+      asw::draw::sprite(player_images[10], x - tile_map_x, y - tile_map_y);
     else
-      aar::draw::sprite(player_images[11], x - tile_map_x, y - tile_map_y);
+      asw::draw::sprite(player_images[11], x - tile_map_x, y - tile_map_y);
   }
 }

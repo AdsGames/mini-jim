@@ -2,14 +2,14 @@
 
 #include <iostream>
 
-#include "../utility/KeyListener.h"
-#include "../utility/MouseListener.h"
+#include <asw/util/KeyListener.h>
+#include <asw/util/MouseListener.h>
 
 InputBox::InputBox(int x,
                    int y,
                    int width,
                    int height,
-                   aar::Font* font,
+                   asw::Font font,
                    const std::string& value,
                    const std::string& type)
     : x(x),
@@ -44,7 +44,7 @@ void InputBox::Update() {
       int closest = width;
 
       for (unsigned int i = 0; i <= text.length(); i++) {
-        int textSize = aar::util::getTextSize(font, text.substr(0, i)).x;
+        int textSize = asw::util::getTextSize(font, text.substr(0, i)).x;
 
         int distance = abs(textSize + x + 6 - (signed)MouseListener::x);
 
@@ -114,26 +114,26 @@ void InputBox::Update() {
 
 // Draw box
 void InputBox::Draw() {
-  aar::draw::primRectFill(x, y, x + width, y + height,
-                          aar::util::makeColor(12, 12, 12));
+  asw::draw::primRectFill(x, y, x + width, y + height,
+                          asw::util::makeColor(12, 12, 12));
 
-  aar::Color col = (Hover() || focused) ? aar::util::makeColor(230, 230, 230)
-                                        : aar::util::makeColor(245, 245, 245);
+  asw::Color col = (Hover() || focused) ? asw::util::makeColor(230, 230, 230)
+                                        : asw::util::makeColor(245, 245, 245);
 
   if (focused)
-    aar::draw::primRectFill(x + 2, y + 2, x + width - 2, y + height - 2, col);
+    asw::draw::primRectFill(x + 2, y + 2, x + width - 2, y + height - 2, col);
   else
-    aar::draw::primRectFill(x + 1, y + 1, x + width - 1, y + height - 1, col);
+    asw::draw::primRectFill(x + 1, y + 1, x + width - 1, y + height - 1, col);
 
   // Output the string to the screen
-  aar::draw::text(font, text.c_str(), x + 6, y,
-                  aar::util::makeColor(22, 22, 22));
+  asw::draw::text(font, text.c_str(), x + 6, y,
+                  asw::util::makeColor(22, 22, 22));
 
   // Draw the caret
   if (focused) {
-    int textSize = aar::util::getTextSize(font, text.substr(0, text_iter)).x;
+    int textSize = asw::util::getTextSize(font, text.substr(0, text_iter)).x;
 
-    aar::draw::primRectFill(textSize + x + 6, y + 8, textSize + x + 7,
-                            y + height - 8, aar::util::makeColor(0, 0, 0));
+    asw::draw::primRectFill(textSize + x + 6, y + 8, textSize + x + 7,
+                            y + height - 8, asw::util::makeColor(0, 0, 0));
   }
 }

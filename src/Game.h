@@ -3,38 +3,40 @@
 
 #include "State.h"
 
-#include "./lib/aar/aar.h"
+#include <asw/asw.h>
+#include <asw/util/Timer.h>
 
 #include "Camera.h"
 #include "Player.h"
 #include "TileMap.h"
-#include "utility/Timer.h"
 
 // Main game screen
 class Game : public State {
  public:
+  explicit Game(StateEngine& engine) : State(engine) {}
+
   virtual void init() override;
-  virtual void update(StateEngine& engine) override;
+  virtual void update() override;
   virtual void draw() override;
   virtual void cleanup() override;
 
   void setup();
 
  private:
-  aar::Sample* countdown;
-  aar::Sample* timeout;
+  asw::Sample countdown;
+  asw::Sample timeout;
 
-  aar::Font* cooper;
+  asw::Font cooper;
 
-  aar::Texture* countdownImage;
-  aar::Texture* results;
-  aar::Texture* results_singleplayer;
+  asw::Texture countdownImage;
+  asw::Texture results;
+  asw::Texture results_singleplayer;
 
-  aar::Sample* mainMusic;
+  asw::Sample mainMusic;
 
   // COLOR_MAP light_table;
   // PALLETE pal;
-  aar::Texture *darkness, *darkness_old, *spotlight;
+  asw::Texture darkness, darkness_old, spotlight;
 
   // Objects
   Player *player1, *player2;

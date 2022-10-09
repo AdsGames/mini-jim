@@ -1,9 +1,10 @@
 #include "Game.h"
 
+#include <asw/util/KeyListener.h>
+#include <asw/util/MouseListener.h>
 #include <string>
 
 #include "globals.h"
-#include "utility/KeyListener.h"
 #include "utility/tools.h"
 
 void Game::init() {
@@ -12,25 +13,25 @@ void Game::init() {
   player2 = new Player(2);
 
   // Sets Font
-  cooper = aar::load::font("assets/fonts/cooper.ttf", 24);
+  cooper = asw::load::font("assets/fonts/cooper.ttf", 24);
 
   // Load images
-  countdownImage = aar::load::bitmap("assets/images/321go.png");
-  darkness = aar::load::bitmap("assets/images/darkness.png");
-  darkness_old = aar::load::bitmap("assets/images/darkness.png");
+  countdownImage = asw::load::texture("assets/images/321go.png");
+  darkness = asw::load::texture("assets/images/darkness.png");
+  darkness_old = asw::load::texture("assets/images/darkness.png");
 
-  spotlight = aar::load::bitmap("assets/images/spotlight.png");
+  spotlight = asw::load::texture("assets/images/spotlight.png");
 
-  results = aar::load::bitmap("assets/images/gui/winscreen.png");
+  results = asw::load::texture("assets/images/gui/winscreen.png");
   results_singleplayer =
-      aar::load::bitmap("assets/images/gui/winscreen_singleplayer.png");
+      asw::load::texture("assets/images/gui/winscreen_singleplayer.png");
 
   // Samples
-  countdown = aar::load::sample("assets/sounds/countdown.wav");
-  timeout = aar::load::sample("assets/sounds/timeout.wav");
+  countdown = asw::load::sample("assets/sounds/countdown.wav");
+  timeout = asw::load::sample("assets/sounds/timeout.wav");
 
   // Load music
-  mainMusic = aar::load::sampleOgg("assets/sounds/music/BasicJimFull.ogg");
+  mainMusic = asw::load::sample("assets/sounds/music/BasicJimFull.ogg");
 
   tile_map = nullptr;
 
@@ -48,10 +49,10 @@ void Game::setup() {
   std::string file_name = "assets/data/level_" + std::to_string(levelOn + 1);
 
   if (!tile_map->load(file_name)) {
-    aar::util::abortOnError("Could not open level" + file_name);
+    asw::util::abortOnError("Could not open level" + file_name);
   }
 
-  auto screenSize = aar::display::getLogicalSize();
+  auto screenSize = asw::display::getLogicalSize();
 
   if (single_player) {
     cam_1 = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
@@ -74,14 +75,14 @@ void Game::setup() {
   }
 
   // Play music
-  aar::sound::play(countdown, 255, 128, 0);
-  aar::sound::play(mainMusic, 255, 128, 1);
+  asw::sound::play(countdown, 255, 128, 0);
+  asw::sound::play(mainMusic, 255, 128, 1);
 
   // Start game
   tm_begin.Start();
 }
 
-void Game::update(StateEngine& engine) {
+void Game::update() {
   // Camera follow
   cam_1.Follow(player1->getX(), player1->getY());
   cam_2.Follow(player2->getX(), player2->getY());
@@ -116,17 +117,17 @@ void Game::update(StateEngine& engine) {
   // Change level when both are done
   if (KeyListener::keyDown[SDL_SCANCODE_RETURN] && player1->getFinished() &&
       (player2->getFinished() || single_player)) {
-    setNextState(engine, StateEngine::STATE_MENU);
+    setNextState(StateEngine::STATE_MENU);
   }
 
   // Back to menu
   if (KeyListener::keyDown[SDL_SCANCODE_M]) {
-    setNextState(engine, StateEngine::STATE_MENU);
+    setNextState(StateEngine::STATE_MENU);
   }
 }
 
 void Game::draw() {
-  auto screenSize = aar::display::getLogicalSize();
+  auto screenSize = asw::display::getLogicalSize();
 
   // Draw tiles and characters
 
@@ -151,7 +152,7 @@ void Game::draw() {
   // Lighting
   // if (tile_map->hasLighting()) {
   //   // set_alpha_blender();
-  //   aar::draw::sprite(darkness, darkness_old, 0, 0);
+  //   asw::draw::sprite(darkness, darkness_old, 0, 0);
 
   //   // Get map area
   //   std::vector<Tile*> ranged_map = tile_map->get_tiles_in_range(
@@ -162,7 +163,7 @@ void Game::draw() {
 
   //   for (auto t : ranged_map) {
   //     if (t->containsAttribute(light)) {
-  //       aar::draw::stretchSprite(
+  //       asw::draw::stretchSprite(
   //           darkness, spotlight,
   //           t->getX() - cam_1.GetX() + t->getWidth() / 2 - t->getWidth() * 3,
   //           t->getY() - cam_1.GetY() + t->getHeight() / 2 - t->getHeight() *
@@ -170,68 +171,68 @@ void Game::draw() {
   //     }
   //   }
 
-  //   aar::draw::sprite(darkness, spotlight,
+  //   asw::draw::sprite(darkness, spotlight,
   //                     player1->getX() - cam_1.GetX() + 32 - (spotlight->w /
   //                     2), player1->getY() - cam_1.GetY() + 32 - (spotlight->h
   //                     / 2));
-  //   aar::draw::sprite(screen1, darkness, 0, 0);
+  //   asw::draw::sprite(screen1, darkness, 0, 0);
   // }
 
   // Frame
-  aar::draw::primRectFill(0, 0, screenSize.x, 16,
-                          aar::util::makeColor(0, 0, 0));
-  aar::draw::primRectFill(0, 0, 16, screenSize.y,
-                          aar::util::makeColor(0, 0, 0));
-  aar::draw::primRectFill(screenSize.x - 16, 0, screenSize.x, screenSize.y,
-                          aar::util::makeColor(0, 0, 0));
-  aar::draw::primRectFill(0, screenSize.y - 16, screenSize.x, screenSize.y,
-                          aar::util::makeColor(0, 0, 0));
+  asw::draw::primRectFill(0, 0, screenSize.x, 16,
+                          asw::util::makeColor(0, 0, 0));
+  asw::draw::primRectFill(0, 0, 16, screenSize.y,
+                          asw::util::makeColor(0, 0, 0));
+  asw::draw::primRectFill(screenSize.x - 16, 0, screenSize.x, screenSize.y,
+                          asw::util::makeColor(0, 0, 0));
+  asw::draw::primRectFill(0, screenSize.y - 16, screenSize.x, screenSize.y,
+                          asw::util::makeColor(0, 0, 0));
 
   // Timers
-  aar::draw::primRectFill(20, 20, 320, 90, aar::util::makeColor(0, 0, 0));
+  asw::draw::primRectFill(20, 20, 320, 90, asw::util::makeColor(0, 0, 0));
 
   if (!single_player) {
-    aar::draw::primRectFill(20, (screenSize.y / 2) + 20, 320,
+    asw::draw::primRectFill(20, (screenSize.y / 2) + 20, 320,
                             (screenSize.y / 2) + 90,
-                            aar::util::makeColor(0, 0, 0));
+                            asw::util::makeColor(0, 0, 0));
   }
 
   // Draw timer to screen
-  aar::draw::text(
+  asw::draw::text(
       cooper,
       "Time: " + std::to_string(tm_p1.GetElapsedTime<milliseconds>() / 1000),
-      40, 55, aar::util::makeColor(255, 255, 255, 255));
-  aar::draw::text(cooper, "Deaths:" + std::to_string(player1->getDeathcount()),
-                  40, 20, aar::util::makeColor(255, 255, 255, 255));
+      40, 55, asw::util::makeColor(255, 255, 255, 255));
+  asw::draw::text(cooper, "Deaths:" + std::to_string(player1->getDeathcount()),
+                  40, 20, asw::util::makeColor(255, 255, 255, 255));
 
   if (!single_player) {
-    aar::draw::text(
+    asw::draw::text(
         cooper,
         "Time: " + std::to_string(tm_p2.GetElapsedTime<milliseconds>() / 1000),
         40, (screenSize.y / 2) + 20 + 35,
-        aar::util::makeColor(255, 255, 255, 255));
-    aar::draw::text(
+        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::text(
         cooper, "Deaths:" + std::to_string(player2->getDeathcount()), 40,
-        (screenSize.y / 2) + 20, aar::util::makeColor(255, 255, 255, 255));
+        (screenSize.y / 2) + 20, asw::util::makeColor(255, 255, 255, 255));
   }
 
   // Starting countdown
   else {
     // Timer 3..2..1..GO!
     if (tm_begin.GetElapsedTime<milliseconds>() < 330) {
-      aar::draw::stretchSpriteBlit(countdownImage, 0, 0, 14, 18,
+      asw::draw::stretchSpriteBlit(countdownImage, 0, 0, 14, 18,
                                    screenSize.x / 2 - 100,
                                    screenSize.y / 2 - 100, 140, 180);
     } else if (tm_begin.GetElapsedTime<milliseconds>() < 660) {
-      aar::draw::stretchSpriteBlit(countdownImage, 19, 0, 14, 18,
+      asw::draw::stretchSpriteBlit(countdownImage, 19, 0, 14, 18,
                                    screenSize.x / 2 - 100,
                                    screenSize.y / 2 - 100, 140, 180);
     } else if (tm_begin.GetElapsedTime<milliseconds>() < 990) {
-      aar::draw::stretchSpriteBlit(countdownImage, 39, 0, 14, 18,
+      asw::draw::stretchSpriteBlit(countdownImage, 39, 0, 14, 18,
                                    screenSize.x / 2 - 100,
                                    screenSize.y / 2 - 100, 140, 180);
     } else if (tm_begin.GetElapsedTime<milliseconds>() < 1200) {
-      aar::draw::stretchSpriteBlit(countdownImage, 57, 0, 40, 18,
+      asw::draw::stretchSpriteBlit(countdownImage, 57, 0, 40, 18,
                                    screenSize.x / 2 - 200,
                                    screenSize.y / 2 - 100, 400, 180);
     }
@@ -243,57 +244,41 @@ void Game::draw() {
     const float p2_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
 
     if (single_player)
-      aar::draw::sprite(results_singleplayer, (screenSize.x / 2) - 364,
+      asw::draw::sprite(results_singleplayer, (screenSize.x / 2) - 364,
                         (screenSize.y / 2) - 200);
     else
-      aar::draw::sprite(results, (screenSize.x / 2) - 364,
+      asw::draw::sprite(results, (screenSize.x / 2) - 364,
                         (screenSize.y / 2) - 200);
 
-    aar::draw::text(cooper, std::to_string(p1_time), (screenSize.x / 2) - 60,
+    asw::draw::text(cooper, std::to_string(p1_time), (screenSize.x / 2) - 60,
                     (screenSize.y / 2) - 110,
-                    aar::util::makeColor(255, 255, 255, 255));
+                    asw::util::makeColor(255, 255, 255, 255));
 
     if (!single_player) {
-      aar::draw::text(cooper, std::to_string(p2_time), (screenSize.x / 2) - 60,
+      asw::draw::text(cooper, std::to_string(p2_time), (screenSize.x / 2) - 60,
                       (screenSize.y / 2) - 55,
-                      aar::util::makeColor(255, 255, 255, 255));
+                      asw::util::makeColor(255, 255, 255, 255));
 
       if (p1_time < p2_time) {
-        aar::draw::text(cooper, "1", (screenSize.x / 2) - 175,
+        asw::draw::text(cooper, "1", (screenSize.x / 2) - 175,
                         (screenSize.y / 2) + 2,
-                        aar::util::makeColor(255, 255, 255, 255));
-        aar::draw::text(cooper, std::to_string(p2_time - p1_time),
+                        asw::util::makeColor(255, 255, 255, 255));
+        asw::draw::text(cooper, std::to_string(p2_time - p1_time),
                         (screenSize.x / 2) - 5, (screenSize.y / 2) + 2,
-                        aar::util::makeColor(255, 255, 255, 255));
+                        asw::util::makeColor(255, 255, 255, 255));
       } else if (p1_time > p2_time) {
-        aar::draw::text(cooper, "2", (screenSize.x / 2) - 175,
+        asw::draw::text(cooper, "2", (screenSize.x / 2) - 175,
                         (screenSize.y / 2) + 2,
-                        aar::util::makeColor(255, 255, 255, 255));
-        aar::draw::text(cooper, std::to_string(p1_time - p2_time),
+                        asw::util::makeColor(255, 255, 255, 255));
+        asw::draw::text(cooper, std::to_string(p1_time - p2_time),
                         (screenSize.x / 2) - 5, (screenSize.y / 2) + 2,
-                        aar::util::makeColor(255, 255, 255, 255));
+                        asw::util::makeColor(255, 255, 255, 255));
       }
     }
   }
 }
 
 void Game::cleanup() {
-  // Destroy images
-  aar::load::destroyTexture(countdownImage);
-  aar::load::destroyTexture(results);
-  aar::load::destroyTexture(results_singleplayer);
-  aar::load::destroyTexture(darkness);
-  aar::load::destroyTexture(darkness_old);
-  aar::load::destroyTexture(spotlight);
-
-  // Destroy fonts
-  aar::load::destroyFont(cooper);
-
-  // Destroy sounds
-  aar::load::destroySample(countdown);
-  aar::load::destroySample(timeout);
-  aar::load::destroySample(mainMusic);
-
   delete player1;
   delete player2;
   delete tile_map;

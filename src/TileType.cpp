@@ -43,7 +43,7 @@ bool TileType::HasAttribute(int attribute) {
          attributes.end();
 }
 
-void TileType::AddImage(aar::Texture* image) {
+void TileType::AddImage(asw::Texture image) {
   if (image) {
     images.push_back(image);
   }
@@ -62,6 +62,6 @@ void TileType::SetDimensions(int x_1, int y_1, int x_2, int y_2) {
 
 void TileType::Draw(int x, int y, int frame) {
   if (images.size() > 0) {
-    aar::draw::sprite(images.at(frame % images.size()), x, y);
+    asw::draw::sprite(images.at(frame % images.size()), x, y);
   }
 }

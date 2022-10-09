@@ -1,6 +1,7 @@
 #include "Button.h"
 
-#include "../utility/MouseListener.h"
+#include <asw/util/MouseListener.h>
+
 #include "../utility/tools.h"
 
 Button::Button() : Button(0, 0) {}
@@ -11,22 +12,17 @@ Button::Button(int x, int y)
   images[1] = nullptr;
 }
 
-Button::~Button() {
-  aar::load::destroyTexture(images[0]);
-  aar::load::destroyTexture(images[1]);
-}
-
 void Button::SetOnClick(std::function<void(void)> func) {
   OnClick = func;
 }
 
 // Load images from file
 void Button::SetImages(const char* image1, const char* image2) {
-  images[0] = aar::load::bitmap(image1);
-  images[1] = aar::load::bitmap(image2);
+  images[0] = asw::load::texture(image1);
+  images[1] = asw::load::texture(image2);
 
   // Size
-  auto size = aar::util::getTextureSize(images[0]);
+  auto size = asw::util::getTextureSize(images[0]);
   height = size.y;
   width = size.x;
 }
@@ -52,9 +48,9 @@ int Button::GetY() const {
 
 void Button::Draw() {
   if (images[Hover()]) {
-    aar::draw::sprite(images[Hover()], x, y);
+    asw::draw::sprite(images[Hover()], x, y);
   } else {
-    aar::draw::primRectFill(x, y, x + width, y + height,
-                            aar::util::makeColor(60, 60, 60));
+    asw::draw::primRectFill(x, y, x + width, y + height,
+                            asw::util::makeColor(60, 60, 60));
   }
 }

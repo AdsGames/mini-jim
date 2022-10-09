@@ -1,10 +1,8 @@
 // Includes
+#include <asw/asw.h>
+#include <asw/util/KeyListener.h>
+#include <asw/util/MouseListener.h>
 #include <chrono>
-#include "./lib/aar/aar.h"
-
-#include "utility/JoystickListener.h"
-#include "utility/KeyListener.h"
-#include "utility/MouseListener.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -34,7 +32,7 @@ int frames_done = 0;
 // Setup game
 void setup() {
   // Load allegro library
-  aar::util::init(1280, 960, "AAR Game Engine");
+  asw::util::init(1280, 960);
 
   game_state = new StateEngine();
 }
@@ -44,16 +42,15 @@ void update() {
   // Update listeners
   KeyListener::update();
   MouseListener::update();
-  JoystickListener::update();
 
-  aar::core::update();
+  asw::core::update();
 
   // Do state logic
   game_state->update();
 
   // Handle exit
   if (game_state->getStateId() == StateEngine::STATE_EXIT) {
-    aar::core::exit = true;
+    asw::core::exit = true;
   }
 }
 
@@ -86,7 +83,7 @@ int main(int argc, char* argv[]) {
   nanoseconds lag(0ns);
   auto time_start = clock::now();
 
-  while (!KeyListener::keyDown[SDL_SCANCODE_ESCAPE] && !aar::core::exit) {
+  while (!KeyListener::keyDown[SDL_SCANCODE_ESCAPE] && !asw::core::exit) {
     auto delta_time = clock::now() - time_start;
     time_start = clock::now();
     lag += duration_cast<nanoseconds>(delta_time);

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "./lib/aar/aar.h"
+#include <asw/asw.h>
 
 class TileType {
  public:
@@ -24,7 +24,7 @@ class TileType {
 
   bool HasAttribute(int attribute);
 
-  void AddImage(aar::Texture* image);
+  void AddImage(asw::Texture image);
   void AddAttribute(int attribute);
   void SetDimensions(int x_1, int y_1, int x_2, int y_2);
 
@@ -35,7 +35,7 @@ class TileType {
   int x_1, x_2, y_1, y_2;
 
   std::vector<int> attributes;
-  std::vector<aar::Texture*> images;
+  std::vector<asw::Texture> images;
 };
 
 #endif  // TILETYPE_H

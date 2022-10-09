@@ -1,18 +1,17 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "./lib/aar/aar.h"
+#include <asw/asw.h>
+#include <asw/util/Timer.h>
 
 #include "globals.h"
 #include "utility/tools.h"
 
 #include "TileMap.h"
-#include "utility/Timer.h"
 
 class Player {
  public:
   explicit Player(int number);
-  ~Player();
 
   void load_images(int type);
   void load_sounds();
@@ -66,16 +65,16 @@ class Player {
 
   // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27 28-29
   // is idle
-  aar::Texture* player_images[14];
+  asw::Texture player_images[14];
 
   // Sounds
-  aar::Sample* walk[2];
-  aar::Sample* jump;
-  aar::Sample* die;
-  aar::Sample* win;
-  aar::Sample* trapsnap;
-  aar::Sample* chicken;
-  aar::Sample* checkpoint;
+  asw::Sample walk[2];
+  asw::Sample jump;
+  asw::Sample die;
+  asw::Sample win;
+  asw::Sample trapsnap;
+  asw::Sample chicken;
+  asw::Sample checkpoint;
 };
 
 #endif

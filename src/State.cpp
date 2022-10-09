@@ -14,25 +14,27 @@
 
 // Init
 StateEngine::StateEngine()
-    : nextState(STATE_NULL), currentState(STATE_NULL), state(nullptr) {}
+    : nextState(StateEngine::STATE_NULL),
+      currentState(StateEngine::STATE_NULL),
+      state(nullptr) {}
 
 // Draw
 void StateEngine::draw() {
   if (state) {
     // Clear screen
-    SDL_RenderClear(aar::display::renderer);
+    SDL_RenderClear(asw::display::renderer);
 
     state->draw();
 
     // Update screen
-    SDL_RenderPresent(aar::display::renderer);
+    SDL_RenderPresent(asw::display::renderer);
   }
 }
 
 // Update
 void StateEngine::update() {
   if (state) {
-    state->update(*this);
+    state->update();
   }
 
   changeState();
@@ -58,34 +60,33 @@ void StateEngine::changeState() {
   // Delete the current state
   if (state) {
     state->cleanup();
-    delete state;
     state = nullptr;
   }
 
   // Change the state
   switch (nextState) {
     case STATE_GAME:
-      state = new Game();
+      state = std::make_unique<Game>(*this);
       std::cout << ("Switched state to game.\n");
       break;
 
     case STATE_MENU:
-      state = new Menu();
+      state = std::make_unique<Menu>(*this);
       std::cout << ("Switched state to main menu.\n");
       break;
 
     case STATE_INIT:
-      state = new Init();
+      state = std::make_unique<Init>(*this);
       std::cout << ("Switched state to init.\n");
       break;
 
     case STATE_INTRO:
-      state = new Intro();
+      state = std::make_unique<Intro>(*this);
       std::cout << ("Switched state to intro.\n");
       break;
 
     case STATE_EDIT:
-      state = new Editor();
+      state = std::make_unique<Editor>(*this);
       std::cout << ("Switched state to edit.\n");
       break;
 
@@ -108,6 +109,6 @@ void StateEngine::changeState() {
  *********/
 
 // Change state
-void State::setNextState(StateEngine& engine, int state) {
-  engine.setNextState(state);
+void State::setNextState(const int state) {
+  this->engine.setNextState(state);
 }

@@ -1,6 +1,6 @@
 #include "TileTypeLoader.h"
 
-#include "./lib/aar/aar.h"
+#include <asw/asw.h>
 
 #include <algorithm>
 #include <fstream>
@@ -68,12 +68,12 @@ void TileTypeLoader::LoadTypes(const std::string& path) {
           cTile->first_node("images")->first_node("image");
 
       for (; img != nullptr; img = img->next_sibling()) {
-        aar::Texture* image = aar::load::bitmap(
+        asw::Texture image = asw::load::texture(
             "assets/images/blocks/" +
             std::string(img->first_attribute("src")->value()));
         tile->AddImage(image);
 
-        auto size = aar::util::getTextureSize(image);
+        auto size = asw::util::getTextureSize(image);
         tile->SetDimensions(0, 0, size.x, size.y);
       }
     }

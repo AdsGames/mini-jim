@@ -1,11 +1,11 @@
 #include "Editor.h"
 
+#include <asw/util/KeyListener.h>
+#include <asw/util/MouseListener.h>
 #include <string>
-#include "TileTypeLoader.h"
 
+#include "TileTypeLoader.h"
 #include "globals.h"
-#include "utility/KeyListener.h"
-#include "utility/MouseListener.h"
 #include "utility/tools.h"
 
 void Editor::init() {
@@ -15,7 +15,7 @@ void Editor::init() {
   // Create example tile
   pallette_tile = new Tile(0, 0, 0);
 
-  editorFont = aar::load::font("assets/fonts/ariblk.ttf", 24);
+  editorFont = asw::load::font("assets/fonts/ariblk.ttf", 24);
 
   ib_save = InputBox(400, 408, 480, 50, editorFont, "untitled");
   ib_open = InputBox(400, 408, 480, 50, editorFont, "level_1");
@@ -51,8 +51,6 @@ void Editor::init() {
 void Editor::cleanup() {
   delete tile_map;
   delete pallette_tile;
-
-  aar::load::destroyFont(editorFont);
 }
 
 void Editor::Close() {
@@ -67,7 +65,7 @@ void Editor::Save() {
 void Editor::Open() {
   tile_map->load("assets/data/" + ib_open.GetValue());
   editor_state = EDIT;
-  auto size = aar::display::getLogicalSize();
+  auto size = asw::display::getLogicalSize();
   cam = Camera(size.x, size.y, tile_map->getWidth(), tile_map->getHeight());
   cam.SetSpeed(1);
   cam.SetBounds(20, 20);
@@ -77,7 +75,7 @@ void Editor::New() {
   if (ib_width.GetValue().length() != 0 && ib_width.GetValue().length() != 0) {
     editor_state = EDIT;
     tile_map->create(stoi(ib_width.GetValue()), stoi(ib_height.GetValue()));
-    auto size = aar::display::getLogicalSize();
+    auto size = asw::display::getLogicalSize();
 
     cam = Camera(size.x, size.y, tile_map->getWidth(), tile_map->getHeight());
     cam.SetSpeed(1);
@@ -128,7 +126,7 @@ void Editor::Edit() {
       temp_tile->setType(pallette_tile->getType());
 
     // Erase tile
-    if (MouseListener::mouse_button & 3)
+    if (MouseListener::mouse_button & 4)
       temp_tile->setType(0);
 
     // Get tile type tile
@@ -167,10 +165,10 @@ void Editor::Edit() {
   }
 }
 
-void Editor::update(StateEngine& engine) {
+void Editor::update() {
   // Back to menu
   if (KeyListener::keyPressed[SDL_SCANCODE_M] && editor_state == EDIT) {
-    setNextState(engine, StateEngine::STATE_MENU);
+    setNextState(StateEngine::STATE_MENU);
   }
 
   // Run states
@@ -193,64 +191,64 @@ void Editor::update(StateEngine& engine) {
 }
 
 void Editor::draw() {
-  auto screenSize = aar::display::getLogicalSize();
+  auto screenSize = asw::display::getLogicalSize();
 
   // Background
-  aar::draw::clearColor(aar::util::makeColor(0, 0, 0));
+  asw::draw::clearColor(asw::util::makeColor(0, 0, 0));
 
   // Draw tiles
   tile_map->draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y, 0, 0,
                  draw_layer);
 
   pallette_tile->draw(0, 0, 0);
-  aar::draw::text(editorFont, pallette_tile->getName(), 70, 20,
-                  aar::util::makeColor(255, 255, 255));
+  asw::draw::text(editorFont, pallette_tile->getName(), 70, 20,
+                  asw::util::makeColor(255, 255, 255));
 
   // Map info
-  aar::draw::text(editorFont,
+  asw::draw::text(editorFont,
                   "height-" + std::to_string(tile_map->getHeight()) +
                       " width-" + std::to_string(tile_map->getWidth()) +
                       " lighting-" + std::to_string(tile_map->hasLighting()),
-                  0, 80, aar::util::makeColor(255, 255, 255));
+                  0, 80, asw::util::makeColor(255, 255, 255));
 
   if (layer == 1)
-    aar::draw::text(editorFont, "Editing Mode: Foreground ", 0, 130,
-                    aar::util::makeColor(255, 255, 255));
+    asw::draw::text(editorFont, "Editing Mode: Foreground ", 0, 130,
+                    asw::util::makeColor(255, 255, 255));
   else
-    aar::draw::text(editorFont, "Editing Mode: Background ", 0, 130,
-                    aar::util::makeColor(255, 255, 255));
+    asw::draw::text(editorFont, "Editing Mode: Background ", 0, 130,
+                    asw::util::makeColor(255, 255, 255));
 
   if (editor_state == SAVE) {
-    aar::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
-                            aar::util::makeColor(255, 255, 255, 255));
-    aar::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                        aar::util::makeColor(0, 0, 0));
-    aar::draw::textCenter(editorFont, "Save Map Name", 640, 310,
-                          aar::util::makeColor(0, 0, 0));
+    asw::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+                            asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                        asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(editorFont, "Save Map Name", 640, 310,
+                          asw::util::makeColor(0, 0, 0));
     ib_save.Draw();
     btn_save.Draw();
     btn_close.Draw();
   } else if (editor_state == OPEN) {
-    aar::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
-                            aar::util::makeColor(255, 255, 255, 255));
-    aar::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                        aar::util::makeColor(0, 0, 0));
-    aar::draw::textCenter(editorFont, "Open Map Name", 640, 310,
-                          aar::util::makeColor(0, 0, 0));
+    asw::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+                            asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                        asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(editorFont, "Open Map Name", 640, 310,
+                          asw::util::makeColor(0, 0, 0));
     ib_open.Draw();
     btn_open.Draw();
     btn_close.Draw();
   } else if (editor_state == CREATE) {
-    aar::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
-                            aar::util::makeColor(255, 255, 255, 255));
-    aar::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                        aar::util::makeColor(0, 0, 0));
-    aar::draw::textCenter(editorFont, "New Map", 640, 310,
-                          aar::util::makeColor(0, 0, 0));
-    aar::draw::textCenter(editorFont, "Width", 500, 360,
-                          aar::util::makeColor(0, 0, 0));
-    aar::draw::textCenter(editorFont, "Height", 800, 360,
-                          aar::util::makeColor(0, 0, 0));
+    asw::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+                            asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                        asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(editorFont, "New Map", 640, 310,
+                          asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(editorFont, "Width", 500, 360,
+                          asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(editorFont, "Height", 800, 360,
+                          asw::util::makeColor(0, 0, 0));
     ib_width.Draw();
     ib_height.Draw();
     btn_new.Draw();

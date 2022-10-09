@@ -1,8 +1,8 @@
 #ifndef INPUTBOX_H
 #define INPUTBOX_H
 
+#include <asw/asw.h>
 #include <string>
-#include "../lib/aar/aar.h"
 
 class InputBox {
  public:
@@ -10,7 +10,7 @@ class InputBox {
                     int y = 0,
                     int width = 100,
                     int height = 20,
-                    aar::Font* font = nullptr,
+                    asw::Font font = nullptr,
                     const std::string& value = "",
                     const std::string& type = "text");
 
@@ -25,7 +25,7 @@ class InputBox {
   int x, y;
   int width, height;
 
-  aar::Font* font;
+  asw::Font font;
 
   std::string text;
   std::string type;
