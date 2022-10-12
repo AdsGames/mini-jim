@@ -16,6 +16,9 @@ class Tile {
   int getX() const;
   int getY() const;
 
+  int getCenterX() const;
+  int getCenterY() const;
+
   int getWidth() const;
   int getHeight() const;
 

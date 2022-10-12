@@ -17,10 +17,6 @@ void Game::init() {
 
   // Load images
   countdownImage = asw::load::texture("assets/images/321go.png");
-  darkness = asw::load::texture("assets/images/darkness.png");
-  darkness_old = asw::load::texture("assets/images/darkness.png");
-
-  spotlight = asw::load::texture("assets/images/spotlight.png");
 
   results = asw::load::texture("assets/images/gui/winscreen.png");
   results_singleplayer =
@@ -66,6 +62,9 @@ void Game::setup() {
                    tile_map->getHeight());
   }
 
+  cam_1.SetSpeed(8.0f);
+  cam_2.SetSpeed(8.0f);
+
   // Find spawn
   Tile* spawnTile = tile_map->find_tile_type(199, 1);
 
@@ -89,8 +88,6 @@ void Game::update() {
 
   // Starting countdown
   if (!tm_begin.IsRunning()) {
-    // poll_joystick();
-
     // Stop from moving once done
     if (!player1->getFinished()) {
       player1->update(tile_map);
@@ -150,33 +147,26 @@ void Game::draw() {
   }
 
   // Lighting
-  // if (tile_map->hasLighting()) {
-  //   // set_alpha_blender();
-  //   asw::draw::sprite(darkness, darkness_old, 0, 0);
+  if (tile_map->hasLighting()) {
+    std::vector<SDL_Point> lightPointsP1;
 
-  //   // Get map area
-  //   std::vector<Tile*> ranged_map = tile_map->get_tiles_in_range(
-  //       cam_1.GetX() - spotlight->w,
-  //       cam_1.GetX() + cam_1.GetWidth() + spotlight->w,
-  //       cam_1.GetY() - spotlight->h,
-  //       cam_1.GetY() + cam_1.GetHeight() + spotlight->w);
+    // Get map area
+    std::vector<Tile*> rangeP1 = tile_map->get_tiles_in_range(
+        cam_1.GetX(), cam_1.GetX() + cam_1.GetWidth(), cam_1.GetY(),
+        cam_1.GetY() + cam_1.GetHeight());
 
-  //   for (auto t : ranged_map) {
-  //     if (t->containsAttribute(light)) {
-  //       asw::draw::stretchSprite(
-  //           darkness, spotlight,
-  //           t->getX() - cam_1.GetX() + t->getWidth() / 2 - t->getWidth() * 3,
-  //           t->getY() - cam_1.GetY() + t->getHeight() / 2 - t->getHeight() *
-  //           3, t->getWidth() * 6, t->getHeight() * 6);
-  //     }
-  //   }
+    for (auto t : rangeP1) {
+      if (t->containsAttribute(light)) {
+        lightPointsP1.push_back(
+            {t->getCenterX() - cam_1.GetX(), t->getCenterY() - cam_1.GetY()});
+      }
+    }
 
-  //   asw::draw::sprite(darkness, spotlight,
-  //                     player1->getX() - cam_1.GetX() + 32 - (spotlight->w /
-  //                     2), player1->getY() - cam_1.GetY() + 32 - (spotlight->h
-  //                     / 2));
-  //   asw::draw::sprite(screen1, darkness, 0, 0);
-  // }
+    lightPointsP1.push_back({player1->getX() - cam_1.GetX() + 32,
+                             player1->getY() - cam_1.GetY() + 32});
+
+    lightLayer.draw(lightPointsP1);
+  }
 
   // Frame
   asw::draw::primRectFill(0, 0, screenSize.x, 16,
@@ -241,14 +231,15 @@ void Game::draw() {
   // Change level when both are done
   if (player1->getFinished() && (player2->getFinished() || single_player)) {
     const float p1_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
-    const float p2_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
+    const float p2_time = tm_p2.GetElapsedTime<milliseconds>() / 1000;
 
-    if (single_player)
+    if (single_player) {
       asw::draw::sprite(results_singleplayer, (screenSize.x / 2) - 364,
                         (screenSize.y / 2) - 200);
-    else
+    } else {
       asw::draw::sprite(results, (screenSize.x / 2) - 364,
                         (screenSize.y / 2) - 200);
+    }
 
     asw::draw::text(cooper, std::to_string(p1_time), (screenSize.x / 2) - 60,
                     (screenSize.y / 2) - 110,

@@ -7,13 +7,12 @@
 #include <string>
 #include <vector>
 
-#include "TileMap.h"
-
-#include "globals.h"
-#include "utility/tools.h"
-
 #include "Camera.h"
+#include "LightLayer.h"
+#include "TileMap.h"
+#include "globals.h"
 #include "ui/Button.h"
+#include "utility/tools.h"
 
 class Menu : public State {
  public:
@@ -43,7 +42,7 @@ class Menu : public State {
   int next_state;
 
   // Lighting effects
-  asw::Texture darkness, darkness_old, spotlight;
+  LightLayer lightLayer;
 
   asw::Font menuFont;
 

@@ -31,14 +31,6 @@ void Menu::init() {
   change_level(0);
   next_state = -1;
 
-  // Lighting
-  // Build a color lookup table for lighting effects
-  // get_palette(pal);
-  // create_light_table(&light_table, pal, 0, 0, 0, nullptr);
-  darkness = asw::load::texture("assets/images/darkness.png");
-  darkness_old = asw::load::texture("assets/images/darkness.png");
-  spotlight = asw::load::texture("assets/images/spotlight.png");
-
   // Buttons
   buttons[BUTTON_START] = Button(60, 630);
   buttons[BUTTON_START_MP] = Button(60, 690);
@@ -151,28 +143,24 @@ void Menu::draw() {
 
   // Lighting
   if (tile_map->hasLighting()) {
-    // // set_alpha_blender();
-    // asw::draw::sprite(darkness, darkness_old, 0, 0);
+    std::vector<SDL_Point> lightPoints;
 
-    // // Get map area
-    // std::vector<Tile*> ranged_map = tile_map->get_tiles_in_range(
-    //     cam.GetX() - spotlight->w, cam.GetX() + cam.GetWidth() +
-    //     spotlight->w, cam.GetY() - spotlight->h, cam.GetY() + cam.GetHeight()
-    //     + spotlight->w);
+    // Get map area
+    std::vector<Tile*> mapRange =
+        tile_map->get_tiles_in_range(cam.GetX(), cam.GetX() + cam.GetWidth(),
+                                     cam.GetY(), cam.GetY() + cam.GetHeight());
 
-    // for (auto t : ranged_map) {
-    //   if (t->containsAttribute(light)) {
-    //     // asw::draw::stretchSprite(
-    //     //     darkness, spotlight,
-    //     //     t->getX() - cam.GetX() + t->getWidth() / 2 - t->getWidth() *
-    //     3,
-    //     //     t->getY() - cam.GetY() + t->getHeight() / 2 - t->getHeight() *
-    //     3,
-    //     //     t->getWidth() * 6, t->getHeight() * 6);
-    //   }
-    // }
+    for (auto t : mapRange) {
+      if (t->containsAttribute(light)) {
+        lightPoints.push_back(
+            {t->getCenterX() - cam.GetX(), t->getCenterY() - cam.GetY()});
+      }
+    }
 
-    asw::draw::sprite(darkness, 0, 0);
+    lightPoints.push_back({static_cast<int>(MouseListener::x),
+                           static_cast<int>(MouseListener::y)});
+
+    lightLayer.draw(lightPoints);
   }
 
   // Overlay

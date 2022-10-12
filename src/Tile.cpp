@@ -28,6 +28,20 @@ int Tile::getY() const {
   return y;
 }
 
+int Tile::getCenterX() const {
+  if (t_type)
+    return x + t_type->GetBBX() + t_type->GetWidth() / 2;
+
+  return x;
+}
+
+int Tile::getCenterY() const {
+  if (t_type)
+    return y + t_type->GetBBY() + t_type->GetHeight() / 2;
+
+  return y;
+}
+
 int Tile::getWidth() const {
   if (t_type)
     return t_type->GetWidth();

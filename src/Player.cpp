@@ -196,7 +196,7 @@ void Player::update(TileMap* fullMap) {
             checkpointPosition[1] != t->getY()) {
           checkpointPosition[0] = t->getX();
           checkpointPosition[1] = t->getY();
-          asw::sound::play(checkpoint);
+          asw::sound::play(checkpoint, 50);
         }
       }
 

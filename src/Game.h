@@ -7,6 +7,7 @@
 #include <asw/util/Timer.h>
 
 #include "Camera.h"
+#include "LightLayer.h"
 #include "Player.h"
 #include "TileMap.h"
 
@@ -34,9 +35,7 @@ class Game : public State {
 
   asw::Sample mainMusic;
 
-  // COLOR_MAP light_table;
-  // PALLETE pal;
-  asw::Texture darkness, darkness_old, spotlight;
+  LightLayer lightLayer;
 
   // Objects
   Player *player1, *player2;
