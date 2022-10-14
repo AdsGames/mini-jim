@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include <asw/util/KeyListener.h>
-#include <asw/util/MouseListener.h>
 #include <string>
 
 #include "globals.h"
@@ -13,21 +11,21 @@ void Game::init() {
   player2 = new Player(2);
 
   // Sets Font
-  cooper = asw::load::font("assets/fonts/cooper.ttf", 24);
+  cooper = asw::assets::loadFont("assets/fonts/cooper.ttf", 24);
 
   // Load images
-  countdownImage = asw::load::texture("assets/images/321go.png");
+  countdownImage = asw::assets::loadTexture("assets/images/321go.png");
 
-  results = asw::load::texture("assets/images/gui/winscreen.png");
+  results = asw::assets::loadTexture("assets/images/gui/winscreen.png");
   results_singleplayer =
-      asw::load::texture("assets/images/gui/winscreen_singleplayer.png");
+      asw::assets::loadTexture("assets/images/gui/winscreen_singleplayer.png");
 
   // Samples
-  countdown = asw::load::sample("assets/sounds/countdown.wav");
-  timeout = asw::load::sample("assets/sounds/timeout.wav");
+  countdown = asw::assets::loadSample("assets/sounds/countdown.wav");
+  timeout = asw::assets::loadSample("assets/sounds/timeout.wav");
 
   // Load music
-  mainMusic = asw::load::sample("assets/sounds/music/BasicJimFull.ogg");
+  mainMusic = asw::assets::loadSample("assets/sounds/music/BasicJimFull.ogg");
 
   tile_map = nullptr;
 
@@ -112,13 +110,13 @@ void Game::update() {
     tm_p2.Stop();
 
   // Change level when both are done
-  if (KeyListener::keyDown[SDL_SCANCODE_RETURN] && player1->getFinished() &&
-      (player2->getFinished() || single_player)) {
+  if (asw::input::keyboard.down[SDL_SCANCODE_RETURN] &&
+      player1->getFinished() && (player2->getFinished() || single_player)) {
     setNextState(StateEngine::STATE_MENU);
   }
 
   // Back to menu
-  if (KeyListener::keyDown[SDL_SCANCODE_M]) {
+  if (asw::input::keyboard.down[SDL_SCANCODE_M]) {
     setNextState(StateEngine::STATE_MENU);
   }
 }
@@ -169,22 +167,19 @@ void Game::draw() {
   }
 
   // Frame
-  asw::draw::primRectFill(0, 0, screenSize.x, 16,
-                          asw::util::makeColor(0, 0, 0));
-  asw::draw::primRectFill(0, 0, 16, screenSize.y,
-                          asw::util::makeColor(0, 0, 0));
-  asw::draw::primRectFill(screenSize.x - 16, 0, screenSize.x, screenSize.y,
-                          asw::util::makeColor(0, 0, 0));
-  asw::draw::primRectFill(0, screenSize.y - 16, screenSize.x, screenSize.y,
-                          asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(0, 0, screenSize.x, 16, asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(0, 0, 16, screenSize.y, asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(screenSize.x - 16, 0, screenSize.x, screenSize.y,
+                      asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(0, screenSize.y - 16, screenSize.x, screenSize.y,
+                      asw::util::makeColor(0, 0, 0));
 
   // Timers
-  asw::draw::primRectFill(20, 20, 320, 90, asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(20, 20, 320, 90, asw::util::makeColor(0, 0, 0));
 
   if (!single_player) {
-    asw::draw::primRectFill(20, (screenSize.y / 2) + 20, 320,
-                            (screenSize.y / 2) + 90,
-                            asw::util::makeColor(0, 0, 0));
+    asw::draw::rectFill(20, (screenSize.y / 2) + 20, 320,
+                        (screenSize.y / 2) + 90, asw::util::makeColor(0, 0, 0));
   }
 
   // Draw timer to screen

@@ -1,7 +1,5 @@
 #include "Button.h"
 
-#include <asw/util/MouseListener.h>
-
 #include "../utility/tools.h"
 
 Button::Button() : Button(0, 0) {}
@@ -18,8 +16,8 @@ void Button::SetOnClick(std::function<void(void)> func) {
 
 // Load images from file
 void Button::SetImages(const char* image1, const char* image2) {
-  images[0] = asw::load::texture(image1);
-  images[1] = asw::load::texture(image2);
+  images[0] = asw::assets::loadTexture(image1);
+  images[1] = asw::assets::loadTexture(image2);
 
   // Size
   auto size = asw::util::getTextureSize(images[0]);
@@ -28,12 +26,12 @@ void Button::SetImages(const char* image1, const char* image2) {
 }
 
 bool Button::Hover() const {
-  return collisionAny(MouseListener::x, MouseListener::x, x, x + width,
-                      MouseListener::y, MouseListener::y, y, y + height);
+  return collisionAny(asw::input::mouse.x, asw::input::mouse.x, x, x + width,
+                      asw::input::mouse.y, asw::input::mouse.y, y, y + height);
 }
 
 void Button::Update() {
-  if (Hover() && MouseListener::mouse_pressed & 1 && OnClick != nullptr) {
+  if (Hover() && asw::input::mouse.pressed[1] && OnClick != nullptr) {
     OnClick();
   }
 }
@@ -50,7 +48,7 @@ void Button::Draw() {
   if (images[Hover()]) {
     asw::draw::sprite(images[Hover()], x, y);
   } else {
-    asw::draw::primRectFill(x, y, x + width, y + height,
-                            asw::util::makeColor(60, 60, 60));
+    asw::draw::rectFill(x, y, x + width, y + height,
+                        asw::util::makeColor(60, 60, 60));
   }
 }

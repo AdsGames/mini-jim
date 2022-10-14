@@ -1,29 +1,26 @@
 #include "Menu.h"
 
-#include <asw/util/KeyListener.h>
-#include <asw/util/MouseListener.h>
-
 // Create menu
 void Menu::init() {
   auto screenSize = asw::display::getLogicalSize();
 
   // Load images
-  menu = asw::load::texture("assets/images/gui/menu.png");
-  menuselect = asw::load::texture("assets/images/gui/menuSelector.png");
-  help = asw::load::texture("assets/images/gui/help.png");
-  cursor = asw::load::texture("assets/images/gui/cursor1.png");
+  menu = asw::assets::loadTexture("assets/images/gui/menu.png");
+  menuselect = asw::assets::loadTexture("assets/images/gui/menuSelector.png");
+  help = asw::assets::loadTexture("assets/images/gui/help.png");
+  cursor = asw::assets::loadTexture("assets/images/gui/cursor1.png");
   levelSelectNumber =
-      asw::load::texture("assets/images/gui/levelSelectNumber.png");
-  copyright = asw::load::texture("assets/images/gui/copyright.png");
-  credits = asw::load::texture("assets/images/gui/credits.png");
+      asw::assets::loadTexture("assets/images/gui/levelSelectNumber.png");
+  copyright = asw::assets::loadTexture("assets/images/gui/copyright.png");
+  credits = asw::assets::loadTexture("assets/images/gui/credits.png");
 
   // Load sound
-  click = asw::load::sample("assets/sounds/click.wav");
-  intro = asw::load::sample("assets/sounds/intro.wav");
-  music = asw::load::sample("assets/sounds/music/MiniJim.ogg");
+  click = asw::assets::loadSample("assets/sounds/click.wav");
+  intro = asw::assets::loadSample("assets/sounds/intro.wav");
+  music = asw::assets::loadSample("assets/sounds/music/MiniJim.ogg");
 
   // Sets Font
-  menuFont = asw::load::font("assets/fonts/ariblk.ttf", 24);
+  menuFont = asw::assets::loadFont("assets/fonts/ariblk.ttf", 24);
 
   // Create map for live background
   levelOn = 0;
@@ -135,8 +132,8 @@ void Menu::draw() {
   auto screenSize = asw::display::getLogicalSize();
 
   // Draw background to screen
-  asw::draw::primRectFill(0, 0, screenSize.x, screenSize.y,
-                          asw::util::makeColor(255, 255, 255, 255));
+  asw::draw::rectFill(0, 0, screenSize.x, screenSize.y,
+                      asw::util::makeColor(255, 255, 255, 255));
 
   // Draw live background
   tile_map->draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y);
@@ -157,8 +154,8 @@ void Menu::draw() {
       }
     }
 
-    lightPoints.push_back({static_cast<int>(MouseListener::x),
-                           static_cast<int>(MouseListener::y)});
+    lightPoints.push_back({static_cast<int>(asw::input::mouse.x),
+                           static_cast<int>(asw::input::mouse.y)});
 
     lightLayer.draw(lightPoints);
   }
@@ -177,7 +174,7 @@ void Menu::draw() {
                   asw::util::makeColor(0, 0, 0));
 
   // Cursor
-  asw::draw::sprite(cursor, MouseListener::x, MouseListener::y);
+  asw::draw::sprite(cursor, asw::input::mouse.x, asw::input::mouse.y);
 
   // Help menu
   if (buttons[BUTTON_HELP].Hover()) {
@@ -186,5 +183,5 @@ void Menu::draw() {
 
   asw::draw::sprite(copyright, screenSize.x - 350, screenSize.y - 40);
 
-  asw::draw::sprite(cursor, MouseListener::x, MouseListener::y);
+  asw::draw::sprite(cursor, asw::input::mouse.x, asw::input::mouse.y);
 }

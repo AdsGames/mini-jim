@@ -1,7 +1,5 @@
 #include "Player.h"
 
-#include <asw/util/KeyListener.h>
-
 #include "TileTypeLoader.h"
 
 #define LEFT 0
@@ -52,36 +50,36 @@ void Player::load_images(int type) {
   std::string prefix =
       "assets/images/character/character_" + std::to_string(type) + "_";
 
-  player_images[0] = asw::load::texture(prefix + "left_1.png");
-  player_images[1] = asw::load::texture(prefix + "left_2.png");
-  player_images[2] = asw::load::texture(prefix + "left_3.png");
-  player_images[3] = asw::load::texture(prefix + "left_4.png");
+  player_images[0] = asw::assets::loadTexture(prefix + "left_1.png");
+  player_images[1] = asw::assets::loadTexture(prefix + "left_2.png");
+  player_images[2] = asw::assets::loadTexture(prefix + "left_3.png");
+  player_images[3] = asw::assets::loadTexture(prefix + "left_4.png");
 
-  player_images[4] = asw::load::texture(prefix + "right_1.png");
-  player_images[5] = asw::load::texture(prefix + "right_2.png");
-  player_images[6] = asw::load::texture(prefix + "right_3.png");
-  player_images[7] = asw::load::texture(prefix + "right_4.png");
+  player_images[4] = asw::assets::loadTexture(prefix + "right_1.png");
+  player_images[5] = asw::assets::loadTexture(prefix + "right_2.png");
+  player_images[6] = asw::assets::loadTexture(prefix + "right_3.png");
+  player_images[7] = asw::assets::loadTexture(prefix + "right_4.png");
 
-  player_images[8] = asw::load::texture(prefix + "left_jump.png");
-  player_images[9] = asw::load::texture(prefix + "right_jump.png");
+  player_images[8] = asw::assets::loadTexture(prefix + "left_jump.png");
+  player_images[9] = asw::assets::loadTexture(prefix + "right_jump.png");
 
-  player_images[10] = asw::load::texture(prefix + "slide_left.png");
-  player_images[11] = asw::load::texture(prefix + "slide_right.png");
+  player_images[10] = asw::assets::loadTexture(prefix + "slide_left.png");
+  player_images[11] = asw::assets::loadTexture(prefix + "slide_right.png");
 
-  player_images[12] = asw::load::texture(prefix + "left_idle.png");
-  player_images[13] = asw::load::texture(prefix + "right_idle.png");
+  player_images[12] = asw::assets::loadTexture(prefix + "left_idle.png");
+  player_images[13] = asw::assets::loadTexture(prefix + "right_idle.png");
 }
 
 // Load sounds
 void Player::load_sounds() {
-  chicken = asw::load::sample("assets/sounds/chicken.wav");
-  walk[0] = asw::load::sample("assets/sounds/walk_1.wav");
-  walk[1] = asw::load::sample("assets/sounds/walk_2.wav");
-  jump = asw::load::sample("assets/sounds/jump.wav");
-  die = asw::load::sample("assets/sounds/die.wav");
-  win = asw::load::sample("assets/sounds/win.wav");
-  trapsnap = asw::load::sample("assets/sounds/trapsnap.wav");
-  checkpoint = asw::load::sample("assets/sounds/checkpoint.wav");
+  chicken = asw::assets::loadSample("assets/sounds/chicken.wav");
+  walk[0] = asw::assets::loadSample("assets/sounds/walk_1.wav");
+  walk[1] = asw::assets::loadSample("assets/sounds/walk_2.wav");
+  jump = asw::assets::loadSample("assets/sounds/jump.wav");
+  die = asw::assets::loadSample("assets/sounds/die.wav");
+  win = asw::assets::loadSample("assets/sounds/win.wav");
+  trapsnap = asw::assets::loadSample("assets/sounds/trapsnap.wav");
+  checkpoint = asw::assets::loadSample("assets/sounds/checkpoint.wav");
 }
 
 // Set keys
@@ -212,23 +210,24 @@ void Player::update(TileMap* fullMap) {
   if (canFall)
     player_state = STATE_JUMPING;
 
-  if (KeyListener::keyDown[rightKey])
+  if (asw::input::keyboard.down[rightKey])
     characterDir = RIGHT;
 
-  if (KeyListener::keyDown[leftKey])
+  if (asw::input::keyboard.down[leftKey])
     characterDir = LEFT;
 
   // State logic
   switch (player_state) {
     case STATE_STANDING: {
       // Jump
-      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+      if (asw::input::keyboard.pressed[jumpKey] ||
+          asw::input::keyboard.pressed[upKey]) {
         yVelocity = -24;
         asw::sound::play(jump);
         player_state = STATE_JUMPING;
-      } else if (KeyListener::keyDown[leftKey])
+      } else if (asw::input::keyboard.down[leftKey])
         player_state = STATE_WALKING;
-      else if (KeyListener::keyDown[rightKey])
+      else if (asw::input::keyboard.down[rightKey])
         player_state = STATE_WALKING;
       else
         xVelocity = 0;
@@ -237,14 +236,16 @@ void Player::update(TileMap* fullMap) {
     }
 
     case STATE_WALKING: {
-      if (KeyListener::keyDown[downKey])
+      if (asw::input::keyboard.down[downKey])
         player_state = STATE_SLIDING;
 
-      if (!(KeyListener::keyDown[leftKey] || KeyListener::keyDown[rightKey]))
+      if (!(asw::input::keyboard.down[leftKey] ||
+            asw::input::keyboard.down[rightKey]))
         player_state = STATE_STANDING;
 
       // Jump
-      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+      if (asw::input::keyboard.pressed[jumpKey] ||
+          asw::input::keyboard.pressed[upKey]) {
         yVelocity = -24;
         asw::sound::play(jump);
         player_state = STATE_JUMPING;
@@ -272,12 +273,13 @@ void Player::update(TileMap* fullMap) {
     }
 
     case STATE_JUMPING: {
-      if (KeyListener::keyDown[rightKey] && xVelocity < 12)
+      if (asw::input::keyboard.down[rightKey] && xVelocity < 12)
         xVelocity += 0.5;
-      else if (KeyListener::keyDown[leftKey] && xVelocity > -12)
+      else if (asw::input::keyboard.down[leftKey] && xVelocity > -12)
         xVelocity -= 0.5;
 
-      if (!KeyListener::keyDown[rightKey] && !KeyListener::keyDown[leftKey])
+      if (!asw::input::keyboard.down[rightKey] &&
+          !asw::input::keyboard.down[leftKey])
         xVelocity *= 0.9;
 
       if (canFall) {
@@ -295,14 +297,15 @@ void Player::update(TileMap* fullMap) {
     }
 
     case STATE_SLIDING: {
-      if (!KeyListener::keyDown[downKey])
+      if (!asw::input::keyboard.down[downKey])
         player_state = STATE_STANDING;
 
       (xVelocity < 0.01f && xVelocity > -0.01f) ? xVelocity = 0
                                                 : xVelocity *= 0.95f;
 
       // Jump
-      if (KeyListener::keyPressed[jumpKey] || KeyListener::keyPressed[upKey]) {
+      if (asw::input::keyboard.pressed[jumpKey] ||
+          asw::input::keyboard.pressed[upKey]) {
         yVelocity = -24;
         asw::sound::play(jump);
         player_state = STATE_JUMPING;

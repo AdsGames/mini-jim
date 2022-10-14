@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-#include <asw/util/KeyListener.h>
-#include <asw/util/MouseListener.h>
-
 InputBox::InputBox(int x,
                    int y,
                    int width,
@@ -31,13 +28,15 @@ std::string InputBox::GetValue() const {
 }
 
 bool InputBox::Hover() const {
-  return (signed)MouseListener::x > x && (signed)MouseListener::x < x + width &&
-         (signed)MouseListener::y > y && (signed)MouseListener::y < y + height;
+  return (signed)asw::input::mouse.x > x &&
+         (signed)asw::input::mouse.x < x + width &&
+         (signed)asw::input::mouse.y > y &&
+         (signed)asw::input::mouse.y < y + height;
 }
 
 void InputBox::Update() {
   // Focus
-  if (MouseListener::mouse_pressed & 1) {
+  if (asw::input::mouse.pressed[1]) {
     focused = Hover();
 
     if (focused) {
@@ -46,7 +45,7 @@ void InputBox::Update() {
       for (unsigned int i = 0; i <= text.length(); i++) {
         int textSize = asw::util::getTextSize(font, text.substr(0, i)).x;
 
-        int distance = abs(textSize + x + 6 - (signed)MouseListener::x);
+        int distance = abs(textSize + x + 6 - (signed)asw::input::mouse.x);
 
         if (distance < closest) {
           text_iter = i;
@@ -56,7 +55,7 @@ void InputBox::Update() {
     }
   }
 
-  int lastKey = KeyListener::lastKeyPressed;
+  int lastKey = asw::input::keyboard.lastPressed;
 
   if (!focused || lastKey == -1) {
     return;
@@ -80,8 +79,8 @@ void InputBox::Update() {
 
   if (type == "text") {
     if (lastKey >= 4 && lastKey <= 29) {
-      if (KeyListener::keyDown[SDL_SCANCODE_LSHIFT] ||
-          KeyListener::keyDown[SDL_SCANCODE_RSHIFT]) {
+      if (asw::input::keyboard.down[SDL_SCANCODE_LSHIFT] ||
+          asw::input::keyboard.down[SDL_SCANCODE_RSHIFT]) {
         text.insert(text.begin() + text_iter, 'A' - 4 + lastKey);
       } else {
         text.insert(text.begin() + text_iter, 'a' - 4 + lastKey);
@@ -92,20 +91,20 @@ void InputBox::Update() {
   }
 
   // some other, "special" key was pressed; handle it here
-  if (KeyListener::keyPressed[SDL_SCANCODE_BACKSPACE]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_BACKSPACE]) {
     if (text_iter != 0) {
       text_iter--;
       text.erase(text.begin() + text_iter);
     }
   }
 
-  if (KeyListener::keyPressed[SDL_SCANCODE_RIGHT]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_RIGHT]) {
     if (text_iter != text.size()) {
       text_iter++;
     }
   }
 
-  if (KeyListener::keyPressed[SDL_SCANCODE_LEFT]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_LEFT]) {
     if (text_iter != 0) {
       text_iter--;
     }
@@ -114,16 +113,16 @@ void InputBox::Update() {
 
 // Draw box
 void InputBox::Draw() {
-  asw::draw::primRectFill(x, y, x + width, y + height,
-                          asw::util::makeColor(12, 12, 12));
+  asw::draw::rectFill(x, y, x + width, y + height,
+                      asw::util::makeColor(12, 12, 12));
 
   asw::Color col = (Hover() || focused) ? asw::util::makeColor(230, 230, 230)
                                         : asw::util::makeColor(245, 245, 245);
 
   if (focused)
-    asw::draw::primRectFill(x + 2, y + 2, x + width - 2, y + height - 2, col);
+    asw::draw::rectFill(x + 2, y + 2, x + width - 2, y + height - 2, col);
   else
-    asw::draw::primRectFill(x + 1, y + 1, x + width - 1, y + height - 1, col);
+    asw::draw::rectFill(x + 1, y + 1, x + width - 1, y + height - 1, col);
 
   // Output the string to the screen
   asw::draw::text(font, text.c_str(), x + 6, y,
@@ -133,7 +132,7 @@ void InputBox::Draw() {
   if (focused) {
     int textSize = asw::util::getTextSize(font, text.substr(0, text_iter)).x;
 
-    asw::draw::primRectFill(textSize + x + 6, y + 8, textSize + x + 7,
-                            y + height - 8, asw::util::makeColor(0, 0, 0));
+    asw::draw::rectFill(textSize + x + 6, y + 8, textSize + x + 7,
+                        y + height - 8, asw::util::makeColor(0, 0, 0));
   }
 }

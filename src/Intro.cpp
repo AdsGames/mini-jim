@@ -1,7 +1,6 @@
 #include "Intro.h"
 #include "utility/tools.h"
 
-#include <asw/util/KeyListener.h>
 #include <string>
 #include <vector>
 
@@ -9,14 +8,14 @@
 #include "utility/tools.h"
 
 void Intro::init() {
-  background = asw::load::texture("assets/images/opening/background.png");
-  intro = asw::load::texture("assets/images/opening/intro.png");
-  title = asw::load::texture("assets/images/opening/title.png");
-  introSound = asw::load::sample("assets/sounds/introSound.wav");
+  background = asw::assets::loadTexture("assets/images/opening/background.png");
+  intro = asw::assets::loadTexture("assets/images/opening/intro.png");
+  title = asw::assets::loadTexture("assets/images/opening/title.png");
+  introSound = asw::assets::loadSample("assets/sounds/introSound.wav");
 
   for (int i = 0; i < INTRO_FRAMES; i++) {
-    images[i] = asw::load::texture("assets/images/opening/opening" +
-                                   std::to_string(i) + ".png");
+    images[i] = asw::assets::loadTexture("assets/images/opening/opening" +
+                                         std::to_string(i) + ".png");
   }
 
   timer.Start();
@@ -33,7 +32,7 @@ void Intro::update() {
     sound_played = true;
   }
 
-  if (frame >= INTRO_FRAMES || KeyListener::anyKeyPressed) {
+  if (frame >= INTRO_FRAMES || asw::input::keyboard.anyPressed) {
     setNextState(StateEngine::STATE_MENU);
   }
 }

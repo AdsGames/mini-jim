@@ -1,7 +1,5 @@
 #include "Editor.h"
 
-#include <asw/util/KeyListener.h>
-#include <asw/util/MouseListener.h>
 #include <string>
 
 #include "TileTypeLoader.h"
@@ -15,7 +13,7 @@ void Editor::init() {
   // Create example tile
   pallette_tile = new Tile(0, 0, 0);
 
-  editorFont = asw::load::font("assets/fonts/ariblk.ttf", 24);
+  editorFont = asw::assets::loadFont("assets/fonts/ariblk.ttf", 24);
 
   ib_save = InputBox(400, 408, 480, 50, editorFont, "untitled");
   ib_open = InputBox(400, 408, 480, 50, editorFont, "level_1");
@@ -84,10 +82,11 @@ void Editor::New() {
 }
 
 void Editor::Edit() {
-  cam.Follow(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY());
+  cam.Follow(asw::input::mouse.x + cam.GetX(),
+             asw::input::mouse.y + cam.GetY());
 
   // Change selected
-  if (KeyListener::keyPressed[SDL_SCANCODE_UP]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_UP]) {
     int i = pallette_tile->getType() + 1;
 
     while (!TileTypeLoader::GetTile(i))
@@ -96,7 +95,7 @@ void Editor::Edit() {
     pallette_tile->setType(i);
   }
 
-  if (KeyListener::keyPressed[SDL_SCANCODE_DOWN]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_DOWN]) {
     int i = pallette_tile->getType() - 1;
 
     while (!TileTypeLoader::GetTile(i))
@@ -106,68 +105,71 @@ void Editor::Edit() {
   }
 
   // Change Layer
-  if (KeyListener::keyPressed[SDL_SCANCODE_TAB]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_TAB]) {
     layer = !layer;
     draw_layer = layer + 1;
   }
 
   // Toggle lights
-  if (KeyListener::keyPressed[SDL_SCANCODE_L]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_L]) {
     tile_map->toggleLights();
   }
 
   // Operations
-  Tile* temp_tile = tile_map->get_tile_at(MouseListener::x + cam.GetX(),
-                                          MouseListener::y + cam.GetY(), layer);
+  Tile* temp_tile =
+      tile_map->get_tile_at(asw::input::mouse.x + cam.GetX(),
+                            asw::input::mouse.y + cam.GetY(), layer);
 
   if (temp_tile) {
     // Place tile
-    if (MouseListener::mouse_button & 1)
+    if (asw::input::mouse.down[1]) {
       temp_tile->setType(pallette_tile->getType());
+    }
 
     // Erase tile
-    if (MouseListener::mouse_button & 4)
+    if (asw::input::mouse.down[4]) {
       temp_tile->setType(0);
+    }
 
     // Get tile type tile
-    if (KeyListener::keyPressed[SDL_SCANCODE_K])
+    if (asw::input::keyboard.pressed[SDL_SCANCODE_K])
       pallette_tile->setType(temp_tile->getType());
   }
 
   // Save map
-  if (KeyListener::keyPressed[SDL_SCANCODE_S]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_S]) {
     ib_save.Focus();
     editor_state = SAVE;
   }
 
   // Open map
-  if (KeyListener::keyPressed[SDL_SCANCODE_O]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_O]) {
     ib_open.Focus();
     editor_state = OPEN;
   }
 
   // New map
-  if (KeyListener::keyPressed[SDL_SCANCODE_N]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_N]) {
     ib_width.Update();
     editor_state = CREATE;
   }
 
   // Fill map
-  if (KeyListener::keyPressed[SDL_SCANCODE_F]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_F]) {
     for (auto& t : tile_map->mapTilesBack) {
       t.setType(pallette_tile->getType());
     }
   }
 
   // Draw specific layers
-  if (KeyListener::keyDown[SDL_SCANCODE_0]) {
+  if (asw::input::keyboard.down[SDL_SCANCODE_0]) {
     draw_layer = 0;
   }
 }
 
 void Editor::update() {
   // Back to menu
-  if (KeyListener::keyPressed[SDL_SCANCODE_M] && editor_state == EDIT) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_M] && editor_state == EDIT) {
     setNextState(StateEngine::STATE_MENU);
   }
 
@@ -219,30 +221,30 @@ void Editor::draw() {
                     asw::util::makeColor(255, 255, 255));
 
   if (editor_state == SAVE) {
-    asw::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
-                            asw::util::makeColor(255, 255, 255, 255));
-    asw::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                        asw::util::makeColor(0, 0, 0));
+    asw::draw::rectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+                        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                    asw::util::makeColor(0, 0, 0));
     asw::draw::textCenter(editorFont, "Save Map Name", 640, 310,
                           asw::util::makeColor(0, 0, 0));
     ib_save.Draw();
     btn_save.Draw();
     btn_close.Draw();
   } else if (editor_state == OPEN) {
-    asw::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
-                            asw::util::makeColor(255, 255, 255, 255));
-    asw::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                        asw::util::makeColor(0, 0, 0));
+    asw::draw::rectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+                        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                    asw::util::makeColor(0, 0, 0));
     asw::draw::textCenter(editorFont, "Open Map Name", 640, 310,
                           asw::util::makeColor(0, 0, 0));
     ib_open.Draw();
     btn_open.Draw();
     btn_close.Draw();
   } else if (editor_state == CREATE) {
-    asw::draw::primRectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
-                            asw::util::makeColor(255, 255, 255, 255));
-    asw::draw::primRect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                        asw::util::makeColor(0, 0, 0));
+    asw::draw::rectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+                        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                    asw::util::makeColor(0, 0, 0));
     asw::draw::textCenter(editorFont, "New Map", 640, 310,
                           asw::util::makeColor(0, 0, 0));
     asw::draw::textCenter(editorFont, "Width", 500, 360,

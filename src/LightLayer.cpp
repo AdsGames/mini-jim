@@ -7,7 +7,7 @@ LightLayer::LightLayer() {
                         SDL_TEXTUREACCESS_TARGET, screenSize.x, screenSize.y);
   SDL_SetTextureBlendMode(lightLayer, SDL_BLENDMODE_MOD);
 
-  lightTexture = asw::load::texture("assets/images/spotlight.png");
+  lightTexture = asw::assets::loadTexture("assets/images/spotlight.png");
   SDL_SetTextureBlendMode(lightTexture.get(), SDL_BLENDMODE_ADD);
 }
 

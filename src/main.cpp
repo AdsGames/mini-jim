@@ -1,7 +1,5 @@
 // Includes
 #include <asw/asw.h>
-#include <asw/util/KeyListener.h>
-#include <asw/util/MouseListener.h>
 #include <chrono>
 
 #ifdef __EMSCRIPTEN__
@@ -32,17 +30,14 @@ int frames_done = 0;
 // Setup game
 void setup() {
   // Load allegro library
-  asw::util::init(1280, 960);
+  asw::core::init(1280, 960);
 
   game_state = new StateEngine();
 }
 
 // Update
 void update() {
-  // Update listeners
-  KeyListener::update();
-  MouseListener::update();
-
+  // Update core
   asw::core::update();
 
   // Do state logic
@@ -83,7 +78,7 @@ int main(int argc, char* argv[]) {
   nanoseconds lag(0ns);
   auto time_start = clock::now();
 
-  while (!KeyListener::keyDown[SDL_SCANCODE_ESCAPE] && !asw::core::exit) {
+  while (!asw::input::keyboard.down[SDL_SCANCODE_ESCAPE] && !asw::core::exit) {
     auto delta_time = clock::now() - time_start;
     time_start = clock::now();
     lag += duration_cast<nanoseconds>(delta_time);

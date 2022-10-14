@@ -68,7 +68,7 @@ void TileTypeLoader::LoadTypes(const std::string& path) {
           cTile->first_node("images")->first_node("image");
 
       for (; img != nullptr; img = img->next_sibling()) {
-        asw::Texture image = asw::load::texture(
+        asw::Texture image = asw::assets::loadTexture(
             "assets/images/blocks/" +
             std::string(img->first_attribute("src")->value()));
         tile->AddImage(image);
