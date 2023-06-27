@@ -11,15 +11,15 @@ class InputBox {
                     int width = 100,
                     int height = 20,
                     asw::Font font = nullptr,
-                    const std::string& value = "",
-                    const std::string& type = "text");
+                    std::string value = "",
+                    std::string type = "text");
 
   void Focus();
 
-  std::string GetValue() const;
+  auto GetValue() const -> std::string;
   void Update();
-  void Draw();
-  bool Hover() const;
+  void Draw() const;
+  auto Hover() const -> bool;
 
  private:
   int x, y;
@@ -27,11 +27,11 @@ class InputBox {
 
   asw::Font font;
 
-  std::string text;
-  std::string type;
+  std::string text{};
+  std::string type{};
 
-  unsigned int text_iter;
-  bool focused;
+  unsigned int text_iter{0};
+  bool focused{false};
 };
 
 #endif  // INPUTBOX_H

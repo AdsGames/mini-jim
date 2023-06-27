@@ -12,8 +12,8 @@ class TileMap {
  public:
   explicit TileMap(const std::string& file = "");
 
-  std::vector<Tile> mapTiles;
-  std::vector<Tile> mapTilesBack;
+  std::vector<Tile> mapTiles{};
+  std::vector<Tile> mapTilesBack{};
 
   int getWidth() const;
   int getHeight() const;

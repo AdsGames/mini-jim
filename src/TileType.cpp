@@ -3,14 +3,9 @@
 #include <algorithm>
 
 TileType::TileType(short id, const std::string& name, const std::string& id_str)
-    : id(id), name(name), id_str(id_str) {
-  x_1 = 0;
-  x_2 = 0;
-  y_1 = 0;
-  y_2 = 0;
-}
+    : id(id), x_1(0), x_2(0), y_1(0), y_2(0), name(name), id_str(id_str) {}
 
-short TileType::GetID() const {
+auto TileType::GetID() const -> short {
   return id;
 }
 
@@ -22,23 +17,23 @@ std::string TileType::GetName() const {
   return name;
 }
 
-int TileType::GetWidth() const {
+auto TileType::GetWidth() const -> int {
   return x_2 - x_1;
 }
 
-int TileType::GetHeight() const {
+auto TileType::GetHeight() const -> int {
   return y_2 - y_1;
 }
 
-int TileType::GetBBX() const {
+auto TileType::GetBBX() const -> int {
   return x_1;
 }
 
-int TileType::GetBBY() const {
+auto TileType::GetBBY() const -> int {
   return y_1;
 }
 
-bool TileType::HasAttribute(int attribute) {
+auto TileType::HasAttribute(int attribute) -> bool {
   return std::find(attributes.begin(), attributes.end(), attribute) !=
          attributes.end();
 }

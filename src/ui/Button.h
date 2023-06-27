@@ -3,30 +3,31 @@
 
 #include <asw/asw.h>
 #include <functional>
+#include "../utility/Vec2.h"
 
 class Button {
  public:
-  Button();
-  Button(int x, int y);
+  Button() = default;
+  explicit Button(Vec2<int> position);
 
   void Update();
 
   void SetImages(const char* image1, const char* image2);
 
-  int GetX() const;
-  int GetY() const;
+  auto GetX() const -> int;
+  auto GetY() const -> int;
 
   void SetOnClick(std::function<void()> func);
 
   void Draw();
 
-  bool Hover() const;
+  auto Hover() const -> bool;
 
  private:
   std::function<void(void)> OnClick;
 
-  int x, y;
-  int width, height;
+  Vec2<int> position{0, 0};
+  Vec2<int> size{10, 10};
 
   asw::Texture images[2];
 };

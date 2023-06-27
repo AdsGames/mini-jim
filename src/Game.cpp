@@ -35,8 +35,7 @@ void Game::init() {
 
 void Game::setup() {
   // Create map
-  if (tile_map)
-    delete tile_map;
+  delete tile_map;
 
   tile_map = new TileMap();
 
@@ -60,15 +59,15 @@ void Game::setup() {
                    tile_map->getHeight());
   }
 
-  cam_1.SetSpeed(8.0f);
-  cam_2.SetSpeed(8.0f);
+  cam_1.SetSpeed(8.0F);
+  cam_2.SetSpeed(8.0F);
 
   // Find spawn
   Tile* spawnTile = tile_map->find_tile_type(199, 1);
 
   if (spawnTile != nullptr) {
-    player1->set_spawn(spawnTile->getX(), spawnTile->getY());
-    player2->set_spawn(spawnTile->getX(), spawnTile->getY());
+    player1->setSpawn(spawnTile->getX(), spawnTile->getY());
+    player2->setSpawn(spawnTile->getX(), spawnTile->getY());
   }
 
   // Play music
@@ -76,7 +75,7 @@ void Game::setup() {
   asw::sound::play(mainMusic, 255, 128, 1);
 
   // Start game
-  tm_begin.Start();
+  tm_begin.start();
 }
 
 void Game::update() {
@@ -85,7 +84,7 @@ void Game::update() {
   cam_2.Follow(player2->getX(), player2->getY());
 
   // Starting countdown
-  if (!tm_begin.IsRunning()) {
+  if (!tm_begin.isRunning()) {
     // Stop from moving once done
     if (!player1->getFinished()) {
       player1->update(tile_map);
@@ -97,27 +96,28 @@ void Game::update() {
   }
 
   // Timers
-  if (tm_begin.IsRunning() && tm_begin.GetElapsedTime<milliseconds>() > 1200) {
-    tm_begin.Stop();
-    tm_p1.Start();
-    tm_p2.Start();
+  if (tm_begin.isRunning() &&
+      tm_begin.getElapsedTime<std::chrono::milliseconds>() > 1200) {
+    tm_begin.stop();
+    tm_p1.start();
+    tm_p2.start();
   }
 
-  if (tm_p1.IsRunning() && player1->getFinished())
-    tm_p1.Stop();
+  if (tm_p1.isRunning() && player1->getFinished())
+    tm_p1.stop();
 
-  if (tm_p2.IsRunning() && player2->getFinished())
-    tm_p2.Stop();
+  if (tm_p2.isRunning() && player2->getFinished())
+    tm_p2.stop();
 
   // Change level when both are done
   if (asw::input::keyboard.down[SDL_SCANCODE_RETURN] &&
       player1->getFinished() && (player2->getFinished() || single_player)) {
-    setNextState(StateEngine::STATE_MENU);
+    setNextState(ProgramState::Menu);
   }
 
   // Back to menu
   if (asw::input::keyboard.down[SDL_SCANCODE_M]) {
-    setNextState(StateEngine::STATE_MENU);
+    setNextState(ProgramState::Menu);
   }
 }
 
@@ -185,7 +185,8 @@ void Game::draw() {
   // Draw timer to screen
   asw::draw::text(
       cooper,
-      "Time: " + std::to_string(tm_p1.GetElapsedTime<milliseconds>() / 1000),
+      "Time: " + std::to_string(
+                     tm_p1.getElapsedTime<std::chrono::milliseconds>() / 1000),
       40, 55, asw::util::makeColor(255, 255, 255, 255));
   asw::draw::text(cooper, "Deaths:" + std::to_string(player1->getDeathcount()),
                   40, 20, asw::util::makeColor(255, 255, 255, 255));
@@ -193,7 +194,9 @@ void Game::draw() {
   if (!single_player) {
     asw::draw::text(
         cooper,
-        "Time: " + std::to_string(tm_p2.GetElapsedTime<milliseconds>() / 1000),
+        "Time: " +
+            std::to_string(tm_p2.getElapsedTime<std::chrono::milliseconds>() /
+                           1000),
         40, (screenSize.y / 2) + 20 + 35,
         asw::util::makeColor(255, 255, 255, 255));
     asw::draw::text(
@@ -204,19 +207,19 @@ void Game::draw() {
   // Starting countdown
   else {
     // Timer 3..2..1..GO!
-    if (tm_begin.GetElapsedTime<milliseconds>() < 330) {
+    if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 330) {
       asw::draw::stretchSpriteBlit(countdownImage, 0, 0, 14, 18,
                                    screenSize.x / 2 - 100,
                                    screenSize.y / 2 - 100, 140, 180);
-    } else if (tm_begin.GetElapsedTime<milliseconds>() < 660) {
+    } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 660) {
       asw::draw::stretchSpriteBlit(countdownImage, 19, 0, 14, 18,
                                    screenSize.x / 2 - 100,
                                    screenSize.y / 2 - 100, 140, 180);
-    } else if (tm_begin.GetElapsedTime<milliseconds>() < 990) {
+    } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 990) {
       asw::draw::stretchSpriteBlit(countdownImage, 39, 0, 14, 18,
                                    screenSize.x / 2 - 100,
                                    screenSize.y / 2 - 100, 140, 180);
-    } else if (tm_begin.GetElapsedTime<milliseconds>() < 1200) {
+    } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 1200) {
       asw::draw::stretchSpriteBlit(countdownImage, 57, 0, 40, 18,
                                    screenSize.x / 2 - 200,
                                    screenSize.y / 2 - 100, 400, 180);
@@ -225,8 +228,10 @@ void Game::draw() {
 
   // Change level when both are done
   if (player1->getFinished() && (player2->getFinished() || single_player)) {
-    const float p1_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
-    const float p2_time = tm_p2.GetElapsedTime<milliseconds>() / 1000;
+    const float p1_time =
+        tm_p1.getElapsedTime<std::chrono::milliseconds>() / 1000;
+    const float p2_time =
+        tm_p2.getElapsedTime<std::chrono::milliseconds>() / 1000;
 
     if (single_player) {
       asw::draw::sprite(results_singleplayer, (screenSize.x / 2) - 364,

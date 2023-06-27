@@ -30,12 +30,12 @@ class TileType {
 
  private:
   short id;
-  std::string name;
-  std::string id_str;
+  std::string name{};
+  std::string id_str{};
   int x_1, x_2, y_1, y_2;
 
-  std::vector<int> attributes;
-  std::vector<asw::Texture> images;
+  std::vector<int> attributes{};
+  std::vector<asw::Texture> images{};
 };
 
 #endif  // TILETYPE_H

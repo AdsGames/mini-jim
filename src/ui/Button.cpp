@@ -1,17 +1,16 @@
 #include "Button.h"
 
+#include <utility>
+
 #include "../utility/tools.h"
 
-Button::Button() : Button(0, 0) {}
-
-Button::Button(int x, int y)
-    : OnClick(nullptr), x(x), y(y), width(10), height(10) {
+Button::Button(Vec2<int> position) : OnClick(nullptr), position(position) {
   images[0] = nullptr;
   images[1] = nullptr;
 }
 
 void Button::SetOnClick(std::function<void(void)> func) {
-  OnClick = func;
+  OnClick = std::move(func);
 }
 
 // Load images from file
@@ -20,14 +19,15 @@ void Button::SetImages(const char* image1, const char* image2) {
   images[1] = asw::assets::loadTexture(image2);
 
   // Size
-  auto size = asw::util::getTextureSize(images[0]);
-  height = size.y;
-  width = size.x;
+  auto texture_size = asw::util::getTextureSize(images[0]);
+  size.y = texture_size.y;
+  size.x = texture_size.x;
 }
 
-bool Button::Hover() const {
-  return collisionAny(asw::input::mouse.x, asw::input::mouse.x, x, x + width,
-                      asw::input::mouse.y, asw::input::mouse.y, y, y + height);
+auto Button::Hover() const -> bool {
+  return collisionAny(asw::input::mouse.x, asw::input::mouse.x, position.x,
+                      position.x + size.x, asw::input::mouse.y,
+                      asw::input::mouse.y, position.y, position.y + size.y);
 }
 
 void Button::Update() {
@@ -36,19 +36,19 @@ void Button::Update() {
   }
 }
 
-int Button::GetX() const {
-  return x;
+auto Button::GetX() const -> int {
+  return position.x;
 }
 
-int Button::GetY() const {
-  return y;
+auto Button::GetY() const -> int {
+  return position.y;
 }
 
 void Button::Draw() {
   if (images[Hover()]) {
-    asw::draw::sprite(images[Hover()], x, y);
+    asw::draw::sprite(images[Hover()], position.x, position.y);
   } else {
-    asw::draw::rectFill(x, y, x + width, y + height,
-                        asw::util::makeColor(60, 60, 60));
+    asw::draw::rectFill(position.x, position.y, position.x + size.x,
+                        position.y + size.y, asw::util::makeColor(60, 60, 60));
   }
 }

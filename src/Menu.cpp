@@ -26,16 +26,16 @@ void Menu::init() {
   levelOn = 0;
   tile_map = new TileMap();
   change_level(0);
-  next_state = -1;
+  next_state = ProgramState::Null;
 
   // Buttons
-  buttons[BUTTON_START] = Button(60, 630);
-  buttons[BUTTON_START_MP] = Button(60, 690);
-  buttons[BUTTON_EDIT] = Button(60, 750);
-  buttons[BUTTON_HELP] = Button(60, 810);
-  buttons[BUTTON_EXIT] = Button(60, 870);
-  buttons[BUTTON_LEFT] = Button(screenSize.x - 180, 80);
-  buttons[BUTTON_RIGHT] = Button(screenSize.x - 80, 80);
+  buttons[BUTTON_START] = Button({60, 630});
+  buttons[BUTTON_START_MP] = Button({60, 690});
+  buttons[BUTTON_EDIT] = Button({60, 750});
+  buttons[BUTTON_HELP] = Button({60, 810});
+  buttons[BUTTON_EXIT] = Button({60, 870});
+  buttons[BUTTON_LEFT] = Button({screenSize.x - 180, 80});
+  buttons[BUTTON_RIGHT] = Button({screenSize.x - 80, 80});
 
   buttons[BUTTON_START].SetImages("assets/images/gui/button_start.png",
                                   "assets/images/gui/button_start_hover.png");
@@ -55,19 +55,19 @@ void Menu::init() {
 
   buttons[BUTTON_START].SetOnClick([this]() {
     single_player = true;
-    next_state = StateEngine::STATE_GAME;
+    next_state = ProgramState::Game;
   });
 
   buttons[BUTTON_START_MP].SetOnClick([this]() {
     single_player = false;
-    next_state = StateEngine::STATE_GAME;
+    next_state = ProgramState::Game;
   });
 
   buttons[BUTTON_EDIT].SetOnClick(
-      [this]() { next_state = StateEngine::STATE_EDIT; });
+      [this]() { next_state = ProgramState::Edit; });
 
   buttons[BUTTON_EXIT].SetOnClick(
-      [this]() { next_state = StateEngine::STATE_EXIT; });
+      [this]() { next_state = ProgramState::Edit; });
 
   buttons[BUTTON_LEFT].SetOnClick([this]() { change_level(-1); });
 
@@ -90,10 +90,12 @@ void Menu::change_level(int level) {
 
   tile_map->load("assets/data/level_" + std::to_string(levelOn + 1));
 
-  scroll_x = random(screenSize.x, tile_map->getWidth() - screenSize.x);
-  scroll_dir_x = random(0, 1) ? -3 : 3;
-  scroll_y = random(screenSize.y, tile_map->getHeight() - screenSize.y);
-  scroll_dir_y = random(0, 1) ? -3 : 3;
+  scroll_x = static_cast<float>(
+      random(screenSize.x, tile_map->getWidth() - screenSize.x));
+  scroll_dir_x = static_cast<float>(random(0, 1) != 0 ? -3 : 3);
+  scroll_y = static_cast<float>(
+      random(screenSize.y, tile_map->getHeight() - screenSize.y));
+  scroll_dir_y = static_cast<float>(random(0, 1) != 0 ? -3 : 3);
 
   asw::sound::play(click);
 
@@ -107,12 +109,14 @@ void Menu::update() {
 
   // Move around live background
   if (scroll_x + screenSize.x / 2 >= tile_map->getWidth() ||
-      scroll_x <= screenSize.x / 2)
+      scroll_x <= screenSize.x / 2) {
     scroll_dir_x *= -1;
+  }
 
   if (scroll_y + screenSize.y / 2 >= tile_map->getHeight() ||
-      scroll_y <= screenSize.y / 2)
+      scroll_y <= screenSize.y / 2) {
     scroll_dir_y *= -1;
+  }
 
   scroll_x += scroll_dir_x;
   scroll_y += scroll_dir_y;
@@ -120,8 +124,9 @@ void Menu::update() {
   cam.Follow(scroll_x, scroll_y);
 
   // State change
-  if (next_state != -1)
+  if (next_state != ProgramState::Null) {
     setNextState(next_state);
+  }
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++)
@@ -165,8 +170,9 @@ void Menu::draw() {
   asw::draw::sprite(menu, 40, 480);
 
   // Buttons
-  for (int i = 0; i < NUM_BUTTONS; i++)
+  for (int i = 0; i < NUM_BUTTONS; i++) {
     buttons[i].Draw();
+  }
 
   // Level selection
   asw::draw::sprite(levelSelectNumber, screenSize.x - 160, 80);

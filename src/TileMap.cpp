@@ -7,33 +7,31 @@
 #include "utility/tools.h"
 
 // Constructor
-TileMap::TileMap(const std::string& file) {
-  width = 0;
-  height = 0;
-  lighting = false;
-  frame_timer.Start();
+TileMap::TileMap(const std::string& file)
+    : width(0), height(0), lighting(false) {
+  frame_timer.start();
 
   if (file != "")
     load(file);
 }
 
 // Get width
-int TileMap::getWidth() const {
+auto TileMap::getWidth() const -> int {
   return width * 64;
 }
 
 // Get height
-int TileMap::getHeight() const {
+auto TileMap::getHeight() const -> int {
   return height * 64;
 }
 
 // Get frame
-int TileMap::getFrame() {
-  return int(frame_timer.GetElapsedTime<milliseconds>() / 100) % 8;
+auto TileMap::getFrame() -> int {
+  return int(frame_timer.getElapsedTime<std::chrono::milliseconds>() / 100) % 8;
 }
 
 // Has lighting enabled
-bool TileMap::hasLighting() const {
+auto TileMap::hasLighting() const -> bool {
   return lighting;
 }
 
@@ -75,7 +73,7 @@ void TileMap::load_layer(std::ifstream& file, std::vector<Tile>& t_map) {
   }
 }
 
-bool TileMap::load(const std::string& file) {
+auto TileMap::load(const std::string& file) -> bool {
   // Change size
   std::ifstream rf(file + ".level", std::ios::in | std::ios::binary);
 
@@ -155,7 +153,7 @@ void TileMap::save(const std::string& file) {
 }
 
 // Get tile at
-Tile* TileMap::get_tile_at(int s_x, int s_y, int layer) {
+auto TileMap::get_tile_at(int s_x, int s_y, int layer) -> Tile* {
   std::vector<Tile>* ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
 
   for (auto& t : *ttm) {
@@ -169,7 +167,7 @@ Tile* TileMap::get_tile_at(int s_x, int s_y, int layer) {
 }
 
 // Find tile type
-Tile* TileMap::find_tile_type(int type, int layer) {
+auto TileMap::find_tile_type(int type, int layer) -> Tile* {
   std::vector<Tile>* ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
 
   for (auto& t : *ttm) {
@@ -207,7 +205,7 @@ void TileMap::draw_layer(std::vector<Tile>& t_map,
                          int height,
                          int destX,
                          int destY) {
-  int frame = getFrame();
+  int const frame = getFrame();
 
   for (auto& t : t_map) {
     if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + width) &&

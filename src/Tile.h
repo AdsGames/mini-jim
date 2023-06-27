@@ -36,10 +36,10 @@ class Tile {
   void draw(int xOffset, int yOffset, int frame);
 
  private:
-  int x, y;
-  std::vector<int> attribute;
+  int x{}, y{};
+  std::vector<int> attribute{};
 
-  TileType* t_type;
+  TileType* t_type{};
 };
 
 #endif

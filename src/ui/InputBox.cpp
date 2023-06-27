@@ -1,33 +1,31 @@
 #include "InputBox.h"
 
-#include <iostream>
+#include <utility>
 
 InputBox::InputBox(int x,
                    int y,
                    int width,
                    int height,
                    asw::Font font,
-                   const std::string& value,
-                   const std::string& type)
+                   std::string value,
+                   std::string type)
     : x(x),
       y(y),
       width(width),
       height(height),
-      font(font),
-      text(value),
-      type(type),
-      text_iter(0),
-      focused(false) {}
+      font(std::move(font)),
+      text(std::move(value)),
+      type(std::move(type)) {}
 
 void InputBox::Focus() {
   focused = true;
 }
 
-std::string InputBox::GetValue() const {
+auto InputBox::GetValue() const -> std::string {
   return text;
 }
 
-bool InputBox::Hover() const {
+auto InputBox::Hover() const -> bool {
   return (signed)asw::input::mouse.x > x &&
          (signed)asw::input::mouse.x < x + width &&
          (signed)asw::input::mouse.y > y &&
@@ -55,13 +53,11 @@ void InputBox::Update() {
     }
   }
 
-  int lastKey = asw::input::keyboard.lastPressed;
+  int const lastKey = asw::input::keyboard.lastPressed;
 
   if (!focused || lastKey == -1) {
     return;
   }
-
-  std::cout << "Key: " << lastKey << std::endl;
 
   // a character key was pressed; add it to the string
   if (type == "number" || type == "text") {
@@ -112,21 +108,22 @@ void InputBox::Update() {
 }
 
 // Draw box
-void InputBox::Draw() {
+void InputBox::Draw() const {
   asw::draw::rectFill(x, y, x + width, y + height,
                       asw::util::makeColor(12, 12, 12));
 
-  asw::Color col = (Hover() || focused) ? asw::util::makeColor(230, 230, 230)
-                                        : asw::util::makeColor(245, 245, 245);
+  asw::Color const col = (Hover() || focused)
+                             ? asw::util::makeColor(230, 230, 230)
+                             : asw::util::makeColor(245, 245, 245);
 
-  if (focused)
+  if (focused) {
     asw::draw::rectFill(x + 2, y + 2, x + width - 2, y + height - 2, col);
-  else
+  } else {
     asw::draw::rectFill(x + 1, y + 1, x + width - 1, y + height - 1, col);
+  }
 
   // Output the string to the screen
-  asw::draw::text(font, text.c_str(), x + 6, y,
-                  asw::util::makeColor(22, 22, 22));
+  asw::draw::text(font, text, x + 6, y, asw::util::makeColor(22, 22, 22));
 
   // Draw the caret
   if (focused) {

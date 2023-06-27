@@ -16,13 +16,24 @@
 // Class
 class State;
 
+// Game states
+enum class ProgramState {
+  Null,
+  Init,
+  Intro,
+  Menu,
+  Game,
+  Edit,
+  Exit,
+};
+
 /*****************
  * STATE ENGINE
  *****************/
 class StateEngine {
  public:
   // Init
-  StateEngine();
+  StateEngine() = default;
 
   // Update
   void update();
@@ -31,34 +42,23 @@ class StateEngine {
   void draw();
 
   // Set next state
-  void setNextState(const int state);
+  void setNextState(ProgramState state);
 
   // Get state id
-  int getStateId() const;
-
-  // Game states
-  enum ProgramState {
-    STATE_NULL,
-    STATE_INIT,
-    STATE_INTRO,
-    STATE_MENU,
-    STATE_GAME,
-    STATE_EDIT,
-    STATE_EXIT,
-  };
+  auto getStateId() const -> ProgramState;
 
  private:
   // Change state
   void changeState();
 
   // Next state
-  int nextState = STATE_NULL;
+  ProgramState nextState{ProgramState::Null};
 
   // State id
-  int currentState = STATE_NULL;
+  ProgramState currentState{ProgramState::Null};
 
   // Stores states
-  std::unique_ptr<State> state;
+  std::unique_ptr<State> state{nullptr};
 };
 
 /*********
@@ -84,7 +84,7 @@ class State {
   virtual void update() = 0;
 
   // Change state
-  void setNextState(const int state);
+  void setNextState(ProgramState state);
 
  private:
   StateEngine& engine;

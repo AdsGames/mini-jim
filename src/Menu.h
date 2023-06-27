@@ -18,14 +18,14 @@ class Menu : public State {
  public:
   explicit Menu(StateEngine& engine) : State(engine) {}
 
-  virtual void init() override;
-  virtual void update() override;
-  virtual void draw() override;
-  virtual void cleanup() override;
+  void init() override;
+  void update() override;
+  void draw() override;
+  void cleanup() override;
 
  private:
   // Mouse hovering over button
-  bool button_hover();
+  auto button_hover() -> bool;
 
   // Change level (background)
   void change_level(int level);
@@ -36,10 +36,14 @@ class Menu : public State {
   asw::Sample click, intro, music;
 
   // Live background
-  TileMap* tile_map;
-  float scroll_x, scroll_y;
-  int scroll_dir_x, scroll_dir_y;
-  int next_state;
+  TileMap* tile_map{};
+  float scroll_x{};
+  float scroll_y{};
+
+  int scroll_dir_x{};
+  int scroll_dir_y{};
+
+  ProgramState next_state;
 
   // Lighting effects
   LightLayer lightLayer;

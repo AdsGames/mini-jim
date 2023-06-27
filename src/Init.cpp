@@ -10,7 +10,7 @@
 void Init::init() {
   asw::display::setTitle("Setting up");
 
-  TileTypeLoader::LoadTypes("assets/data/tiles.xml");
+  TileTypeLoader::loadTypes("assets/data/tiles.xml");
 
   asw::display::setTitle("Mini Jim");
 }
@@ -18,7 +18,7 @@ void Init::init() {
 void Init::cleanup() {}
 
 void Init::update() {
-  setNextState(StateEngine::STATE_INTRO);
+  setNextState(ProgramState::Intro);
 }
 
 void Init::draw() {

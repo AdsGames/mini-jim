@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "globals.h"
-#include "utility/tools.h"
 
 void Intro::init() {
   background = asw::assets::loadTexture("assets/images/opening/background.png");
@@ -18,14 +17,14 @@ void Intro::init() {
                                          std::to_string(i) + ".png");
   }
 
-  timer.Start();
+  timer.start();
   frame = 0;
   sound_played = false;
 }
 
 void Intro::update() {
   // poll_joystick();
-  frame = (timer.GetElapsedTime<milliseconds>() - 3000) / 100;
+  frame = (timer.getElapsedTime<std::chrono::milliseconds>() - 3000) / 100;
 
   if (frame >= 0 && !sound_played) {
     asw::sound::play(introSound, 255, 128, 0);
@@ -33,15 +32,15 @@ void Intro::update() {
   }
 
   if (frame >= INTRO_FRAMES || asw::input::keyboard.anyPressed) {
-    setNextState(StateEngine::STATE_MENU);
+    setNextState(ProgramState::Menu);
   }
 }
 
 void Intro::draw() {
   // Intro stuffs
-  if (timer.GetElapsedTime<seconds>() < 1) {
+  if (timer.getElapsedTime<std::chrono::seconds>() < 1) {
     asw::draw::sprite(intro, 0, 0);
-  } else if (timer.GetElapsedTime<seconds>() < 2) {
+  } else if (timer.getElapsedTime<std::chrono::seconds>() < 2) {
     asw::draw::sprite(title, 0, 0);
   } else {
     asw::draw::clearColor(asw::util::makeColor(0, 0, 0));

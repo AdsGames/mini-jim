@@ -17,7 +17,7 @@ class LightLayer {
 
   asw::Texture lightTexture;
 
-  asw::Color lightColor;
+  asw::Color lightColor{};
 };
 
 #endif  // LIGHT_LAYER_H

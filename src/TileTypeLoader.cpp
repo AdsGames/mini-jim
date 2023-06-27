@@ -14,14 +14,14 @@
 
 std::vector<TileType*> TileTypeLoader::types;
 
-TileType* TileTypeLoader::GetTile(int id) {
+auto TileTypeLoader::getTile(int id) -> TileType* {
   auto found = std::find_if(types.begin(), types.end(),
                             [&id](auto& t) { return t->GetID() == id; });
 
   return (found != types.end()) ? *found : nullptr;
 }
 
-TileType* TileTypeLoader::GetTile(const std::string& id_str) {
+auto TileTypeLoader::getTile(const std::string& id_str) -> TileType* {
   auto found = std::find_if(types.begin(), types.end(), [&id_str](auto& t) {
     return t->GetIDStr() == id_str;
   });
@@ -29,12 +29,13 @@ TileType* TileTypeLoader::GetTile(const std::string& id_str) {
   return (found != types.end()) ? *found : nullptr;
 }
 
-void TileTypeLoader::LoadTypes(const std::string& path) {
+void TileTypeLoader::loadTypes(const std::string& path) {
   // Open file or abort if it does not exist
   std::ifstream file(path);
 
-  if (file.fail())
+  if (file.fail()) {
     return;
+  }
 
   // Create buffer
   std::stringstream buffer;
@@ -60,7 +61,7 @@ void TileTypeLoader::LoadTypes(const std::string& path) {
     int id = atoi(cTile->first_attribute("id")->value());
 
     // Create tile
-    TileType* tile = new TileType(id, name, id_str);
+    auto tile = new TileType(id, name, id_str);
 
     // Images
     if (cTile->first_node("images")) {
@@ -81,7 +82,7 @@ void TileTypeLoader::LoadTypes(const std::string& path) {
     // Bounding box
     rapidxml::xml_node<>* bounding_box = cTile->first_node("boundingBox");
 
-    if (bounding_box) {
+    if (bounding_box != nullptr) {
       int x_1 = atoi(bounding_box->first_attribute("x1")->value());
       int x_2 = atoi(bounding_box->first_attribute("x2")->value());
       int y_1 = atoi(bounding_box->first_attribute("y1")->value());
@@ -90,17 +91,21 @@ void TileTypeLoader::LoadTypes(const std::string& path) {
     }
 
     // Add special feature
-    if (cTile->first_node("solid"))
+    if (cTile->first_node("solid")) {
       tile->AddAttribute(solid);
+    }
 
-    if (cTile->first_node("light"))
+    if (cTile->first_node("light")) {
       tile->AddAttribute(light);
+    }
 
-    if (cTile->first_node("harmful"))
+    if (cTile->first_node("harmful")) {
       tile->AddAttribute(harmful);
+    }
 
-    if (cTile->first_node("slide"))
+    if (cTile->first_node("slide")) {
       tile->AddAttribute(slide);
+    }
 
     // Add to types
     types.push_back(tile);
