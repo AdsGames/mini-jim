@@ -56,3 +56,4 @@ build.ninja
 /build
 .idea
 Testing/
+compile_commands.json
