@@ -18,8 +18,6 @@ void Intro::init() {
   }
 
   timer.start();
-  frame = 0;
-  sound_played = false;
 }
 
 void Intro::update() {

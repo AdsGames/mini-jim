@@ -2,6 +2,7 @@
 #include "../globals.h"
 
 #include <random>
+#include <time.h>
 
 // Random device
 std::mt19937 rng(time(nullptr));

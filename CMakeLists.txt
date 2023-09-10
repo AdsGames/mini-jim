@@ -42,6 +42,7 @@ if(EMSCRIPTEN)
     -sUSE_SDL_MIXER=2 
     -sUSE_SDL_GFX=2 
     -sSDL2_IMAGE_FORMATS=["png"]
+    -sSTACK_SIZE=128MB
   )
   target_link_libraries(
     ${PROJECT_NAME} 
@@ -54,6 +55,7 @@ if(EMSCRIPTEN)
     -sSDL2_IMAGE_FORMATS=["png"] 
     -sDEMANGLE_SUPPORT=1
     -sTOTAL_MEMORY=512MB
+    -sSTACK_SIZE=128MB
     asw
   )
   set_target_properties(

@@ -25,8 +25,8 @@ class Intro : public State {
   asw::Texture images[INTRO_FRAMES];
   asw::Sample introSound;
 
-  int frame;
-  bool sound_played;
+  int frame = 0;
+  bool sound_played = false;
 
   Timer timer;
 };

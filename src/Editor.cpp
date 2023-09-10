@@ -216,7 +216,7 @@ void Editor::draw() {
                     asw::util::makeColor(255, 255, 255));
 
   if (editor_state == EditorState::Save) {
-    asw::draw::rectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
                         asw::util::makeColor(255, 255, 255, 255));
     asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
                     asw::util::makeColor(0, 0, 0));
@@ -226,7 +226,7 @@ void Editor::draw() {
     btn_save.Draw();
     btn_close.Draw();
   } else if (editor_state == EditorState::Open) {
-    asw::draw::rectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
                         asw::util::makeColor(255, 255, 255, 255));
     asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
                     asw::util::makeColor(0, 0, 0));
@@ -236,7 +236,7 @@ void Editor::draw() {
     btn_open.Draw();
     btn_close.Draw();
   } else if (editor_state == EditorState::Create) {
-    asw::draw::rectFill(330, 300, screenSize.x - 330, screenSize.y - 400,
+    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
                         asw::util::makeColor(255, 255, 255, 255));
     asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
                     asw::util::makeColor(0, 0, 0));

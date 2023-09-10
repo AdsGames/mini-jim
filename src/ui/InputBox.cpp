@@ -109,7 +109,7 @@ void InputBox::Update() {
 
 // Draw box
 void InputBox::Draw() const {
-  asw::draw::rectFill(x, y, x + width, y + height,
+  asw::draw::rectFill(x, y, width, height,
                       asw::util::makeColor(12, 12, 12));
 
   asw::Color const col = (Hover() || focused)
@@ -117,9 +117,9 @@ void InputBox::Draw() const {
                              : asw::util::makeColor(245, 245, 245);
 
   if (focused) {
-    asw::draw::rectFill(x + 2, y + 2, x + width - 2, y + height - 2, col);
+    asw::draw::rectFill(x + 2, y + 2, width - 2, height - 2, col);
   } else {
-    asw::draw::rectFill(x + 1, y + 1, x + width - 1, y + height - 1, col);
+    asw::draw::rectFill(x + 1, y + 1, width - 1, height - 1, col);
   }
 
   // Output the string to the screen
@@ -129,7 +129,7 @@ void InputBox::Draw() const {
   if (focused) {
     int textSize = asw::util::getTextSize(font, text.substr(0, text_iter)).x;
 
-    asw::draw::rectFill(textSize + x + 6, y + 8, textSize + x + 7,
-                        y + height - 8, asw::util::makeColor(0, 0, 0));
+    asw::draw::rectFill(textSize + x + 6, y + 8, 7,
+                        height - 8, asw::util::makeColor(0, 0, 0));
   }
 }

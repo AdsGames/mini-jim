@@ -160,8 +160,8 @@ void Game::draw() {
       }
     }
 
-    lightPointsP1.push_back({player1->getX() - cam_1.GetX() + 32,
-                             player1->getY() - cam_1.GetY() + 32});
+    lightPointsP1.push_back({static_cast<int>(player1->getX() - cam_1.GetX() + 32),
+                             static_cast<int>(player1->getY() - cam_1.GetY() + 32)});
 
     lightLayer.draw(lightPointsP1);
   }
@@ -179,7 +179,7 @@ void Game::draw() {
 
   if (!single_player) {
     asw::draw::rectFill(20, (screenSize.y / 2) + 20, 320,
-                        (screenSize.y / 2) + 90, asw::util::makeColor(0, 0, 0));
+                        90, asw::util::makeColor(0, 0, 0));
   }
 
   // Draw timer to screen
