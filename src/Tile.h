@@ -1,7 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <allegro.h>
+#include <asw/asw.h>
 #include <string>
 #include <vector>
 
@@ -10,11 +10,14 @@
 class Tile {
  public:
   explicit Tile(short type);
+
   Tile(short type, int x, int y);
-  ~Tile();
 
   int getX() const;
   int getY() const;
+
+  int getCenterX() const;
+  int getCenterY() const;
 
   int getWidth() const;
   int getHeight() const;
@@ -30,13 +33,13 @@ class Tile {
   void setType(short type);
   void setType(std::string type);
 
-  void draw(BITMAP* buffer, int xOffset, int yOffset, int frame);
+  void draw(int xOffset, int yOffset, int frame);
 
  private:
-  int x, y;
-  std::vector<int> attribute;
+  int x{}, y{};
+  std::vector<int> attribute{};
 
-  TileType* t_type;
+  TileType* t_type{};
 };
 
 #endif

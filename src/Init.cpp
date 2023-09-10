@@ -1,31 +1,26 @@
 #include "Init.h"
 
-#include <allegro.h>
+#include <asw/asw.h>
 
 #include "globals.h"
 #include "utility/tools.h"
 
 #include "TileTypeLoader.h"
 
-Init::Init() {
-  set_window_title("Setting up");
+void Init::init() {
+  asw::display::setTitle("Setting up");
 
-  set_display_switch_mode(SWITCH_BACKGROUND);
+  TileTypeLoader::loadTypes("assets/data/tiles.xml");
 
-  // Setup number generator
-  srand(time(nullptr));
-
-  TileTypeLoader::LoadTypes("data/tiles.xml");
-
-  set_window_title("Mini Jim");
+  asw::display::setTitle("Mini Jim");
 }
 
-void Init::update(StateEngine& engine) {
-  setNextState(engine, StateEngine::STATE_INTRO);
+void Init::cleanup() {}
+
+void Init::update() {
+  setNextState(ProgramState::Intro);
 }
 
-void Init::draw(BITMAP* buffer) {
-  clear_to_color(buffer, 0x000000);
+void Init::draw() {
+  asw::draw::clearColor(asw::util::makeColor(0, 0, 0));
 }
-
-Init::~Init() {}

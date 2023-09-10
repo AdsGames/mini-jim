@@ -7,36 +7,31 @@
 #include "utility/tools.h"
 
 // Constructor
-TileMap::TileMap(const std::string& file) {
-  width = 0;
-  height = 0;
-  lighting = false;
-  frame_timer.Start();
+TileMap::TileMap(const std::string& file)
+    : width(0), height(0), lighting(false) {
+  frame_timer.start();
 
   if (file != "")
     load(file);
 }
 
-// Destructor
-TileMap::~TileMap() {}
-
 // Get width
-int TileMap::getWidth() const {
+auto TileMap::getWidth() const -> int {
   return width * 64;
 }
 
 // Get height
-int TileMap::getHeight() const {
+auto TileMap::getHeight() const -> int {
   return height * 64;
 }
 
 // Get frame
-int TileMap::getFrame() {
-  return int(frame_timer.GetElapsedTime<milliseconds>() / 100) % 8;
+auto TileMap::getFrame() -> int {
+  return int(frame_timer.getElapsedTime<std::chrono::milliseconds>() / 100) % 8;
 }
 
 // Has lighting enabled
-bool TileMap::hasLighting() const {
+auto TileMap::hasLighting() const -> bool {
   return lighting;
 }
 
@@ -78,9 +73,9 @@ void TileMap::load_layer(std::ifstream& file, std::vector<Tile>& t_map) {
   }
 }
 
-bool TileMap::load(const std::string& file) {
+auto TileMap::load(const std::string& file) -> bool {
   // Change size
-  std::ifstream rf((file + ".level").c_str(), std::ios::in | std::ios::binary);
+  std::ifstream rf(file + ".level", std::ios::in | std::ios::binary);
 
   if (rf.fail()) {
     rf.close();
@@ -134,7 +129,7 @@ void TileMap::save_layer(std::ofstream& file, std::vector<Tile>& t_map) {
 
 // Save file
 void TileMap::save(const std::string& file) {
-  std::ofstream of((file + ".level").c_str(), std::ios::out | std::ios::binary);
+  std::ofstream of(file + ".level", std::ios::out | std::ios::binary);
 
   if (of.fail()) {
     of.close();
@@ -158,7 +153,7 @@ void TileMap::save(const std::string& file) {
 }
 
 // Get tile at
-Tile* TileMap::get_tile_at(int s_x, int s_y, int layer) {
+auto TileMap::get_tile_at(int s_x, int s_y, int layer) -> Tile* {
   std::vector<Tile>* ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
 
   for (auto& t : *ttm) {
@@ -172,7 +167,7 @@ Tile* TileMap::get_tile_at(int s_x, int s_y, int layer) {
 }
 
 // Find tile type
-Tile* TileMap::find_tile_type(int type, int layer) {
+auto TileMap::find_tile_type(int type, int layer) -> Tile* {
   std::vector<Tile>* ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
 
   for (auto& t : *ttm) {
@@ -203,27 +198,36 @@ std::vector<Tile*> TileMap::get_tiles_in_range(int x_1,
 }
 
 // Draw a layer
-void TileMap::draw_layer(BITMAP* buffer,
-                         std::vector<Tile>& t_map,
+void TileMap::draw_layer(std::vector<Tile>& t_map,
                          int x,
-                         int y) {
-  int frame = getFrame();
+                         int y,
+                         int width,
+                         int height,
+                         int destX,
+                         int destY) {
+  int const frame = getFrame();
 
   for (auto& t : t_map) {
-    if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + NATIVE_SCREEN_W) &&
-        (t.getY() + t.getHeight() >= y) && (t.getY() < y + NATIVE_SCREEN_H)) {
-      t.draw(buffer, x, y, frame);
+    if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + width) &&
+        (t.getY() + t.getHeight() >= y) && (t.getY() < y + height)) {
+      t.draw(x - destX, y - destY, frame);
     }
   }
 }
 
 // Draw at position
-void TileMap::draw(BITMAP* buffer, int x, int y, int layer) {
+void TileMap::draw(int x,
+                   int y,
+                   int width,
+                   int height,
+                   int destX,
+                   int destY,
+                   int layer) {
   if (layer == 0 || layer == 1) {
-    draw_layer(buffer, mapTilesBack, x, y);
+    draw_layer(mapTilesBack, x, y, width, height, destX, destY);
   }
 
   if (layer == 0 || layer == 2) {
-    draw_layer(buffer, mapTiles, x, y);
+    draw_layer(mapTiles, x, y, width, height, destX, destY);
   }
 }

@@ -1,258 +1,254 @@
 #include "Editor.h"
 
 #include <string>
-#include "TileTypeLoader.h"
 
+#include "TileTypeLoader.h"
 #include "globals.h"
-#include "utility/KeyListener.h"
-#include "utility/MouseListener.h"
 #include "utility/tools.h"
 
-Editor::Editor() {
-  // Create map
-  tile_map = new TileMap();
+void Editor::init() {
+  tile_map = std::make_unique<TileMap>();
+  pallette_tile = std::make_unique<Tile>(0, 0, 0);
 
-  // Create example tile
-  pallette_tile = new Tile(0, 0, 0);
+  font_editor = asw::assets::loadFont("assets/fonts/ariblk.ttf", 24);
 
-  font = load_font_ex("fonts/arial_black.pcx");
-  cursor = load_png_ex("images/gui/cursor1.png");
+  ib_save = InputBox(400, 408, 480, 50, font_editor, "untitled");
+  ib_open = InputBox(400, 408, 480, 50, font_editor, "level_1");
+  ib_width = InputBox(400, 408, 220, 50, font_editor, "64", "number");
+  ib_height = InputBox(660, 408, 220, 50, font_editor, "64", "number");
 
-  ib_save = InputBox(400, 408, 480, 50, "untitled");
-  ib_open = InputBox(400, 408, 480, 50, "level_1");
-  ib_width = InputBox(400, 408, 220, 50, "64", "number");
-  ib_height = InputBox(660, 408, 220, 50, "64", "number");
+  btn_save = Button({400, 500});
+  btn_open = Button({400, 500});
+  btn_new = Button({400, 500});
+  btn_close = Button({663, 500});
 
-  btn_save = Button(400, 500);
-  btn_open = Button(400, 500);
-  btn_new = Button(400, 500);
-  btn_close = Button(663, 500);
+  btn_save.SetOnClick(std::bind(&Editor::save_map, this));
+  btn_open.SetOnClick(std::bind(&Editor::open_map, this));
+  btn_new.SetOnClick(std::bind(&Editor::new_map, this));
+  btn_close.SetOnClick(std::bind(&Editor::close_map, this));
 
-  btn_save.SetOnClick(std::bind(&Editor::Save, this));
-  btn_open.SetOnClick(std::bind(&Editor::Open, this));
-  btn_new.SetOnClick(std::bind(&Editor::New, this));
-  btn_close.SetOnClick(std::bind(&Editor::Close, this));
+  btn_save.SetImages("assets/images/gui/button_save.png",
+                     "assets/images/gui/button_save_hover.png");
+  btn_open.SetImages("assets/images/gui/button_load.png",
+                     "assets/images/gui/button_load_hover.png");
+  btn_new.SetImages("assets/images/gui/button_create.png",
+                    "assets/images/gui/button_create_hover.png");
+  btn_close.SetImages("assets/images/gui/button_close.png",
+                      "assets/images/gui/button_close_hover.png");
 
-  btn_save.SetImages("images/gui/button_save.png",
-                     "images/gui/button_save_hover.png");
-  btn_open.SetImages("images/gui/button_load.png",
-                     "images/gui/button_load_hover.png");
-  btn_new.SetImages("images/gui/button_create.png",
-                    "images/gui/button_create_hover.png");
-  btn_close.SetImages("images/gui/button_close.png",
-                      "images/gui/button_close_hover.png");
-
-  set_alpha_blender();
+  // set_alpha_blender();
 
   layer = 1;
   draw_layer = 2;
-  editor_state = OPEN;
+  editor_state = EditorState::Open;
 }
 
-Editor::~Editor() {
-  destroy_bitmap(cursor);
-
-  delete tile_map;
-  delete pallette_tile;
+void Editor::close_map() {
+  editor_state = EditorState::Edit;
 }
 
-void Editor::Close() {
-  editor_state = EDIT;
+void Editor::save_map() {
+  tile_map->save("assets/data/" + ib_save.GetValue());
+  editor_state = EditorState::Edit;
 }
 
-void Editor::Save() {
-  tile_map->save("data/" + ib_save.GetValue());
-  editor_state = EDIT;
-}
-
-void Editor::Open() {
-  tile_map->load("data/" + ib_open.GetValue());
-  editor_state = EDIT;
-  cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map->getWidth(),
-               tile_map->getHeight());
+void Editor::open_map() {
+  tile_map->load("assets/data/" + ib_open.GetValue());
+  editor_state = EditorState::Edit;
+  auto size = asw::display::getLogicalSize();
+  cam = Camera(size.x, size.y, tile_map->getWidth(), tile_map->getHeight());
   cam.SetSpeed(1);
   cam.SetBounds(20, 20);
 }
 
-void Editor::New() {
+void Editor::new_map() {
   if (ib_width.GetValue().length() != 0 && ib_width.GetValue().length() != 0) {
-    editor_state = EDIT;
+    editor_state = EditorState::Edit;
     tile_map->create(stoi(ib_width.GetValue()), stoi(ib_height.GetValue()));
-    cam = Camera(NATIVE_SCREEN_W, NATIVE_SCREEN_H, tile_map->getWidth(),
-                 tile_map->getHeight());
+    auto size = asw::display::getLogicalSize();
+
+    cam = Camera(size.x, size.y, tile_map->getWidth(), tile_map->getHeight());
     cam.SetSpeed(1);
     cam.SetBounds(20, 20);
   }
 }
 
-void Editor::Edit() {
-  cam.Follow(MouseListener::x + cam.GetX(), MouseListener::y + cam.GetY());
+void Editor::edit_map() {
+  cam.Follow(static_cast<float>(asw::input::mouse.x) + cam.GetX(),
+             static_cast<float>(asw::input::mouse.y) + cam.GetY());
 
   // Change selected
-  if (KeyListener::keyPressed[KEY_UP]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_UP]) {
     int i = pallette_tile->getType() + 1;
 
-    while (!TileTypeLoader::GetTile(i))
+    while (TileTypeLoader::getTile(i) == nullptr) {
       i = (i + 1) > 400 ? 0 : i + 1;
+    }
 
     pallette_tile->setType(i);
   }
 
-  if (KeyListener::keyPressed[KEY_DOWN]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_DOWN]) {
     int i = pallette_tile->getType() - 1;
 
-    while (!TileTypeLoader::GetTile(i))
+    while (TileTypeLoader::getTile(i) == nullptr) {
       i = (i - 1) < 0 ? 400 : i - 1;
+    }
 
     pallette_tile->setType(i);
   }
 
   // Change Layer
-  if (KeyListener::keyPressed[KEY_TAB]) {
-    layer = !layer;
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_TAB]) {
+    layer = static_cast<int>(!static_cast<bool>(layer));
     draw_layer = layer + 1;
   }
 
   // Toggle lights
-  if (KeyListener::keyPressed[KEY_L]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_L]) {
     tile_map->toggleLights();
   }
 
   // Operations
-  Tile* temp_tile = tile_map->get_tile_at(MouseListener::x + cam.GetX(),
-                                          MouseListener::y + cam.GetY(), layer);
+  Tile* temp_tile =
+      tile_map->get_tile_at(asw::input::mouse.x + cam.GetX(),
+                            asw::input::mouse.y + cam.GetY(), layer);
 
-  if (temp_tile) {
+  if (temp_tile != nullptr) {
     // Place tile
-    if (mouse_b & 1)
+    if (asw::input::mouse.down[1]) {
       temp_tile->setType(pallette_tile->getType());
+    }
 
     // Erase tile
-    if (mouse_b & 2)
+    if (asw::input::mouse.down[4]) {
       temp_tile->setType(0);
+    }
 
     // Get tile type tile
-    if (KeyListener::keyPressed[KEY_K])
+    if (asw::input::keyboard.pressed[SDL_SCANCODE_K])
       pallette_tile->setType(temp_tile->getType());
   }
 
   // Save map
-  if (KeyListener::keyPressed[KEY_S]) {
-    clear_keybuf();
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_S]) {
     ib_save.Focus();
-    editor_state = SAVE;
+    editor_state = EditorState::Save;
   }
 
   // Open map
-  if (KeyListener::keyPressed[KEY_O]) {
-    clear_keybuf();
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_O]) {
     ib_open.Focus();
-    editor_state = OPEN;
+    editor_state = EditorState::Open;
   }
 
   // New map
-  if (KeyListener::keyPressed[KEY_N]) {
-    clear_keybuf();
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_N]) {
     ib_width.Update();
-    editor_state = CREATE;
+    editor_state = EditorState::Create;
   }
 
   // Fill map
-  if (KeyListener::keyPressed[KEY_F]) {
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_F]) {
     for (auto& t : tile_map->mapTilesBack) {
       t.setType(pallette_tile->getType());
     }
   }
 
   // Draw specific layers
-  if (key[KEY_0])
+  if (asw::input::keyboard.down[SDL_SCANCODE_0]) {
     draw_layer = 0;
+  }
 }
 
-void Editor::update(StateEngine& engine) {
+void Editor::update() {
   // Back to menu
-  if (KeyListener::keyPressed[KEY_M] && editor_state == EDIT) {
-    setNextState(engine, StateEngine::STATE_MENU);
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_M] &&
+      editor_state == EditorState::Edit) {
+    setNextState(ProgramState::Menu);
   }
 
   // Run states
-  if (editor_state == SAVE) {
+  if (editor_state == EditorState::Save) {
     ib_save.Update();
     btn_save.Update();
     btn_close.Update();
-  } else if (editor_state == OPEN) {
+  } else if (editor_state == EditorState::Open) {
     ib_open.Update();
     btn_open.Update();
     btn_close.Update();
-  } else if (editor_state == CREATE) {
+  } else if (editor_state == EditorState::Create) {
     ib_width.Update();
     ib_height.Update();
     btn_new.Update();
     btn_close.Update();
   } else {
-    Edit();
+    edit_map();
   }
 }
 
-void Editor::draw(BITMAP* buffer) {
+void Editor::draw() {
+  auto screenSize = asw::display::getLogicalSize();
+
   // Background
-  clear_to_color(buffer, 0x000000);
+  asw::draw::clearColor(asw::util::makeColor(0, 0, 0));
 
   // Draw tiles
-  tile_map->draw(buffer, cam.GetX(), cam.GetY(), draw_layer);
+  tile_map->draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y, 0, 0,
+                 draw_layer);
 
-  pallette_tile->draw(buffer, 0, 0, 0);
-  textprintf_ex(buffer, font, 70, 20, makecol(255, 255, 255), makecol(0, 0, 0),
-                "%s", pallette_tile->getName().c_str());
+  pallette_tile->draw(0, 0, 0);
+  asw::draw::text(font_editor, pallette_tile->getName(), 70, 20,
+                  asw::util::makeColor(255, 255, 255));
 
   // Map info
-  textprintf_ex(buffer, font, 0, 80, makecol(255, 255, 255), makecol(0, 0, 0),
-                "height-%i width-%i lighting-%i", tile_map->getHeight(),
-                tile_map->getWidth(), tile_map->hasLighting());
+  asw::draw::text(font_editor,
+                  "height-" + std::to_string(tile_map->getHeight()) +
+                      " width-" + std::to_string(tile_map->getWidth()) +
+                      " lighting-" + std::to_string(tile_map->hasLighting()),
+                  0, 80, asw::util::makeColor(255, 255, 255));
 
   if (layer == 1)
-    textprintf_ex(buffer, font, 0, 130, makecol(255, 255, 255),
-                  makecol(0, 0, 0), "Editing Mode: Foreground");
+    asw::draw::text(font_editor, "Editing Mode: Foreground ", 0, 130,
+                    asw::util::makeColor(255, 255, 255));
   else
-    textprintf_ex(buffer, font, 0, 130, makecol(255, 255, 255),
-                  makecol(0, 0, 0), "Editing Mode: Background");
+    asw::draw::text(font_editor, "Editing Mode: Background ", 0, 130,
+                    asw::util::makeColor(255, 255, 255));
 
-  if (editor_state == SAVE) {
-    rectfill(buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400,
-             makecol(255, 255, 255));
-    rect(buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400,
-         makecol(0, 0, 0));
-    textprintf_centre_ex(buffer, font, 640, 310, makecol(0, 0, 0), -1,
-                         "Save Map Name");
-    ib_save.Draw(buffer);
-    btn_save.Draw(buffer);
-    btn_close.Draw(buffer);
-  } else if (editor_state == OPEN) {
-    rectfill(buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400,
-             makecol(255, 255, 255));
-    rect(buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400,
-         makecol(0, 0, 0));
-    textprintf_centre_ex(buffer, font, 640, 310, makecol(0, 0, 0), -1,
-                         "Open Map Name");
-    ib_open.Draw(buffer);
-    btn_open.Draw(buffer);
-    btn_close.Draw(buffer);
-  } else if (editor_state == CREATE) {
-    rectfill(buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400,
-             makecol(255, 255, 255));
-    rect(buffer, 330, 300, NATIVE_SCREEN_W - 330, NATIVE_SCREEN_H - 400,
-         makecol(0, 0, 0));
-    textprintf_centre_ex(buffer, font, 640, 310, makecol(0, 0, 0), -1,
-                         "New Map");
-    textprintf_centre_ex(buffer, font, 500, 360, makecol(0, 0, 0), -1, "Width");
-    textprintf_centre_ex(buffer, font, 800, 360, makecol(0, 0, 0), -1,
-                         "Height");
-    ib_width.Draw(buffer);
-    ib_height.Draw(buffer);
-    btn_new.Draw(buffer);
-    btn_close.Draw(buffer);
+  if (editor_state == EditorState::Save) {
+    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
+                        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                    asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "Save Map Name", 640, 310,
+                          asw::util::makeColor(0, 0, 0));
+    ib_save.Draw();
+    btn_save.Draw();
+    btn_close.Draw();
+  } else if (editor_state == EditorState::Open) {
+    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
+                        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                    asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "Open Map Name", 640, 310,
+                          asw::util::makeColor(0, 0, 0));
+    ib_open.Draw();
+    btn_open.Draw();
+    btn_close.Draw();
+  } else if (editor_state == EditorState::Create) {
+    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
+                        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
+                    asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "New Map", 640, 310,
+                          asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "Width", 500, 360,
+                          asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "Height", 800, 360,
+                          asw::util::makeColor(0, 0, 0));
+    ib_width.Draw();
+    ib_height.Draw();
+    btn_new.Draw();
+    btn_close.Draw();
   }
-
-  // Cursor
-  draw_sprite(buffer, cursor, MouseListener::x, MouseListener::y);
 }

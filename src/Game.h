@@ -3,42 +3,39 @@
 
 #include "State.h"
 
-#include <allegro.h>
+#include <asw/asw.h>
+#include <asw/util/Timer.h>
 
 #include "Camera.h"
+#include "LightLayer.h"
 #include "Player.h"
 #include "TileMap.h"
-#include "utility/Timer.h"
 
 // Main game screen
 class Game : public State {
  public:
-  Game();
-  virtual ~Game();
-  virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
-  void init();
+  explicit Game(StateEngine& engine) : State(engine) {}
+
+  virtual void init() override;
+  virtual void update() override;
+  virtual void draw() override;
+  virtual void cleanup() override;
+
+  void setup();
 
  private:
-  // Disallow copy
-  Game(const Game&);
-  Game& operator=(const Game&);
+  asw::Sample countdown;
+  asw::Sample timeout;
 
-  BITMAP *screen1, *screen2;
-  SAMPLE* countdown;
-  SAMPLE* timeout;
+  asw::Font cooper;
 
-  FONT* cooper;
+  asw::Texture countdownImage;
+  asw::Texture results;
+  asw::Texture results_singleplayer;
 
-  BITMAP* countdownImage;
-  BITMAP* results;
-  BITMAP* results_singleplayer;
+  asw::Sample mainMusic;
 
-  SAMPLE* mainMusic;
-
-  COLOR_MAP light_table;
-  PALLETE pal;
-  BITMAP *darkness, *darkness_old, *spotlight;
+  LightLayer lightLayer;
 
   // Objects
   Player *player1, *player2;

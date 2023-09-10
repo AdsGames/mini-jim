@@ -12,9 +12,7 @@ Camera::Camera(int width, int height, int max_x, int max_y)
       bound_y(height / 2),
       max_x(max_x),
       max_y(max_y),
-      speed(16.0f) {}
-
-Camera::~Camera() {}
+      speed(16.0F) {}
 
 void Camera::SetSpeed(float speed) {
   this->speed = speed;
@@ -26,44 +24,50 @@ void Camera::SetBounds(int x, int y) {
 }
 
 void Camera::Follow(float f_x, float f_y) {
-  float y_diff = f_y - y;
-  float x_diff = f_x - x;
+  float const y_diff = f_y - y;
+  float const x_diff = f_x - x;
 
-  if (y_diff < bound_y)
+  if (y_diff < bound_y) {
     y += (y_diff - bound_y) / speed;
-  else if (y_diff > height - bound_y)
+  } else if (y_diff > height - bound_y) {
     y += (y_diff - (height - bound_y)) / speed;
+  }
 
-  if (x_diff < bound_x)
+  if (x_diff < bound_x) {
     x += (x_diff - bound_x) / speed;
-  else if (x_diff > width - bound_x)
+  } else if (x_diff > width - bound_x) {
     x += (x_diff - (width - bound_x)) / speed;
+  }
 
-  if (y < 0)
+  if (y < 0) {
     y = 0;
+  }
 
-  if (y + height > max_y)
+  if (y + height > max_y) {
     y = max_y - height;
+  }
 
-  if (x < 0)
+  if (x < 0) {
     x = 0;
+  }
 
-  if (x + width > max_x)
+  if (x + width > max_x) {
     x = max_x - width;
+  }
 }
 
-int Camera::GetWidth() const {
+auto Camera::GetWidth() const -> int {
   return width;
 }
 
-int Camera::GetHeight() const {
+auto Camera::GetHeight() const -> int {
   return height;
 }
 
-int Camera::GetX() const {
-  return round(x);
+auto Camera::GetX() const -> int {
+  return std::round(x);
 }
 
-int Camera::GetY() const {
-  return round(y);
+auto Camera::GetY() const -> int {
+  return std::round(y);
 }

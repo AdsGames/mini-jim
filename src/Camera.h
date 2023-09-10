@@ -5,7 +5,7 @@ class Camera {
  public:
   Camera();
   Camera(int width, int height, int max_x, int max_y);
-  virtual ~Camera();
+  virtual ~Camera() = default;
 
   void SetSpeed(float speed);
   void Follow(float f_x, float f_y);

@@ -10,10 +10,22 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include <allegro.h>
+#include <asw/asw.h>
+#include <memory>
 
 // Class
 class State;
+
+// Game states
+enum class ProgramState {
+  Null,
+  Init,
+  Intro,
+  Menu,
+  Game,
+  Edit,
+  Exit,
+};
 
 /*****************
  * STATE ENGINE
@@ -21,43 +33,32 @@ class State;
 class StateEngine {
  public:
   // Init
-  StateEngine();
+  StateEngine() = default;
 
   // Update
   void update();
 
   // Draw
-  void draw(BITMAP* buffer);
+  void draw();
 
   // Set next state
-  void setNextState(const int newState);
+  void setNextState(ProgramState state);
 
   // Get state id
-  int getStateId() const;
-
-  // Game states
-  enum programStates {
-    STATE_NULL,
-    STATE_INIT,
-    STATE_INTRO,
-    STATE_MENU,
-    STATE_EDIT,
-    STATE_GAME,
-    STATE_EXIT,
-  };
+  auto getStateId() const -> ProgramState;
 
  private:
   // Change state
   void changeState();
 
   // Next state
-  int nextState = STATE_NULL;
+  ProgramState nextState{ProgramState::Null};
 
   // State id
-  int currentState = STATE_NULL;
+  ProgramState currentState{ProgramState::Null};
 
   // Stores states
-  State* state;
+  std::unique_ptr<State> state{nullptr};
 };
 
 /*********
@@ -65,23 +66,28 @@ class StateEngine {
  *********/
 class State {
  public:
-  // Virtual destructor
-  State(){};
-  virtual ~State(){};
+  // Constructor
+  explicit State(StateEngine& engine) : engine(engine){};
+
+  virtual ~State() = default;
+
+  // Init the state
+  virtual void init() = 0;
 
   // Draw to screen
-  virtual void draw(BITMAP* buffer) = 0;
+  virtual void draw() = 0;
+
+  // Cleanup
+  virtual void cleanup() = 0;
 
   // Update logic
-  virtual void update(StateEngine& engine) = 0;
+  virtual void update() = 0;
 
   // Change state
-  static void setNextState(StateEngine& engine, int state);
+  void setNextState(ProgramState state);
 
  private:
-  // Disallow copy
-  State(const State&);
-  State& operator=(const State&);
+  StateEngine& engine;
 };
 
 #endif  // STATE_H

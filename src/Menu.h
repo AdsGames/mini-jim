@@ -3,52 +3,52 @@
 
 #include "State.h"
 
-#include <allegro.h>
-#include <loadpng.h>
+#include <asw/asw.h>
 #include <string>
 #include <vector>
 
-#include "TileMap.h"
-
-#include "globals.h"
-#include "utility/tools.h"
-
 #include "Camera.h"
+#include "LightLayer.h"
+#include "TileMap.h"
+#include "globals.h"
 #include "ui/Button.h"
+#include "utility/tools.h"
 
 class Menu : public State {
  public:
-  Menu();
-  virtual ~Menu();
-  virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
+  explicit Menu(StateEngine& engine) : State(engine) {}
+
+  void init() override;
+  void update() override;
+  void draw() override;
+  void cleanup() override;
 
  private:
-  // Disallow copy
-  Menu(const Menu&);
-  Menu& operator=(const Menu&);
-
   // Mouse hovering over button
-  bool button_hover();
+  auto button_hover() -> bool;
 
   // Change level (background)
   void change_level(int level);
 
   // Menu/GUI
-  BITMAP *levelSelectNumber, *cursor, *menuselect, *menu, *help, *copyright,
-      *credits;
-  SAMPLE *click, *intro, *music;
+  asw::Texture levelSelectNumber, cursor, menuselect, menu, help, copyright,
+      credits;
+  asw::Sample click, intro, music;
 
   // Live background
-  TileMap* tile_map;
-  float scroll_x, scroll_y;
-  int scroll_dir_x, scroll_dir_y;
-  int next_state;
+  TileMap* tile_map{};
+  float scroll_x{};
+  float scroll_y{};
+
+  int scroll_dir_x{};
+  int scroll_dir_y{};
+
+  ProgramState next_state;
 
   // Lighting effects
-  COLOR_MAP light_table;
-  PALLETE pal;
-  BITMAP *darkness, *darkness_old, *spotlight;
+  LightLayer lightLayer;
+
+  asw::Font menuFont;
 
   enum button_names {
     BUTTON_START,

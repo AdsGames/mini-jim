@@ -1,57 +1,54 @@
 #include "Button.h"
 
-#include "../utility/MouseListener.h"
+#include <utility>
+
 #include "../utility/tools.h"
 
-Button::Button() : Button(0, 0) {}
-
-Button::Button(int x, int y)
-    : OnClick(nullptr), x(x), y(y), width(10), height(10) {
+Button::Button(Vec2<int> position) : OnClick(nullptr), position(position) {
   images[0] = nullptr;
   images[1] = nullptr;
 }
 
-Button::~Button() {
-  destroy_bitmap(images[0]);
-  destroy_bitmap(images[1]);
-}
-
 void Button::SetOnClick(std::function<void(void)> func) {
-  OnClick = func;
+  OnClick = std::move(func);
 }
 
 // Load images from file
 void Button::SetImages(const char* image1, const char* image2) {
-  images[0] = load_png_ex(image1);
-  images[1] = load_png_ex(image2);
+  images[0] = asw::assets::loadTexture(image1);
+  images[1] = asw::assets::loadTexture(image2);
 
   // Size
-  height = images[0]->h;
-  width = images[0]->w;
+  auto texture_size = asw::util::getTextureSize(images[0]);
+  size.y = texture_size.y;
+  size.x = texture_size.x;
 }
 
-bool Button::Hover() const {
-  return collisionAny(MouseListener::x, MouseListener::x, x, x + width,
-                      MouseListener::y, MouseListener::y, y, y + height);
+auto Button::Hover() const -> bool {
+  return collisionAny(asw::input::mouse.x, asw::input::mouse.x, position.x,
+                      position.x + size.x, asw::input::mouse.y,
+                      asw::input::mouse.y, position.y, position.y + size.y);
 }
 
 void Button::Update() {
-  if (Hover() && MouseListener::mouse_pressed & 1 && OnClick != nullptr)
+  if (Hover() && asw::input::mouse.pressed[1] && OnClick != nullptr) {
     OnClick();
+  }
 }
 
-int Button::GetX() const {
-  return x;
+auto Button::GetX() const -> int {
+  return position.x;
 }
 
-int Button::GetY() const {
-  return y;
+auto Button::GetY() const -> int {
+  return position.y;
 }
 
-void Button::Draw(BITMAP* buffer) {
+void Button::Draw() {
   if (images[Hover()]) {
-    draw_trans_sprite(buffer, images[Hover()], x, y);
+    asw::draw::sprite(images[Hover()], position.x, position.y);
   } else {
-    rectfill(buffer, x, y, x + width, y + height, 0x999999);
+    asw::draw::rectFill(position.x, position.y, position.x + size.x,
+                        position.y + size.y, asw::util::makeColor(60, 60, 60));
   }
 }

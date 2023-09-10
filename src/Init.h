@@ -5,10 +5,12 @@
 
 class Init : public State {
  public:
-  Init();
-  virtual ~Init();
-  virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
+  explicit Init(StateEngine& engine) : State(engine) {}
+
+  virtual void init() override;
+  virtual void update() override;
+  virtual void draw() override;
+  virtual void cleanup() override;
 };
 
 #endif  // INIT_H

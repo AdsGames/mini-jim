@@ -12,73 +12,75 @@
  * STATE ENGINE
  *****************/
 
-// Init
-StateEngine::StateEngine()
-    : nextState(STATE_NULL), currentState(STATE_NULL), state(nullptr) {}
-
 // Draw
-void StateEngine::draw(BITMAP* buffer) {
+void StateEngine::draw() {
   if (state) {
-    state->draw(buffer);
+    // Clear screen
+    SDL_RenderClear(asw::display::renderer);
+
+    state->draw();
+
+    // Update screen
+    SDL_RenderPresent(asw::display::renderer);
   }
 }
 
 // Update
 void StateEngine::update() {
   if (state) {
-    state->update(*this);
+    state->update();
   }
 
   changeState();
 }
 
 // Set next state
-void StateEngine::setNextState(const int newState) {
+void StateEngine::setNextState(const ProgramState newState) {
   nextState = newState;
 }
 
 // Get state id
-int StateEngine::getStateId() const {
+auto StateEngine::getStateId() const -> ProgramState {
   return currentState;
 }
 
 // Change game screen
 void StateEngine::changeState() {
   // If the state needs to be changed
-  if (nextState == STATE_NULL) {
+  if (nextState == ProgramState::Null) {
     return;
   }
 
   // Delete the current state
   if (state) {
-    delete state;
+    state->cleanup();
     state = nullptr;
   }
 
   // Change the state
   switch (nextState) {
-    case STATE_GAME:
-      state = new Game();
+    case ProgramState::Game:
+      state = std::make_unique<Game>(*this);
       std::cout << ("Switched state to game.\n");
       break;
 
-    case STATE_MENU:
-      state = new Menu();
+    case ProgramState::Menu:
+      state = std::make_unique<Menu>(*this);
       std::cout << ("Switched state to main menu.\n");
       break;
 
-    case STATE_INIT:
-      state = new Init();
+    case ProgramState::Init:
+      state = std::make_unique<Init>(*this);
       std::cout << ("Switched state to init.\n");
       break;
 
-    case STATE_INTRO:
-      state = new Intro();
+    case ProgramState::Intro:
+      state = std::make_unique<Intro>(*this);
       std::cout << ("Switched state to intro.\n");
       break;
 
-    case STATE_EDIT:
-      state = new Editor();
+    case ProgramState::Edit:
+      state = std::make_unique<Editor>(*this);
       std::cout << ("Switched state to edit.\n");
       break;
 
@@ -87,11 +89,13 @@ void StateEngine::changeState() {
       break;
   }
 
+  state->init();
+
   // Change the current state ID
   currentState = nextState;
 
   // NULL the next state ID
-  nextState = STATE_NULL;
+  nextState = ProgramState::Null;
 }
 
 /*********
@@ -99,6 +103,6 @@ void StateEngine::changeState() {
  *********/
 
 // Change state
-void State::setNextState(StateEngine& engine, int state) {
-  engine.setNextState(state);
+void State::setNextState(const ProgramState state) {
+  this->engine.setNextState(state);
 }

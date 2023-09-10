@@ -5,92 +5,86 @@
 #include "globals.h"
 #include "utility/tools.h"
 
-Game::Game() {
-  // Create screens
-  if (single_player) {
-    screen1 = create_bitmap(NATIVE_SCREEN_W, NATIVE_SCREEN_H);
-    screen2 = create_bitmap(0, 0);
-  } else {
-    screen1 = create_bitmap(NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
-    screen2 = create_bitmap(NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
-  }
-
+void Game::init() {
   // Player
   player1 = new Player(1);
   player2 = new Player(2);
 
-  // Build a color lookup table for lighting effects
-  get_palette(pal);
-  create_light_table(&light_table, pal, 0, 0, 0, nullptr);
-
   // Sets Font
-  cooper = load_font_ex("fonts/cooper_black.pcx");
+  cooper = asw::assets::loadFont("assets/fonts/cooper.ttf", 24);
 
   // Load images
-  countdownImage = load_png_ex("images/321go.png");
-  darkness = load_png_ex("images/darkness.png");
-  darkness_old = load_png_ex("images/darkness.png");
+  countdownImage = asw::assets::loadTexture("assets/images/321go.png");
 
-  spotlight = load_png_ex("images/spotlight.png");
-
-  results = load_png_ex("images/gui/winscreen.png");
-  results_singleplayer = load_png_ex("images/gui/winscreen_singleplayer.png");
+  results = asw::assets::loadTexture("assets/images/gui/winscreen.png");
+  results_singleplayer =
+      asw::assets::loadTexture("assets/images/gui/winscreen_singleplayer.png");
 
   // Samples
-  countdown = load_sample_ex("sounds/countdown.wav");
-  timeout = load_sample_ex("sounds/timeout.wav");
+  countdown = asw::assets::loadSample("assets/sounds/countdown.wav");
+  timeout = asw::assets::loadSample("assets/sounds/timeout.wav");
 
   // Load music
-  mainMusic = load_ogg_ex("sounds/music/BasicJimFull.ogg");
+  mainMusic = asw::assets::loadSample("assets/sounds/music/BasicJimFull.ogg");
 
   tile_map = nullptr;
 
   // Init
-  init();
+  setup();
 }
 
-void Game::init() {
+void Game::setup() {
   // Create map
-  if (tile_map)
-    delete tile_map;
+  delete tile_map;
 
   tile_map = new TileMap();
 
-  std::string file_name = "data/level_" + std::to_string(levelOn + 1);
+  std::string file_name = "assets/data/level_" + std::to_string(levelOn + 1);
 
-  if (!tile_map->load(file_name))
-    abort_on_error("Could not open level" + file_name);
+  if (!tile_map->load(file_name)) {
+    asw::util::abortOnError("Could not open level" + file_name);
+  }
 
-  cam_1 = Camera(screen1->w, screen1->h, tile_map->getWidth(),
-                 tile_map->getHeight());
-  cam_2 = Camera(screen2->w, screen2->h, tile_map->getWidth(),
-                 tile_map->getHeight());
+  auto screenSize = asw::display::getLogicalSize();
+
+  if (single_player) {
+    cam_1 = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
+                   tile_map->getHeight());
+    cam_2 = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
+                   tile_map->getHeight());
+  } else {
+    cam_1 = Camera(screenSize.x, screenSize.y / 2, tile_map->getWidth(),
+                   tile_map->getHeight());
+    cam_2 = Camera(screenSize.x, screenSize.y / 2, tile_map->getWidth(),
+                   tile_map->getHeight());
+  }
+
+  cam_1.SetSpeed(8.0F);
+  cam_2.SetSpeed(8.0F);
 
   // Find spawn
   Tile* spawnTile = tile_map->find_tile_type(199, 1);
 
   if (spawnTile != nullptr) {
-    player1->set_spawn(spawnTile->getX(), spawnTile->getY());
-    player2->set_spawn(spawnTile->getX(), spawnTile->getY());
+    player1->setSpawn(spawnTile->getX(), spawnTile->getY());
+    player2->setSpawn(spawnTile->getX(), spawnTile->getY());
   }
 
   // Play music
-  play_sample(countdown, 255, 125, 1000, 0);
-  play_sample(mainMusic, 255, 125, 1000, 1);
+  asw::sound::play(countdown, 255, 128, 0);
+  asw::sound::play(mainMusic, 255, 128, 1);
 
   // Start game
-  tm_begin.Start();
+  tm_begin.start();
 }
 
-void Game::update(StateEngine& engine) {
+void Game::update() {
   // Camera follow
   cam_1.Follow(player1->getX(), player1->getY());
   cam_2.Follow(player2->getX(), player2->getY());
 
   // Starting countdown
-  if (!tm_begin.IsRunning()) {
-    poll_joystick();
-
+  if (!tm_begin.isRunning()) {
     // Stop from moving once done
     if (!player1->getFinished()) {
       player1->update(tile_map);
@@ -102,195 +96,181 @@ void Game::update(StateEngine& engine) {
   }
 
   // Timers
-  if (tm_begin.IsRunning() && tm_begin.GetElapsedTime<milliseconds>() > 1200) {
-    tm_begin.Stop();
-    tm_p1.Start();
-    tm_p2.Start();
+  if (tm_begin.isRunning() &&
+      tm_begin.getElapsedTime<std::chrono::milliseconds>() > 1200) {
+    tm_begin.stop();
+    tm_p1.start();
+    tm_p2.start();
   }
 
-  if (tm_p1.IsRunning() && player1->getFinished())
-    tm_p1.Stop();
+  if (tm_p1.isRunning() && player1->getFinished())
+    tm_p1.stop();
 
-  if (tm_p2.IsRunning() && player2->getFinished())
-    tm_p2.Stop();
+  if (tm_p2.isRunning() && player2->getFinished())
+    tm_p2.stop();
 
   // Change level when both are done
-  if (key[KEY_ENTER] && player1->getFinished() &&
-      (player2->getFinished() || single_player)) {
-    setNextState(engine, StateEngine::STATE_MENU);
+  if (asw::input::keyboard.down[SDL_SCANCODE_RETURN] &&
+      player1->getFinished() && (player2->getFinished() || single_player)) {
+    setNextState(ProgramState::Menu);
   }
 
   // Back to menu
-  if (key[KEY_M])
-    setNextState(engine, StateEngine::STATE_MENU);
+  if (asw::input::keyboard.down[SDL_SCANCODE_M]) {
+    setNextState(ProgramState::Menu);
+  }
 }
 
-void Game::draw(BITMAP* buffer) {
-  // Black background (just in case)
-  rectfill(buffer, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H, 0x000000);
+void Game::draw() {
+  auto screenSize = asw::display::getLogicalSize();
 
   // Draw tiles and characters
-  tile_map->draw(screen1, cam_1.GetX(), cam_1.GetY());
-  player1->draw(screen1, cam_1.GetX(), cam_1.GetY());
 
-  if (!single_player) {
-    tile_map->draw(screen2, cam_2.GetX(), cam_2.GetY());
-    player2->draw(screen1, cam_1.GetX(), cam_1.GetY());
-    player1->draw(screen1, cam_1.GetX(), cam_1.GetY());
-    player1->draw(screen2, cam_2.GetX(), cam_2.GetY());
-    player2->draw(screen2, cam_2.GetX(), cam_2.GetY());
+  if (single_player) {
+    tile_map->draw(cam_1.GetX(), cam_1.GetY(), cam_1.GetWidth(),
+                   cam_1.GetHeight());
+    player1->draw(cam_1.GetX(), cam_1.GetY());
+  }
+
+  else {
+    tile_map->draw(cam_1.GetX(), cam_1.GetY(), cam_1.GetWidth(),
+                   cam_1.GetHeight(), 0, 0);
+    player1->draw(cam_1.GetX(), cam_1.GetY());
+    player2->draw(cam_1.GetX(), cam_1.GetY());
+
+    tile_map->draw(cam_2.GetX(), cam_2.GetY(), cam_2.GetWidth(),
+                   cam_2.GetHeight(), 0, screenSize.y / 2);
+    player1->draw(cam_2.GetX(), cam_2.GetY() - screenSize.y / 2);
+    player2->draw(cam_2.GetX(), cam_2.GetY() - screenSize.y / 2);
   }
 
   // Lighting
   if (tile_map->hasLighting()) {
-    set_alpha_blender();
-    draw_sprite(darkness, darkness_old, 0, 0);
+    std::vector<SDL_Point> lightPointsP1;
 
     // Get map area
-    std::vector<Tile*> ranged_map = tile_map->get_tiles_in_range(
-        cam_1.GetX() - spotlight->w,
-        cam_1.GetX() + cam_1.GetWidth() + spotlight->w,
-        cam_1.GetY() - spotlight->h,
-        cam_1.GetY() + cam_1.GetHeight() + spotlight->w);
+    std::vector<Tile*> rangeP1 = tile_map->get_tiles_in_range(
+        cam_1.GetX(), cam_1.GetX() + cam_1.GetWidth(), cam_1.GetY(),
+        cam_1.GetY() + cam_1.GetHeight());
 
-    for (auto t : ranged_map) {
+    for (auto t : rangeP1) {
       if (t->containsAttribute(light)) {
-        stretch_sprite(
-            darkness, spotlight,
-            t->getX() - cam_1.GetX() + t->getWidth() / 2 - t->getWidth() * 3,
-            t->getY() - cam_1.GetY() + t->getHeight() / 2 - t->getHeight() * 3,
-            t->getWidth() * 6, t->getHeight() * 6);
+        lightPointsP1.push_back(
+            {t->getCenterX() - cam_1.GetX(), t->getCenterY() - cam_1.GetY()});
       }
     }
 
-    draw_sprite(darkness, spotlight,
-                player1->getX() - cam_1.GetX() + 32 - (spotlight->w / 2),
-                player1->getY() - cam_1.GetY() + 32 - (spotlight->h / 2));
-    draw_trans_sprite(screen1, darkness, 0, 0);
-  }
+    lightPointsP1.push_back({static_cast<int>(player1->getX() - cam_1.GetX() + 32),
+                             static_cast<int>(player1->getY() - cam_1.GetY() + 32)});
 
-  // Draw split screens
-  // Screens
-  if (single_player) {
-    stretch_sprite(buffer, screen1, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H);
-  } else {
-    stretch_sprite(buffer, screen1, 0, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H / 2);
-    stretch_sprite(buffer, screen2, 0, NATIVE_SCREEN_H / 2, NATIVE_SCREEN_W,
-                   NATIVE_SCREEN_H / 2);
-    rectfill(buffer, 0, (NATIVE_SCREEN_H / 2) - 8, NATIVE_SCREEN_W,
-             (NATIVE_SCREEN_H / 2) + 8, makecol(0, 0, 0));
+    lightLayer.draw(lightPointsP1);
   }
 
   // Frame
-  rectfill(buffer, 0, 0, NATIVE_SCREEN_W, 16, makecol(0, 0, 0));
-  rectfill(buffer, 0, 0, 16, NATIVE_SCREEN_H, makecol(0, 0, 0));
-  rectfill(buffer, NATIVE_SCREEN_W - 16, 0, NATIVE_SCREEN_W, NATIVE_SCREEN_H,
-           makecol(0, 0, 0));
-  rectfill(buffer, 0, NATIVE_SCREEN_H - 16, NATIVE_SCREEN_W, NATIVE_SCREEN_H,
-           makecol(0, 0, 0));
+  asw::draw::rectFill(0, 0, screenSize.x, 16, asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(0, 0, 16, screenSize.y, asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(screenSize.x - 16, 0, screenSize.x, screenSize.y,
+                      asw::util::makeColor(0, 0, 0));
+  asw::draw::rectFill(0, screenSize.y - 16, screenSize.x, screenSize.y,
+                      asw::util::makeColor(0, 0, 0));
 
   // Timers
-  rectfill(buffer, 20, 20, 320, 90, makecol(0, 0, 0));
-
-  if (!single_player)
-    rectfill(buffer, 20, (NATIVE_SCREEN_H / 2) + 20, 320,
-             (NATIVE_SCREEN_H / 2) + 90, makecol(0, 0, 0));
-
-  // Draw timer to screen
-  textprintf_ex(buffer, cooper, 40, 55, makecol(255, 255, 255), -1,
-                "Time: %.1f", tm_p1.GetElapsedTime<milliseconds>() / 1000);
-  textprintf_ex(buffer, cooper, 40, 20, makecol(255, 255, 255), -1, "Deaths:%i",
-                player1->getDeathcount());
+  asw::draw::rectFill(20, 20, 320, 90, asw::util::makeColor(0, 0, 0));
 
   if (!single_player) {
-    textprintf_ex(buffer, cooper, 40, (NATIVE_SCREEN_H / 2) + 20 + 35,
-                  makecol(255, 255, 255), -1, "Time: %.1f",
-                  tm_p2.GetElapsedTime<milliseconds>() / 1000);
-    textprintf_ex(buffer, cooper, 40, (NATIVE_SCREEN_H / 2) + 20,
-                  makecol(255, 255, 255), -1, "Deaths:%i",
-                  player2->getDeathcount());
+    asw::draw::rectFill(20, (screenSize.y / 2) + 20, 320,
+                        90, asw::util::makeColor(0, 0, 0));
+  }
+
+  // Draw timer to screen
+  asw::draw::text(
+      cooper,
+      "Time: " + std::to_string(
+                     tm_p1.getElapsedTime<std::chrono::milliseconds>() / 1000),
+      40, 55, asw::util::makeColor(255, 255, 255, 255));
+  asw::draw::text(cooper, "Deaths:" + std::to_string(player1->getDeathcount()),
+                  40, 20, asw::util::makeColor(255, 255, 255, 255));
+
+  if (!single_player) {
+    asw::draw::text(
+        cooper,
+        "Time: " +
+            std::to_string(tm_p2.getElapsedTime<std::chrono::milliseconds>() /
+                           1000),
+        40, (screenSize.y / 2) + 20 + 35,
+        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::text(
+        cooper, "Deaths:" + std::to_string(player2->getDeathcount()), 40,
+        (screenSize.y / 2) + 20, asw::util::makeColor(255, 255, 255, 255));
   }
 
   // Starting countdown
   else {
     // Timer 3..2..1..GO!
-    if (tm_begin.GetElapsedTime<milliseconds>() < 330)
-      masked_stretch_blit(countdownImage, buffer, 0, 0, 14, 18,
-                          NATIVE_SCREEN_W / 2 - 100, NATIVE_SCREEN_H / 2 - 100,
-                          140, 180);
-    else if (tm_begin.GetElapsedTime<milliseconds>() < 660)
-      masked_stretch_blit(countdownImage, buffer, 19, 0, 14, 18,
-                          NATIVE_SCREEN_W / 2 - 100, NATIVE_SCREEN_H / 2 - 100,
-                          140, 180);
-    else if (tm_begin.GetElapsedTime<milliseconds>() < 990)
-      masked_stretch_blit(countdownImage, buffer, 39, 0, 14, 18,
-                          NATIVE_SCREEN_W / 2 - 100, NATIVE_SCREEN_H / 2 - 100,
-                          140, 180);
-    else if (tm_begin.GetElapsedTime<milliseconds>() < 1200)
-      masked_stretch_blit(countdownImage, buffer, 57, 0, 40, 18,
-                          NATIVE_SCREEN_W / 2 - 200, NATIVE_SCREEN_H / 2 - 100,
-                          400, 180);
+    if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 330) {
+      asw::draw::stretchSpriteBlit(countdownImage, 0, 0, 14, 18,
+                                   screenSize.x / 2 - 100,
+                                   screenSize.y / 2 - 100, 140, 180);
+    } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 660) {
+      asw::draw::stretchSpriteBlit(countdownImage, 19, 0, 14, 18,
+                                   screenSize.x / 2 - 100,
+                                   screenSize.y / 2 - 100, 140, 180);
+    } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 990) {
+      asw::draw::stretchSpriteBlit(countdownImage, 39, 0, 14, 18,
+                                   screenSize.x / 2 - 100,
+                                   screenSize.y / 2 - 100, 140, 180);
+    } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 1200) {
+      asw::draw::stretchSpriteBlit(countdownImage, 57, 0, 40, 18,
+                                   screenSize.x / 2 - 200,
+                                   screenSize.y / 2 - 100, 400, 180);
+    }
   }
 
   // Change level when both are done
   if (player1->getFinished() && (player2->getFinished() || single_player)) {
-    const float p1_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
-    const float p2_time = tm_p1.GetElapsedTime<milliseconds>() / 1000;
+    const float p1_time =
+        tm_p1.getElapsedTime<std::chrono::milliseconds>() / 1000;
+    const float p2_time =
+        tm_p2.getElapsedTime<std::chrono::milliseconds>() / 1000;
 
-    set_alpha_blender();
+    if (single_player) {
+      asw::draw::sprite(results_singleplayer, (screenSize.x / 2) - 364,
+                        (screenSize.y / 2) - 200);
+    } else {
+      asw::draw::sprite(results, (screenSize.x / 2) - 364,
+                        (screenSize.y / 2) - 200);
+    }
 
-    if (single_player)
-      draw_trans_sprite(buffer, results_singleplayer,
-                        (NATIVE_SCREEN_W / 2) - 364,
-                        (NATIVE_SCREEN_H / 2) - 200);
-    else
-      draw_trans_sprite(buffer, results, (NATIVE_SCREEN_W / 2) - 364,
-                        (NATIVE_SCREEN_H / 2) - 200);
-
-    textprintf_ex(buffer, cooper, (NATIVE_SCREEN_W / 2) - 60,
-                  (NATIVE_SCREEN_H / 2) - 110, makecol(255, 255, 255), -1,
-                  "%.1f", p1_time);
+    asw::draw::text(cooper, std::to_string(p1_time), (screenSize.x / 2) - 60,
+                    (screenSize.y / 2) - 110,
+                    asw::util::makeColor(255, 255, 255, 255));
 
     if (!single_player) {
-      textprintf_ex(buffer, cooper, (NATIVE_SCREEN_W / 2) - 60,
-                    (NATIVE_SCREEN_H / 2) - 55, makecol(255, 255, 255), -1,
-                    "%.1f", p2_time);
+      asw::draw::text(cooper, std::to_string(p2_time), (screenSize.x / 2) - 60,
+                      (screenSize.y / 2) - 55,
+                      asw::util::makeColor(255, 255, 255, 255));
 
       if (p1_time < p2_time) {
-        textprintf_ex(buffer, cooper, (NATIVE_SCREEN_W / 2) - 175,
-                      (NATIVE_SCREEN_H / 2) + 2, makecol(255, 255, 255), -1,
-                      "1");
-        textprintf_ex(buffer, cooper, (NATIVE_SCREEN_W / 2) - 5,
-                      (NATIVE_SCREEN_H / 2) + 2, makecol(255, 255, 255), -1,
-                      "%.1f", p2_time - p1_time);
+        asw::draw::text(cooper, "1", (screenSize.x / 2) - 175,
+                        (screenSize.y / 2) + 2,
+                        asw::util::makeColor(255, 255, 255, 255));
+        asw::draw::text(cooper, std::to_string(p2_time - p1_time),
+                        (screenSize.x / 2) - 5, (screenSize.y / 2) + 2,
+                        asw::util::makeColor(255, 255, 255, 255));
       } else if (p1_time > p2_time) {
-        textprintf_ex(buffer, cooper, (NATIVE_SCREEN_W / 2) - 175,
-                      (NATIVE_SCREEN_H / 2) + 2, makecol(255, 255, 255), -1,
-                      "2");
-        textprintf_ex(buffer, cooper, (NATIVE_SCREEN_W / 2) - 5,
-                      (NATIVE_SCREEN_H / 2) + 2, makecol(255, 255, 255), -1,
-                      "%.1f", p1_time - p2_time);
+        asw::draw::text(cooper, "2", (screenSize.x / 2) - 175,
+                        (screenSize.y / 2) + 2,
+                        asw::util::makeColor(255, 255, 255, 255));
+        asw::draw::text(cooper, std::to_string(p1_time - p2_time),
+                        (screenSize.x / 2) - 5, (screenSize.y / 2) + 2,
+                        asw::util::makeColor(255, 255, 255, 255));
       }
     }
   }
 }
 
-Game::~Game() {
-  // Destroy images
-  destroy_bitmap(screen1);
-  destroy_bitmap(screen2);
-  destroy_bitmap(countdownImage);
-  destroy_bitmap(results);
-  destroy_bitmap(results_singleplayer);
-
-  // Destroy fonts
-  destroy_font(cooper);
-
-  // Destroy sounds
-  destroy_sample(countdown);
-  destroy_sample(timeout);
-  destroy_sample(mainMusic);
-
-  // Fade out
-  highcolor_fade_out(16);
+void Game::cleanup() {
+  delete player1;
+  delete player2;
+  delete tile_map;
 }

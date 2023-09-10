@@ -2,58 +2,44 @@
 
 After being microfied Jim must find a way to become regular size again. Race through levels in singleplayer or multiplayer modes while avoiding new dangers.
 
-## Getting started
+## Setup
+
+### Dependencies
+
+To pull the submodules, run the following command:
+
+```bash
+git submodule update --init --recursive
+```
 
 ### Windows (MSYS2)
 
-#### Install Libraries
-
 ```bash
-https://www.allegro.cc/files/?v=4.4
-```
-
-#### Build
-
-```bash
-cmake -G "MSYS Makefiles" .
-```
-
-```bash
-make
+pacman -S mingw-w64-i686-gcc-libs mingw-w64-i686-SDL2 mingw-w64-i686-SDL2_mixer mingw-w64-i686-SDL2_image mingw-w64-i686-SDL2_ttf
 ```
 
 ### Mac OS
 
-#### Install Libraries
-
 ```bash
-https://github.com/msikma/liballeg.4.4.2-osx
-```
-
-#### Build
-
-```bash
-cmake -G "Unix Makefiles" .
-```
-
-```bash
-make
+brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer
 ```
 
 ### Linux
 
-#### Install Libraries
-
 ```bash
-sudo apt-get install liballegro4-dev libloadpng4-dev liblogg4-dev
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
 ```
 
-#### Build
+### Build
 
 ```bash
-cmake -G "Unix Makefiles" .
+cmake .
+make
 ```
 
+### Build Emscripten
+
 ```bash
+emcmake cmake .
 make
 ```

@@ -1,67 +1,51 @@
 #include "Intro.h"
 #include "utility/tools.h"
 
-#include <loadpng.h>
 #include <string>
 #include <vector>
 
 #include "globals.h"
-#include "utility/tools.h"
 
-Intro::Intro() {
-  background = load_png_ex("images/opening/background.png");
-  intro = load_png_ex("images/opening/intro.png");
-  title = load_png_ex("images/opening/title.png");
-  introSound = load_sample_ex("sounds/introSound.wav");
+void Intro::init() {
+  background = asw::assets::loadTexture("assets/images/opening/background.png");
+  intro = asw::assets::loadTexture("assets/images/opening/intro.png");
+  title = asw::assets::loadTexture("assets/images/opening/title.png");
+  introSound = asw::assets::loadSample("assets/sounds/introSound.wav");
 
   for (int i = 0; i < INTRO_FRAMES; i++) {
-    images[i] = load_png_ex(
-        std::string("images/opening/opening" + std::to_string(i) + ".png")
-            .c_str());
+    images[i] = asw::assets::loadTexture("assets/images/opening/opening" +
+                                         std::to_string(i) + ".png");
   }
 
-  timer.Start();
-  highcolor_fade_in(intro, 32);
-  frame = 0;
-  sound_played = false;
+  timer.start();
 }
 
-Intro::~Intro() {
-  for (int i = 0; i < INTRO_FRAMES; i++)
-    destroy_bitmap(images[i]);
-
-  destroy_bitmap(background);
-  destroy_bitmap(title);
-  destroy_bitmap(intro);
-  destroy_sample(introSound);
-}
-
-void Intro::update(StateEngine& engine) {
-  poll_joystick();
-  frame = (timer.GetElapsedTime<milliseconds>() - 3000) / 100;
+void Intro::update() {
+  // poll_joystick();
+  frame = (timer.getElapsedTime<std::chrono::milliseconds>() - 3000) / 100;
 
   if (frame >= 0 && !sound_played) {
-    play_sample(introSound, 255, 128, 1000, 0);
+    asw::sound::play(introSound, 255, 128, 0);
     sound_played = true;
   }
 
-  if (frame >= INTRO_FRAMES || key_down() || button_down()) {
-    setNextState(engine, StateEngine::STATE_MENU);
-    highcolor_fade_out(64);
+  if (frame >= INTRO_FRAMES || asw::input::keyboard.anyPressed) {
+    setNextState(ProgramState::Menu);
   }
 }
 
-void Intro::draw(BITMAP* buffer) {
+void Intro::draw() {
   // Intro stuffs
-  if (timer.GetElapsedTime<seconds>() < 1) {
-    draw_sprite(buffer, intro, 0, 0);
-  } else if (timer.GetElapsedTime<seconds>() < 2) {
-    draw_sprite(buffer, title, 0, 0);
+  if (timer.getElapsedTime<std::chrono::seconds>() < 1) {
+    asw::draw::sprite(intro, 0, 0);
+  } else if (timer.getElapsedTime<std::chrono::seconds>() < 2) {
+    asw::draw::sprite(title, 0, 0);
   } else {
-    clear_to_color(buffer, 0x00000);
-    stretch_sprite(buffer, background, 105, 140, 1070, 680);
+    asw::draw::clearColor(asw::util::makeColor(0, 0, 0));
+    asw::draw::stretchSprite(background, 105, 140, 1070, 680);
 
-    if (frame >= 0 && frame < INTRO_FRAMES)
-      stretch_sprite(buffer, images[frame], 105, 120, 1070, 660);
+    if (frame >= 0 && frame < INTRO_FRAMES) {
+      asw::draw::stretchSprite(images[frame], 105, 120, 1070, 660);
+    }
   }
 }

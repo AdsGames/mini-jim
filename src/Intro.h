@@ -1,34 +1,32 @@
 #ifndef INTRO_H
 #define INTRO_H
 
-#include <allegro.h>
+#include <asw/asw.h>
+#include <asw/util/Timer.h>
 
 #include "State.h"
-#include "utility/Timer.h"
 
 #define INTRO_FRAMES 84
 
 // Intro screen of game
 class Intro : public State {
  public:
-  Intro();
-  virtual ~Intro();
-  virtual void update(StateEngine& engine) override;
-  virtual void draw(BITMAP* buffer) override;
+  explicit Intro(StateEngine& engine) : State(engine) {}
+
+  virtual void init() override;
+  virtual void update() override;
+  virtual void draw() override;
+  virtual void cleanup() override{};
 
  private:
-  // Disallow copy
-  Intro(const Intro&);
-  Intro& operator=(const Intro&);
+  asw::Texture intro;
+  asw::Texture title;
+  asw::Texture background;
+  asw::Texture images[INTRO_FRAMES];
+  asw::Sample introSound;
 
-  BITMAP* intro;
-  BITMAP* title;
-  BITMAP* background;
-  BITMAP* images[INTRO_FRAMES];
-  SAMPLE* introSound;
-
-  int frame;
-  bool sound_played;
+  int frame = 0;
+  bool sound_played = false;
 
   Timer timer;
 };

@@ -1,36 +1,37 @@
 #ifndef INPUTBOX_H
 #define INPUTBOX_H
 
-#include <allegro.h>
+#include <asw/asw.h>
 #include <string>
 
 class InputBox {
  public:
-  InputBox();
-  InputBox(int x,
-           int y,
-           int width,
-           int height,
-           const std::string& value = "",
-           const std::string& type = "text");
-  virtual ~InputBox();
+  explicit InputBox(int x = 0,
+                    int y = 0,
+                    int width = 100,
+                    int height = 20,
+                    asw::Font font = nullptr,
+                    std::string value = "",
+                    std::string type = "text");
 
   void Focus();
 
-  std::string GetValue() const;
+  auto GetValue() const -> std::string;
   void Update();
-  void Draw(BITMAP* buffer);
-  bool Hover() const;
+  void Draw() const;
+  auto Hover() const -> bool;
 
  private:
   int x, y;
   int width, height;
 
-  std::string text;
-  std::string type;
+  asw::Font font;
 
-  unsigned int text_iter;
-  bool focused;
+  std::string text{};
+  std::string type{};
+
+  unsigned int text_iter{0};
+  bool focused{false};
 };
 
 #endif  // INPUTBOX_H
