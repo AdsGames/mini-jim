@@ -62,7 +62,7 @@ if(EMSCRIPTEN)
     ${PROJECT_NAME} 
     PROPERTIES 
     LINK_FLAGS
-    "--preload-file ${CMAKE_CURRENT_LIST_DIR}/assets@/assets --use-preload-plugins"
+    "--preload-file ${CMAKE_CURRENT_LIST_DIR}/assets@/assets --use-preload-plugins --shell-file ${CMAKE_CURRENT_LIST_DIR}/index.html"
   )
 
 # Run of the mill executable
@@ -85,6 +85,3 @@ endif(EMSCRIPTEN)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/assets/ DESTINATION ${CMAKE_BINARY_DIR}/build/assets/)
 
-if(EMSCRIPTEN)
-  file(COPY ${CMAKE_CURRENT_LIST_DIR}/index.html DESTINATION ${CMAKE_BINARY_DIR}/build/)
-endif(EMSCRIPTEN)

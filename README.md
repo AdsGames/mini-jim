@@ -2,6 +2,10 @@
 
 After being microfied Jim must find a way to become regular size again. Race through levels in singleplayer or multiplayer modes while avoiding new dangers.
 
+## Demo
+
+[Web Demo](https://adsgames.github.io/mini-jim/)
+
 ## Setup
 
 ### Dependencies
