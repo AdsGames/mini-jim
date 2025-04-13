@@ -32,7 +32,6 @@ $RECYCLE.BIN/
 # Icon must ends with two \r.
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -40,20 +39,6 @@ Icon
 .Spotlight-V100
 .Trashes
 
-CppCheckResults.xml
-CMakeFiles
-CMakeCache.txt
-Makefile
-*.cmake
-install_manifest.txt
-bin
-docs
-build/MiniJim*
-
-.ninja*
-build.ninja
-*.exe
+# Build
 /build
-.idea
-Testing/
-compile_commands.json
+

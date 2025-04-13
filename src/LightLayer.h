@@ -13,7 +13,7 @@ class LightLayer {
   void draw(std::vector<SDL_Point>& points);
 
  private:
-  SDL_Texture* lightLayer;
+  asw::Texture lightLayer;
 
   asw::Texture lightTexture;
 

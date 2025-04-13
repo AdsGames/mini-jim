@@ -37,15 +37,16 @@ void Intro::update() {
 void Intro::draw() {
   // Intro stuffs
   if (timer.getElapsedTime<std::chrono::seconds>() < 1) {
-    asw::draw::sprite(intro, 0, 0);
+    asw::draw::sprite(intro, asw::Vec2<float>(0, 0));
   } else if (timer.getElapsedTime<std::chrono::seconds>() < 2) {
-    asw::draw::sprite(title, 0, 0);
+    asw::draw::sprite(title, asw::Vec2<float>(0, 0));
   } else {
     asw::draw::clearColor(asw::util::makeColor(0, 0, 0));
-    asw::draw::stretchSprite(background, 105, 140, 1070, 680);
+    asw::draw::stretchSprite(background, asw::Quad<float>(105, 140, 1070, 680));
 
     if (frame >= 0 && frame < INTRO_FRAMES) {
-      asw::draw::stretchSprite(images[frame], 105, 120, 1070, 660);
+      asw::draw::stretchSprite(images[frame],
+                               asw::Quad<float>(105, 120, 1070, 660));
     }
   }
 }

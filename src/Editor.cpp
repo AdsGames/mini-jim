@@ -198,7 +198,8 @@ void Editor::draw() {
                  draw_layer);
 
   pallette_tile->draw(0, 0, 0);
-  asw::draw::text(font_editor, pallette_tile->getName(), 70, 20,
+  asw::draw::text(font_editor, pallette_tile->getName(),
+                  asw::Vec2<float>(70, 20),
                   asw::util::makeColor(255, 255, 255));
 
   // Map info
@@ -206,45 +207,55 @@ void Editor::draw() {
                   "height-" + std::to_string(tile_map->getHeight()) +
                       " width-" + std::to_string(tile_map->getWidth()) +
                       " lighting-" + std::to_string(tile_map->hasLighting()),
-                  0, 80, asw::util::makeColor(255, 255, 255));
+                  asw::Vec2<float>(0, 80), asw::util::makeColor(255, 255, 255));
 
   if (layer == 1)
-    asw::draw::text(font_editor, "Editing Mode: Foreground ", 0, 130,
+    asw::draw::text(font_editor, "Editing Mode: Foreground ",
+                    asw::Vec2<float>(0, 130),
                     asw::util::makeColor(255, 255, 255));
   else
-    asw::draw::text(font_editor, "Editing Mode: Background ", 0, 130,
+    asw::draw::text(font_editor, "Editing Mode: Background ",
+                    asw::Vec2<float>(0, 130),
                     asw::util::makeColor(255, 255, 255));
 
   if (editor_state == EditorState::Save) {
-    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
-                        asw::util::makeColor(255, 255, 255, 255));
-    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                    asw::util::makeColor(0, 0, 0));
-    asw::draw::textCenter(font_editor, "Save Map Name", 640, 310,
+    asw::draw::rectFill(
+        asw::Quad<float>(330, 300, screenSize.x - 660, screenSize.y - 600),
+        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(
+        asw::Quad<float>(330, 300, screenSize.x - 330, screenSize.y - 400),
+        asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "Save Map Name",
+                          asw::Vec2<float>(640, 310),
                           asw::util::makeColor(0, 0, 0));
     ib_save.Draw();
     btn_save.Draw();
     btn_close.Draw();
   } else if (editor_state == EditorState::Open) {
-    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
-                        asw::util::makeColor(255, 255, 255, 255));
-    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                    asw::util::makeColor(0, 0, 0));
-    asw::draw::textCenter(font_editor, "Open Map Name", 640, 310,
+    asw::draw::rectFill(
+        asw::Quad<float>(330, 300, screenSize.x - 660, screenSize.y - 600),
+        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(
+        asw::Quad<float>(330, 300, screenSize.x - 330, screenSize.y - 400),
+        asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "Open Map Name",
+                          asw::Vec2<float>(640, 310),
                           asw::util::makeColor(0, 0, 0));
     ib_open.Draw();
     btn_open.Draw();
     btn_close.Draw();
   } else if (editor_state == EditorState::Create) {
-    asw::draw::rectFill(330, 300, screenSize.x - 660, screenSize.y - 600,
-                        asw::util::makeColor(255, 255, 255, 255));
-    asw::draw::rect(330, 300, screenSize.x - 330, screenSize.y - 400,
-                    asw::util::makeColor(0, 0, 0));
-    asw::draw::textCenter(font_editor, "New Map", 640, 310,
+    asw::draw::rectFill(
+        asw::Quad<float>(330, 300, screenSize.x - 660, screenSize.y - 600),
+        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::rect(
+        asw::Quad<float>(330, 300, screenSize.x - 330, screenSize.y - 400),
+        asw::util::makeColor(0, 0, 0));
+    asw::draw::textCenter(font_editor, "New Map", asw::Vec2<float>(640, 310),
                           asw::util::makeColor(0, 0, 0));
-    asw::draw::textCenter(font_editor, "Width", 500, 360,
+    asw::draw::textCenter(font_editor, "Width", asw::Vec2<float>(500, 360),
                           asw::util::makeColor(0, 0, 0));
-    asw::draw::textCenter(font_editor, "Height", 800, 360,
+    asw::draw::textCenter(font_editor, "Height", asw::Vec2<float>(800, 360),
                           asw::util::makeColor(0, 0, 0));
     ib_width.Draw();
     ib_height.Draw();

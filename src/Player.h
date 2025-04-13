@@ -8,13 +8,12 @@
 #include <asw/util/Timer.h>
 
 #include "globals.h"
-#include "utility/Vec2.h"
 #include "utility/tools.h"
 
 #include "TileMap.h"
 
 constexpr float GRAVITY = 1.5f;
-const int collision_range = 128;
+constexpr float COLLISION_RANGE = 128;
 
 enum class CharacterDirection {
   Left,
@@ -35,7 +34,7 @@ class Player {
   void loadImages(int type);
   void loadSounds();
   void setKeys(int up, int down, int left, int right, int jump, int joy_number);
-  void setSpawn(int x, int y);
+  void setSpawn(float x, float y);
 
   float getX() const;
   float getY() const;
@@ -49,8 +48,13 @@ class Player {
  private:
   void killSelf();
 
-  Vec2<float> position{128.0f, 128.0f};
-  Vec2<float> velocity{0.0f, 0.0f};
+  asw::Quad<float> transform{
+      128.0F,
+      128.0F,
+      48.0F,
+      64.0F,
+  };
+  asw::Vec2<float> velocity{0.0F, 0.0F};
 
   CharacterState player_state{CharacterState::Standing};
   CharacterDirection direction{CharacterDirection::Right};

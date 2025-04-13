@@ -109,7 +109,7 @@ void InputBox::Update() {
 
 // Draw box
 void InputBox::Draw() const {
-  asw::draw::rectFill(x, y, width, height,
+  asw::draw::rectFill(asw::Quad<float>(x, y, width, height),
                       asw::util::makeColor(12, 12, 12));
 
   asw::Color const col = (Hover() || focused)
@@ -117,19 +117,23 @@ void InputBox::Draw() const {
                              : asw::util::makeColor(245, 245, 245);
 
   if (focused) {
-    asw::draw::rectFill(x + 2, y + 2, width - 2, height - 2, col);
+    asw::draw::rectFill(asw::Quad<float>(x + 2, y + 2, width - 2, height - 2),
+                        col);
   } else {
-    asw::draw::rectFill(x + 1, y + 1, width - 1, height - 1, col);
+    asw::draw::rectFill(asw::Quad<float>(x + 1, y + 1, width - 1, height - 1),
+                        col);
   }
 
   // Output the string to the screen
-  asw::draw::text(font, text, x + 6, y, asw::util::makeColor(22, 22, 22));
+  asw::draw::text(font, text, asw::Vec2<float>(x + 6, y),
+                  asw::util::makeColor(22, 22, 22));
 
   // Draw the caret
   if (focused) {
     int textSize = asw::util::getTextSize(font, text.substr(0, text_iter)).x;
 
-    asw::draw::rectFill(textSize + x + 6, y + 8, 7,
-                        height - 8, asw::util::makeColor(0, 0, 0));
+    asw::draw::rectFill(
+        asw::Quad<float>(textSize + x + 6, y + 8, 7, height - 8),
+        asw::util::makeColor(0, 0, 0));
   }
 }

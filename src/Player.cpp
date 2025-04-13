@@ -71,11 +71,11 @@ void Player::setKeys(int up,
 }
 
 // Set spawn
-void Player::setSpawn(int x, int y) {
+void Player::setSpawn(float x, float y) {
   last_checkpoint.first = x;
   last_checkpoint.second = y;
-  position.x = static_cast<float>(last_checkpoint.first);
-  position.y = static_cast<float>(last_checkpoint.second);
+  transform.position.x = static_cast<float>(last_checkpoint.first);
+  transform.position.y = static_cast<float>(last_checkpoint.second);
 }
 
 // Deathcount
@@ -85,12 +85,12 @@ auto Player::getDeathcount() const -> int {
 
 // Return X
 auto Player::getX() const -> float {
-  return position.x;
+  return transform.position.x;
 }
 
 // Return Y
 auto Player::getY() const -> float {
-  return position.y;
+  return transform.position.y;
 }
 
 // Get finished
@@ -103,9 +103,9 @@ void Player::killSelf() {
   asw::sound::play(smp_die);
   player_state = CharacterState::Standing;
   death_count++;
-  position.x = static_cast<float>(last_checkpoint.first);
-  position.y = static_cast<float>(last_checkpoint.second);
-  velocity = Vec2(0.0f, 0.0f);
+  transform.position.x = static_cast<float>(last_checkpoint.first);
+  transform.position.y = static_cast<float>(last_checkpoint.second);
+  velocity = asw::Vec2<float>(0.0f, 0.0f);
 }
 
 // Movement
@@ -116,40 +116,47 @@ void Player::update(TileMap* fullMap) {
   bool canJumpUp = true;
 
   // Get map around player
-  std::vector<Tile*> ranged_map = fullMap->get_tiles_in_range(
-      position.x - collision_range, position.x + collision_range,
-      position.y - collision_range, position.y + collision_range);
+  std::vector<Tile*> ranged_map =
+      fullMap->get_tiles_in_range(transform.position.x - COLLISION_RANGE,
+                                  transform.position.x + COLLISION_RANGE,
+                                  transform.position.y - COLLISION_RANGE,
+                                  transform.position.y + COLLISION_RANGE);
 
   // Check for collision
   for (auto t : ranged_map) {
     // Check moving LEFT
-    if (collisionAny(position.x + 8 + velocity.x, position.x + 56 + velocity.x,
-                     t->getX(), t->getX() + t->getWidth(), position.y,
-                     position.y + 64, t->getY(), t->getY() + t->getHeight())) {
+    if (collisionAny(transform.position.x + 8 + velocity.x,
+                     transform.position.x + 56 + velocity.x, t->getX(),
+                     t->getX() + t->getWidth(), transform.position.y,
+                     transform.position.y + 64, t->getY(),
+                     t->getY() + t->getHeight())) {
       // Left right
       if (t->containsAttribute(solid) ||
           (t->containsAttribute(slide) &&
            player_state != CharacterState::Sliding)) {
-        if (collisionLeft(position.x + 8 + velocity.x, position.x + 56,
+        if (collisionLeft(transform.position.x + 8 + velocity.x,
+                          transform.position.x + 56,
                           t->getX() + t->getWidth())) {
           canMoveLeft = false;
         }
 
-        if (collisionRight(position.x + 8, position.x + 56 + velocity.x,
-                           t->getX())) {
+        if (collisionRight(transform.position.x + 8,
+                           transform.position.x + 56 + velocity.x, t->getX())) {
           canMoveRight = false;
         }
       }
     }
 
-    if (collisionAny(position.x + 16 + velocity.x, position.x + 48 + velocity.x,
-                     t->getX(), t->getX() + t->getWidth(),
-                     position.y + velocity.y, position.y + velocity.y + 64,
-                     t->getY(), t->getY() + t->getHeight())) {
+    if (collisionAny(transform.position.x + 16 + velocity.x,
+                     transform.position.x + 48 + velocity.x, t->getX(),
+                     t->getX() + t->getWidth(),
+                     transform.position.y + velocity.y,
+                     transform.position.y + velocity.y + 64, t->getY(),
+                     t->getY() + t->getHeight())) {
       // Jumping
       if (t->containsAttribute(solid)) {
         if (collisionTop(t->getY(), t->getY() + t->getHeight(),
-                         position.y + velocity.y)) {
+                         transform.position.y + velocity.y)) {
           canJumpUp = false;
         }
       }
@@ -278,7 +285,7 @@ void Player::update(TileMap* fullMap) {
 
         velocity.y += GRAVITY;
       } else {
-        position.y = floor_x - 64.0f;
+        transform.position.y = floor_x - 64.0f;
         velocity.y = 0.0f;
         player_state = CharacterState::Standing;
       }
@@ -312,24 +319,24 @@ void Player::update(TileMap* fullMap) {
       break;
   }
 
-  if (!((canMoveRight && velocity.x > 0) || (canMoveLeft && velocity.x < 0))) {
+  if ((!canMoveRight || velocity.x <= 0) && (!canMoveLeft || velocity.x >= 0)) {
     velocity.x = 0;
   }
 
-  position.x += velocity.x;
-  position.y += velocity.y;
+  transform.position += velocity;
 
   // Falling (calculated separately to ensure collision accurate)
   can_fall = true;
   floor_x = INT_MAX;
 
-  for (auto t : ranged_map) {
+  for (auto* t : ranged_map) {
     if (t->containsAttribute(solid) &&
-        collisionAny(position.x + 16.0f, position.x + 48.0f, t->getX(),
-                     t->getX() + t->getWidth(), position.y,
-                     position.y + 65.0f + velocity.y, t->getY(),
+        collisionAny(transform.position.x + 16.0f, transform.position.x + 48.0f,
+                     t->getX(), t->getX() + t->getWidth(), transform.position.y,
+                     transform.position.y + 65.0f + velocity.y, t->getY(),
                      t->getY() + t->getHeight()) &&
-        collisionTop(position.y, position.y + 65.0f + velocity.y, t->getY())) {
+        collisionTop(transform.position.y,
+                     transform.position.y + 65.0f + velocity.y, t->getY())) {
       can_fall = false;
 
       if (t->getY() < floor_x) {
@@ -339,8 +346,9 @@ void Player::update(TileMap* fullMap) {
   }
 
   // Die
-  if (position.x > fullMap->getWidth() || position.x < 0.0f ||
-      position.y > fullMap->getHeight()) {
+  if (transform.position.x > fullMap->getWidth() ||
+      transform.position.x < 0.0f ||
+      transform.position.y > fullMap->getHeight()) {
     killSelf();
   }
 }
@@ -352,48 +360,41 @@ void Player::draw(int tile_map_x, int tile_map_y) {
           tm_animation.getElapsedTime<std::chrono::milliseconds>()) /
       100;
 
+  auto position_offset =
+      transform.position - asw::Vec2<float>(tile_map_x, tile_map_y);
+
   if (player_state == CharacterState::Jumping) {
     if (direction == CharacterDirection::Left) {
-      asw::draw::sprite(tex_player[8], position.x - tile_map_x,
-                        position.y - tile_map_y);
+      asw::draw::sprite(tex_player[8], position_offset);
     } else {
-      asw::draw::sprite(tex_player[9], position.x - tile_map_x,
-                        position.y - tile_map_y);
+      asw::draw::sprite(tex_player[9], position_offset);
     }
   } else if (player_state == CharacterState::Walking) {
     if (direction == CharacterDirection::Left) {
-      asw::draw::sprite(tex_player[ani_ticker % 4], position.x - tile_map_x,
-                        position.y - tile_map_y);
+      asw::draw::sprite(tex_player[ani_ticker % 4], position_offset);
     } else {
-      asw::draw::sprite(tex_player[4 + ani_ticker % 4], position.x - tile_map_x,
-                        position.y - tile_map_y);
+      asw::draw::sprite(tex_player[4 + ani_ticker % 4], position_offset);
     }
 
   } else if (player_state == CharacterState::Standing) {
     if (direction == CharacterDirection::Left) {
       if (ani_ticker % 10 < 5) {
-        asw::draw::sprite(tex_player[0], position.x - tile_map_x,
-                          position.y - tile_map_y);
+        asw::draw::sprite(tex_player[0], position_offset);
       } else {
-        asw::draw::sprite(tex_player[12], position.x - tile_map_x,
-                          position.y - tile_map_y);
+        asw::draw::sprite(tex_player[12], position_offset);
       }
     } else {
       if (ani_ticker % 10 < 5) {
-        asw::draw::sprite(tex_player[4], position.x - tile_map_x,
-                          position.y - tile_map_y);
+        asw::draw::sprite(tex_player[4], position_offset);
       } else {
-        asw::draw::sprite(tex_player[13], position.x - tile_map_x,
-                          position.y - tile_map_y);
+        asw::draw::sprite(tex_player[13], position_offset);
       }
     }
   } else if (player_state == CharacterState::Sliding) {
     if (direction == CharacterDirection::Left) {
-      asw::draw::sprite(tex_player[10], position.x - tile_map_x,
-                        position.y - tile_map_y);
+      asw::draw::sprite(tex_player[10], position_offset);
     } else {
-      asw::draw::sprite(tex_player[11], position.x - tile_map_x,
-                        position.y - tile_map_y);
+      asw::draw::sprite(tex_player[11], position_offset);
     }
   }
 }

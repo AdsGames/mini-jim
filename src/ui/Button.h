@@ -2,34 +2,33 @@
 #define BUTTON_H
 
 #include <asw/asw.h>
+#include <array>
 #include <functional>
-#include "../utility/Vec2.h"
 
 class Button {
  public:
   Button() = default;
-  explicit Button(Vec2<int> position);
+  explicit Button(const asw::Vec2<float>& position);
 
   void Update();
 
   void SetImages(const char* image1, const char* image2);
 
-  auto GetX() const -> int;
-  auto GetY() const -> int;
+  int GetX() const;
+  int GetY() const;
 
   void SetOnClick(std::function<void()> func);
 
   void Draw();
 
-  auto Hover() const -> bool;
+  bool Hover() const;
 
  private:
-  std::function<void(void)> OnClick;
+  std::function<void(void)> onClick;
 
-  Vec2<int> position{0, 0};
-  Vec2<int> size{10, 10};
+  asw::Quad<float> transform{0, 0, 0, 0};
 
-  asw::Texture images[2];
+  std::array<asw::Texture, 2> images;
 };
 
 #endif
