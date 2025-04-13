@@ -1,5 +1,4 @@
-#ifndef TILE_H
-#define TILE_H
+#pragma once
 
 #include <asw/asw.h>
 #include <string>
@@ -41,5 +40,3 @@ class Tile {
 
   TileType* t_type{};
 };
-
-#endif

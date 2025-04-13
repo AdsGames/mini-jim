@@ -1,5 +1,4 @@
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#pragma once
 
 // All defined presets put here
 // tile Attributes
@@ -10,5 +9,3 @@
 
 extern bool single_player;
 extern int levelOn;
-
-#endif

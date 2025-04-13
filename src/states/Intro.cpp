@@ -1,10 +1,10 @@
-#include "Intro.h"
-#include "utility/tools.h"
+#include "./Intro.h"
 
 #include <string>
 #include <vector>
 
-#include "globals.h"
+#include "../globals.h"
+#include "../utility/tools.h"
 
 void Intro::init() {
   background = asw::assets::loadTexture("assets/images/opening/background.png");
@@ -20,8 +20,7 @@ void Intro::init() {
   timer.start();
 }
 
-void Intro::update() {
-  // poll_joystick();
+void Intro::update(float dt) {
   frame = (timer.getElapsedTime<std::chrono::milliseconds>() - 3000) / 100;
 
   if (frame >= 0 && !sound_played) {
@@ -30,7 +29,7 @@ void Intro::update() {
   }
 
   if (frame >= INTRO_FRAMES || asw::input::keyboard.anyPressed) {
-    setNextState(ProgramState::Menu);
+    sceneManager.setNextScene(ProgramState::Menu);
   }
 }
 

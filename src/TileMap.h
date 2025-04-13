@@ -1,5 +1,4 @@
-#ifndef TILEMAP_H
-#define TILEMAP_H
+#pragma once
 
 #include <asw/asw.h>
 #include <asw/util/Timer.h>
@@ -10,10 +9,10 @@
 
 class TileMap {
  public:
-  explicit TileMap(const std::string& file = "");
+  TileMap() { frame_timer.start(); };
 
-  std::vector<Tile> mapTiles{};
-  std::vector<Tile> mapTilesBack{};
+  std::vector<Tile> mapTiles;
+  std::vector<Tile> mapTilesBack;
 
   int getWidth() const;
   int getHeight() const;
@@ -49,10 +48,9 @@ class TileMap {
                   int destX = 0,
                   int destY = 0);
 
-  int width, height;
-  bool lighting;
+  int width{0};
+  int height{0};
+  bool lighting{false};
 
-  Timer frame_timer;
+  Timer frame_timer{};
 };
-
-#endif

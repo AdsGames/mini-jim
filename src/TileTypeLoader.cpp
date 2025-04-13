@@ -1,6 +1,7 @@
 #include "TileTypeLoader.h"
 
 #include <asw/asw.h>
+#include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <fstream>
@@ -8,9 +9,6 @@
 
 #include "globals.h"
 #include "utility/tools.h"
-
-#include "rapidxml/rapidxml.hpp"
-#include "rapidxml/rapidxml_print.hpp"
 
 std::vector<TileType*> TileTypeLoader::types;
 
@@ -32,46 +30,30 @@ auto TileTypeLoader::getTile(const std::string& id_str) -> TileType* {
 void TileTypeLoader::loadTypes(const std::string& path) {
   // Open file or abort if it does not exist
   std::ifstream file(path);
-
-  if (file.fail()) {
+  if (!file.is_open()) {
     return;
   }
 
   // Create buffer
-  std::stringstream buffer;
-  buffer << file.rdbuf();
-  std::string content(buffer.str());
+  nlohmann::json doc = nlohmann::json::parse(file);
 
   // Get first node
-  rapidxml::xml_document<> doc;
-  doc.parse<0>(&content[0]);
-  rapidxml::xml_node<>* allTiles = doc.first_node();
-
-  // Define iterator
-  rapidxml::xml_node<>* cTile = allTiles->first_node("tile");
-
-  // Parse data
-  for (; cTile != nullptr; cTile = cTile->next_sibling()) {
-    std::string name = cTile->first_attribute("name")->value();
+  for (auto const& cTile : doc) {
+    std::string name = cTile["name"];
+    short id = cTile["id"];
 
     std::string id_str = name;
     std::transform(id_str.begin(), id_str.end(), id_str.begin(), ::tolower);
     std::replace(id_str.begin(), id_str.end(), ' ', '_');
 
-    int id = atoi(cTile->first_attribute("id")->value());
-
     // Create tile
-    auto tile = new TileType(id, name, id_str);
+    TileType* tile = new TileType(id, name, id_str);
 
     // Images
-    if (cTile->first_node("images")) {
-      rapidxml::xml_node<>* img =
-          cTile->first_node("images")->first_node("image");
-
-      for (; img != nullptr; img = img->next_sibling()) {
-        asw::Texture image = asw::assets::loadTexture(
-            "assets/images/blocks/" +
-            std::string(img->first_attribute("src")->value()));
+    if (cTile.contains("images")) {
+      for (auto const& img : cTile["images"]) {
+        asw::Texture image = asw::assets::loadTexture("assets/images/blocks/" +
+                                                      img.get<std::string>());
         tile->AddImage(image);
 
         auto size = asw::util::getTextureSize(image);
@@ -80,30 +62,29 @@ void TileTypeLoader::loadTypes(const std::string& path) {
     }
 
     // Bounding box
-    rapidxml::xml_node<>* bounding_box = cTile->first_node("boundingBox");
-
-    if (bounding_box != nullptr) {
-      int x_1 = atoi(bounding_box->first_attribute("x1")->value());
-      int x_2 = atoi(bounding_box->first_attribute("x2")->value());
-      int y_1 = atoi(bounding_box->first_attribute("y1")->value());
-      int y_2 = atoi(bounding_box->first_attribute("y2")->value());
+    if (cTile.contains("boundingBox")) {
+      auto bounding_box = cTile["boundingBox"];
+      int x_1 = bounding_box["x1"];
+      int x_2 = bounding_box["x2"];
+      int y_1 = bounding_box["y1"];
+      int y_2 = bounding_box["y2"];
       tile->SetDimensions(x_1, y_1, x_2, y_2);
     }
 
     // Add special feature
-    if (cTile->first_node("solid")) {
+    if (cTile.contains("solid")) {
       tile->AddAttribute(solid);
     }
 
-    if (cTile->first_node("light")) {
+    if (cTile.contains("light")) {
       tile->AddAttribute(light);
     }
 
-    if (cTile->first_node("harmful")) {
+    if (cTile.contains("harmful")) {
       tile->AddAttribute(harmful);
     }
 
-    if (cTile->first_node("slide")) {
+    if (cTile.contains("slide")) {
       tile->AddAttribute(slide);
     }
 

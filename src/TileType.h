@@ -1,5 +1,4 @@
-#ifndef TILETYPE_H
-#define TILETYPE_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -37,5 +36,3 @@ class TileType {
   std::vector<int> attributes{};
   std::vector<asw::Texture> images{};
 };
-
-#endif  // TILETYPE_H

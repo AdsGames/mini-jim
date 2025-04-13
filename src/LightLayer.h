@@ -1,5 +1,4 @@
-#ifndef LIGHT_LAYER_H
-#define LIGHT_LAYER_H
+#pragma once
 
 #include <asw/asw.h>
 #include <vector>
@@ -19,5 +18,3 @@ class LightLayer {
 
   asw::Color lightColor{};
 };
-
-#endif  // LIGHT_LAYER_H

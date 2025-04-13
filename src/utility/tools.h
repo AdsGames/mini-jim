@@ -1,5 +1,4 @@
-#ifndef TOOLS_H
-#define TOOLS_H
+#pragma once
 
 // Collision
 extern auto collisionAny(int xMin1,
@@ -17,5 +16,3 @@ extern auto collisionLeft(int xMin1, int xMax1, int xMax2) -> bool;
 
 // Random number generator
 extern auto random(int low, int high) -> int;
-
-#endif  // TOOLS_H

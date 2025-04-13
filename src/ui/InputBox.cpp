@@ -75,8 +75,8 @@ void InputBox::Update() {
 
   if (type == "text") {
     if (lastKey >= 4 && lastKey <= 29) {
-      if (asw::input::keyboard.down[SDL_SCANCODE_LSHIFT] ||
-          asw::input::keyboard.down[SDL_SCANCODE_RSHIFT]) {
+      if (asw::input::isKeyDown(asw::input::Key::LSHIFT) ||
+          asw::input::isKeyDown(asw::input::Key::RSHIFT)) {
         text.insert(text.begin() + text_iter, 'A' - 4 + lastKey);
       } else {
         text.insert(text.begin() + text_iter, 'a' - 4 + lastKey);
@@ -87,20 +87,20 @@ void InputBox::Update() {
   }
 
   // some other, "special" key was pressed; handle it here
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_BACKSPACE]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::BACKSPACE)) {
     if (text_iter != 0) {
       text_iter--;
       text.erase(text.begin() + text_iter);
     }
   }
 
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_RIGHT]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::RIGHT)) {
     if (text_iter != text.size()) {
       text_iter++;
     }
   }
 
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_LEFT]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::LEFT)) {
     if (text_iter != 0) {
       text_iter--;
     }

@@ -10,11 +10,11 @@ Player::Player(int number) {
   loadSounds();
 
   if (number == 1) {
-    setKeys(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT,
-            SDL_SCANCODE_RIGHT, SDL_SCANCODE_RETURN, 0);
+    setKeys(asw::input::Key::UP, asw::input::Key::DOWN, asw::input::Key::LEFT,
+            asw::input::Key::RIGHT, asw::input::Key::RETURN, 0);
   } else {
-    setKeys(SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D,
-            SDL_SCANCODE_SPACE, 1);
+    setKeys(asw::input::Key::W, asw::input::Key::S, asw::input::Key::A,
+            asw::input::Key::D, asw::input::Key::SPACE, 1);
   }
 }
 
@@ -56,11 +56,11 @@ void Player::loadSounds() {
 }
 
 // Set keys
-void Player::setKeys(int up,
-                     int down,
-                     int left,
-                     int right,
-                     int jump,
+void Player::setKeys(asw::input::Key up,
+                     asw::input::Key down,
+                     asw::input::Key left,
+                     asw::input::Key right,
+                     asw::input::Key jump,
                      int joy_number) {
   key_up = up;
   key_down = down;
@@ -109,21 +109,21 @@ void Player::killSelf() {
 }
 
 // Movement
-void Player::update(TileMap* fullMap) {
+void Player::update(TileMap& fullMap, float dt) {
   // Collision stuff
   bool canMoveLeft = true;
   bool canMoveRight = true;
   bool canJumpUp = true;
 
   // Get map around player
-  std::vector<Tile*> ranged_map =
-      fullMap->get_tiles_in_range(transform.position.x - COLLISION_RANGE,
-                                  transform.position.x + COLLISION_RANGE,
-                                  transform.position.y - COLLISION_RANGE,
-                                  transform.position.y + COLLISION_RANGE);
+  const std::vector<Tile*> ranged_map =
+      fullMap.get_tiles_in_range(transform.position.x - COLLISION_RANGE,
+                                 transform.position.x + COLLISION_RANGE,
+                                 transform.position.y - COLLISION_RANGE,
+                                 transform.position.y + COLLISION_RANGE);
 
   // Check for collision
-  for (auto t : ranged_map) {
+  for (auto* t : ranged_map) {
     // Check moving LEFT
     if (collisionAny(transform.position.x + 8 + velocity.x,
                      transform.position.x + 56 + velocity.x, t->getX(),
@@ -196,11 +196,11 @@ void Player::update(TileMap* fullMap) {
     player_state = CharacterState::Jumping;
   }
 
-  if (asw::input::keyboard.down[key_right]) {
+  if (asw::input::isKeyDown(key_right)) {
     direction = CharacterDirection::Right;
   }
 
-  if (asw::input::keyboard.down[key_left]) {
+  if (asw::input::isKeyDown(key_left)) {
     direction = CharacterDirection::Left;
   }
 
@@ -208,14 +208,13 @@ void Player::update(TileMap* fullMap) {
   switch (player_state) {
     case CharacterState::Standing: {
       // Jump
-      if (asw::input::keyboard.pressed[key_jump] ||
-          asw::input::keyboard.pressed[key_up]) {
-        velocity.y = -24;
+      if (asw::input::wasKeyPressed(key_jump) ||
+          asw::input::wasKeyPressed(key_up)) {
+        velocity.y = JUMP_VELOCITY;
         asw::sound::play(smp_jump);
         player_state = CharacterState::Jumping;
-      } else if (asw::input::keyboard.down[key_left]) {
-        player_state = CharacterState::Walking;
-      } else if (asw::input::keyboard.down[key_right]) {
+      } else if (asw::input::isKeyDown(key_left) ||
+                 asw::input::isKeyDown(key_right)) {
         player_state = CharacterState::Walking;
       } else {
         velocity.x = 0;
@@ -225,41 +224,35 @@ void Player::update(TileMap* fullMap) {
     }
 
     case CharacterState::Walking: {
-      if (asw::input::keyboard.down[key_down]) {
+      if (asw::input::isKeyDown(key_down)) {
         player_state = CharacterState::Sliding;
       }
 
-      if (!(asw::input::keyboard.down[key_left] ||
-            asw::input::keyboard.down[key_right])) {
+      if (!(asw::input::isKeyDown(key_left) ||
+            asw::input::isKeyDown(key_right))) {
         player_state = CharacterState::Standing;
       }
 
       // Jump
-      if (asw::input::keyboard.pressed[key_jump] ||
-          asw::input::keyboard.pressed[key_up]) {
-        velocity.y = -24;
+      if (asw::input::wasKeyPressed(key_jump) ||
+          asw::input::wasKeyPressed(key_up)) {
+        velocity.y = JUMP_VELOCITY;
         asw::sound::play(smp_jump);
         player_state = CharacterState::Jumping;
-        velocity.x = velocity.x / 2;
-      }
-
-      // Animate
-      if (int(tm_animation.getElapsedTime<std::chrono::milliseconds>()) % 50 ==
-          0) {
-        asw::sound::play(smp_walk.at(random(0, 1)));
+        velocity.x *= JUMP_X_MULTIPLER;
       }
 
       if (direction == CharacterDirection::Right) {
-        if (velocity.x < 4) {
-          velocity.x = 4.0f;
-        } else if (velocity.x < 12) {
-          velocity.x += 0.5f;
+        if (velocity.x < WALK_MIN_SPEED) {
+          velocity.x = WALK_MIN_SPEED;
+        } else if (velocity.x < WALK_MAX_SPEED) {
+          velocity.x += WALK_ACCELERATION * dt;
         }
       } else if (direction == CharacterDirection::Left) {
-        if (velocity.x > -4.0f) {
-          velocity.x = -4.0f;
-        } else if (velocity.x > -12.0f) {
-          velocity.x -= 0.5f;
+        if (velocity.x > -WALK_MIN_SPEED) {
+          velocity.x = -WALK_MIN_SPEED;
+        } else if (velocity.x > -WALK_MAX_SPEED) {
+          velocity.x -= WALK_ACCELERATION * dt;
         }
       }
 
@@ -267,15 +260,16 @@ void Player::update(TileMap* fullMap) {
     }
 
     case CharacterState::Jumping: {
-      if (asw::input::keyboard.down[key_right] && velocity.x < 12.0f) {
-        velocity.x += 0.5f;
-      } else if (asw::input::keyboard.down[key_left] && velocity.x > -12.0f) {
-        velocity.x -= 0.5f;
+      if (asw::input::isKeyDown(key_right) && velocity.x < WALK_MAX_SPEED) {
+        velocity.x += WALK_ACCELERATION * dt;
+      } else if (asw::input::isKeyDown(key_left) &&
+                 velocity.x > -WALK_MAX_SPEED) {
+        velocity.x -= WALK_ACCELERATION * dt;
       }
 
-      if (!asw::input::keyboard.down[key_right] &&
-          !asw::input::keyboard.down[key_left]) {
-        velocity.x *= 0.9f;
+      if (!asw::input::isKeyDown(key_right) &&
+          !asw::input::isKeyDown(key_left)) {
+        velocity.x += (velocity.x > 0 ? -1 : 1) * JUMP_X_ACCELERATION * dt;
       }
 
       if (can_fall) {
@@ -283,7 +277,7 @@ void Player::update(TileMap* fullMap) {
           velocity.y = 0.0f;
         }
 
-        velocity.y += GRAVITY;
+        velocity.y += GRAVITY * dt;
       } else {
         transform.position.y = floor_x - 64.0f;
         velocity.y = 0.0f;
@@ -294,20 +288,19 @@ void Player::update(TileMap* fullMap) {
     }
 
     case CharacterState::Sliding: {
-      if (!asw::input::keyboard.down[key_down]) {
+      if (!asw::input::isKeyDown(key_down)) {
         player_state = CharacterState::Standing;
       }
 
-      if (velocity.x < 0.01f && velocity.x > -0.01f) {
-        velocity.x = 0;
-      } else {
-        velocity.x *= 0.95f;
+      velocity.x += (velocity.x > 0 ? -1 : 1) * SLIDE_ACCELERATION * dt;
+      if (std::abs(velocity.x) < 0.01f) {
+        velocity.x = 0.0f;  // Stop completely if velocity is very small
       }
 
       // Jump
-      if (asw::input::keyboard.pressed[key_jump] ||
-          asw::input::keyboard.pressed[key_up]) {
-        velocity.y = -24;
+      if (asw::input::wasKeyPressed(key_jump) ||
+          asw::input::wasKeyPressed(key_up)) {
+        velocity.y = JUMP_VELOCITY;
         asw::sound::play(smp_jump);
         player_state = CharacterState::Jumping;
       }
@@ -323,7 +316,7 @@ void Player::update(TileMap* fullMap) {
     velocity.x = 0;
   }
 
-  transform.position += velocity;
+  transform.position += velocity * dt;
 
   // Falling (calculated separately to ensure collision accurate)
   can_fall = true;
@@ -346,9 +339,9 @@ void Player::update(TileMap* fullMap) {
   }
 
   // Die
-  if (transform.position.x > fullMap->getWidth() ||
+  if (transform.position.x > fullMap.getWidth() ||
       transform.position.x < 0.0f ||
-      transform.position.y > fullMap->getHeight()) {
+      transform.position.y > fullMap.getHeight()) {
     killSelf();
   }
 }

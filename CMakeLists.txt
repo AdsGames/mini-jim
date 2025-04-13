@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(MiniJIm VERSION 0.1.0 LANGUAGES CXX)
+project(MiniJim VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,6 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
 
 include(cmake/get_cpm.cmake)
 CPMAddPackage("gh:adsgames/asw@0.5.8")
+CPMAddPackage("gh:nlohmann/json@3.11.3")
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h)
@@ -17,6 +18,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
 target_link_libraries(${PROJECT_NAME} PRIVATE 
   asw
+  nlohmann_json::nlohmann_json
 )
 
 if(EMSCRIPTEN)
@@ -29,6 +31,8 @@ if(EMSCRIPTEN)
     -sWASM=1
     -sALLOW_MEMORY_GROWTH=1
     -sMAXIMUM_MEMORY=1gb
+    -sSTACK_SIZE=32mb
+    -sINITIAL_MEMORY=64mb
   )
 
   set_target_properties(${PROJECT_NAME} PROPERTIES

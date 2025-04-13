@@ -1,5 +1,4 @@
-#ifndef BUTTON_H
-#define BUTTON_H
+#pragma once
 
 #include <asw/asw.h>
 #include <array>
@@ -30,5 +29,3 @@ class Button {
 
   std::array<asw::Texture, 2> images;
 };
-
-#endif

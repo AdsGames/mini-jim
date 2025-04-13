@@ -23,20 +23,21 @@ void Camera::SetBounds(int x, int y) {
   bound_y = y;
 }
 
-void Camera::Follow(float f_x, float f_y) {
-  float const y_diff = f_y - y;
-  float const x_diff = f_x - x;
+void Camera::Follow(float f_x, float f_y, float dt) {
+  const float  y_diff = f_y - y;
+  const float  x_diff = f_x - x;
+  const float speed_dt = (speed / 16.0F) * dt;
 
   if (y_diff < bound_y) {
-    y += (y_diff - bound_y) / speed;
+    y += (y_diff - bound_y) / speed_dt;
   } else if (y_diff > height - bound_y) {
-    y += (y_diff - (height - bound_y)) / speed;
+    y += (y_diff - (height - bound_y)) / speed_dt;
   }
 
   if (x_diff < bound_x) {
-    x += (x_diff - bound_x) / speed;
+    x += (x_diff - bound_x) / speed_dt;
   } else if (x_diff > width - bound_x) {
-    x += (x_diff - (width - bound_x)) / speed;
+    x += (x_diff - (width - bound_x)) / speed_dt;
   }
 
   if (y < 0) {
