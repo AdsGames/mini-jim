@@ -9,6 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
 
 include(cmake/get_cpm.cmake)
 CPMAddPackage("gh:adsgames/asw@0.5.8")
+CPMAddPackage("gh:nlohmann/json@3.11.3")
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h)
@@ -17,6 +18,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
 target_link_libraries(${PROJECT_NAME} PRIVATE 
   asw
+  nlohmann_json::nlohmann_json
 )
 
 if(EMSCRIPTEN)

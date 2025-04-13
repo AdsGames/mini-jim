@@ -10,7 +10,8 @@
 void Init::init() {
   asw::display::setTitle("Setting up");
 
-  TileTypeLoader::loadTypes("assets/data/tiles.xml");
+  TileTypeLoader::loadTypes("assets/data/tiles.json");
+  asw::display::setIcon("assets/icon.ico");
 
   asw::display::setTitle("Mini Jim");
 }

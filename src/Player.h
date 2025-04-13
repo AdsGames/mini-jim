@@ -43,7 +43,12 @@ class Player {
 
   void loadImages(int type);
   void loadSounds();
-  void setKeys(int up, int down, int left, int right, int jump, int joy_number);
+  void setKeys(asw::input::Key up,
+               asw::input::Key down,
+               asw::input::Key left,
+               asw::input::Key right,
+               asw::input::Key jump,
+               int joy_number);
   void setSpawn(float x, float y);
 
   float getX() const;
@@ -81,11 +86,11 @@ class Player {
   bool finished{false};
 
   // Keys
-  int key_up{0};
-  int key_down{0};
-  int key_left{0};
-  int key_right{0};
-  int key_jump{0};
+  asw::input::Key key_up{};
+  asw::input::Key key_down{};
+  asw::input::Key key_left{};
+  asw::input::Key key_right{};
+  asw::input::Key key_jump{};
 
   Timer tm_animation{};
 

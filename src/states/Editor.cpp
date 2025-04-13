@@ -78,7 +78,7 @@ void Editor::edit_map(float dt) {
              static_cast<float>(asw::input::mouse.y) + cam.GetY(), dt);
 
   // Change selected
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_UP]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::UP)) {
     int i = pallette_tile->getType() + 1;
 
     while (TileTypeLoader::getTile(i) == nullptr) {
@@ -88,7 +88,7 @@ void Editor::edit_map(float dt) {
     pallette_tile->setType(i);
   }
 
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_DOWN]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::DOWN)) {
     int i = pallette_tile->getType() - 1;
 
     while (TileTypeLoader::getTile(i) == nullptr) {
@@ -99,13 +99,13 @@ void Editor::edit_map(float dt) {
   }
 
   // Change Layer
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_TAB]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::TAB)) {
     layer = static_cast<int>(!static_cast<bool>(layer));
     draw_layer = layer + 1;
   }
 
   // Toggle lights
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_L]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::L)) {
     tile_map->toggleLights();
   }
 
@@ -116,54 +116,54 @@ void Editor::edit_map(float dt) {
 
   if (temp_tile != nullptr) {
     // Place tile
-    if (asw::input::mouse.down[1]) {
+    if (asw::input::isButtonDown(asw::input::MouseButton::LEFT)) {
       temp_tile->setType(pallette_tile->getType());
     }
 
     // Erase tile
-    if (asw::input::mouse.down[4]) {
+    if (asw::input::isButtonDown(asw::input::MouseButton::RIGHT)) {
       temp_tile->setType(0);
     }
 
     // Get tile type tile
-    if (asw::input::keyboard.pressed[SDL_SCANCODE_K])
+    if (asw::input::wasKeyPressed(asw::input::Key::K))
       pallette_tile->setType(temp_tile->getType());
   }
 
   // Save map
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_S]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::S)) {
     ib_save.Focus();
     editor_state = EditorState::Save;
   }
 
   // Open map
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_O]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::O)) {
     ib_open.Focus();
     editor_state = EditorState::Open;
   }
 
   // New map
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_N]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::N)) {
     ib_width.Update();
     editor_state = EditorState::Create;
   }
 
   // Fill map
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_F]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::F)) {
     for (auto& t : tile_map->mapTilesBack) {
       t.setType(pallette_tile->getType());
     }
   }
 
   // Draw specific layers
-  if (asw::input::keyboard.down[SDL_SCANCODE_0]) {
+  if (asw::input::isKeyDown(asw::input::Key::NUM_0)) {
     draw_layer = 0;
   }
 }
 
 void Editor::update(float dt) {
   // Back to menu
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_M] &&
+  if (asw::input::wasKeyPressed(asw::input::Key::M) &&
       editor_state == EditorState::Edit) {
     sceneManager.setNextScene(ProgramState::Menu);
   }

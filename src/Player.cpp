@@ -10,11 +10,11 @@ Player::Player(int number) {
   loadSounds();
 
   if (number == 1) {
-    setKeys(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT,
-            SDL_SCANCODE_RIGHT, SDL_SCANCODE_RETURN, 0);
+    setKeys(asw::input::Key::UP, asw::input::Key::DOWN, asw::input::Key::LEFT,
+            asw::input::Key::RIGHT, asw::input::Key::RETURN, 0);
   } else {
-    setKeys(SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D,
-            SDL_SCANCODE_SPACE, 1);
+    setKeys(asw::input::Key::W, asw::input::Key::S, asw::input::Key::A,
+            asw::input::Key::D, asw::input::Key::SPACE, 1);
   }
 }
 
@@ -56,11 +56,11 @@ void Player::loadSounds() {
 }
 
 // Set keys
-void Player::setKeys(int up,
-                     int down,
-                     int left,
-                     int right,
-                     int jump,
+void Player::setKeys(asw::input::Key up,
+                     asw::input::Key down,
+                     asw::input::Key left,
+                     asw::input::Key right,
+                     asw::input::Key jump,
                      int joy_number) {
   key_up = up;
   key_down = down;
@@ -196,11 +196,11 @@ void Player::update(TileMap& fullMap, float dt) {
     player_state = CharacterState::Jumping;
   }
 
-  if (asw::input::keyboard.down[key_right]) {
+  if (asw::input::isKeyDown(key_right)) {
     direction = CharacterDirection::Right;
   }
 
-  if (asw::input::keyboard.down[key_left]) {
+  if (asw::input::isKeyDown(key_left)) {
     direction = CharacterDirection::Left;
   }
 
@@ -208,13 +208,13 @@ void Player::update(TileMap& fullMap, float dt) {
   switch (player_state) {
     case CharacterState::Standing: {
       // Jump
-      if (asw::input::keyboard.pressed[key_jump] ||
-          asw::input::keyboard.pressed[key_up]) {
+      if (asw::input::wasKeyPressed(key_jump) ||
+          asw::input::wasKeyPressed(key_up)) {
         velocity.y = JUMP_VELOCITY;
         asw::sound::play(smp_jump);
         player_state = CharacterState::Jumping;
-      } else if (asw::input::keyboard.down[key_left] ||
-                 asw::input::keyboard.down[key_right]) {
+      } else if (asw::input::isKeyDown(key_left) ||
+                 asw::input::isKeyDown(key_right)) {
         player_state = CharacterState::Walking;
       } else {
         velocity.x = 0;
@@ -224,18 +224,18 @@ void Player::update(TileMap& fullMap, float dt) {
     }
 
     case CharacterState::Walking: {
-      if (asw::input::keyboard.down[key_down]) {
+      if (asw::input::isKeyDown(key_down)) {
         player_state = CharacterState::Sliding;
       }
 
-      if (!(asw::input::keyboard.down[key_left] ||
-            asw::input::keyboard.down[key_right])) {
+      if (!(asw::input::isKeyDown(key_left) ||
+            asw::input::isKeyDown(key_right))) {
         player_state = CharacterState::Standing;
       }
 
       // Jump
-      if (asw::input::keyboard.pressed[key_jump] ||
-          asw::input::keyboard.pressed[key_up]) {
+      if (asw::input::wasKeyPressed(key_jump) ||
+          asw::input::wasKeyPressed(key_up)) {
         velocity.y = JUMP_VELOCITY;
         asw::sound::play(smp_jump);
         player_state = CharacterState::Jumping;
@@ -260,15 +260,15 @@ void Player::update(TileMap& fullMap, float dt) {
     }
 
     case CharacterState::Jumping: {
-      if (asw::input::keyboard.down[key_right] && velocity.x < WALK_MAX_SPEED) {
+      if (asw::input::isKeyDown(key_right) && velocity.x < WALK_MAX_SPEED) {
         velocity.x += WALK_ACCELERATION * dt;
-      } else if (asw::input::keyboard.down[key_left] &&
+      } else if (asw::input::isKeyDown(key_left) &&
                  velocity.x > -WALK_MAX_SPEED) {
         velocity.x -= WALK_ACCELERATION * dt;
       }
 
-      if (!asw::input::keyboard.down[key_right] &&
-          !asw::input::keyboard.down[key_left]) {
+      if (!asw::input::isKeyDown(key_right) &&
+          !asw::input::isKeyDown(key_left)) {
         velocity.x += (velocity.x > 0 ? -1 : 1) * JUMP_X_ACCELERATION * dt;
       }
 
@@ -288,7 +288,7 @@ void Player::update(TileMap& fullMap, float dt) {
     }
 
     case CharacterState::Sliding: {
-      if (!asw::input::keyboard.down[key_down]) {
+      if (!asw::input::isKeyDown(key_down)) {
         player_state = CharacterState::Standing;
       }
 
@@ -298,8 +298,8 @@ void Player::update(TileMap& fullMap, float dt) {
       }
 
       // Jump
-      if (asw::input::keyboard.pressed[key_jump] ||
-          asw::input::keyboard.pressed[key_up]) {
+      if (asw::input::wasKeyPressed(key_jump) ||
+          asw::input::wasKeyPressed(key_up)) {
         velocity.y = JUMP_VELOCITY;
         asw::sound::play(smp_jump);
         player_state = CharacterState::Jumping;
