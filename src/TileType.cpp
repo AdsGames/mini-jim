@@ -57,6 +57,6 @@ void TileType::SetDimensions(int x_1, int y_1, int x_2, int y_2) {
 
 void TileType::Draw(int x, int y, int frame) {
   if (images.size() > 0) {
-    asw::draw::sprite(images.at(frame % images.size()), x, y);
+    asw::draw::sprite(images.at(frame % images.size()), asw::Vec2<float>(x, y));
   }
 }

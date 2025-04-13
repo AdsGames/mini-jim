@@ -2,13 +2,11 @@
 
 LightLayer::LightLayer() {
   auto screenSize = asw::display::getLogicalSize();
-  lightLayer =
-      SDL_CreateTexture(asw::display::renderer, SDL_PIXELFORMAT_RGBA8888,
-                        SDL_TEXTUREACCESS_TARGET, screenSize.x, screenSize.y);
-  SDL_SetTextureBlendMode(lightLayer, SDL_BLENDMODE_MOD);
+  lightLayer = asw::assets::createTexture(screenSize.x, screenSize.y);
+  asw::draw::setBlendMode(lightLayer, asw::BlendMode::MODULATE);
 
   lightTexture = asw::assets::loadTexture("assets/images/spotlight.png");
-  SDL_SetTextureBlendMode(lightTexture.get(), SDL_BLENDMODE_ADD);
+  asw::draw::setBlendMode(lightTexture, asw::BlendMode::ADD);
 }
 
 void LightLayer::setColor(asw::Color color) {
@@ -18,16 +16,18 @@ void LightLayer::setColor(asw::Color color) {
 void LightLayer::draw(std::vector<SDL_Point>& points) {
   auto lightSize = asw::util::getTextureSize(lightTexture);
 
-  SDL_SetRenderTarget(asw::display::renderer, lightLayer);
+  asw::display::setRenderTarget(lightLayer);
   SDL_SetRenderDrawColor(asw::display::renderer, 64, 64, 64, 0);
   SDL_RenderFillRect(asw::display::renderer, nullptr);
 
   for (auto t : points) {
-    asw::draw::stretchSprite(lightTexture, t.x - lightSize.x / 2,
-                             t.y - lightSize.y / 2, lightSize.x, lightSize.y);
+    asw::draw::stretchSprite(
+        lightTexture,
+        asw::Quad<float>(t.x - lightSize.x / 2, t.y - lightSize.y / 2,
+                         lightSize.x, lightSize.y));
   }
 
-  SDL_SetRenderTarget(asw::display::renderer, nullptr);
+  asw::display::resetRenderTarget();
 
-  SDL_RenderCopy(asw::display::renderer, lightLayer, nullptr, nullptr);
+  asw::draw::sprite(lightLayer, asw::Vec2<float>(0, 0));
 }

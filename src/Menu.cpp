@@ -29,13 +29,13 @@ void Menu::init() {
   next_state = ProgramState::Null;
 
   // Buttons
-  buttons[BUTTON_START] = Button({60, 630});
-  buttons[BUTTON_START_MP] = Button({60, 690});
-  buttons[BUTTON_EDIT] = Button({60, 750});
-  buttons[BUTTON_HELP] = Button({60, 810});
-  buttons[BUTTON_EXIT] = Button({60, 870});
-  buttons[BUTTON_LEFT] = Button({screenSize.x - 180, 80});
-  buttons[BUTTON_RIGHT] = Button({screenSize.x - 80, 80});
+  buttons[BUTTON_START] = Button(asw::Vec2<float>(60, 630));
+  buttons[BUTTON_START_MP] = Button(asw::Vec2<float>(60, 690));
+  buttons[BUTTON_EDIT] = Button(asw::Vec2<float>(60, 750));
+  buttons[BUTTON_HELP] = Button(asw::Vec2<float>(60, 810));
+  buttons[BUTTON_EXIT] = Button(asw::Vec2<float>(60, 870));
+  buttons[BUTTON_LEFT] = Button(asw::Vec2<float>(screenSize.x - 180, 80));
+  buttons[BUTTON_RIGHT] = Button(asw::Vec2<float>(screenSize.x - 80, 80));
 
   buttons[BUTTON_START].SetImages("assets/images/gui/button_start.png",
                                   "assets/images/gui/button_start_hover.png");
@@ -129,15 +129,16 @@ void Menu::update() {
   }
 
   // Buttons
-  for (int i = 0; i < NUM_BUTTONS; i++)
+  for (int i = 0; i < NUM_BUTTONS; i++) {
     buttons[i].Update();
+  }
 }
 
 void Menu::draw() {
   auto screenSize = asw::display::getLogicalSize();
 
   // Draw background to screen
-  asw::draw::rectFill(0, 0, screenSize.x, screenSize.y,
+  asw::draw::rectFill(asw::Quad<float>(0, 0, screenSize.x, screenSize.y),
                       asw::util::makeColor(255, 255, 255, 255));
 
   // Draw live background
@@ -166,8 +167,8 @@ void Menu::draw() {
   }
 
   // Overlay
-  asw::draw::sprite(credits, 0, 0);
-  asw::draw::sprite(menu, 40, 480);
+  asw::draw::sprite(credits, asw::Vec2<float>(0, 0));
+  asw::draw::sprite(menu, asw::Vec2<float>(40, 480));
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++) {
@@ -175,19 +176,24 @@ void Menu::draw() {
   }
 
   // Level selection
-  asw::draw::sprite(levelSelectNumber, screenSize.x - 160, 80);
-  asw::draw::text(menuFont, std::to_string(levelOn + 1), screenSize.x - 120, 80,
+  asw::draw::sprite(levelSelectNumber,
+                    asw::Vec2<float>(screenSize.x - 160, 80));
+  asw::draw::text(menuFont, std::to_string(levelOn + 1),
+                  asw::Vec2<float>(screenSize.x - 120, 80),
                   asw::util::makeColor(0, 0, 0));
 
   // Cursor
-  asw::draw::sprite(cursor, asw::input::mouse.x, asw::input::mouse.y);
+  asw::draw::sprite(cursor,
+                    asw::Vec2<float>(asw::input::mouse.x, asw::input::mouse.y));
 
   // Help menu
   if (buttons[BUTTON_HELP].Hover()) {
-    asw::draw::sprite(help, 0, 0);
+    asw::draw::sprite(help, asw::Vec2<float>(0, 0));
   }
 
-  asw::draw::sprite(copyright, screenSize.x - 350, screenSize.y - 40);
+  asw::draw::sprite(copyright,
+                    asw::Vec2<float>(screenSize.x - 350, screenSize.y - 40));
 
-  asw::draw::sprite(cursor, asw::input::mouse.x, asw::input::mouse.y);
+  asw::draw::sprite(cursor,
+                    asw::Vec2<float>(asw::input::mouse.x, asw::input::mouse.y));
 }
