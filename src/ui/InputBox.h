@@ -1,5 +1,4 @@
-#ifndef INPUTBOX_H
-#define INPUTBOX_H
+#pragma once
 
 #include <asw/asw.h>
 #include <string>
@@ -33,5 +32,3 @@ class InputBox {
   unsigned int text_iter{0};
   bool focused{false};
 };
-
-#endif  // INPUTBOX_H

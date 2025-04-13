@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(MiniJIm VERSION 0.1.0 LANGUAGES CXX)
+project(MiniJim VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,6 +29,8 @@ if(EMSCRIPTEN)
     -sWASM=1
     -sALLOW_MEMORY_GROWTH=1
     -sMAXIMUM_MEMORY=1gb
+    -sSTACK_SIZE=32mb
+    -sINITIAL_MEMORY=64mb
   )
 
   set_target_properties(${PROJECT_NAME} PROPERTIES

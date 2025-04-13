@@ -1,42 +1,46 @@
-#ifndef MENU_H
-#define MENU_H
+#pragma once
 
-#include "State.h"
+#include "./State.h"
 
 #include <asw/asw.h>
 #include <string>
 #include <vector>
 
-#include "Camera.h"
-#include "LightLayer.h"
-#include "TileMap.h"
-#include "globals.h"
-#include "ui/Button.h"
-#include "utility/tools.h"
+#include "../Camera.h"
+#include "../LightLayer.h"
+#include "../TileMap.h"
+#include "../globals.h"
+#include "../ui/Button.h"
+#include "../utility/tools.h"
 
-class Menu : public State {
+class Menu : public asw::scene::Scene<ProgramState> {
  public:
-  explicit Menu(StateEngine& engine) : State(engine) {}
+  using asw::scene::Scene<ProgramState>::Scene;
 
   void init() override;
-  void update() override;
+  void update(float dt) override;
   void draw() override;
-  void cleanup() override;
 
  private:
-  // Mouse hovering over button
-  auto button_hover() -> bool;
-
   // Change level (background)
   void change_level(int level);
 
   // Menu/GUI
-  asw::Texture levelSelectNumber, cursor, menuselect, menu, help, copyright,
-      credits;
-  asw::Sample click, intro, music;
+  asw::Texture levelSelectNumber;
+  asw::Texture cursor;
+  asw::Texture menuselect;
+  asw::Texture menu;
+  asw::Texture help;
+  asw::Texture copyright;
+  asw::Texture credits;
+
+  asw::Sample click;
+  asw::Sample intro;
+
+  asw::Music music;
 
   // Live background
-  TileMap* tile_map{};
+  TileMap tile_map{};
   float scroll_x{};
   float scroll_y{};
 
@@ -64,5 +68,3 @@ class Menu : public State {
   Button buttons[7];
   Camera cam;
 };
-
-#endif  // MENU_H

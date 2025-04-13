@@ -1,26 +1,25 @@
 #pragma once
 
-#include "State.h"
+#include "./State.h"
 
 #include <asw/asw.h>
 #include <memory>
 
-#include "Camera.h"
-#include "Tile.h"
-#include "TileMap.h"
-#include "ui/Button.h"
-#include "ui/InputBox.h"
+#include "../Camera.h"
+#include "../Tile.h"
+#include "../TileMap.h"
+#include "../ui/Button.h"
+#include "../ui/InputBox.h"
 
 enum class EditorState { Save, Open, Create, Edit };
 
-class Editor : public State {
+class Editor : public asw::scene::Scene<ProgramState> {
  public:
-  explicit Editor(StateEngine& engine) : State(engine) {}
+  using asw::scene::Scene<ProgramState>::Scene;
 
-  virtual void init() override;
-  virtual void update() override;
-  virtual void draw() override;
-  virtual void cleanup() override{};
+  void init() override;
+  void update(float dt) override;
+  void draw() override;
 
  private:
   int layer;
@@ -48,7 +47,7 @@ class Editor : public State {
   void save_map();
   void open_map();
   void new_map();
-  void edit_map();
+  void edit_map(float dt);
 
   Camera cam;
 };

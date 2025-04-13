@@ -1,5 +1,4 @@
-#ifndef TILETYPELOADER_H
-#define TILETYPELOADER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -15,5 +14,3 @@ class TileTypeLoader {
  private:
   static std::vector<TileType*> types;
 };
-
-#endif  // TILETYPELOADER_H

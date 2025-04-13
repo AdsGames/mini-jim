@@ -1,10 +1,10 @@
-#include "Editor.h"
+#include "./Editor.h"
 
 #include <string>
 
-#include "TileTypeLoader.h"
-#include "globals.h"
-#include "utility/tools.h"
+#include "../TileTypeLoader.h"
+#include "../globals.h"
+#include "../utility/tools.h"
 
 void Editor::init() {
   tile_map = std::make_unique<TileMap>();
@@ -73,9 +73,9 @@ void Editor::new_map() {
   }
 }
 
-void Editor::edit_map() {
+void Editor::edit_map(float dt) {
   cam.Follow(static_cast<float>(asw::input::mouse.x) + cam.GetX(),
-             static_cast<float>(asw::input::mouse.y) + cam.GetY());
+             static_cast<float>(asw::input::mouse.y) + cam.GetY(), dt);
 
   // Change selected
   if (asw::input::keyboard.pressed[SDL_SCANCODE_UP]) {
@@ -161,11 +161,11 @@ void Editor::edit_map() {
   }
 }
 
-void Editor::update() {
+void Editor::update(float dt) {
   // Back to menu
   if (asw::input::keyboard.pressed[SDL_SCANCODE_M] &&
       editor_state == EditorState::Edit) {
-    setNextState(ProgramState::Menu);
+    sceneManager.setNextScene(ProgramState::Menu);
   }
 
   // Run states
@@ -183,7 +183,7 @@ void Editor::update() {
     btn_new.Update();
     btn_close.Update();
   } else {
-    edit_map();
+    edit_map(dt);
   }
 }
 

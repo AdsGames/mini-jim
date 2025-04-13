@@ -1,4 +1,4 @@
-#include "Menu.h"
+#include "./Menu.h"
 
 // Create menu
 void Menu::init() {
@@ -17,14 +17,14 @@ void Menu::init() {
   // Load sound
   click = asw::assets::loadSample("assets/sounds/click.wav");
   intro = asw::assets::loadSample("assets/sounds/intro.wav");
-  music = asw::assets::loadSample("assets/sounds/music/MiniJim.ogg");
+  music = asw::assets::loadMusic("assets/sounds/music/MiniJim.ogg");
 
   // Sets Font
   menuFont = asw::assets::loadFont("assets/fonts/ariblk.ttf", 24);
 
   // Create map for live background
   levelOn = 0;
-  tile_map = new TileMap();
+  tile_map = TileMap();
   change_level(0);
   next_state = ProgramState::Null;
 
@@ -55,32 +55,26 @@ void Menu::init() {
 
   buttons[BUTTON_START].SetOnClick([this]() {
     single_player = true;
-    next_state = ProgramState::Game;
+    sceneManager.setNextScene(ProgramState::Game);
   });
 
   buttons[BUTTON_START_MP].SetOnClick([this]() {
     single_player = false;
-    next_state = ProgramState::Game;
+    sceneManager.setNextScene(ProgramState::Game);
   });
 
   buttons[BUTTON_EDIT].SetOnClick(
-      [this]() { next_state = ProgramState::Edit; });
+      [this]() { sceneManager.setNextScene(ProgramState::Edit); });
 
-  buttons[BUTTON_EXIT].SetOnClick(
-      [this]() { next_state = ProgramState::Edit; });
+  buttons[BUTTON_EXIT].SetOnClick([]() { asw::core::exit = true; });
 
   buttons[BUTTON_LEFT].SetOnClick([this]() { change_level(-1); });
 
   buttons[BUTTON_RIGHT].SetOnClick([this]() { change_level(1); });
 
   // Variables
-  asw::sound::play(music, 255, 128, 1);
+  asw::sound::playMusic(music, 255);
   asw::sound::play(intro);
-}
-
-void Menu::cleanup() {
-  // Destory background
-  delete tile_map;
 }
 
 void Menu::change_level(int level) {
@@ -88,45 +82,40 @@ void Menu::change_level(int level) {
 
   levelOn = (levelOn + level) < 0 ? 4 : (levelOn + level) % 5;
 
-  tile_map->load("assets/data/level_" + std::to_string(levelOn + 1));
+  tile_map.load("assets/data/level_" + std::to_string(levelOn + 1));
 
   scroll_x = static_cast<float>(
-      random(screenSize.x, tile_map->getWidth() - screenSize.x));
+      random(screenSize.x, tile_map.getWidth() - screenSize.x));
   scroll_dir_x = static_cast<float>(random(0, 1) != 0 ? -3 : 3);
   scroll_y = static_cast<float>(
-      random(screenSize.y, tile_map->getHeight() - screenSize.y));
+      random(screenSize.y, tile_map.getHeight() - screenSize.y));
   scroll_dir_y = static_cast<float>(random(0, 1) != 0 ? -3 : 3);
 
   asw::sound::play(click);
 
-  cam = Camera(screenSize.x, screenSize.y, tile_map->getWidth(),
-               tile_map->getHeight());
+  cam = Camera(screenSize.x, screenSize.y, tile_map.getWidth(),
+               tile_map.getHeight());
   cam.SetSpeed(5);
 }
 
-void Menu::update() {
+void Menu::update(float dt) {
   auto screenSize = asw::display::getLogicalSize();
 
   // Move around live background
-  if (scroll_x + screenSize.x / 2 >= tile_map->getWidth() ||
+  if (scroll_x + screenSize.x / 2 >= tile_map.getWidth() ||
       scroll_x <= screenSize.x / 2) {
     scroll_dir_x *= -1;
   }
 
-  if (scroll_y + screenSize.y / 2 >= tile_map->getHeight() ||
+  if (scroll_y + screenSize.y / 2 >= tile_map.getHeight() ||
       scroll_y <= screenSize.y / 2) {
     scroll_dir_y *= -1;
   }
 
-  scroll_x += scroll_dir_x;
-  scroll_y += scroll_dir_y;
+  scroll_x += (scroll_dir_x / 16.0F) * dt;
+  scroll_y += (scroll_dir_y / 16.0F) * dt;
 
-  cam.Follow(scroll_x, scroll_y);
-
-  // State change
-  if (next_state != ProgramState::Null) {
-    setNextState(next_state);
-  }
+  cam.Follow(scroll_x, scroll_y, dt);
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++) {
@@ -142,18 +131,18 @@ void Menu::draw() {
                       asw::util::makeColor(255, 255, 255, 255));
 
   // Draw live background
-  tile_map->draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y);
+  tile_map.draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y);
 
   // Lighting
-  if (tile_map->hasLighting()) {
+  if (tile_map.hasLighting()) {
     std::vector<SDL_Point> lightPoints;
 
     // Get map area
-    std::vector<Tile*> mapRange =
-        tile_map->get_tiles_in_range(cam.GetX(), cam.GetX() + cam.GetWidth(),
-                                     cam.GetY(), cam.GetY() + cam.GetHeight());
+    const std::vector<Tile*> mapRange =
+        tile_map.get_tiles_in_range(cam.GetX(), cam.GetX() + cam.GetWidth(),
+                                    cam.GetY(), cam.GetY() + cam.GetHeight());
 
-    for (auto t : mapRange) {
+    for (auto* t : mapRange) {
       if (t->containsAttribute(light)) {
         lightPoints.push_back(
             {t->getCenterX() - cam.GetX(), t->getCenterY() - cam.GetY()});

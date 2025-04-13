@@ -6,15 +6,6 @@
 #include "globals.h"
 #include "utility/tools.h"
 
-// Constructor
-TileMap::TileMap(const std::string& file)
-    : width(0), height(0), lighting(false) {
-  frame_timer.start();
-
-  if (file != "")
-    load(file);
-}
-
 // Get width
 auto TileMap::getWidth() const -> int {
   return width * 64;

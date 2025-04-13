@@ -1,11 +1,11 @@
-#include "Init.h"
+#include "./Init.h"
 
 #include <asw/asw.h>
 
-#include "globals.h"
-#include "utility/tools.h"
+#include "../globals.h"
+#include "../utility/tools.h"
 
-#include "TileTypeLoader.h"
+#include "../TileTypeLoader.h"
 
 void Init::init() {
   asw::display::setTitle("Setting up");
@@ -15,10 +15,8 @@ void Init::init() {
   asw::display::setTitle("Mini Jim");
 }
 
-void Init::cleanup() {}
-
-void Init::update() {
-  setNextState(ProgramState::Intro);
+void Init::update(float dt) {
+  sceneManager.setNextScene(ProgramState::Intro);
 }
 
 void Init::draw() {
