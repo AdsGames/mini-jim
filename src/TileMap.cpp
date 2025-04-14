@@ -218,6 +218,14 @@ void TileMap::draw(int x,
     draw_layer(mapTilesBack, x, y, width, height, destX, destY);
   }
 
+  // Draw semi-transparent buffer
+  if (layer == 0) {
+    SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_BLEND);
+    asw::draw::rectFill(asw::Quad<float>(0, 0, width, height),
+                        asw::util::makeColor(0, 0, 0, 128));
+    SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_NONE);
+  }
+
   if (layer == 0 || layer == 2) {
     draw_layer(mapTiles, x, y, width, height, destX, destY);
   }
