@@ -12,17 +12,10 @@ class Tile {
 
   Tile(short type, int x, int y);
 
-  int getX() const;
-  int getY() const;
-
-  int getCenterX() const;
-  int getCenterY() const;
-
-  int getWidth() const;
-  int getHeight() const;
-
   void setX(int x);
   void setY(int y);
+
+  asw::Quad<float> getTransform() const;
 
   short getType() const;
   std::string getName() const;
@@ -35,7 +28,7 @@ class Tile {
   void draw(int xOffset, int yOffset, int frame);
 
  private:
-  int x{}, y{};
+  asw::Vec2<float> position{0.0F, 0.0F};
   std::vector<int> attribute{};
 
   TileType* t_type{};

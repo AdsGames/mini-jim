@@ -7,7 +7,6 @@
 #include <asw/util/Timer.h>
 
 #include "globals.h"
-#include "utility/tools.h"
 
 #include "TileMap.h"
 
@@ -51,22 +50,22 @@ class Player {
                int joy_number);
   void setSpawn(float x, float y);
 
-  float getX() const;
-  float getY() const;
   int getDeathcount() const;
+
+  const asw::Quad<float>& getTransform() const { return transform; }
 
   bool getFinished() const;
 
   void update(TileMap& fullMap, float dt);
-  void draw(int tile_map_x, int tile_map_y);
+  void draw(const asw::Vec2<float>& offset);
 
  private:
   void killSelf();
 
   asw::Quad<float> transform{
-      128.0F,
-      128.0F,
-      48.0F,
+      0.0F,
+      0.0F,
+      32.0F,
       64.0F,
   };
 
@@ -76,13 +75,11 @@ class Player {
   CharacterState player_state{CharacterState::Standing};
   CharacterDirection direction{CharacterDirection::Right};
 
-  bool can_fall{false};
-  int floor_x{0};
   int joy_number{0};
 
   int death_count{0};
 
-  std::pair<int, int> last_checkpoint{0, 0};
+  asw::Vec2<float> last_checkpoint{0, 0};
   bool finished{false};
 
   // Keys

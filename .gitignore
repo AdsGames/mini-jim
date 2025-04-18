@@ -42,3 +42,5 @@ Icon
 # Build
 /build
 
+# Tiled
+*.tiled-session

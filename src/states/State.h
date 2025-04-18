@@ -16,6 +16,5 @@ enum class ProgramState {
   Intro,
   Menu,
   Game,
-  Edit,
   Exit,
 };

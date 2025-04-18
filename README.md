@@ -25,3 +25,7 @@ cmake --build --preset debug
 emcmake cmake --preset debug
 cmake --build --preset debug
 ```
+
+## Level Editor
+
+Using [Tiled](https://www.mapeditor.org/) to create levels. The level files are located in `assets/levels`.

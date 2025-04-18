@@ -3,7 +3,6 @@
 #include <string>
 
 #include "../globals.h"
-#include "../utility/tools.h"
 
 void Game::init() {
   // Player
@@ -35,7 +34,7 @@ void Game::setup() {
   tile_map = TileMap();
 
   const std::string file_name =
-      "assets/data/level_" + std::to_string(levelOn + 1);
+      "assets/levels/level_" + std::to_string(levelOn + 1) + ".json";
 
   if (!tile_map.load(file_name)) {
     asw::util::abortOnError("Could not open level" + file_name);
@@ -55,15 +54,17 @@ void Game::setup() {
                    tile_map.getHeight());
   }
 
-  cam_1.SetSpeed(8.0F);
-  cam_2.SetSpeed(8.0F);
+  cam_1.setSpeed(8.0F);
+  cam_2.setSpeed(8.0F);
 
   // Find spawn
   Tile* spawnTile = tile_map.find_tile_type(199, 1);
 
   if (spawnTile != nullptr) {
-    player1.setSpawn(spawnTile->getX(), spawnTile->getY());
-    player2.setSpawn(spawnTile->getX(), spawnTile->getY());
+    player1.setSpawn(spawnTile->getTransform().position.x,
+                     spawnTile->getTransform().position.y);
+    player2.setSpawn(spawnTile->getTransform().position.x,
+                     spawnTile->getTransform().position.y);
   }
 
   // Play music
@@ -76,8 +77,8 @@ void Game::setup() {
 
 void Game::update(float dt) {
   // Camera follow
-  cam_1.Follow(player1.getX(), player1.getY(), dt);
-  cam_2.Follow(player2.getX(), player2.getY(), dt);
+  cam_1.follow(player1.getTransform().position, dt);
+  cam_2.follow(player2.getTransform().position, dt);
 
   // Starting countdown
   if (!tm_begin.isRunning()) {
@@ -123,46 +124,56 @@ void Game::draw() {
   auto screenSize = asw::display::getLogicalSize();
 
   // Draw tiles and characters
-
   if (single_player) {
-    tile_map.draw(cam_1.GetX(), cam_1.GetY(), cam_1.GetWidth(),
-                  cam_1.GetHeight());
-    player1.draw(cam_1.GetX(), cam_1.GetY());
-  }
+    tile_map.draw(cam_1.getViewport());
+    player1.draw(cam_1.getViewport().position);
+  } else {
+    // Clip to remove interference
+    SDL_Rect clip;
+    clip.x = 0;
+    clip.w = screenSize.x;
 
-  else {
-    tile_map.draw(cam_1.GetX(), cam_1.GetY(), cam_1.GetWidth(),
-                  cam_1.GetHeight(), 0, 0);
-    player1.draw(cam_1.GetX(), cam_1.GetY());
-    player2.draw(cam_1.GetX(), cam_1.GetY());
+    // Top
+    clip.y = 0;
+    clip.h = screenSize.y / 2;
 
-    tile_map.draw(cam_2.GetX(), cam_2.GetY(), cam_2.GetWidth(),
-                  cam_2.GetHeight(), 0, screenSize.y / 2);
-    player1.draw(cam_2.GetX(), cam_2.GetY() - screenSize.y / 2);
-    player2.draw(cam_2.GetX(), cam_2.GetY() - screenSize.y / 2);
+    SDL_SetRenderClipRect(asw::display::renderer, &clip);
+    tile_map.draw(cam_1.getViewport(), 0, 0);
+
+    player1.draw(cam_1.getViewport().position);
+    player2.draw(cam_1.getViewport().position);
+
+    // Bottom
+    clip.y = screenSize.y / 2;
+    clip.h = screenSize.y / 2;
+
+    SDL_SetRenderClipRect(asw::display::renderer, &clip);
+    tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2);
+    SDL_SetRenderClipRect(asw::display::renderer, nullptr);
+
+    player1.draw(cam_2.getViewport().position +
+                 asw::Vec2<float>(0, -screenSize.y / 2));
+    player2.draw(cam_2.getViewport().position +
+                 asw::Vec2<float>(0, -screenSize.y / 2));
   }
 
   // Lighting
-  if (tile_map.hasLighting()) {
-    std::vector<SDL_Point> lightPointsP1;
+  if (tile_map.hasLighting() && single_player) {
+    std::vector<asw::Vec2<float>> lightPoints;
 
     // Get map area
-    std::vector<Tile*> rangeP1 = tile_map.get_tiles_in_range(
-        cam_1.GetX(), cam_1.GetX() + cam_1.GetWidth(), cam_1.GetY(),
-        cam_1.GetY() + cam_1.GetHeight());
+    const std::vector<Tile*> tileRange =
+        tile_map.get_tiles_in_range(cam_1.getViewport());
 
-    for (auto t : rangeP1) {
+    for (auto* t : tileRange) {
       if (t->containsAttribute(light)) {
-        lightPointsP1.push_back(
-            {t->getCenterX() - cam_1.GetX(), t->getCenterY() - cam_1.GetY()});
+        lightPoints.push_back(t->getTransform().getCenter() -
+                              cam_1.getViewport().position);
       }
     }
 
-    lightPointsP1.push_back(
-        {static_cast<int>(player1.getX() - cam_1.GetX() + 32),
-         static_cast<int>(player1.getY() - cam_1.GetY() + 32)});
-
-    lightLayer.draw(lightPointsP1);
+    lightPoints.push_back(player1.getTransform().getCenter());
+    lightLayer.draw(lightPoints);
   }
 
   // Frame
@@ -187,23 +198,24 @@ void Game::draw() {
   }
 
   // Draw timer to screen
-  asw::draw::text(
-      cooper,
-      "Time: " + std::to_string(
-                     tm_p1.getElapsedTime<std::chrono::milliseconds>() / 1000),
-      asw::Vec2<float>(40, 55), asw::util::makeColor(255, 255, 255, 255));
+  const auto timer1 =
+      std::roundf(tm_p1.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
+  const auto timer2 =
+      std::roundf(tm_p2.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
+
+  asw::draw::text(cooper, "Time: " + std::to_string(timer1),
+                  asw::Vec2<float>(40, 55),
+                  asw::util::makeColor(255, 255, 255, 255));
+
   asw::draw::text(cooper, "Deaths:" + std::to_string(player1.getDeathcount()),
                   asw::Vec2<float>(40, 20),
                   asw::util::makeColor(255, 255, 255, 255));
 
   if (!single_player) {
-    asw::draw::text(
-        cooper,
-        "Time: " +
-            std::to_string(tm_p2.getElapsedTime<std::chrono::milliseconds>() /
-                           1000),
-        asw::Vec2<float>(40, (screenSize.y / 2) + 20 + 35),
-        asw::util::makeColor(255, 255, 255, 255));
+    asw::draw::text(cooper, "Time: " + std::to_string(timer2),
+                    asw::Vec2<float>(40, (screenSize.y / 2) + 20 + 35),
+                    asw::util::makeColor(255, 255, 255, 255));
+
     asw::draw::text(cooper, "Deaths:" + std::to_string(player2.getDeathcount()),
                     asw::Vec2<float>(40, (screenSize.y / 2) + 20),
                     asw::util::makeColor(255, 255, 255, 255));
@@ -237,11 +249,6 @@ void Game::draw() {
 
   // Change level when both are done
   if (player1.getFinished() && (player2.getFinished() || single_player)) {
-    const float p1_time =
-        tm_p1.getElapsedTime<std::chrono::milliseconds>() / 1000;
-    const float p2_time =
-        tm_p2.getElapsedTime<std::chrono::milliseconds>() / 1000;
-
     if (single_player) {
       asw::draw::sprite(
           results_singleplayer,
@@ -252,32 +259,32 @@ void Game::draw() {
     }
 
     asw::draw::text(
-        cooper, std::to_string(p1_time),
+        cooper, std::to_string(timer1),
         asw::Vec2<float>((screenSize.x / 2) - 60, (screenSize.y / 2) - 110),
         asw::util::makeColor(255, 255, 255, 255));
 
     if (!single_player) {
       asw::draw::text(
-          cooper, std::to_string(p2_time),
+          cooper, std::to_string(timer2),
           asw::Vec2<float>((screenSize.x / 2) - 60, (screenSize.y / 2) - 55),
           asw::util::makeColor(255, 255, 255, 255));
 
-      if (p1_time < p2_time) {
+      if (timer1 < timer2) {
         asw::draw::text(
             cooper, "1",
             asw::Vec2<float>((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
             asw::util::makeColor(255, 255, 255, 255));
         asw::draw::text(
-            cooper, std::to_string(p2_time - p1_time),
+            cooper, std::to_string(timer2 - timer1),
             asw::Vec2<float>((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
             asw::util::makeColor(255, 255, 255, 255));
-      } else if (p1_time > p2_time) {
+      } else if (timer1 > timer2) {
         asw::draw::text(
             cooper, "2",
             asw::Vec2<float>((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
             asw::util::makeColor(255, 255, 255, 255));
         asw::draw::text(
-            cooper, std::to_string(p1_time - p2_time),
+            cooper, std::to_string(timer1 - timer2),
             asw::Vec2<float>((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
             asw::util::makeColor(255, 255, 255, 255));
       }
