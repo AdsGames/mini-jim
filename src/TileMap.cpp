@@ -26,26 +26,6 @@ auto TileMap::hasLighting() const -> bool {
   return lighting;
 }
 
-// Toggle lighting effects
-void TileMap::toggleLights() {
-  lighting = !lighting;
-}
-
-void TileMap::create(int width, int height) {
-  mapTiles.clear();
-  mapTilesBack.clear();
-  this->width = width;
-  this->height = height;
-  this->lighting = false;
-
-  for (int t = 0; t < height; t++) {
-    for (int i = 0; i < width; i++) {
-      mapTiles.push_back(Tile(0, i * 64, t * 64));
-      mapTilesBack.push_back(Tile(0, i * 64, t * 64));
-    }
-  }
-}
-
 void TileMap::load_layer(const std::vector<int>& data,
                          std::vector<Tile>& t_map) {
   int position = 0;
@@ -114,19 +94,6 @@ auto TileMap::load(const std::string& path) -> bool {
   return true;
 }
 
-// Get tile at
-auto TileMap::get_tile_at(int s_x, int s_y, int layer) -> Tile* {
-  std::vector<Tile>* ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
-
-  for (auto& t : *ttm) {
-    if (t.getBoundingBox().contains(s_x, s_y)) {
-      return &t;
-    }
-  }
-
-  return nullptr;
-}
-
 // Find tile type
 auto TileMap::find_tile_type(int type, int layer) -> Tile* {
   std::vector<Tile>* ttm = (layer == 1) ? &mapTiles : &mapTilesBack;
@@ -141,15 +108,11 @@ auto TileMap::find_tile_type(int type, int layer) -> Tile* {
 }
 
 // Get tile at
-std::vector<Tile*> TileMap::get_tiles_in_range(int x_1,
-                                               int x_2,
-                                               int y_1,
-                                               int y_2) {
+std::vector<Tile*> TileMap::get_tiles_in_range(const asw::Quad<float>& range) {
   std::vector<Tile*> ranged_map;
 
   for (auto& t : mapTiles) {
-    if (t.getType() != 0 && t.getBoundingBox().collides(asw::Quad<float>(
-                                x_1, y_1, x_2 - x_1, y_2 - y_1))) {
+    if (t.getType() != 0 && t.getTransform().collides(range)) {
       ranged_map.push_back(&t);
     }
   }
@@ -159,43 +122,36 @@ std::vector<Tile*> TileMap::get_tiles_in_range(int x_1,
 
 // Draw a layer
 void TileMap::draw_layer(std::vector<Tile>& t_map,
-                         int x,
-                         int y,
-                         int width,
-                         int height,
+                         const asw::Quad<float>& camera,
                          int destX,
                          int destY) {
   int const frame = getFrame();
 
   for (auto& t : t_map) {
-    if ((t.getX() + t.getWidth() >= x) && (t.getX() < x + width) &&
-        (t.getY() + t.getHeight() >= y) && (t.getY() < y + height)) {
-      t.draw(x - destX, y - destY, frame);
+    if (t.getTransform().collides(camera)) {
+      t.draw(camera.position.x - destX, camera.position.y - destY, frame);
     }
   }
 }
 
 // Draw at position
-void TileMap::draw(int x,
-                   int y,
-                   int width,
-                   int height,
+void TileMap::draw(const asw::Quad<float>& camera,
                    int destX,
                    int destY,
                    int layer) {
   if (layer == 0 || layer == 1) {
-    draw_layer(mapTilesBack, x, y, width, height, destX, destY);
+    draw_layer(mapTilesBack, camera, destX, destY);
   }
 
   // Draw semi-transparent buffer
   if (layer == 0) {
     SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_BLEND);
-    asw::draw::rectFill(asw::Quad<float>(0, 0, width, height),
-                        asw::util::makeColor(0, 0, 0, 128));
+    asw::draw::rectFill(asw::Quad<float>(0, 0, getWidth(), getHeight()),
+                        asw::util::makeColor(0, 0, 0, 110));
     SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_NONE);
   }
 
   if (layer == 0 || layer == 2) {
-    draw_layer(mapTiles, x, y, width, height, destX, destY);
+    draw_layer(mapTiles, camera, destX, destY);
   }
 }

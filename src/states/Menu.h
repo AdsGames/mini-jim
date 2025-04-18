@@ -38,12 +38,9 @@ class Menu : public asw::scene::Scene<ProgramState> {
   asw::Music music;
 
   // Live background
-  TileMap tile_map{};
-  float scroll_x{};
-  float scroll_y{};
-
-  int scroll_dir_x{};
-  int scroll_dir_y{};
+  TileMap tile_map;
+  asw::Vec2<float> scroll;
+  asw::Vec2<float> scroll_dir;
 
   ProgramState next_state;
 

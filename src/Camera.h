@@ -1,33 +1,24 @@
 #pragma once
 
+#include <asw/asw.h>
+
 class Camera {
  public:
   Camera();
-  Camera(int width, int height, int max_x, int max_y);
-  virtual ~Camera() = default;
+  Camera(float width, float height, float max_x, float max_y);
 
-  void SetSpeed(float speed);
-  void Follow(float f_x, float f_y, float dt);
-  void SetBounds(int x, int y);
+  void setSpeed(float speed);
+  void follow(const asw::Vec2<float>& pos, float dt);
+  void setBounds(float x, float y);
 
-  int GetWidth() const;
-  int GetHeight() const;
-
-  int GetX() const;
-  int GetY() const;
+  const asw::Quad<float>& getViewport() const { return viewport; }
 
  private:
-  float x;
-  float y;
+  asw::Quad<float> viewport;
 
-  int width;
-  int height;
+  asw::Vec2<float> bounds;
 
-  int bound_x;
-  int bound_y;
-
-  int max_x;
-  int max_y;
+  asw::Vec2<float> max_pos;
 
   float speed;
 };

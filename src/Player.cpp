@@ -72,25 +72,14 @@ void Player::setKeys(asw::input::Key up,
 
 // Set spawn
 void Player::setSpawn(float x, float y) {
-  last_checkpoint.first = x;
-  last_checkpoint.second = y;
-  transform.position.x = static_cast<float>(last_checkpoint.first);
-  transform.position.y = static_cast<float>(last_checkpoint.second);
+  last_checkpoint.x = x;
+  last_checkpoint.y = y;
+  transform.position = last_checkpoint;
 }
 
 // Deathcount
 auto Player::getDeathcount() const -> int {
   return death_count;
-}
-
-// Return X
-auto Player::getX() const -> float {
-  return transform.position.x;
-}
-
-// Return Y
-auto Player::getY() const -> float {
-  return transform.position.y;
 }
 
 // Get finished
@@ -103,19 +92,15 @@ void Player::killSelf() {
   asw::sound::play(smp_die);
   player_state = CharacterState::Standing;
   death_count++;
-  transform.position.x = static_cast<float>(last_checkpoint.first);
-  transform.position.y = static_cast<float>(last_checkpoint.second);
+  transform.position = last_checkpoint;
   velocity = asw::Vec2<float>(0.0f, 0.0f);
 }
 
 // Movement
 void Player::update(TileMap& fullMap, float dt) {
   // Get map around player
-  const std::vector<Tile*> ranged_map =
-      fullMap.get_tiles_in_range(transform.position.x - COLLISION_RANGE,
-                                 transform.position.x + COLLISION_RANGE,
-                                 transform.position.y - COLLISION_RANGE,
-                                 transform.position.y + COLLISION_RANGE);
+  const std::vector<Tile*> ranged_map = fullMap.get_tiles_in_range(
+      transform + asw::Quad<float>(-256.0F, -256.0F, 512.0F, 512.0F));
 
   // Gravity
   velocity.y += GRAVITY * dt;
@@ -127,7 +112,7 @@ void Player::update(TileMap& fullMap, float dt) {
                                 asw::Quad<float>(8, 0, -16, 1);
 
   for (auto* t : ranged_map) {
-    const auto& bb = t->getBoundingBox();
+    const auto& bb = t->getTransform();
     if (t->containsAttribute(solid) && offset_transform.collides(bb) &&
         offset_transform.collidesTop(bb)) {
       can_fall = false;
@@ -256,7 +241,7 @@ void Player::update(TileMap& fullMap, float dt) {
 
   // Check for collision
   for (auto* t : ranged_map) {
-    const auto& bb = t->getBoundingBox();
+    const auto& bb = t->getTransform();
 
     // Left right
     if (x_cmp.collides(bb)) {
@@ -295,10 +280,9 @@ void Player::update(TileMap& fullMap, float dt) {
 
       // Checkpoint
       if (t->getTypeStr() == "checkpoint") {
-        if (last_checkpoint.first != t->getX() ||
-            last_checkpoint.second != t->getY()) {
-          last_checkpoint.first = t->getX();
-          last_checkpoint.second = t->getY();
+        if (last_checkpoint.x != bb.position.x ||
+            last_checkpoint.y != bb.position.y) {
+          last_checkpoint = bb.position;
           asw::sound::play(smp_checkpoint, 50);
         }
       }
@@ -313,19 +297,25 @@ void Player::update(TileMap& fullMap, float dt) {
 
   // Apply velocity
   transform.position += velocity * dt;
+
+  // Die
+  if (transform.position.x > fullMap.getWidth() ||
+      transform.position.x < 0.0f ||
+      transform.position.y > fullMap.getHeight()) {
+    killSelf();
+  }
 }
 
 // Draw character
-void Player::draw(int tile_map_x, int tile_map_y) {
+void Player::draw(const asw::Vec2<float>& offset) {
   const int ani_ticker =
       static_cast<int>(
           tm_animation.getElapsedTime<std::chrono::milliseconds>()) /
       100;
 
   // Tile map position and sprite offset
-  auto position_offset = transform.position -
-                         asw::Vec2<float>(tile_map_x, tile_map_y) -
-                         asw::Vec2<float>(16.0f, 0);
+  auto position_offset =
+      transform.position - offset - asw::Vec2<float>(16.0f, 0);
 
   if (player_state == CharacterState::Jumping) {
     if (direction == CharacterDirection::Left) {
@@ -361,10 +351,4 @@ void Player::draw(int tile_map_x, int tile_map_y) {
       asw::draw::sprite(tex_player[11], position_offset);
     }
   }
-
-  // Draw transform
-  auto transform_offset = transform;
-  transform_offset.position -= asw::Vec2<float>(tile_map_x, tile_map_y);
-
-  asw::draw::rect(transform_offset, asw::util::makeColor(255, 0, 0));
 }

@@ -3,72 +3,50 @@
 
 Camera::Camera() : Camera(0, 0, 0, 0) {}
 
-Camera::Camera(int width, int height, int max_x, int max_y)
-    : x(0),
-      y(0),
-      width(width),
-      height(height),
-      bound_x(width / 2),
-      bound_y(height / 2),
-      max_x(max_x),
-      max_y(max_y),
+Camera::Camera(float width, float height, float max_x, float max_y)
+    : viewport(0, 0, width, height),
+      bounds(width / 2, height / 2),
+      max_pos(max_x, max_y),
       speed(16.0F) {}
 
-void Camera::SetSpeed(float speed) {
+void Camera::setSpeed(float speed) {
   this->speed = speed;
 }
 
-void Camera::SetBounds(int x, int y) {
-  bound_x = x;
-  bound_y = y;
+void Camera::setBounds(float x, float y) {
+  bounds.x = x;
+  bounds.y = y;
 }
 
-void Camera::Follow(float f_x, float f_y, float dt) {
-  const float  y_diff = f_y - y;
-  const float  x_diff = f_x - x;
+void Camera::follow(const asw::Vec2<float>& pos, float dt) {
+  const auto diff = pos - viewport.position;
   const float speed_dt = (speed / 16.0F) * dt;
 
-  if (y_diff < bound_y) {
-    y += (y_diff - bound_y) / speed_dt;
-  } else if (y_diff > height - bound_y) {
-    y += (y_diff - (height - bound_y)) / speed_dt;
+  if (diff.y < bounds.y) {
+    viewport.position.y += (diff.y - bounds.y) / speed_dt;
+  } else if (diff.y > viewport.size.y - bounds.y) {
+    viewport.position.y += (diff.y - (viewport.size.y - bounds.y)) / speed_dt;
   }
 
-  if (x_diff < bound_x) {
-    x += (x_diff - bound_x) / speed_dt;
-  } else if (x_diff > width - bound_x) {
-    x += (x_diff - (width - bound_x)) / speed_dt;
+  if (diff.x < bounds.x) {
+    viewport.position.x += (diff.x - bounds.x) / speed_dt;
+  } else if (diff.x > viewport.size.x - bounds.x) {
+    viewport.position.x += (diff.x - (viewport.size.x - bounds.x)) / speed_dt;
   }
 
-  if (y < 0) {
-    y = 0;
+  if (viewport.position.y < 0) {
+    viewport.position.y = 0;
   }
 
-  if (y + height > max_y) {
-    y = max_y - height;
+  if (viewport.position.y + viewport.size.y > max_pos.y) {
+    viewport.position.y = max_pos.y - viewport.size.y;
   }
 
-  if (x < 0) {
-    x = 0;
+  if (viewport.position.x < 0) {
+    viewport.position.x = 0;
   }
 
-  if (x + width > max_x) {
-    x = max_x - width;
+  if (viewport.position.x + viewport.size.x > max_pos.x) {
+    viewport.position.x = max_pos.x - viewport.size.x;
   }
-}
-
-auto Camera::GetWidth() const -> int {
-  return width;
-}
-
-auto Camera::GetHeight() const -> int {
-  return height;
-}
-
-auto Camera::GetX() const -> int {
-  return std::round(x);
-}
-
-auto Camera::GetY() const -> int {
-  return std::round(y);
 }

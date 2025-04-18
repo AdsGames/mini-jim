@@ -12,70 +12,21 @@ Tile::Tile(short type, int x, int y) {
   setType(type);
 }
 
-// Getters/ setters
-auto Tile::getX() const -> int {
+asw::Quad<float> Tile::getTransform() const {
   if (t_type != nullptr) {
-    return x + t_type->GetBBX();
-  }
-
-  return x;
-}
-
-auto Tile::getY() const -> int {
-  if (t_type != nullptr) {
-    return y + t_type->GetBBY();
-  }
-
-  return y;
-}
-
-auto Tile::getCenterX() const -> int {
-  if (t_type != nullptr) {
-    return x + t_type->GetBBX() + t_type->GetWidth() / 2;
-  }
-
-  return x;
-}
-
-auto Tile::getCenterY() const -> int {
-  if (t_type != nullptr) {
-    return y + t_type->GetBBY() + t_type->GetHeight() / 2;
-  }
-
-  return y;
-}
-
-auto Tile::getWidth() const -> int {
-  if (t_type != nullptr) {
-    return t_type->GetWidth();
-  }
-
-  return 0;
-}
-
-auto Tile::getHeight() const -> int {
-  if (t_type != nullptr) {
-    return t_type->GetHeight();
-  }
-
-  return 0;
-}
-
-asw::Quad<float> Tile::getBoundingBox() const {
-  if (t_type != nullptr) {
-    return asw::Quad<float>(x + t_type->GetBBX(), y + t_type->GetBBY(),
-                            t_type->GetWidth(), t_type->GetHeight());
+    return asw::Quad<float>(position + t_type->GetBoundingBox().position,
+                            t_type->GetBoundingBox().size);
   }
 
   return asw::Quad<float>(0, 0, 0, 0);
 }
 
 void Tile::setX(int x) {
-  this->x = x;
+  this->position.x = x;
 }
 
 void Tile::setY(int y) {
-  this->y = y;
+  this->position.y = y;
 }
 
 auto Tile::getType() const -> short {
@@ -123,6 +74,6 @@ void Tile::setType(short type) {
 // Draw tile
 void Tile::draw(int xOffset, int yOffset, int frame) {
   if (t_type != nullptr) {
-    t_type->Draw(x - xOffset, y - yOffset, frame);
+    t_type->Draw(position.x - xOffset, position.y - yOffset, frame);
   }
 }

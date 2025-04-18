@@ -77,38 +77,37 @@ void Menu::change_level(int level) {
 
   tile_map.load("assets/levels/level_" + std::to_string(levelOn + 1) + ".json");
 
-  scroll_x =
+  scroll.x =
       asw::random::between(screenSize.x, tile_map.getWidth() - screenSize.x);
-  scroll_dir_x = asw::random::chance(0.5F) ? -3 : 3;
-  scroll_y =
+  scroll_dir.x = asw::random::chance(0.5F) ? -3 : 3;
+  scroll.y =
       asw::random::between(screenSize.y, tile_map.getHeight() - screenSize.y);
-  scroll_dir_y = asw::random::chance(0.5F) ? -3 : 3;
+  scroll_dir.y = asw::random::chance(0.5F) ? -3 : 3;
 
   asw::sound::play(click);
 
   cam = Camera(screenSize.x, screenSize.y, tile_map.getWidth(),
                tile_map.getHeight());
-  cam.SetSpeed(5);
+  cam.setSpeed(5);
 }
 
 void Menu::update(float dt) {
   auto screenSize = asw::display::getLogicalSize();
 
   // Move around live background
-  if (scroll_x + screenSize.x / 2 >= tile_map.getWidth() ||
-      scroll_x <= screenSize.x / 2) {
-    scroll_dir_x *= -1;
+  if (scroll.x + screenSize.x / 2 >= tile_map.getWidth() ||
+      scroll.x <= screenSize.x / 2) {
+    scroll_dir.x *= -1;
   }
 
-  if (scroll_y + screenSize.y / 2 >= tile_map.getHeight() ||
-      scroll_y <= screenSize.y / 2) {
-    scroll_dir_y *= -1;
+  if (scroll.y + screenSize.y / 2 >= tile_map.getHeight() ||
+      scroll.y <= screenSize.y / 2) {
+    scroll_dir.y *= -1;
   }
 
-  scroll_x += (scroll_dir_x / 16.0F) * dt;
-  scroll_y += (scroll_dir_y / 16.0F) * dt;
+  scroll += (scroll_dir / 16.0F) * dt;
 
-  cam.Follow(scroll_x, scroll_y, dt);
+  cam.follow(scroll, dt);
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++) {
@@ -119,31 +118,25 @@ void Menu::update(float dt) {
 void Menu::draw() {
   auto screenSize = asw::display::getLogicalSize();
 
-  // Draw background to screen
-  asw::draw::rectFill(asw::Quad<float>(0, 0, screenSize.x, screenSize.y),
-                      asw::util::makeColor(255, 255, 255, 255));
-
   // Draw live background
-  tile_map.draw(cam.GetX(), cam.GetY(), screenSize.x, screenSize.y);
+  tile_map.draw(cam.getViewport());
 
   // Lighting
   if (tile_map.hasLighting()) {
-    std::vector<SDL_Point> lightPoints;
+    std::vector<asw::Vec2<float>> lightPoints;
 
     // Get map area
     const std::vector<Tile*> mapRange =
-        tile_map.get_tiles_in_range(cam.GetX(), cam.GetX() + cam.GetWidth(),
-                                    cam.GetY(), cam.GetY() + cam.GetHeight());
+        tile_map.get_tiles_in_range(cam.getViewport());
 
     for (auto* t : mapRange) {
       if (t->containsAttribute(light)) {
-        lightPoints.push_back(
-            {t->getCenterX() - cam.GetX(), t->getCenterY() - cam.GetY()});
+        lightPoints.push_back(t->getTransform().getCenter() -
+                              cam.getViewport().position);
       }
     }
 
-    lightPoints.push_back({static_cast<int>(asw::input::mouse.x),
-                           static_cast<int>(asw::input::mouse.y)});
+    lightPoints.emplace_back(asw::input::mouse.x, asw::input::mouse.y);
 
     lightLayer.draw(lightPoints);
   }

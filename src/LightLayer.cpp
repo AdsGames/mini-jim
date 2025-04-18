@@ -13,7 +13,7 @@ void LightLayer::setColor(asw::Color color) {
   lightColor = color;
 }
 
-void LightLayer::draw(std::vector<SDL_Point>& points) {
+void LightLayer::draw(const std::vector<asw::Vec2<float>>& points) {
   auto lightSize = asw::util::getTextureSize(lightTexture);
 
   asw::display::setRenderTarget(lightLayer);
@@ -23,7 +23,7 @@ void LightLayer::draw(std::vector<SDL_Point>& points) {
   for (auto t : points) {
     asw::draw::stretchSprite(
         lightTexture,
-        asw::Quad<float>(t.x - lightSize.x / 2, t.y - lightSize.y / 2,
+        asw::Quad<float>(t.x - (lightSize.x / 2), t.y - (lightSize.y / 2),
                          lightSize.x, lightSize.y));
   }
 

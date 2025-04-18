@@ -50,14 +50,14 @@ class Player {
                int joy_number);
   void setSpawn(float x, float y);
 
-  float getX() const;
-  float getY() const;
   int getDeathcount() const;
+
+  const asw::Quad<float>& getTransform() const { return transform; }
 
   bool getFinished() const;
 
   void update(TileMap& fullMap, float dt);
-  void draw(int tile_map_x, int tile_map_y);
+  void draw(const asw::Vec2<float>& offset);
 
  private:
   void killSelf();
@@ -79,7 +79,7 @@ class Player {
 
   int death_count{0};
 
-  std::pair<int, int> last_checkpoint{0, 0};
+  asw::Vec2<float> last_checkpoint{0, 0};
   bool finished{false};
 
   // Keys

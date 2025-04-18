@@ -19,30 +19,21 @@ class TileMap {
   int getFrame();
 
   bool hasLighting() const;
-  void toggleLights();
 
-  void draw(int x,
-            int y,
-            int width,
-            int height,
+  void draw(const asw::Quad<float>& camera,
             int destX = 0,
             int destY = 0,
             int layer = 0);
 
-  void create(int width, int height);
-  bool load(const std::string& file);
+  bool load(const std::string& path);
 
-  Tile* get_tile_at(int s_x, int s_y, int layer);
   Tile* find_tile_type(int type, int layer);
-  std::vector<Tile*> get_tiles_in_range(int x_1, int x_2, int y_1, int y_2);
+  std::vector<Tile*> get_tiles_in_range(const asw::Quad<float>& range);
 
  private:
   void load_layer(const std::vector<int>& data, std::vector<Tile>& t_map);
   void draw_layer(std::vector<Tile>& t_map,
-                  int x,
-                  int y,
-                  int width,
-                  int height,
+                  const asw::Quad<float>& camera,
                   int destX = 0,
                   int destY = 0);
 

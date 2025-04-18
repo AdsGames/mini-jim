@@ -9,7 +9,7 @@ class LightLayer {
 
   void setColor(asw::Color color);
 
-  void draw(std::vector<SDL_Point>& points);
+  void draw(const std::vector<asw::Vec2<float>>& points);
 
  private:
   asw::Texture lightLayer;
