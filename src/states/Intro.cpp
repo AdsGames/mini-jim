@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "../globals.h"
-#include "../utility/tools.h"
 
 void Intro::init() {
   background = asw::assets::loadTexture("assets/images/opening/background.png");

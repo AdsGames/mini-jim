@@ -3,7 +3,6 @@
 #include <string>
 
 #include "../globals.h"
-#include "../utility/tools.h"
 
 void Game::init() {
   // Player
@@ -35,7 +34,7 @@ void Game::setup() {
   tile_map = TileMap();
 
   const std::string file_name =
-      "assets/data/level_" + std::to_string(levelOn + 1);
+      "assets/levels/level_" + std::to_string(levelOn + 1) + ".json";
 
   if (!tile_map.load(file_name)) {
     asw::util::abortOnError("Could not open level" + file_name);

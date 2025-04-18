@@ -8,7 +8,6 @@ void Menu::init() {
   menu = asw::assets::loadTexture("assets/images/gui/menu.png");
   menuselect = asw::assets::loadTexture("assets/images/gui/menuSelector.png");
   help = asw::assets::loadTexture("assets/images/gui/help.png");
-  cursor = asw::assets::loadTexture("assets/images/gui/cursor1.png");
   levelSelectNumber =
       asw::assets::loadTexture("assets/images/gui/levelSelectNumber.png");
   copyright = asw::assets::loadTexture("assets/images/gui/copyright.png");
@@ -31,7 +30,6 @@ void Menu::init() {
   // Buttons
   buttons[BUTTON_START] = Button(asw::Vec2<float>(60, 630));
   buttons[BUTTON_START_MP] = Button(asw::Vec2<float>(60, 690));
-  buttons[BUTTON_EDIT] = Button(asw::Vec2<float>(60, 750));
   buttons[BUTTON_HELP] = Button(asw::Vec2<float>(60, 810));
   buttons[BUTTON_EXIT] = Button(asw::Vec2<float>(60, 870));
   buttons[BUTTON_LEFT] = Button(asw::Vec2<float>(screenSize.x - 180, 80));
@@ -42,8 +40,6 @@ void Menu::init() {
   buttons[BUTTON_START_MP].SetImages(
       "assets/images/gui/button_start_mp.png",
       "assets/images/gui/button_start_mp_hover.png");
-  buttons[BUTTON_EDIT].SetImages("assets/images/gui/button_edit.png",
-                                 "assets/images/gui/button_edit_hover.png");
   buttons[BUTTON_HELP].SetImages("assets/images/gui/button_help.png",
                                  "assets/images/gui/button_help_hover.png");
   buttons[BUTTON_EXIT].SetImages("assets/images/gui/button_quit.png",
@@ -63,9 +59,6 @@ void Menu::init() {
     sceneManager.setNextScene(ProgramState::Game);
   });
 
-  buttons[BUTTON_EDIT].SetOnClick(
-      [this]() { sceneManager.setNextScene(ProgramState::Edit); });
-
   buttons[BUTTON_EXIT].SetOnClick([]() { asw::core::exit = true; });
 
   buttons[BUTTON_LEFT].SetOnClick([this]() { change_level(-1); });
@@ -82,14 +75,14 @@ void Menu::change_level(int level) {
 
   levelOn = (levelOn + level) < 0 ? 4 : (levelOn + level) % 5;
 
-  tile_map.load("assets/data/level_" + std::to_string(levelOn + 1));
+  tile_map.load("assets/levels/level_" + std::to_string(levelOn + 1) + ".json");
 
-  scroll_x = static_cast<float>(
-      random(screenSize.x, tile_map.getWidth() - screenSize.x));
-  scroll_dir_x = static_cast<float>(random(0, 1) != 0 ? -3 : 3);
-  scroll_y = static_cast<float>(
-      random(screenSize.y, tile_map.getHeight() - screenSize.y));
-  scroll_dir_y = static_cast<float>(random(0, 1) != 0 ? -3 : 3);
+  scroll_x =
+      asw::random::between(screenSize.x, tile_map.getWidth() - screenSize.x);
+  scroll_dir_x = asw::random::chance(0.5F) ? -3 : 3;
+  scroll_y =
+      asw::random::between(screenSize.y, tile_map.getHeight() - screenSize.y);
+  scroll_dir_y = asw::random::chance(0.5F) ? -3 : 3;
 
   asw::sound::play(click);
 
@@ -171,10 +164,6 @@ void Menu::draw() {
                   asw::Vec2<float>(screenSize.x - 120, 80),
                   asw::util::makeColor(0, 0, 0));
 
-  // Cursor
-  asw::draw::sprite(cursor,
-                    asw::Vec2<float>(asw::input::mouse.x, asw::input::mouse.y));
-
   // Help menu
   if (buttons[BUTTON_HELP].Hover()) {
     asw::draw::sprite(help, asw::Vec2<float>(0, 0));
@@ -182,7 +171,4 @@ void Menu::draw() {
 
   asw::draw::sprite(copyright,
                     asw::Vec2<float>(screenSize.x - 350, screenSize.y - 40));
-
-  asw::draw::sprite(cursor,
-                    asw::Vec2<float>(asw::input::mouse.x, asw::input::mouse.y));
 }

@@ -11,7 +11,6 @@
 #include "../TileMap.h"
 #include "../globals.h"
 #include "../ui/Button.h"
-#include "../utility/tools.h"
 
 class Menu : public asw::scene::Scene<ProgramState> {
  public:
@@ -27,7 +26,6 @@ class Menu : public asw::scene::Scene<ProgramState> {
 
   // Menu/GUI
   asw::Texture levelSelectNumber;
-  asw::Texture cursor;
   asw::Texture menuselect;
   asw::Texture menu;
   asw::Texture help;
@@ -57,7 +55,6 @@ class Menu : public asw::scene::Scene<ProgramState> {
   enum button_names {
     BUTTON_START,
     BUTTON_START_MP,
-    BUTTON_EDIT,
     BUTTON_HELP,
     BUTTON_EXIT,
     BUTTON_LEFT,

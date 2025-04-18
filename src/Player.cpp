@@ -110,11 +110,6 @@ void Player::killSelf() {
 
 // Movement
 void Player::update(TileMap& fullMap, float dt) {
-  // Collision stuff
-  bool canMoveLeft = true;
-  bool canMoveRight = true;
-  bool canJumpUp = true;
-
   // Get map around player
   const std::vector<Tile*> ranged_map =
       fullMap.get_tiles_in_range(transform.position.x - COLLISION_RANGE,
@@ -122,72 +117,23 @@ void Player::update(TileMap& fullMap, float dt) {
                                  transform.position.y - COLLISION_RANGE,
                                  transform.position.y + COLLISION_RANGE);
 
-  // Check for collision
+  // Gravity
+  velocity.y += GRAVITY * dt;
+
+  // Snap falling
+  bool can_fall = true;
+  const auto offset_transform = transform +
+                                asw::Quad<float>(0, velocity.y * dt, 0, 0) +
+                                asw::Quad<float>(8, 0, -16, 1);
+
   for (auto* t : ranged_map) {
-    // Check moving LEFT
-    if (collisionAny(transform.position.x + 8 + velocity.x,
-                     transform.position.x + 56 + velocity.x, t->getX(),
-                     t->getX() + t->getWidth(), transform.position.y,
-                     transform.position.y + 64, t->getY(),
-                     t->getY() + t->getHeight())) {
-      // Left right
-      if (t->containsAttribute(solid) ||
-          (t->containsAttribute(slide) &&
-           player_state != CharacterState::Sliding)) {
-        if (collisionLeft(transform.position.x + 8 + velocity.x,
-                          transform.position.x + 56,
-                          t->getX() + t->getWidth())) {
-          canMoveLeft = false;
-        }
-
-        if (collisionRight(transform.position.x + 8,
-                           transform.position.x + 56 + velocity.x, t->getX())) {
-          canMoveRight = false;
-        }
-      }
-    }
-
-    if (collisionAny(transform.position.x + 16 + velocity.x,
-                     transform.position.x + 48 + velocity.x, t->getX(),
-                     t->getX() + t->getWidth(),
-                     transform.position.y + velocity.y,
-                     transform.position.y + velocity.y + 64, t->getY(),
-                     t->getY() + t->getHeight())) {
-      // Jumping
-      if (t->containsAttribute(solid)) {
-        if (collisionTop(t->getY(), t->getY() + t->getHeight(),
-                         transform.position.y + velocity.y)) {
-          canJumpUp = false;
-        }
-      }
-
-      // Harmful
-      if (t->containsAttribute(harmful)) {
-        if (t->getTypeStr() == "mouse_trap") {
-          t->setType("mouse_trap_snapped");
-          asw::sound::play(smp_trap_snap);
-        } else if (t->getTypeStr() == "beak") {
-          asw::sound::play(smp_chicken);
-        }
-
-        killSelf();
-      }
-
-      // Checkpoint
-      if (t->getTypeStr() == "checkpoint") {
-        if (last_checkpoint.first != t->getX() ||
-            last_checkpoint.second != t->getY()) {
-          last_checkpoint.first = t->getX();
-          last_checkpoint.second = t->getY();
-          asw::sound::play(smp_checkpoint, 50);
-        }
-      }
-
-      // Finish
-      if (t->getTypeStr() == "finish") {
-        asw::sound::play(smp_win);
-        finished = true;
-      }
+    const auto& bb = t->getBoundingBox();
+    if (t->containsAttribute(solid) && offset_transform.collides(bb) &&
+        offset_transform.collidesTop(bb)) {
+      can_fall = false;
+      transform.position.y = bb.position.y - 64.0f;
+      velocity.y = 0.0f;
+      break;
     }
   }
 
@@ -272,15 +218,7 @@ void Player::update(TileMap& fullMap, float dt) {
         velocity.x += (velocity.x > 0 ? -1 : 1) * JUMP_X_ACCELERATION * dt;
       }
 
-      if (can_fall) {
-        if (!canJumpUp && velocity.y < 0.0f) {
-          velocity.y = 0.0f;
-        }
-
-        velocity.y += GRAVITY * dt;
-      } else {
-        transform.position.y = floor_x - 64.0f;
-        velocity.y = 0.0f;
+      if (!can_fall) {
         player_state = CharacterState::Standing;
       }
 
@@ -312,49 +250,82 @@ void Player::update(TileMap& fullMap, float dt) {
       break;
   }
 
-  if ((!canMoveRight || velocity.x <= 0) && (!canMoveLeft || velocity.x >= 0)) {
-    velocity.x = 0;
-  }
+  // Calculate new position
+  const auto x_cmp = transform + asw::Quad<float>(velocity.x * dt, 0, 0, 0);
+  const auto y_cmp = transform + asw::Quad<float>(0, velocity.y * dt, 0, 0);
 
-  transform.position += velocity * dt;
-
-  // Falling (calculated separately to ensure collision accurate)
-  can_fall = true;
-  floor_x = INT_MAX;
-
+  // Check for collision
   for (auto* t : ranged_map) {
-    if (t->containsAttribute(solid) &&
-        collisionAny(transform.position.x + 16.0f, transform.position.x + 48.0f,
-                     t->getX(), t->getX() + t->getWidth(), transform.position.y,
-                     transform.position.y + 65.0f + velocity.y, t->getY(),
-                     t->getY() + t->getHeight()) &&
-        collisionTop(transform.position.y,
-                     transform.position.y + 65.0f + velocity.y, t->getY())) {
-      can_fall = false;
+    const auto& bb = t->getBoundingBox();
 
-      if (t->getY() < floor_x) {
-        floor_x = t->getY();
+    // Left right
+    if (x_cmp.collides(bb)) {
+      if (t->containsAttribute(solid) ||
+          (t->containsAttribute(slide) &&
+           player_state != CharacterState::Sliding)) {
+        if (velocity.x < 0.0f && x_cmp.collidesRight(bb)) {
+          velocity.x = 0.0f;
+        }
+
+        if (velocity.x > 0.0f && x_cmp.collidesLeft(bb)) {
+          velocity.x = 0.0f;
+        }
+      }
+    }
+
+    if (y_cmp.collides(bb)) {
+      // Jumping
+      if (t->containsAttribute(solid)) {
+        if (y_cmp.collidesBottom(bb) && velocity.y < 0.0f) {
+          velocity.y = 0.0f;
+        }
+      }
+
+      // Harmful
+      if (t->containsAttribute(harmful)) {
+        if (t->getTypeStr() == "mouse_trap") {
+          t->setType("mouse_trap_snapped");
+          asw::sound::play(smp_trap_snap);
+        } else if (t->getTypeStr() == "beak") {
+          asw::sound::play(smp_chicken);
+        }
+
+        killSelf();
+      }
+
+      // Checkpoint
+      if (t->getTypeStr() == "checkpoint") {
+        if (last_checkpoint.first != t->getX() ||
+            last_checkpoint.second != t->getY()) {
+          last_checkpoint.first = t->getX();
+          last_checkpoint.second = t->getY();
+          asw::sound::play(smp_checkpoint, 50);
+        }
+      }
+
+      // Finish
+      if (t->getTypeStr() == "finish") {
+        asw::sound::play(smp_win);
+        finished = true;
       }
     }
   }
 
-  // Die
-  if (transform.position.x > fullMap.getWidth() ||
-      transform.position.x < 0.0f ||
-      transform.position.y > fullMap.getHeight()) {
-    killSelf();
-  }
+  // Apply velocity
+  transform.position += velocity * dt;
 }
 
 // Draw character
 void Player::draw(int tile_map_x, int tile_map_y) {
-  int ani_ticker =
+  const int ani_ticker =
       static_cast<int>(
           tm_animation.getElapsedTime<std::chrono::milliseconds>()) /
       100;
 
-  auto position_offset =
-      transform.position - asw::Vec2<float>(tile_map_x, tile_map_y);
+  // Tile map position and sprite offset
+  auto position_offset = transform.position -
+                         asw::Vec2<float>(tile_map_x, tile_map_y) -
+                         asw::Vec2<float>(16.0f, 0);
 
   if (player_state == CharacterState::Jumping) {
     if (direction == CharacterDirection::Left) {
@@ -390,4 +361,10 @@ void Player::draw(int tile_map_x, int tile_map_y) {
       asw::draw::sprite(tex_player[11], position_offset);
     }
   }
+
+  // Draw transform
+  auto transform_offset = transform;
+  transform_offset.position -= asw::Vec2<float>(tile_map_x, tile_map_y);
+
+  asw::draw::rect(transform_offset, asw::util::makeColor(255, 0, 0));
 }

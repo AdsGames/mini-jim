@@ -31,15 +31,13 @@ class TileMap {
 
   void create(int width, int height);
   bool load(const std::string& file);
-  void save(const std::string& file);
 
   Tile* get_tile_at(int s_x, int s_y, int layer);
   Tile* find_tile_type(int type, int layer);
   std::vector<Tile*> get_tiles_in_range(int x_1, int x_2, int y_1, int y_2);
 
  private:
-  void load_layer(std::ifstream& file, std::vector<Tile>& t_map);
-  void save_layer(std::ofstream& file, std::vector<Tile>& t_map);
+  void load_layer(const std::vector<int>& data, std::vector<Tile>& t_map);
   void draw_layer(std::vector<Tile>& t_map,
                   int x,
                   int y,

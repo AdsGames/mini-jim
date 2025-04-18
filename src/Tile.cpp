@@ -1,7 +1,6 @@
 #include "Tile.h"
 
 #include "globals.h"
-#include "utility/tools.h"
 
 #include "TileTypeLoader.h"
 
@@ -60,6 +59,15 @@ auto Tile::getHeight() const -> int {
   }
 
   return 0;
+}
+
+asw::Quad<float> Tile::getBoundingBox() const {
+  if (t_type != nullptr) {
+    return asw::Quad<float>(x + t_type->GetBBX(), y + t_type->GetBBY(),
+                            t_type->GetWidth(), t_type->GetHeight());
+  }
+
+  return asw::Quad<float>(0, 0, 0, 0);
 }
 
 void Tile::setX(int x) {

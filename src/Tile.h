@@ -24,6 +24,8 @@ class Tile {
   void setX(int x);
   void setY(int y);
 
+  asw::Quad<float> getBoundingBox() const;
+
   short getType() const;
   std::string getName() const;
   std::string getTypeStr() const;

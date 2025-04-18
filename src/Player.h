@@ -7,7 +7,6 @@
 #include <asw/util/Timer.h>
 
 #include "globals.h"
-#include "utility/tools.h"
 
 #include "TileMap.h"
 
@@ -64,9 +63,9 @@ class Player {
   void killSelf();
 
   asw::Quad<float> transform{
-      128.0F,
-      128.0F,
-      48.0F,
+      0.0F,
+      0.0F,
+      32.0F,
       64.0F,
   };
 
@@ -76,8 +75,6 @@ class Player {
   CharacterState player_state{CharacterState::Standing};
   CharacterDirection direction{CharacterDirection::Right};
 
-  bool can_fall{false};
-  int floor_x{0};
   int joy_number{0};
 
   int death_count{0};

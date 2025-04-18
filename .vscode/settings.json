@@ -85,7 +85,8 @@
     "shared_mutex": "cpp",
     "text_encoding": "cpp",
     "typeindex": "cpp",
-    "__node_handle": "cpp"
+    "__node_handle": "cpp",
+    "valarray": "cpp"
   },
   "sonarlint.pathToCompileCommands": "${workspaceFolder}/build/debug/compile_commands.json",
   "sonarlint.connectedMode.project": {
