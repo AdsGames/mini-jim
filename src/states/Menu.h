@@ -44,9 +44,6 @@ class Menu : public asw::scene::Scene<ProgramState> {
 
   ProgramState next_state;
 
-  // Lighting effects
-  LightLayer lightLayer;
-
   asw::Font menuFont;
 
   enum button_names {

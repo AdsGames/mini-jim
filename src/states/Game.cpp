@@ -61,10 +61,8 @@ void Game::setup() {
   Tile* spawnTile = tile_map.find_tile_type(199, 1);
 
   if (spawnTile != nullptr) {
-    player1.setSpawn(spawnTile->getTransform().position.x,
-                     spawnTile->getTransform().position.y);
-    player2.setSpawn(spawnTile->getTransform().position.x,
-                     spawnTile->getTransform().position.y);
+    player1.setSpawn(spawnTile->getTransform().position);
+    player2.setSpawn(spawnTile->getTransform().position);
   }
 
   // Play music
@@ -79,6 +77,9 @@ void Game::update(float dt) {
   // Camera follow
   cam_1.follow(player1.getTransform().position, dt);
   cam_2.follow(player2.getTransform().position, dt);
+
+  // Tile
+  tile_map.update(dt);
 
   // Starting countdown
   if (!tm_begin.isRunning()) {
@@ -125,8 +126,11 @@ void Game::draw() {
 
   // Draw tiles and characters
   if (single_player) {
-    tile_map.draw(cam_1.getViewport());
+    tile_map.draw(cam_1.getViewport(), 0, 0, 1);
     player1.draw(cam_1.getViewport().position);
+    tile_map.drawShadows(cam_1.getViewport(), 0, 0);
+    tile_map.draw(cam_1.getViewport(), 0, 0, 2);
+    tile_map.drawLights(cam_1.getViewport(), 0, 0);
   } else {
     // Clip to remove interference
     SDL_Rect clip;
@@ -138,42 +142,32 @@ void Game::draw() {
     clip.h = screenSize.y / 2;
 
     SDL_SetRenderClipRect(asw::display::renderer, &clip);
-    tile_map.draw(cam_1.getViewport(), 0, 0);
+    tile_map.draw(cam_1.getViewport(), 0, 0, 1);
 
     player1.draw(cam_1.getViewport().position);
     player2.draw(cam_1.getViewport().position);
+
+    tile_map.drawShadows(cam_1.getViewport(), 0, 0);
+    tile_map.draw(cam_1.getViewport(), 0, 0, 2);
+    tile_map.drawLights(cam_1.getViewport(), 0, 0);
 
     // Bottom
     clip.y = screenSize.y / 2;
     clip.h = screenSize.y / 2;
 
     SDL_SetRenderClipRect(asw::display::renderer, &clip);
-    tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2);
-    SDL_SetRenderClipRect(asw::display::renderer, nullptr);
+    tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 1);
 
     player1.draw(cam_2.getViewport().position +
                  asw::Vec2<float>(0, -screenSize.y / 2));
     player2.draw(cam_2.getViewport().position +
                  asw::Vec2<float>(0, -screenSize.y / 2));
-  }
 
-  // Lighting
-  if (tile_map.hasLighting() && single_player) {
-    std::vector<asw::Vec2<float>> lightPoints;
+    tile_map.drawShadows(cam_2.getViewport(), 0, screenSize.y / 2);
+    tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 2);
+    tile_map.drawLights(cam_2.getViewport(), 0, screenSize.y / 2);
 
-    // Get map area
-    const std::vector<Tile*> tileRange =
-        tile_map.get_tiles_in_range(cam_1.getViewport());
-
-    for (auto* t : tileRange) {
-      if (t->containsAttribute(light)) {
-        lightPoints.push_back(t->getTransform().getCenter() -
-                              cam_1.getViewport().position);
-      }
-    }
-
-    lightPoints.push_back(player1.getTransform().getCenter());
-    lightLayer.draw(lightPoints);
+    SDL_SetRenderClipRect(asw::display::renderer, nullptr);
   }
 
   // Frame

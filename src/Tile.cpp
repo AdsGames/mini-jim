@@ -29,28 +29,8 @@ void Tile::setY(int y) {
   this->position.y = y;
 }
 
-auto Tile::getType() const -> short {
-  if (t_type != nullptr) {
-    return t_type->GetID();
-  }
-
-  return 0;
-}
-
-std::string Tile::getTypeStr() const {
-  if (t_type != nullptr) {
-    return t_type->GetIDStr();
-  }
-
-  return "";
-}
-
-std::string Tile::getName() const {
-  if (t_type != nullptr) {
-    return t_type->GetName();
-  }
-
-  return "";
+TileType* Tile::getType() const {
+  return t_type;
 }
 
 // Contains Attribute

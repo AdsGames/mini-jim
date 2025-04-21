@@ -9,7 +9,7 @@
   "name": "main",
   "objectalignment": "topleft",
   "spacing": 0,
-  "tilecount": 101,
+  "tilecount": 94,
   "tiledversion": "1.11.2",
   "tileheight": 768,
   "tiles": [
@@ -36,11 +36,124 @@
       "image": "../images/blocks/checkpoint0.png",
       "imageheight": 64,
       "imagewidth": 64,
+      "objectgroup": {
+        "draworder": "index",
+        "id": 2,
+        "name": "",
+        "objects": [
+          {
+            "height": 61,
+            "id": 1,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 38,
+            "x": 24,
+            "y": 3
+          }
+        ],
+        "opacity": 1,
+        "type": "objectgroup",
+        "visible": true,
+        "x": 0,
+        "y": 0
+      },
       "properties": [
         {
           "name": "name",
           "type": "string",
           "value": "Checkpoint"
+        }
+      ]
+    },
+    {
+      "animation": [
+        {
+          "duration": 100,
+          "tileid": 199
+        },
+        {
+          "duration": 100,
+          "tileid": 219
+        },
+        {
+          "duration": 100,
+          "tileid": 220
+        },
+        {
+          "duration": 100,
+          "tileid": 221
+        }
+      ],
+      "id": 199,
+      "image": "../images/blocks/spawn1.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "objectgroup": {
+        "draworder": "index",
+        "id": 2,
+        "name": "",
+        "objects": [
+          {
+            "height": 61,
+            "id": 1,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 39,
+            "x": 23,
+            "y": 3
+          }
+        ],
+        "opacity": 1,
+        "type": "objectgroup",
+        "visible": true,
+        "x": 0,
+        "y": 0
+      },
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Spawn Player"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "image": "../images/blocks/finish.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "objectgroup": {
+        "draworder": "index",
+        "id": 2,
+        "name": "",
+        "objects": [
+          {
+            "height": 61,
+            "id": 1,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 38,
+            "x": 24,
+            "y": 3
+          }
+        ],
+        "opacity": 1,
+        "type": "objectgroup",
+        "visible": true,
+        "x": 0,
+        "y": 0
+      },
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Finish"
         }
       ]
     },
@@ -54,6 +167,80 @@
           "name": "name",
           "type": "string",
           "value": "Oven Fill"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "image": "../images/blocks/ovenfill.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Oven Center"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "image": "../images/blocks/ovenleft.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Oven Left"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "image": "../images/blocks/ovenright.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Oven Right"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "solid",
@@ -74,11 +261,86 @@
           "value": "Oven Top"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
         }
       ]
+    },
+    {
+      "animation": [
+        {
+          "duration": 100,
+          "tileid": 51
+        },
+        {
+          "duration": 100,
+          "tileid": 209
+        },
+        {
+          "duration": 100,
+          "tileid": 210
+        },
+        {
+          "duration": 100,
+          "tileid": 211
+        }
+      ],
+      "id": 51,
+      "image": "../images/blocks/element0.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "harmful",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "light_level",
+          "type": "float",
+          "value": 2
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Element"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "image": "../images/blocks/glass.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Stained Glass"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 215,
+      "image": "../images/blocks/ovenmiddle1.png",
+      "imageheight": 64,
+      "imagewidth": 64
     },
     {
       "id": 4,
@@ -92,61 +354,14 @@
           "value": "Red Brick"
         },
         {
-          "name": "solid",
-          "type": "bool",
-          "value": true
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "image": "../images/blocks/tack.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "objectgroup": {
-        "draworder": "index",
-        "id": 2,
-        "name": "",
-        "objects": [
-          {
-            "height": 29,
-            "id": 3,
-            "name": "",
-            "rotation": 0,
-            "type": "",
-            "visible": true,
-            "width": 64,
-            "x": 0,
-            "y": 35
-          },
-          {
-            "height": 30,
-            "id": 4,
-            "name": "",
-            "rotation": 0,
-            "type": "",
-            "visible": true,
-            "width": 53,
-            "x": 5,
-            "y": 34
-          }
-        ],
-        "opacity": 1,
-        "type": "objectgroup",
-        "visible": true,
-        "x": 0,
-        "y": 0
-      },
-      "properties": [
-        {
-          "name": "harmful",
+          "name": "shadow",
           "type": "bool",
           "value": true
         },
         {
-          "name": "name",
-          "type": "string",
-          "value": "Tack"
+          "name": "solid",
+          "type": "bool",
+          "value": true
         }
       ]
     },
@@ -160,6 +375,11 @@
           "name": "name",
           "type": "string",
           "value": "Carpet"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "solid",
@@ -180,6 +400,11 @@
           "value": "Carpet Top"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -198,6 +423,34 @@
           "value": "Cement"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "image": "../images/blocks/cement_full.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Cement Full"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -214,6 +467,11 @@
           "name": "name",
           "type": "string",
           "value": "Dice"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "solid",
@@ -236,33 +494,15 @@
       ]
     },
     {
-      "id": 13,
-      "image": "../images/blocks/book.png",
-      "imageheight": 64,
-      "imagewidth": 320,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Book"
-        },
-        {
-          "name": "solid",
-          "type": "bool",
-          "value": true
-        }
-      ]
-    },
-    {
-      "id": 15,
-      "image": "../images/blocks/finish.png",
+      "id": 21,
+      "image": "../images/blocks/white_tile.png",
       "imageheight": 64,
       "imagewidth": 64,
       "properties": [
         {
           "name": "name",
           "type": "string",
-          "value": "Finish"
+          "value": "White Tile"
         }
       ]
     },
@@ -321,19 +561,6 @@
       ]
     },
     {
-      "id": 18,
-      "image": "../images/blocks/bottle.png",
-      "imageheight": 448,
-      "imagewidth": 192,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Bottle"
-        }
-      ]
-    },
-    {
       "id": 19,
       "image": "../images/blocks/wood.png",
       "imageheight": 64,
@@ -345,6 +572,11 @@
           "value": "Wood"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -352,28 +584,70 @@
       ]
     },
     {
-      "id": 20,
-      "image": "../images/blocks/glass.png",
+      "id": 53,
+      "image": "../images/blocks/wood_light.png",
       "imageheight": 64,
       "imagewidth": 64,
       "properties": [
         {
           "name": "name",
           "type": "string",
-          "value": "Stained Glass"
+          "value": "Light Wood"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
         }
       ]
     },
     {
-      "id": 21,
-      "image": "../images/blocks/white_tile.png",
+      "id": 111,
+      "image": "../images/blocks/wood_light_slide.png",
       "imageheight": 64,
       "imagewidth": 64,
+      "objectgroup": {
+        "draworder": "index",
+        "name": "",
+        "objects": [
+          {
+            "height": 28,
+            "id": 1,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 64,
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "opacity": 1,
+        "type": "objectgroup",
+        "visible": true,
+        "x": 0,
+        "y": 0
+      },
       "properties": [
         {
           "name": "name",
           "type": "string",
-          "value": "White Tile"
+          "value": "Wood Light Slide"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "slide",
+          "type": "bool",
+          "value": true
         }
       ]
     },
@@ -423,7 +697,6 @@
       "imagewidth": 256,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -464,7 +737,6 @@
       "imagewidth": 256,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -508,6 +780,11 @@
           "name": "name",
           "type": "string",
           "value": "Toaster Block"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "solid",
@@ -564,6 +841,11 @@
           "value": "Toaster Center"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -600,27 +882,19 @@
           "value": true
         },
         {
-          "name": "light",
-          "type": "bool",
-          "value": true
+          "name": "light_level",
+          "type": "float",
+          "value": 4
         },
         {
           "name": "name",
           "type": "string",
           "value": "Toaster Element"
-        }
-      ]
-    },
-    {
-      "id": 34,
-      "image": "../images/blocks/chicken_1.png",
-      "imageheight": 576,
-      "imagewidth": 1024,
-      "properties": [
+        },
         {
-          "name": "name",
-          "type": "string",
-          "value": "Chicken Still"
+          "name": "shadow",
+          "type": "bool",
+          "value": true
         }
       ]
     },
@@ -687,13 +961,35 @@
       ]
     },
     {
+      "id": 13,
+      "image": "../images/blocks/book.png",
+      "imageheight": 64,
+      "imagewidth": 320,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Book"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
       "id": 38,
       "image": "../images/blocks/plate.png",
       "imageheight": 64,
       "imagewidth": 448,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -735,6 +1031,70 @@
           "name": "solid",
           "type": "bool",
           "value": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "image": "../images/blocks/tack.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "objectgroup": {
+        "draworder": "index",
+        "name": "",
+        "objects": [
+          {
+            "height": 29,
+            "id": 3,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 64,
+            "x": 0,
+            "y": 35
+          },
+          {
+            "height": 30,
+            "id": 4,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 53,
+            "x": 5,
+            "y": 34
+          }
+        ],
+        "opacity": 1,
+        "type": "objectgroup",
+        "visible": true,
+        "x": 0,
+        "y": 0
+      },
+      "properties": [
+        {
+          "name": "harmful",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Tack"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "image": "../images/blocks/bottle.png",
+      "imageheight": 448,
+      "imagewidth": 192,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Bottle"
         }
       ]
     },
@@ -826,9 +1186,9 @@
           "value": true
         },
         {
-          "name": "light",
-          "type": "bool",
-          "value": true
+          "name": "light_level",
+          "type": "float",
+          "value": 6
         },
         {
           "name": "name",
@@ -836,24 +1196,6 @@
           "value": "Fire"
         }
       ]
-    },
-    {
-      "id": 200,
-      "image": "../images/blocks/fire_1.png",
-      "imageheight": 64,
-      "imagewidth": 64
-    },
-    {
-      "id": 201,
-      "image": "../images/blocks/fire_2.png",
-      "imageheight": 64,
-      "imagewidth": 64
-    },
-    {
-      "id": 202,
-      "image": "../images/blocks/fire_3.png",
-      "imageheight": 64,
-      "imagewidth": 64
     },
     {
       "animation": [
@@ -880,7 +1222,6 @@
       "imagewidth": 64,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -939,7 +1280,6 @@
       "imagewidth": 64,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -974,6 +1314,29 @@
       ]
     },
     {
+      "id": 60,
+      "image": "../images/blocks/bed3.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Bed 3"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
       "id": 44,
       "image": "../images/blocks/bed1.png",
       "imageheight": 64,
@@ -983,6 +1346,11 @@
           "name": "name",
           "type": "string",
           "value": "Bed 1"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "solid",
@@ -1001,6 +1369,11 @@
           "name": "name",
           "type": "string",
           "value": "Bed 2"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "solid",
@@ -1034,7 +1407,6 @@
       "imagewidth": 128,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -1075,7 +1447,6 @@
       "imagewidth": 192,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -1121,6 +1492,11 @@
           "value": "Dirt"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -1139,50 +1515,14 @@
           "value": "Grass"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
-        }
-      ]
-    },
-    {
-      "animation": [
-        {
-          "duration": 100,
-          "tileid": 51
-        },
-        {
-          "duration": 100,
-          "tileid": 209
-        },
-        {
-          "duration": 100,
-          "tileid": 210
-        },
-        {
-          "duration": 100,
-          "tileid": 211
-        }
-      ],
-      "id": 51,
-      "image": "../images/blocks/element0.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "harmful",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "light",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Element"
         }
       ]
     },
@@ -1198,22 +1538,9 @@
           "value": "Red Cloth"
         },
         {
-          "name": "solid",
+          "name": "shadow",
           "type": "bool",
           "value": true
-        }
-      ]
-    },
-    {
-      "id": 53,
-      "image": "../images/blocks/wood_light.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Light Wood"
         },
         {
           "name": "solid",
@@ -1233,7 +1560,7 @@
         "name": "",
         "objects": [
           {
-            "height": 40,
+            "height": 32,
             "id": 1,
             "name": "",
             "rotation": 0,
@@ -1241,7 +1568,7 @@
             "visible": true,
             "width": 64,
             "x": 0,
-            "y": 12
+            "y": 16
           }
         ],
         "opacity": 1,
@@ -1257,6 +1584,11 @@
           "value": "Pipe 1"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -1270,7 +1602,6 @@
       "imagewidth": 64,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -1298,6 +1629,103 @@
           "value": "Pipe 2"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 229,
+      "image": "../images/blocks/pipe_cap_right.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "objectgroup": {
+        "draworder": "index",
+        "id": 2,
+        "name": "",
+        "objects": [
+          {
+            "height": 32,
+            "id": 1,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 60,
+            "x": 0,
+            "y": 16
+          }
+        ],
+        "opacity": 1,
+        "type": "objectgroup",
+        "visible": true,
+        "x": 0,
+        "y": 0
+      },
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Pipe Cap Right"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 230,
+      "image": "../images/blocks/pipe_cap_left.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "objectgroup": {
+        "draworder": "index",
+        "id": 2,
+        "name": "",
+        "objects": [
+          {
+            "height": 32,
+            "id": 1,
+            "name": "",
+            "rotation": 0,
+            "type": "",
+            "visible": true,
+            "width": 60,
+            "x": 4,
+            "y": 16
+          }
+        ],
+        "opacity": 1,
+        "type": "objectgroup",
+        "visible": true,
+        "x": 0,
+        "y": 0
+      },
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Pipe Cap left"
+        },
+        {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -1311,7 +1739,6 @@
       "imagewidth": 512,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -1352,7 +1779,6 @@
       "imagewidth": 128,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -1387,110 +1813,20 @@
       ]
     },
     {
-      "id": 60,
-      "image": "../images/blocks/bed3.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Bed 3"
-        },
-        {
-          "name": "solid",
-          "type": "bool",
-          "value": true
-        }
-      ]
-    },
-    {
-      "id": 61,
-      "image": "../images/blocks/ovenright.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Oven Right"
-        },
-        {
-          "name": "solid",
-          "type": "bool",
-          "value": true
-        }
-      ]
-    },
-    {
-      "id": 62,
-      "image": "../images/blocks/ovenleft.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Oven Left"
-        },
-        {
-          "name": "solid",
-          "type": "bool",
-          "value": true
-        }
-      ]
-    },
-    {
-      "id": 63,
-      "image": "../images/blocks/ovenfill.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Oven Center"
-        },
-        {
-          "name": "solid",
-          "type": "bool",
-          "value": true
-        }
-      ]
-    },
-    {
       "id": 64,
       "image": "../images/blocks/light1.png",
       "imageheight": 64,
       "imagewidth": 64,
       "properties": [
         {
-          "name": "light",
-          "type": "bool",
-          "value": true
+          "name": "light_level",
+          "type": "float",
+          "value": 8
         },
         {
           "name": "name",
           "type": "string",
           "value": "Light"
-        }
-      ]
-    },
-    {
-      "id": 65,
-      "image": "../images/blocks/cement_full.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Cement Full"
-        },
-        {
-          "name": "solid",
-          "type": "bool",
-          "value": true
         }
       ]
     },
@@ -1506,6 +1842,11 @@
           "value": "Wall"
         },
         {
+          "name": "shadow",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "solid",
           "type": "bool",
           "value": true
@@ -1519,7 +1860,6 @@
       "imagewidth": 64,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -1547,193 +1887,9 @@
           "value": "Wall Slide"
         },
         {
-          "name": "slide",
+          "name": "shadow",
           "type": "bool",
           "value": true
-        }
-      ]
-    },
-    {
-      "id": 100,
-      "image": "../images/blocks/backs/grey.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey"
-        }
-      ]
-    },
-    {
-      "id": 101,
-      "image": "../images/blocks/backs/grey_shadow_top.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Shadow Top"
-        }
-      ]
-    },
-    {
-      "id": 102,
-      "image": "../images/blocks/backs/grey_shadow_top_right.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Shadow Top Right"
-        }
-      ]
-    },
-    {
-      "id": 103,
-      "image": "../images/blocks/backs/grey_shadow_top_left.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Shadow Top Left"
-        }
-      ]
-    },
-    {
-      "id": 104,
-      "image": "../images/blocks/backs/grey_shadow_left.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Shadow Left"
-        }
-      ]
-    },
-    {
-      "id": 105,
-      "image": "../images/blocks/backs/grey_shadow_bottom_left.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Shadow Bottom Left"
-        }
-      ]
-    },
-    {
-      "id": 106,
-      "image": "../images/blocks/backs/grey_shadow_top_left_corner.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Shadow Top Left Corner"
-        }
-      ]
-    },
-    {
-      "id": 107,
-      "image": "../images/blocks/backs/grey_dark.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Dark"
-        }
-      ]
-    },
-    {
-      "id": 108,
-      "image": "../images/blocks/backs/grey_dark_top_left.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Dark Top Left"
-        }
-      ]
-    },
-    {
-      "id": 109,
-      "image": "../images/blocks/backs/grey_dark_top_right.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Grey Dark Top Right"
-        }
-      ]
-    },
-    {
-      "id": 110,
-      "image": "../images/blocks/backs/lamp.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "properties": [
-        {
-          "name": "light",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Back Lamp"
-        }
-      ]
-    },
-    {
-      "id": 111,
-      "image": "../images/blocks/wood_light_slide.png",
-      "imageheight": 64,
-      "imagewidth": 64,
-      "objectgroup": {
-        "draworder": "index",
-        "id": 2,
-        "name": "",
-        "objects": [
-          {
-            "height": 28,
-            "id": 1,
-            "name": "",
-            "rotation": 0,
-            "type": "",
-            "visible": true,
-            "width": 64,
-            "x": 0,
-            "y": 0
-          }
-        ],
-        "opacity": 1,
-        "type": "objectgroup",
-        "visible": true,
-        "x": 0,
-        "y": 0
-      },
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Wood Light Slide"
         },
         {
           "name": "slide",
@@ -1743,33 +1899,15 @@
       ]
     },
     {
-      "animation": [
-        {
-          "duration": 100,
-          "tileid": 199
-        },
-        {
-          "duration": 100,
-          "tileid": 219
-        },
-        {
-          "duration": 100,
-          "tileid": 220
-        },
-        {
-          "duration": 100,
-          "tileid": 221
-        }
-      ],
-      "id": 199,
-      "image": "../images/blocks/spawn1.png",
+      "id": 228,
+      "image": "../images/blocks/sky.png",
       "imageheight": 64,
       "imagewidth": 64,
       "properties": [
         {
           "name": "name",
           "type": "string",
-          "value": "Spawn Player"
+          "value": "Sky"
         }
       ]
     },
@@ -1778,6 +1916,19 @@
       "image": "../images/blocks/chicken_2.png",
       "imageheight": 576,
       "imagewidth": 1024
+    },
+    {
+      "id": 34,
+      "image": "../images/blocks/chicken_1.png",
+      "imageheight": 576,
+      "imagewidth": 1024,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Chicken Still"
+        }
+      ]
     },
     {
       "id": 204,
@@ -1790,24 +1941,6 @@
       "image": "../images/blocks/chicken_4.png",
       "imageheight": 576,
       "imagewidth": 1024
-    },
-    {
-      "id": 206,
-      "image": "../images/blocks/claw2.png",
-      "imageheight": 128,
-      "imagewidth": 64
-    },
-    {
-      "id": 207,
-      "image": "../images/blocks/claw3.png",
-      "imageheight": 128,
-      "imagewidth": 64
-    },
-    {
-      "id": 208,
-      "image": "../images/blocks/claw4.png",
-      "imageheight": 128,
-      "imagewidth": 64
     },
     {
       "id": 209,
@@ -1846,9 +1979,21 @@
       "imagewidth": 64
     },
     {
-      "id": 215,
-      "image": "../images/blocks/ovenmiddle1.png",
-      "imageheight": 64,
+      "id": 206,
+      "image": "../images/blocks/claw2.png",
+      "imageheight": 128,
+      "imagewidth": 64
+    },
+    {
+      "id": 207,
+      "image": "../images/blocks/claw3.png",
+      "imageheight": 128,
+      "imagewidth": 64
+    },
+    {
+      "id": 208,
+      "image": "../images/blocks/claw4.png",
+      "imageheight": 128,
       "imagewidth": 64
     },
     {
@@ -1894,7 +2039,6 @@
       "imagewidth": 64,
       "objectgroup": {
         "draworder": "index",
-        "id": 2,
         "name": "",
         "objects": [
           {
@@ -1945,6 +2089,37 @@
       "image": "../images/blocks/checkpoint3.png",
       "imageheight": 64,
       "imagewidth": 64
+    },
+    {
+      "id": 200,
+      "image": "../images/blocks/fire_1.png",
+      "imageheight": 64,
+      "imagewidth": 64
+    },
+    {
+      "id": 201,
+      "image": "../images/blocks/fire_2.png",
+      "imageheight": 64,
+      "imagewidth": 64
+    },
+    {
+      "id": 202,
+      "image": "../images/blocks/fire_3.png",
+      "imageheight": 64,
+      "imagewidth": 64
+    },
+    {
+      "id": 231,
+      "image": "../images/blocks/plant_1.png",
+      "imageheight": 64,
+      "imagewidth": 64,
+      "properties": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "Plant 1"
+        }
+      ]
     }
   ],
   "tilewidth": 1024,
