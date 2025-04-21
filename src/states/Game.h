@@ -33,8 +33,6 @@ class Game : public asw::scene::Scene<ProgramState> {
 
   asw::Music mainMusic;
 
-  LightLayer lightLayer;
-
   // Objects
   Player player1;
   Player player2;

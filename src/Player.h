@@ -10,13 +10,14 @@
 
 #include "TileMap.h"
 
-constexpr float COLLISION_RANGE = 128;
+constexpr float COLLISION_RANGE = 256.0F;
 
 // Measured in pixels per ms
 constexpr float JUMP_VELOCITY = -1.5F;
 constexpr float JUMP_X_MULTIPLER = 0.8F;
 constexpr float JUMP_X_ACCELERATION = 0.0035F;
 constexpr float GRAVITY = 0.0058F;
+constexpr float TERMINAL_VELOCITY = 2.0F;
 constexpr float WALK_MAX_SPEED = 0.8F;
 constexpr float WALK_MIN_SPEED = 0.3F;
 constexpr float WALK_ACCELERATION = 0.002F;
@@ -48,7 +49,7 @@ class Player {
                asw::input::Key right,
                asw::input::Key jump,
                int joy_number);
-  void setSpawn(float x, float y);
+  void setSpawn(const asw::Vec2<float>& position);
 
   int getDeathcount() const;
 
@@ -93,14 +94,14 @@ class Player {
 
   // 0-3 left, 4-7 right, 8-11 up 12-17 jump left 18-23 jump slide 24-27 28-29
   // is idle
-  std::array<asw::Texture, 14> tex_player{};
+  std::array<asw::Texture, 7> tex_player{};
 
   // Sounds
   std::array<asw::Sample, 2> smp_walk{};
-  asw::Sample smp_jump{};
-  asw::Sample smp_die{};
-  asw::Sample smp_win{};
-  asw::Sample smp_trap_snap{};
-  asw::Sample smp_chicken{};
-  asw::Sample smp_checkpoint{};
+  asw::Sample smp_jump;
+  asw::Sample smp_die;
+  asw::Sample smp_win;
+  asw::Sample smp_trap_snap;
+  asw::Sample smp_chicken;
+  asw::Sample smp_checkpoint;
 };

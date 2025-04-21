@@ -13,6 +13,10 @@ std::string TileType::GetIDStr() const {
   return id_str;
 }
 
+int TileType::GetLightLevel() const {
+  return lightLevel;
+}
+
 std::string TileType::GetName() const {
   return name;
 }
@@ -22,8 +26,11 @@ const asw::Quad<float>& TileType::GetBoundingBox() const {
 }
 
 auto TileType::HasAttribute(int attribute) -> bool {
-  return std::find(attributes.begin(), attributes.end(), attribute) !=
-         attributes.end();
+  if (attribute < 0 || attribute >= attribute_max) {
+    return false;
+  }
+
+  return attributes.test(attribute);
 }
 
 void TileType::AddImage(asw::Texture image) {
@@ -33,15 +40,25 @@ void TileType::AddImage(asw::Texture image) {
 }
 
 void TileType::AddAttribute(int attribute) {
-  attributes.push_back(attribute);
+  if (attribute < 0 || attribute >= attribute_max) {
+    return;
+  }
+
+  attributes.set(attribute);
 }
 
 void TileType::SetDimensions(const asw::Quad<float>& bounds) {
   this->bounds = bounds;
 }
 
-void TileType::Draw(int x, int y, int frame) {
-  if (!images.empty()) {
-    asw::draw::sprite(images.at(frame % images.size()), asw::Vec2<float>(x, y));
+void TileType::SetLightLevel(int level) {
+  lightLevel = level;
+}
+
+void TileType::Draw(float x, float y, int frame) {
+  if (images.empty()) {
+    return;
   }
+
+  asw::draw::sprite(images.at(frame % images.size()), asw::Vec2<float>(x, y));
 }
