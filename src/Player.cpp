@@ -23,24 +23,13 @@ void Player::loadImages(int type) {
   std::string prefix =
       "assets/images/character/character_" + std::to_string(type) + "_";
 
-  tex_player[0] = asw::assets::loadTexture(prefix + "left_1.png");
-  tex_player[1] = asw::assets::loadTexture(prefix + "left_2.png");
-  tex_player[2] = asw::assets::loadTexture(prefix + "left_3.png");
-  tex_player[3] = asw::assets::loadTexture(prefix + "left_4.png");
-
-  tex_player[4] = asw::assets::loadTexture(prefix + "right_1.png");
-  tex_player[5] = asw::assets::loadTexture(prefix + "right_2.png");
-  tex_player[6] = asw::assets::loadTexture(prefix + "right_3.png");
-  tex_player[7] = asw::assets::loadTexture(prefix + "right_4.png");
-
-  tex_player[8] = asw::assets::loadTexture(prefix + "left_jump.png");
-  tex_player[9] = asw::assets::loadTexture(prefix + "right_jump.png");
-
-  tex_player[10] = asw::assets::loadTexture(prefix + "slide_left.png");
-  tex_player[11] = asw::assets::loadTexture(prefix + "slide_right.png");
-
-  tex_player[12] = asw::assets::loadTexture(prefix + "left_idle.png");
-  tex_player[13] = asw::assets::loadTexture(prefix + "right_idle.png");
+  tex_player[0] = asw::assets::loadTexture(prefix + "right_1.png");
+  tex_player[1] = asw::assets::loadTexture(prefix + "right_2.png");
+  tex_player[2] = asw::assets::loadTexture(prefix + "right_3.png");
+  tex_player[3] = asw::assets::loadTexture(prefix + "right_4.png");
+  tex_player[4] = asw::assets::loadTexture(prefix + "right_jump.png");
+  tex_player[5] = asw::assets::loadTexture(prefix + "slide_right.png");
+  tex_player[6] = asw::assets::loadTexture(prefix + "right_idle.png");
 }
 
 // Load sounds
@@ -71,10 +60,9 @@ void Player::setKeys(asw::input::Key up,
 }
 
 // Set spawn
-void Player::setSpawn(float x, float y) {
-  last_checkpoint.x = x;
-  last_checkpoint.y = y;
-  transform.position = last_checkpoint;
+void Player::setSpawn(const asw::Vec2<float>& position) {
+  last_checkpoint = position;
+  transform.position = position;
 }
 
 // Deathcount
@@ -104,6 +92,9 @@ void Player::update(TileMap& fullMap, float dt) {
 
   // Gravity
   velocity.y += GRAVITY * dt;
+  if (velocity.y > TERMINAL_VELOCITY) {
+    velocity.y = TERMINAL_VELOCITY;
+  }
 
   // Snap falling
   bool can_fall = true;
@@ -242,6 +233,7 @@ void Player::update(TileMap& fullMap, float dt) {
   // Check for collision
   for (auto* t : ranged_map) {
     const auto& bb = t->getTransform();
+    const auto* t_type = t->getType();
 
     // Left right
     if (x_cmp.collides(bb)) {
@@ -268,10 +260,10 @@ void Player::update(TileMap& fullMap, float dt) {
 
       // Harmful
       if (t->containsAttribute(harmful)) {
-        if (t->getTypeStr() == "mouse_trap") {
+        if (t_type->GetIDStr() == "mouse_trap") {
           t->setType("mouse_trap_snapped");
           asw::sound::play(smp_trap_snap);
-        } else if (t->getTypeStr() == "beak") {
+        } else if (t_type->GetIDStr() == "beak") {
           asw::sound::play(smp_chicken);
         }
 
@@ -279,7 +271,7 @@ void Player::update(TileMap& fullMap, float dt) {
       }
 
       // Checkpoint
-      if (t->getTypeStr() == "checkpoint") {
+      if (t_type->GetIDStr() == "checkpoint") {
         if (last_checkpoint.x != bb.position.x ||
             last_checkpoint.y != bb.position.y) {
           last_checkpoint = bb.position;
@@ -288,7 +280,7 @@ void Player::update(TileMap& fullMap, float dt) {
       }
 
       // Finish
-      if (t->getTypeStr() == "finish") {
+      if (t_type->GetIDStr() == "finish") {
         asw::sound::play(smp_win);
         finished = true;
       }
@@ -318,37 +310,30 @@ void Player::draw(const asw::Vec2<float>& offset) {
       transform.position - offset - asw::Vec2<float>(16.0f, 0);
 
   if (player_state == CharacterState::Jumping) {
-    if (direction == CharacterDirection::Left) {
-      asw::draw::sprite(tex_player[8], position_offset);
+    if (direction == CharacterDirection::Right) {
+      asw::draw::sprite(tex_player[4], position_offset);
     } else {
-      asw::draw::sprite(tex_player[9], position_offset);
+      asw::draw::spriteFlip(tex_player[4], position_offset, true, false);
     }
   } else if (player_state == CharacterState::Walking) {
-    if (direction == CharacterDirection::Left) {
+    if (direction == CharacterDirection::Right) {
       asw::draw::sprite(tex_player[ani_ticker % 4], position_offset);
     } else {
-      asw::draw::sprite(tex_player[4 + ani_ticker % 4], position_offset);
+      asw::draw::spriteFlip(tex_player[ani_ticker % 4], position_offset, true,
+                            false);
     }
 
   } else if (player_state == CharacterState::Standing) {
-    if (direction == CharacterDirection::Left) {
-      if (ani_ticker % 10 < 5) {
-        asw::draw::sprite(tex_player[0], position_offset);
-      } else {
-        asw::draw::sprite(tex_player[12], position_offset);
-      }
+    if (direction == CharacterDirection::Right) {
+      asw::draw::sprite(tex_player[6], position_offset);
     } else {
-      if (ani_ticker % 10 < 5) {
-        asw::draw::sprite(tex_player[4], position_offset);
-      } else {
-        asw::draw::sprite(tex_player[13], position_offset);
-      }
+      asw::draw::spriteFlip(tex_player[6], position_offset, true, false);
     }
   } else if (player_state == CharacterState::Sliding) {
-    if (direction == CharacterDirection::Left) {
-      asw::draw::sprite(tex_player[10], position_offset);
+    if (direction == CharacterDirection::Right) {
+      asw::draw::sprite(tex_player[5], position_offset);
     } else {
-      asw::draw::sprite(tex_player[11], position_offset);
+      asw::draw::spriteFlip(tex_player[5], position_offset, true, false);
     }
   }
 }

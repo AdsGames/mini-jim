@@ -55,9 +55,10 @@ void TileTypeLoader::loadTypes(const std::string& path) {
     // Get properties
     std::string name;
     bool isSolid = false;
-    bool isLight = false;
     bool isHarmful = false;
     bool isSlide = false;
+    bool isShadow = false;
+    int lightLevel = 0;
 
     // Invalid tile
     if (!cTile.contains("properties")) {
@@ -69,12 +70,14 @@ void TileTypeLoader::loadTypes(const std::string& path) {
         name = property["value"];
       } else if (property["name"] == "solid") {
         isSolid = property["value"];
-      } else if (property["name"] == "light") {
-        isLight = property["value"];
       } else if (property["name"] == "harmful") {
         isHarmful = property["value"];
       } else if (property["name"] == "slide") {
         isSlide = property["value"];
+      } else if (property["name"] == "shadow") {
+        isShadow = property["value"];
+      } else if (property["name"] == "light_level") {
+        lightLevel = property["value"];
       }
     }
 
@@ -128,8 +131,9 @@ void TileTypeLoader::loadTypes(const std::string& path) {
       tile->AddAttribute(solid);
     }
 
-    if (isLight) {
+    if (lightLevel > 0.0F) {
       tile->AddAttribute(light);
+      tile->SetLightLevel(lightLevel);
     }
 
     if (isHarmful) {
@@ -138,6 +142,10 @@ void TileTypeLoader::loadTypes(const std::string& path) {
 
     if (isSlide) {
       tile->AddAttribute(slide);
+    }
+
+    if (isShadow) {
+      tile->AddAttribute(shadow);
     }
 
     // Add to types

@@ -73,7 +73,8 @@ void Menu::init() {
 void Menu::change_level(int level) {
   auto screenSize = asw::display::getLogicalSize();
 
-  levelOn = (levelOn + level) < 0 ? 4 : (levelOn + level) % 5;
+  levelOn =
+      (levelOn + level) < 0 ? (levelCount - 1) : (levelOn + level) % levelCount;
 
   tile_map.load("assets/levels/level_" + std::to_string(levelOn + 1) + ".json");
 
@@ -113,33 +114,19 @@ void Menu::update(float dt) {
   for (int i = 0; i < NUM_BUTTONS; i++) {
     buttons[i].Update();
   }
+
+  // Tile
+  tile_map.update(dt);
 }
 
 void Menu::draw() {
   auto screenSize = asw::display::getLogicalSize();
 
   // Draw live background
-  tile_map.draw(cam.getViewport());
-
-  // Lighting
-  if (tile_map.hasLighting()) {
-    std::vector<asw::Vec2<float>> lightPoints;
-
-    // Get map area
-    const std::vector<Tile*> mapRange =
-        tile_map.get_tiles_in_range(cam.getViewport());
-
-    for (auto* t : mapRange) {
-      if (t->containsAttribute(light)) {
-        lightPoints.push_back(t->getTransform().getCenter() -
-                              cam.getViewport().position);
-      }
-    }
-
-    lightPoints.emplace_back(asw::input::mouse.x, asw::input::mouse.y);
-
-    lightLayer.draw(lightPoints);
-  }
+  tile_map.draw(cam.getViewport(), 0, 0, 1);
+  tile_map.drawShadows(cam.getViewport(), 0, 0);
+  tile_map.draw(cam.getViewport(), 0, 0, 2);
+  tile_map.drawLights(cam.getViewport(), 0, 0);
 
   // Overlay
   asw::draw::sprite(credits, asw::Vec2<float>(0, 0));

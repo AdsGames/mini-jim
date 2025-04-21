@@ -17,9 +17,7 @@ class Tile {
 
   asw::Quad<float> getTransform() const;
 
-  short getType() const;
-  std::string getName() const;
-  std::string getTypeStr() const;
+  TileType* getType() const;
   bool containsAttribute(int newAttribute);
 
   void setType(short type);

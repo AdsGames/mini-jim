@@ -13,18 +13,36 @@ void LightLayer::setColor(asw::Color color) {
   lightColor = color;
 }
 
-void LightLayer::draw(const std::vector<asw::Vec2<float>>& points) {
-  auto lightSize = asw::util::getTextureSize(lightTexture);
+void LightLayer::clear() {
+  points.clear();
+}
 
+void LightLayer::addPoint(const asw::Vec2<float>& point, float level) {
+  points.emplace_back(point, level);
+}
+
+void LightLayer::draw(const asw::Quad<float>& camera,
+                      float destX,
+                      float destY) {
   asw::display::setRenderTarget(lightLayer);
   SDL_SetRenderDrawColor(asw::display::renderer, 64, 64, 64, 0);
   SDL_RenderFillRect(asw::display::renderer, nullptr);
 
-  for (auto t : points) {
-    asw::draw::stretchSprite(
-        lightTexture,
-        asw::Quad<float>(t.x - (lightSize.x / 2), t.y - (lightSize.y / 2),
-                         lightSize.x, lightSize.y));
+  for (auto& p : points) {
+    auto lightSize = 128.0F * p.level;
+    const auto lightT =
+        asw::Quad<float>(p.position.x - (lightSize / 2),
+                         p.position.y - (lightSize / 2), lightSize, lightSize);
+
+    if (!camera.collides(lightT)) {
+      continue;
+    }
+
+    const auto drawT =
+        lightT + asw::Quad<float>(destX - camera.position.x,
+                                  destY - camera.position.y, 0, 0);
+
+    asw::draw::stretchSprite(lightTexture, drawT);
   }
 
   asw::display::resetRenderTarget();
