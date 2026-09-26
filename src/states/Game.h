@@ -21,6 +21,7 @@ class Game : public asw::scene::Scene<ProgramState> {
 
  private:
   void setup();
+  void step(float dt);
 
   asw::Sample countdown;
   asw::Sample timeout;
@@ -39,4 +40,7 @@ class Game : public asw::scene::Scene<ProgramState> {
   TileMap tile_map;
   Timer tm_begin, tm_p1, tm_p2;
   Camera cam_1, cam_2;
+
+  // Unsimulated time in milliseconds
+  float lag_ms{0.0F};
 };

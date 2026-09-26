@@ -1,11 +1,21 @@
 #include "./Game.h"
 
+#include <algorithm>
 #include <format>
 #include <string>
 
 #include "../globals.h"
 
 namespace {
+// Physics step, matches the asw desktop timestep (8ms)
+constexpr float FIXED_STEP_MS = 8.0F;
+
+// Longest frame time simulated at once
+constexpr float MAX_LAG_MS = 100.0F;
+
+// Absorbs float error when asw passes exactly one step
+constexpr float STEP_EPSILON_MS = 0.01F;
+
 // Format seconds to the nearest tenth
 std::string format_time(double seconds) {
   return std::format("{:.1f}", seconds);
@@ -79,29 +89,18 @@ void Game::setup() {
 
   // Start game
   tm_begin.start();
+  lag_ms = 0.0F;
 }
 
 void Game::update(float dt) {
-  // asw passes seconds; game logic is tuned in milliseconds
-  dt *= 1000.0F;
+  // asw passes seconds; game logic is tuned in milliseconds. Emscripten passes
+  // the real frame time, so run physics in fixed steps and cap the backlog so
+  // a slow frame or a resumed tab cannot tunnel players through floors.
+  lag_ms = std::min(lag_ms + (dt * 1000.0F), MAX_LAG_MS);
 
-  // Camera follow
-  cam_1.follow(player1.getTransform().position, dt);
-  cam_2.follow(player2.getTransform().position, dt);
-
-  // Tile
-  tile_map.update(dt);
-
-  // Starting countdown
-  if (!tm_begin.isRunning()) {
-    // Stop from moving once done
-    if (!player1.getFinished()) {
-      player1.update(tile_map, dt);
-    }
-
-    if (!player2.getFinished() && !single_player) {
-      player2.update(tile_map, dt);
-    }
+  while (lag_ms >= FIXED_STEP_MS - STEP_EPSILON_MS) {
+    step(FIXED_STEP_MS);
+    lag_ms -= FIXED_STEP_MS;
   }
 
   // Timers
@@ -129,6 +128,27 @@ void Game::update(float dt) {
   // Back to menu
   if (asw::input::get_key_down(asw::input::Key::Escape)) {
     manager.set_next_scene(ProgramState::Menu);
+  }
+}
+
+void Game::step(float dt) {
+  // Camera follow
+  cam_1.follow(player1.getTransform().position, dt);
+  cam_2.follow(player2.getTransform().position, dt);
+
+  // Tile
+  tile_map.update(dt);
+
+  // Starting countdown
+  if (!tm_begin.isRunning()) {
+    // Stop from moving once done
+    if (!player1.getFinished()) {
+      player1.update(tile_map, dt);
+    }
+
+    if (!player2.getFinished() && !single_player) {
+      player2.update(tile_map, dt);
+    }
   }
 }
 
