@@ -7,7 +7,7 @@
 class Button {
  public:
   Button() = default;
-  explicit Button(const asw::Vec2<float>& position);
+  explicit Button(const asw::Vec2f& position);
 
   void Update();
 
@@ -25,7 +25,7 @@ class Button {
  private:
   std::function<void(void)> onClick;
 
-  asw::Quad<float> transform{0, 0, 0, 0};
+  asw::Quadf transform{0, 0, 0, 0};
 
   std::array<asw::Texture, 2> images;
 };

@@ -24,6 +24,9 @@ class Menu : public asw::scene::Scene<ProgramState> {
   // Change level (background)
   void change_level(int level);
 
+  // Advance live background by one fixed step
+  void step(float dt);
+
   // Menu/GUI
   asw::Texture levelSelectNumber;
   asw::Texture menuselect;
@@ -39,8 +42,8 @@ class Menu : public asw::scene::Scene<ProgramState> {
 
   // Live background
   TileMap tile_map;
-  asw::Vec2<float> scroll;
-  asw::Vec2<float> scroll_dir;
+  asw::Vec2f scroll;
+  asw::Vec2f scroll_dir;
 
   ProgramState next_state;
 
@@ -58,4 +61,7 @@ class Menu : public asw::scene::Scene<ProgramState> {
 
   Button buttons[7];
   Camera cam;
+
+  // Unsimulated time in milliseconds
+  float lag_ms{0.0F};
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <asw/asw.h>
-#include <asw/util/Timer.h>
+#include "../Timer.h"
 
 #include "./State.h"
 
@@ -15,13 +15,17 @@ class Intro : public asw::scene::Scene<ProgramState> {
   void init() override;
   void update(float dt) override;
   void draw() override;
+  void cleanup() override;
 
  private:
   asw::Texture intro;
   asw::Texture title;
   asw::Texture background;
-  asw::Texture images[INTRO_FRAMES];
-  asw::Sample introSound;
+
+  // Only the frame on screen is loaded, frames are streamed from disk
+  asw::Texture current_frame;
+  int loaded_frame = -1;
+  asw::Music introSound;
 
   int frame = 0;
   bool sound_played = false;

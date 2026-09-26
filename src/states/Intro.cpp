@@ -1,20 +1,20 @@
 #include "./Intro.h"
 
 #include <string>
-#include <vector>
 
 #include "../globals.h"
 
 void Intro::init() {
-  background = asw::assets::loadTexture("assets/images/opening/background.png");
-  intro = asw::assets::loadTexture("assets/images/opening/intro.png");
-  title = asw::assets::loadTexture("assets/images/opening/title.png");
-  introSound = asw::assets::loadSample("assets/sounds/introSound.wav");
+  background =
+      asw::assets::load_texture("assets/images/opening/background.png");
+  intro = asw::assets::load_texture("assets/images/opening/intro.png");
+  title = asw::assets::load_texture("assets/images/opening/title.png");
+  introSound = asw::assets::load_music("assets/sounds/introSound.wav");
 
-  for (int i = 0; i < INTRO_FRAMES; i++) {
-    images[i] = asw::assets::loadTexture("assets/images/opening/opening" +
-                                         std::to_string(i) + ".png");
-  }
+  current_frame = nullptr;
+  loaded_frame = -1;
+  frame = 0;
+  sound_played = false;
 
   timer.start();
 }
@@ -23,28 +23,50 @@ void Intro::update(float dt) {
   frame = (timer.getElapsedTime<std::chrono::milliseconds>() - 3000) / 100;
 
   if (frame >= 0 && !sound_played) {
-    asw::sound::play(introSound, 255, 128, 0);
+    asw::sound::play_music(introSound);
     sound_played = true;
   }
 
-  if (frame >= INTRO_FRAMES || asw::input::keyboard.anyPressed) {
-    sceneManager.setNextScene(ProgramState::Menu);
+  if (frame >= INTRO_FRAMES || asw::input::get_keyboard().any_pressed) {
+    manager.set_next_scene(ProgramState::Menu);
+    return;
   }
+
+  // Load the new frame, the old one is released with it
+  if (frame >= 0 && frame != loaded_frame) {
+    current_frame = asw::assets::load_texture(
+        "assets/images/opening/opening" + std::to_string(frame) + ".png");
+    loaded_frame = frame;
+  }
+}
+
+void Intro::cleanup() {
+  // Stop the intro sound when skipped, it plays on the music track
+  asw::sound::stop_music();
+
+  // Scene stays registered, so release its textures once it is done
+  intro = nullptr;
+  title = nullptr;
+  background = nullptr;
+  current_frame = nullptr;
+  loaded_frame = -1;
+
+  asw::scene::Scene<ProgramState>::cleanup();
 }
 
 void Intro::draw() {
   // Intro stuffs
   if (timer.getElapsedTime<std::chrono::seconds>() < 1) {
-    asw::draw::sprite(intro, asw::Vec2<float>(0, 0));
+    asw::draw::sprite(intro, asw::Vec2f(0, 0));
   } else if (timer.getElapsedTime<std::chrono::seconds>() < 2) {
-    asw::draw::sprite(title, asw::Vec2<float>(0, 0));
+    asw::draw::sprite(title, asw::Vec2f(0, 0));
   } else {
-    asw::draw::clearColor(asw::util::makeColor(0, 0, 0));
-    asw::draw::stretchSprite(background, asw::Quad<float>(105, 140, 1070, 680));
+    asw::draw::clear_color(asw::Color(0, 0, 0));
+    asw::draw::stretch_sprite(background, asw::Quadf(105, 140, 1070, 680));
 
-    if (frame >= 0 && frame < INTRO_FRAMES) {
-      asw::draw::stretchSprite(images[frame],
-                               asw::Quad<float>(105, 120, 1070, 660));
+    if (current_frame) {
+      asw::draw::stretch_sprite(current_frame,
+                                asw::Quadf(105, 120, 1070, 660));
     }
   }
 }

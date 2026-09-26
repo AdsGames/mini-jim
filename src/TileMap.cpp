@@ -1,10 +1,18 @@
 #include "TileMap.h"
 
+#include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <sstream>
 
+#include "TileTypeLoader.h"
 #include "globals.h"
+
+namespace {
+// Light radius in pixels for each light level of a tile
+constexpr float LIGHT_RADIUS_PER_LEVEL = 64.0F;
+}  // namespace
 
 // Get width
 int TileMap::getWidth() const {
@@ -28,24 +36,24 @@ bool TileMap::hasLighting() const {
 
 bool TileMap::load(const std::string& path) {
   // Load shadow textures
-  shadowTextures[1] = asw::assets::loadTexture(
+  shadowTextures[1] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_bottom_left.png");
-  shadowTextures[2] = asw::assets::loadTexture(
+  shadowTextures[2] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_top_right.png");
-  shadowTextures[3] = asw::assets::loadTexture(
+  shadowTextures[3] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_top_left_corner.png");
-  shadowTextures[4] = asw::assets::loadTexture(
+  shadowTextures[4] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_top_left.png");
   shadowTextures[5] =
-      asw::assets::loadTexture("assets/images/blocks/shadows/shadow_left.png");
+      asw::assets::load_texture("assets/images/blocks/shadows/shadow_left.png");
   shadowTextures[6] =
-      asw::assets::loadTexture("assets/images/blocks/shadows/shadow_top.png");
+      asw::assets::load_texture("assets/images/blocks/shadows/shadow_top.png");
   shadowTextures[7] =
-      asw::assets::loadTexture("assets/images/blocks/shadows/shadow_full.png");
+      asw::assets::load_texture("assets/images/blocks/shadows/shadow_full.png");
 
   // Set shadow alpha
   for (auto& t : shadowTextures) {
-    asw::draw::setAlpha(t, 0.4F);
+    asw::draw::set_alpha(t, 0.4F);
   }
 
   // Open file or abort if it does not exist
@@ -89,10 +97,10 @@ bool TileMap::load(const std::string& path) {
 
   // Load data into vector
   const std::vector<int> foreground = doc["layers"][1]["data"];
-  load_layer(foreground, mapTiles);
+  load_layer(foreground, mapTiles, mapIndex);
 
   const std::vector<int> background = doc["layers"][0]["data"];
-  load_layer(background, mapTilesBack);
+  load_layer(background, mapTilesBack, mapIndexBack);
 
   file.close();
 
@@ -106,8 +114,10 @@ bool TileMap::load(const std::string& path) {
 }
 
 void TileMap::load_layer(const std::vector<int>& data,
-                         std::vector<Tile>& t_map) {
+                         std::vector<Tile>& t_map,
+                         std::vector<int>& t_index) {
   int position = 0;
+  t_index.assign(width * height, -1);
 
   for (const int i : data) {
     const auto id = i;
@@ -116,8 +126,46 @@ void TileMap::load_layer(const std::vector<int>& data,
       // Tiled adds 1 to the id
       t_map.emplace_back(id - 1, (position % width) * 64,
                          (position / width) * 64);
+      t_index[position] = static_cast<int>(t_map.size()) - 1;
     }
     position++;
+  }
+}
+
+template <typename Fn>
+void TileMap::for_each_tile_in(std::vector<Tile>& t_map,
+                               const std::vector<int>& t_index,
+                               const asw::Quadf& range,
+                               Fn&& fn) {
+  // Tiles can reach past their own cell (e.g. chicken), so widen the search
+  // by the largest tile footprint, then do the exact check per tile
+  const auto& extent = TileTypeLoader::getExtent();
+
+  const float left = range.position.x - (extent.position.x + extent.size.x);
+  const float top = range.position.y - (extent.position.y + extent.size.y);
+  const float right = range.position.x + range.size.x - extent.position.x;
+  const float bottom = range.position.y + range.size.y - extent.position.y;
+
+  const int x_start =
+      std::max(0, static_cast<int>(std::floor(left / 64.0F)));
+  const int y_start = std::max(0, static_cast<int>(std::floor(top / 64.0F)));
+  const int x_end =
+      std::min(width - 1, static_cast<int>(std::floor(right / 64.0F)));
+  const int y_end =
+      std::min(height - 1, static_cast<int>(std::floor(bottom / 64.0F)));
+
+  for (int y = y_start; y <= y_end; y++) {
+    for (int x = x_start; x <= x_end; x++) {
+      const int idx = t_index[(y * width) + x];
+      if (idx == -1) {
+        continue;
+      }
+
+      auto& t = t_map[idx];
+      if (t.getTransform().collides(range)) {
+        fn(t);
+      }
+    }
   }
 }
 
@@ -141,7 +189,7 @@ void TileMap::generate_shadow_map() {
             continue;  // Skip if out of bounds
           }
 
-          shadowMap[(y * width + j) + (x + i)] = 7;
+          shadowMap[((y + j) * width) + (x + i)] = 7;
         }
       }
     }
@@ -178,13 +226,23 @@ void TileMap::generate_shadow_map() {
 void TileMap::generate_light_map() {
   // Create light map
   lightLayer.clear();
-  lightLayer.setColor(asw::util::makeColor(255, 255, 255, 128));
 
   // Get map area
   for (auto& t : mapTiles) {
     if (t.containsAttribute(light)) {
-      lightLayer.addPoint(t.getTransform().getCenter(),
-                          t.getType()->GetLightLevel());
+      const auto& id = t.getType()->GetIDStr();
+
+      LightKind kind = LightKind::Lamp;
+      if (id == "fire") {
+        kind = LightKind::Fire;
+      } else if (id == "element" || id == "toaster_element") {
+        kind = LightKind::Heat;
+      }
+
+      lightLayer.addPoint(t.getTransform().get_center(),
+                          LIGHT_RADIUS_PER_LEVEL *
+                              static_cast<float>(t.getType()->GetLightLevel()),
+                          kind);
     }
   }
 }
@@ -203,14 +261,14 @@ Tile* TileMap::find_tile_type(short type, int layer) {
 }
 
 // Get tile at
-std::vector<Tile*> TileMap::get_tiles_in_range(const asw::Quad<float>& range) {
+std::vector<Tile*> TileMap::get_tiles_in_range(const asw::Quadf& range) {
   std::vector<Tile*> ranged_map;
 
-  for (auto& t : mapTiles) {
-    if (t.getType() != 0 && t.getTransform().collides(range)) {
+  for_each_tile_in(mapTiles, mapIndex, range, [&ranged_map](Tile& t) {
+    if (t.getType() != nullptr) {
       ranged_map.push_back(&t);
     }
-  }
+  });
 
   return ranged_map;
 }
@@ -220,63 +278,76 @@ void TileMap::update(float deltaTime) {
 }
 
 // Draw at position
-void TileMap::draw(const asw::Quad<float>& camera,
+void TileMap::draw(const asw::Quadf& camera,
                    float destX,
                    float destY,
                    int layer) {
   if (layer == 1) {
-    draw_layer(mapTilesBack, camera, destX, destY);
+    draw_layer(mapTilesBack, mapIndexBack, camera, destX, destY);
 
     // Draw semi-transparent buffer
-    SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_BLEND);
-    asw::draw::rectFill(asw::Quad<float>(0, 0, getWidth(), getHeight()),
-                        asw::util::makeColor(0, 0, 0, 64));
-    SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(),
+                               SDL_BLENDMODE_BLEND);
+    asw::draw::rect_fill(asw::Quadf(0, 0, getWidth(), getHeight()),
+                         asw::Color(0, 0, 0, 64));
+    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(),
+                               SDL_BLENDMODE_NONE);
   }
 
   if (layer == 2) {
-    draw_layer(mapTiles, camera, destX, destY);
+    draw_layer(mapTiles, mapIndex, camera, destX, destY);
   }
 }
 
-void TileMap::drawShadows(const asw::Quad<float>& camera,
-                          float destX,
-                          float destY) {
+void TileMap::drawShadows(const asw::Quadf& camera, float destX, float destY) {
+  // Only visit cells inside the camera
+  const int x_start =
+      std::max(0, static_cast<int>(std::floor(camera.position.x / 64.0F)));
+  const int y_start =
+      std::max(0, static_cast<int>(std::floor(camera.position.y / 64.0F)));
+  const int x_end = std::min(
+      width,
+      static_cast<int>(std::ceil((camera.position.x + camera.size.x) / 64.0F)));
+  const int y_end = std::min(
+      height,
+      static_cast<int>(std::ceil((camera.position.y + camera.size.y) / 64.0F)));
+
   // Draw shadow map
-  for (unsigned int i = 0; i < shadowMap.size(); i++) {
-    const auto kernelIdx = shadowMap[i];
-    if (kernelIdx == 0) {
-      continue;
-    }
+  for (int y = y_start; y < y_end; y++) {
+    for (int x = x_start; x < x_end; x++) {
+      const auto kernelIdx = shadowMap[(y * width) + x];
+      if (kernelIdx == 0) {
+        continue;
+      }
 
-    auto position =
-        asw::Vec2<float>((i % width) * 64.0F - camera.position.x - destX,
-                         (i / width) * 64.0F - camera.position.y - destY);
-    asw::draw::sprite(shadowTextures[kernelIdx], position);
+      auto position = asw::Vec2f(x * 64.0F - camera.position.x + destX,
+                                 y * 64.0F - camera.position.y + destY);
+      asw::draw::sprite(shadowTextures[kernelIdx], position);
+    }
   }
 }
 
-void TileMap::drawLights(const asw::Quad<float>& camera,
+void TileMap::drawLights(const asw::Quadf& camera,
                          float destX,
-                         float destY) {
-  // Add lights
+                         float destY,
+                         const std::vector<asw::Vec2f>& halos) {
+  // Only dark levels are lit
   if (!lighting) {
     return;
   }
 
-  lightLayer.draw(camera, destX, destY);
+  lightLayer.draw(camera, destX, destY, frame_timer, halos);
 }
 
 // Draw a layer
 void TileMap::draw_layer(std::vector<Tile>& t_map,
-                         const asw::Quad<float>& camera,
+                         const std::vector<int>& t_index,
+                         const asw::Quadf& camera,
                          float destX,
                          float destY) {
   int const frame = getFrame();
 
-  for (auto& t : t_map) {
-    if (t.getTransform().collides(camera)) {
-      t.draw(camera.position.x - destX, camera.position.y - destY, frame);
-    }
-  }
+  for_each_tile_in(t_map, t_index, camera, [&](Tile& t) {
+    t.draw(camera.position.x - destX, camera.position.y - destY, frame);
+  });
 }

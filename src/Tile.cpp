@@ -12,13 +12,13 @@ Tile::Tile(short type, int x, int y) {
   setType(type);
 }
 
-asw::Quad<float> Tile::getTransform() const {
+asw::Quadf Tile::getTransform() const {
   if (t_type != nullptr) {
-    return asw::Quad<float>(position + t_type->GetBoundingBox().position,
-                            t_type->GetBoundingBox().size);
+    return asw::Quadf(position + t_type->GetBoundingBox().position,
+                      t_type->GetBoundingBox().size);
   }
 
-  return asw::Quad<float>(0, 0, 0, 0);
+  return asw::Quadf(0, 0, 0, 0);
 }
 
 void Tile::setX(int x) {

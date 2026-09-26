@@ -8,17 +8,17 @@ class Camera {
   Camera(float width, float height, float max_x, float max_y);
 
   void setSpeed(float speed);
-  void follow(const asw::Vec2<float>& pos, float dt);
+  void follow(const asw::Vec2f& pos, float dt);
   void setBounds(float x, float y);
 
-  const asw::Quad<float>& getViewport() const { return viewport; }
+  const asw::Quadf& getViewport() const { return viewport; }
 
  private:
-  asw::Quad<float> viewport;
+  asw::Quadf viewport;
 
-  asw::Vec2<float> bounds;
+  asw::Vec2f bounds;
 
-  asw::Vec2<float> max_pos;
+  asw::Vec2f max_pos;
 
   float speed;
 };

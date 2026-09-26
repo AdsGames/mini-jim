@@ -2,7 +2,7 @@
 
 #include <utility>
 
-Button::Button(const asw::Vec2<float>& position) : onClick(nullptr) {
+Button::Button(const asw::Vec2f& position) : onClick(nullptr) {
   transform.position = position;
 
   images[0] = nullptr;
@@ -15,19 +15,22 @@ void Button::SetOnClick(std::function<void(void)> func) {
 
 // Load images from file
 void Button::SetImages(const char* image1, const char* image2) {
-  images[0] = asw::assets::loadTexture(image1);
-  images[1] = asw::assets::loadTexture(image2);
+  images[0] = asw::assets::load_texture(image1);
+  images[1] = asw::assets::load_texture(image2);
 
   // Size
-  transform.size = asw::util::getTextureSize(images[0]);
+  transform.size = asw::util::get_texture_size(images[0]);
 }
 
 auto Button::Hover() const -> bool {
-  return transform.contains(asw::input::mouse.x, asw::input::mouse.y);
+  return transform.contains(asw::input::get_mouse().position.x,
+                            asw::input::get_mouse().position.y);
 }
 
 void Button::Update() {
-  if (Hover() && asw::input::mouse.pressed[1] && onClick != nullptr) {
+  if (Hover() &&
+      asw::input::get_mouse_button_down(asw::input::MouseButton::Left) &&
+      onClick != nullptr) {
     onClick();
   }
 }
@@ -44,6 +47,6 @@ void Button::Draw() {
   if (images[Hover()]) {
     asw::draw::sprite(images[Hover()], transform.position);
   } else {
-    asw::draw::rectFill(transform, asw::util::makeColor(60, 60, 60));
+    asw::draw::rect_fill(transform, asw::Color(60, 60, 60));
   }
 }

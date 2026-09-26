@@ -1,39 +1,43 @@
 #include "./Menu.h"
 
+#include <algorithm>
+#include <cmath>
+
 // Create menu
 void Menu::init() {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::get_logical_size();
 
   // Load images
-  menu = asw::assets::loadTexture("assets/images/gui/menu.png");
-  menuselect = asw::assets::loadTexture("assets/images/gui/menuSelector.png");
-  help = asw::assets::loadTexture("assets/images/gui/help.png");
+  menu = asw::assets::load_texture("assets/images/gui/menu.png");
+  menuselect = asw::assets::load_texture("assets/images/gui/menuSelector.png");
+  help = asw::assets::load_texture("assets/images/gui/help.png");
   levelSelectNumber =
-      asw::assets::loadTexture("assets/images/gui/levelSelectNumber.png");
-  copyright = asw::assets::loadTexture("assets/images/gui/copyright.png");
-  credits = asw::assets::loadTexture("assets/images/gui/credits.png");
+      asw::assets::load_texture("assets/images/gui/levelSelectNumber.png");
+  copyright = asw::assets::load_texture("assets/images/gui/copyright.png");
+  credits = asw::assets::load_texture("assets/images/gui/credits.png");
 
   // Load sound
-  click = asw::assets::loadSample("assets/sounds/click.wav");
-  intro = asw::assets::loadSample("assets/sounds/intro.wav");
-  music = asw::assets::loadMusic("assets/sounds/music/MiniJim.ogg");
+  click = asw::assets::load_sample("assets/sounds/click.wav");
+  intro = asw::assets::load_sample("assets/sounds/intro.wav");
+  music = asw::assets::load_music("assets/sounds/music/MiniJim.ogg");
 
   // Sets Font
-  menuFont = asw::assets::loadFont("assets/fonts/ariblk.ttf", 24);
+  menuFont = asw::assets::load_font("assets/fonts/ariblk.ttf", 24);
 
   // Create map for live background
   levelOn = 0;
+  lag_ms = 0.0F;
   tile_map = TileMap();
   change_level(0);
   next_state = ProgramState::Null;
 
   // Buttons
-  buttons[BUTTON_START] = Button(asw::Vec2<float>(60, 630));
-  buttons[BUTTON_START_MP] = Button(asw::Vec2<float>(60, 690));
-  buttons[BUTTON_HELP] = Button(asw::Vec2<float>(60, 810));
-  buttons[BUTTON_EXIT] = Button(asw::Vec2<float>(60, 870));
-  buttons[BUTTON_LEFT] = Button(asw::Vec2<float>(screenSize.x - 180, 80));
-  buttons[BUTTON_RIGHT] = Button(asw::Vec2<float>(screenSize.x - 80, 80));
+  buttons[BUTTON_START] = Button(asw::Vec2f(60, 630));
+  buttons[BUTTON_START_MP] = Button(asw::Vec2f(60, 690));
+  buttons[BUTTON_HELP] = Button(asw::Vec2f(60, 810));
+  buttons[BUTTON_EXIT] = Button(asw::Vec2f(60, 870));
+  buttons[BUTTON_LEFT] = Button(asw::Vec2f(screenSize.x - 180, 80));
+  buttons[BUTTON_RIGHT] = Button(asw::Vec2f(screenSize.x - 80, 80));
 
   buttons[BUTTON_START].SetImages("assets/images/gui/button_start.png",
                                   "assets/images/gui/button_start_hover.png");
@@ -51,27 +55,27 @@ void Menu::init() {
 
   buttons[BUTTON_START].SetOnClick([this]() {
     single_player = true;
-    sceneManager.setNextScene(ProgramState::Game);
+    manager.set_next_scene(ProgramState::Game);
   });
 
   buttons[BUTTON_START_MP].SetOnClick([this]() {
     single_player = false;
-    sceneManager.setNextScene(ProgramState::Game);
+    manager.set_next_scene(ProgramState::Game);
   });
 
-  buttons[BUTTON_EXIT].SetOnClick([]() { asw::core::exit = true; });
+  buttons[BUTTON_EXIT].SetOnClick([]() { asw::core::exit(); });
 
   buttons[BUTTON_LEFT].SetOnClick([this]() { change_level(-1); });
 
   buttons[BUTTON_RIGHT].SetOnClick([this]() { change_level(1); });
 
   // Variables
-  asw::sound::playMusic(music, 255);
+  asw::sound::play_music(music);
   asw::sound::play(intro);
 }
 
 void Menu::change_level(int level) {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::get_logical_size();
 
   levelOn =
       (levelOn + level) < 0 ? (levelCount - 1) : (levelOn + level) % levelCount;
@@ -93,34 +97,48 @@ void Menu::change_level(int level) {
 }
 
 void Menu::update(float dt) {
-  auto screenSize = asw::display::getLogicalSize();
+  // asw passes seconds; game logic is tuned in milliseconds. Run the live
+  // background in fixed steps, same as Game.
+  lag_ms = std::min(lag_ms + (dt * 1000.0F), MAX_LAG_MS);
 
-  // Move around live background
-  if (scroll.x + screenSize.x / 2 >= tile_map.getWidth() ||
-      scroll.x <= screenSize.x / 2) {
-    scroll_dir.x *= -1;
+  while (lag_ms >= FIXED_STEP_MS - STEP_EPSILON_MS) {
+    step(FIXED_STEP_MS);
+    lag_ms -= FIXED_STEP_MS;
   }
 
-  if (scroll.y + screenSize.y / 2 >= tile_map.getHeight() ||
-      scroll.y <= screenSize.y / 2) {
-    scroll_dir.y *= -1;
+  // Buttons
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    buttons[i].Update();
+  }
+}
+
+void Menu::step(float dt) {
+  auto screenSize = asw::display::get_logical_size();
+
+  // Move around live background, always bounce back inward so a scroll that
+  // overshoots an edge cannot flip direction every step and get stuck
+  if (scroll.x + screenSize.x / 2 >= tile_map.getWidth()) {
+    scroll_dir.x = -std::abs(scroll_dir.x);
+  } else if (scroll.x <= screenSize.x / 2) {
+    scroll_dir.x = std::abs(scroll_dir.x);
+  }
+
+  if (scroll.y + screenSize.y / 2 >= tile_map.getHeight()) {
+    scroll_dir.y = -std::abs(scroll_dir.y);
+  } else if (scroll.y <= screenSize.y / 2) {
+    scroll_dir.y = std::abs(scroll_dir.y);
   }
 
   scroll += (scroll_dir / 16.0F) * dt;
 
   cam.follow(scroll, dt);
 
-  // Buttons
-  for (int i = 0; i < NUM_BUTTONS; i++) {
-    buttons[i].Update();
-  }
-
   // Tile
   tile_map.update(dt);
 }
 
 void Menu::draw() {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::get_logical_size();
 
   // Draw live background
   tile_map.draw(cam.getViewport(), 0, 0, 1);
@@ -129,8 +147,8 @@ void Menu::draw() {
   tile_map.drawLights(cam.getViewport(), 0, 0);
 
   // Overlay
-  asw::draw::sprite(credits, asw::Vec2<float>(0, 0));
-  asw::draw::sprite(menu, asw::Vec2<float>(40, 480));
+  asw::draw::sprite(credits, asw::Vec2f(0, 0));
+  asw::draw::sprite(menu, asw::Vec2f(40, 480));
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++) {
@@ -138,17 +156,15 @@ void Menu::draw() {
   }
 
   // Level selection
-  asw::draw::sprite(levelSelectNumber,
-                    asw::Vec2<float>(screenSize.x - 160, 80));
+  asw::draw::sprite(levelSelectNumber, asw::Vec2f(screenSize.x - 160, 80));
   asw::draw::text(menuFont, std::to_string(levelOn + 1),
-                  asw::Vec2<float>(screenSize.x - 120, 80),
-                  asw::util::makeColor(0, 0, 0));
+                  asw::Vec2f(screenSize.x - 120, 80), asw::Color(0, 0, 0));
 
   // Help menu
   if (buttons[BUTTON_HELP].Hover()) {
-    asw::draw::sprite(help, asw::Vec2<float>(0, 0));
+    asw::draw::sprite(help, asw::Vec2f(0, 0));
   }
 
   asw::draw::sprite(copyright,
-                    asw::Vec2<float>(screenSize.x - 350, screenSize.y - 40));
+                    asw::Vec2f(screenSize.x - 350, screenSize.y - 40));
 }
