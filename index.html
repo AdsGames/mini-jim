@@ -20,6 +20,14 @@
         display: flex;
         margin: 0 auto;
       }
+
+      /* Size the canvas with CSS so SDL follows it: SDL only resizes the
+         drawing buffer to the canvas CSS size when CSS controls it */
+      #canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
     </style>
   </head>
 
@@ -56,8 +64,9 @@
         }
       };
 
+      // Size now, before SDL creates its window and reads the canvas size
+      resize();
       window.addEventListener("resize", resize);
-      window.addEventListener("load", resize);
     </script>
 
     {{{ SCRIPT }}}

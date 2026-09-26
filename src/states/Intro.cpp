@@ -9,7 +9,7 @@ void Intro::init() {
       asw::assets::load_texture("assets/images/opening/background.png");
   intro = asw::assets::load_texture("assets/images/opening/intro.png");
   title = asw::assets::load_texture("assets/images/opening/title.png");
-  introSound = asw::assets::load_sample("assets/sounds/introSound.wav");
+  introSound = asw::assets::load_music("assets/sounds/introSound.wav");
 
   current_frame = nullptr;
   loaded_frame = -1;
@@ -23,7 +23,7 @@ void Intro::update(float dt) {
   frame = (timer.getElapsedTime<std::chrono::milliseconds>() - 3000) / 100;
 
   if (frame >= 0 && !sound_played) {
-    asw::sound::play(introSound);
+    asw::sound::play_music(introSound);
     sound_played = true;
   }
 
@@ -41,6 +41,9 @@ void Intro::update(float dt) {
 }
 
 void Intro::cleanup() {
+  // Stop the intro sound when skipped, it plays on the music track
+  asw::sound::stop_music();
+
   // Scene stays registered, so release its textures once it is done
   intro = nullptr;
   title = nullptr;

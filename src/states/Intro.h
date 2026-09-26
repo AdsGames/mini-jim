@@ -25,7 +25,7 @@ class Intro : public asw::scene::Scene<ProgramState> {
   // Only the frame on screen is loaded, frames are streamed from disk
   asw::Texture current_frame;
   int loaded_frame = -1;
-  asw::Sample introSound;
+  asw::Music introSound;
 
   int frame = 0;
   bool sound_played = false;
