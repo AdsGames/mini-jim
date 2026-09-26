@@ -9,6 +9,11 @@
 #include "globals.h"
 
 std::vector<TileType*> TileTypeLoader::types;
+asw::Quadf TileTypeLoader::extent{0, 0, 64, 64};
+
+const asw::Quadf& TileTypeLoader::getExtent() {
+  return extent;
+}
 
 auto TileTypeLoader::getTile(int id) -> TileType* {
   auto found = std::find_if(types.begin(), types.end(),
@@ -154,4 +159,20 @@ void TileTypeLoader::loadTypes(const std::string& path) {
 
   // Close
   file.close();
+
+  // Find how far any tile can reach from its anchor, used for spatial lookups
+  float min_x = 0.0F;
+  float min_y = 0.0F;
+  float max_x = 64.0F;
+  float max_y = 64.0F;
+
+  for (const auto* t : types) {
+    const auto& bb = t->GetBoundingBox();
+    min_x = std::min(min_x, bb.position.x);
+    min_y = std::min(min_y, bb.position.y);
+    max_x = std::max(max_x, bb.position.x + bb.size.x);
+    max_y = std::max(max_y, bb.position.y + bb.size.y);
+  }
+
+  extent = asw::Quadf(min_x, min_y, max_x - min_x, max_y - min_y);
 }

@@ -15,12 +15,16 @@ class Intro : public asw::scene::Scene<ProgramState> {
   void init() override;
   void update(float dt) override;
   void draw() override;
+  void cleanup() override;
 
  private:
   asw::Texture intro;
   asw::Texture title;
   asw::Texture background;
-  asw::Texture images[INTRO_FRAMES];
+
+  // Only the frame on screen is loaded, frames are streamed from disk
+  asw::Texture current_frame;
+  int loaded_frame = -1;
   asw::Sample introSound;
 
   int frame = 0;

@@ -3,19 +3,11 @@
 #include <algorithm>
 #include <format>
 #include <string>
+#include <vector>
 
 #include "../globals.h"
 
 namespace {
-// Physics step, matches the asw desktop timestep (8ms)
-constexpr float FIXED_STEP_MS = 8.0F;
-
-// Longest frame time simulated at once
-constexpr float MAX_LAG_MS = 100.0F;
-
-// Absorbs float error when asw passes exactly one step
-constexpr float STEP_EPSILON_MS = 0.01F;
-
 // Format seconds to the nearest tenth
 std::string format_time(double seconds) {
   return std::format("{:.1f}", seconds);
@@ -155,13 +147,19 @@ void Game::step(float dt) {
 void Game::draw() {
   auto screenSize = asw::display::get_logical_size();
 
+  // Players carry a halo on dark levels
+  std::vector<asw::Vec2f> halos{player1.getTransform().get_center()};
+  if (!single_player) {
+    halos.push_back(player2.getTransform().get_center());
+  }
+
   // Draw tiles and characters
   if (single_player) {
     tile_map.draw(cam_1.getViewport(), 0, 0, 1);
     player1.draw(cam_1.getViewport().position);
     tile_map.drawShadows(cam_1.getViewport(), 0, 0);
     tile_map.draw(cam_1.getViewport(), 0, 0, 2);
-    tile_map.drawLights(cam_1.getViewport(), 0, 0);
+    tile_map.drawLights(cam_1.getViewport(), 0, 0, halos);
   } else {
     // Clip to remove interference
     SDL_Rect clip;
@@ -180,7 +178,7 @@ void Game::draw() {
 
     tile_map.drawShadows(cam_1.getViewport(), 0, 0);
     tile_map.draw(cam_1.getViewport(), 0, 0, 2);
-    tile_map.drawLights(cam_1.getViewport(), 0, 0);
+    tile_map.drawLights(cam_1.getViewport(), 0, 0, halos);
 
     // Bottom
     clip.y = screenSize.y / 2;
@@ -196,7 +194,7 @@ void Game::draw() {
 
     tile_map.drawShadows(cam_2.getViewport(), 0, screenSize.y / 2);
     tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 2);
-    tile_map.drawLights(cam_2.getViewport(), 0, screenSize.y / 2);
+    tile_map.drawLights(cam_2.getViewport(), 0, screenSize.y / 2, halos);
 
     SDL_SetRenderClipRect(asw::display::get_renderer(), nullptr);
   }

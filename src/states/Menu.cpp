@@ -1,5 +1,8 @@
 #include "./Menu.h"
 
+#include <algorithm>
+#include <cmath>
+
 // Create menu
 void Menu::init() {
   auto screenSize = asw::display::get_logical_size();
@@ -23,6 +26,7 @@ void Menu::init() {
 
   // Create map for live background
   levelOn = 0;
+  lag_ms = 0.0F;
   tile_map = TileMap();
   change_level(0);
   next_state = ProgramState::Null;
@@ -93,30 +97,41 @@ void Menu::change_level(int level) {
 }
 
 void Menu::update(float dt) {
-  // asw passes seconds; game logic is tuned in milliseconds
-  dt *= 1000.0F;
+  // asw passes seconds; game logic is tuned in milliseconds. Run the live
+  // background in fixed steps, same as Game.
+  lag_ms = std::min(lag_ms + (dt * 1000.0F), MAX_LAG_MS);
 
-  auto screenSize = asw::display::get_logical_size();
-
-  // Move around live background
-  if (scroll.x + screenSize.x / 2 >= tile_map.getWidth() ||
-      scroll.x <= screenSize.x / 2) {
-    scroll_dir.x *= -1;
+  while (lag_ms >= FIXED_STEP_MS - STEP_EPSILON_MS) {
+    step(FIXED_STEP_MS);
+    lag_ms -= FIXED_STEP_MS;
   }
-
-  if (scroll.y + screenSize.y / 2 >= tile_map.getHeight() ||
-      scroll.y <= screenSize.y / 2) {
-    scroll_dir.y *= -1;
-  }
-
-  scroll += (scroll_dir / 16.0F) * dt;
-
-  cam.follow(scroll, dt);
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++) {
     buttons[i].Update();
   }
+}
+
+void Menu::step(float dt) {
+  auto screenSize = asw::display::get_logical_size();
+
+  // Move around live background, always bounce back inward so a scroll that
+  // overshoots an edge cannot flip direction every step and get stuck
+  if (scroll.x + screenSize.x / 2 >= tile_map.getWidth()) {
+    scroll_dir.x = -std::abs(scroll_dir.x);
+  } else if (scroll.x <= screenSize.x / 2) {
+    scroll_dir.x = std::abs(scroll_dir.x);
+  }
+
+  if (scroll.y + screenSize.y / 2 >= tile_map.getHeight()) {
+    scroll_dir.y = -std::abs(scroll_dir.y);
+  } else if (scroll.y <= screenSize.y / 2) {
+    scroll_dir.y = std::abs(scroll_dir.y);
+  }
+
+  scroll += (scroll_dir / 16.0F) * dt;
+
+  cam.follow(scroll, dt);
 
   // Tile
   tile_map.update(dt);

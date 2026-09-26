@@ -24,7 +24,11 @@ class TileMap {
 
   void drawShadows(const asw::Quadf& camera, float destX, float destY);
 
-  void drawLights(const asw::Quadf& camera, float destX, float destY);
+  // Halos are lights that follow the players
+  void drawLights(const asw::Quadf& camera,
+                  float destX,
+                  float destY,
+                  const std::vector<asw::Vec2f>& halos = {});
 
   bool load(const std::string& path);
 
@@ -32,19 +36,34 @@ class TileMap {
   std::vector<Tile*> get_tiles_in_range(const asw::Quadf& range);
 
  private:
-  void load_layer(const std::vector<int>& data, std::vector<Tile>& t_map);
+  void load_layer(const std::vector<int>& data,
+                  std::vector<Tile>& t_map,
+                  std::vector<int>& t_index);
+
+  // Call fn for each tile whose bounding box collides with range, in row order
+  template <typename Fn>
+  void for_each_tile_in(std::vector<Tile>& t_map,
+                        const std::vector<int>& t_index,
+                        const asw::Quadf& range,
+                        Fn&& fn);
 
   void generate_shadow_map();
 
   void generate_light_map();
 
   void draw_layer(std::vector<Tile>& t_map,
+                  const std::vector<int>& t_index,
                   const asw::Quadf& camera,
                   float destX = 0,
                   float destY = 0);
 
   std::vector<Tile> mapTiles;
   std::vector<Tile> mapTilesBack;
+
+  // Per cell index into mapTiles / mapTilesBack, -1 when empty
+  std::vector<int> mapIndex;
+  std::vector<int> mapIndexBack;
+
   std::vector<short> shadowMap;
 
   std::array<asw::Texture, 8> shadowTextures;
