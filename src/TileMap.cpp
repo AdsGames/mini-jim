@@ -28,24 +28,24 @@ bool TileMap::hasLighting() const {
 
 bool TileMap::load(const std::string& path) {
   // Load shadow textures
-  shadowTextures[1] = asw::assets::loadTexture(
+  shadowTextures[1] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_bottom_left.png");
-  shadowTextures[2] = asw::assets::loadTexture(
+  shadowTextures[2] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_top_right.png");
-  shadowTextures[3] = asw::assets::loadTexture(
+  shadowTextures[3] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_top_left_corner.png");
-  shadowTextures[4] = asw::assets::loadTexture(
+  shadowTextures[4] = asw::assets::load_texture(
       "assets/images/blocks/shadows/shadow_top_left.png");
   shadowTextures[5] =
-      asw::assets::loadTexture("assets/images/blocks/shadows/shadow_left.png");
+      asw::assets::load_texture("assets/images/blocks/shadows/shadow_left.png");
   shadowTextures[6] =
-      asw::assets::loadTexture("assets/images/blocks/shadows/shadow_top.png");
+      asw::assets::load_texture("assets/images/blocks/shadows/shadow_top.png");
   shadowTextures[7] =
-      asw::assets::loadTexture("assets/images/blocks/shadows/shadow_full.png");
+      asw::assets::load_texture("assets/images/blocks/shadows/shadow_full.png");
 
   // Set shadow alpha
   for (auto& t : shadowTextures) {
-    asw::draw::setAlpha(t, 0.4F);
+    asw::draw::set_alpha(t, 0.4F);
   }
 
   // Open file or abort if it does not exist
@@ -178,12 +178,12 @@ void TileMap::generate_shadow_map() {
 void TileMap::generate_light_map() {
   // Create light map
   lightLayer.clear();
-  lightLayer.setColor(asw::util::makeColor(255, 255, 255, 128));
+  lightLayer.setColor(asw::Color(255, 255, 255, 128));
 
   // Get map area
   for (auto& t : mapTiles) {
     if (t.containsAttribute(light)) {
-      lightLayer.addPoint(t.getTransform().getCenter(),
+      lightLayer.addPoint(t.getTransform().get_center(),
                           t.getType()->GetLightLevel());
     }
   }
@@ -228,10 +228,10 @@ void TileMap::draw(const asw::Quad<float>& camera,
     draw_layer(mapTilesBack, camera, destX, destY);
 
     // Draw semi-transparent buffer
-    SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_BLEND);
-    asw::draw::rectFill(asw::Quad<float>(0, 0, getWidth(), getHeight()),
-                        asw::util::makeColor(0, 0, 0, 64));
-    SDL_SetRenderDrawBlendMode(asw::display::renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(), SDL_BLENDMODE_BLEND);
+    asw::draw::rect_fill(asw::Quad<float>(0, 0, getWidth(), getHeight()),
+                        asw::Color(0, 0, 0, 64));
+    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(), SDL_BLENDMODE_NONE);
   }
 
   if (layer == 2) {

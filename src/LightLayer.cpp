@@ -1,12 +1,12 @@
 #include "./LightLayer.h"
 
 LightLayer::LightLayer() {
-  auto screenSize = asw::display::getLogicalSize();
-  lightLayer = asw::assets::createTexture(screenSize.x, screenSize.y);
-  asw::draw::setBlendMode(lightLayer, asw::BlendMode::MODULATE);
+  auto screenSize = asw::display::get_logical_size();
+  lightLayer = asw::assets::create_texture(screenSize.x, screenSize.y);
+  asw::draw::set_blend_mode(lightLayer, asw::BlendMode::Modulate);
 
-  lightTexture = asw::assets::loadTexture("assets/images/spotlight.png");
-  asw::draw::setBlendMode(lightTexture, asw::BlendMode::ADD);
+  lightTexture = asw::assets::load_texture("assets/images/spotlight.png");
+  asw::draw::set_blend_mode(lightTexture, asw::BlendMode::Add);
 }
 
 void LightLayer::setColor(asw::Color color) {
@@ -24,9 +24,9 @@ void LightLayer::addPoint(const asw::Vec2<float>& point, float level) {
 void LightLayer::draw(const asw::Quad<float>& camera,
                       float destX,
                       float destY) {
-  asw::display::setRenderTarget(lightLayer);
-  SDL_SetRenderDrawColor(asw::display::renderer, 64, 64, 64, 0);
-  SDL_RenderFillRect(asw::display::renderer, nullptr);
+  asw::display::set_render_target(lightLayer);
+  SDL_SetRenderDrawColor(asw::display::get_renderer(), 64, 64, 64, 0);
+  SDL_RenderFillRect(asw::display::get_renderer(), nullptr);
 
   for (auto& p : points) {
     auto lightSize = 128.0F * p.level;
@@ -42,10 +42,10 @@ void LightLayer::draw(const asw::Quad<float>& camera,
         lightT + asw::Quad<float>(destX - camera.position.x,
                                   destY - camera.position.y, 0, 0);
 
-    asw::draw::stretchSprite(lightTexture, drawT);
+    asw::draw::stretch_sprite(lightTexture, drawT);
   }
 
-  asw::display::resetRenderTarget();
+  asw::display::reset_render_target();
 
   asw::draw::sprite(lightLayer, asw::Vec2<float>(0, 0));
 }

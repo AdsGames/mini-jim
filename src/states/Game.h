@@ -3,7 +3,7 @@
 #include "./State.h"
 
 #include <asw/asw.h>
-#include <asw/util/Timer.h>
+#include "../Timer.h"
 
 #include "../Camera.h"
 #include "../LightLayer.h"

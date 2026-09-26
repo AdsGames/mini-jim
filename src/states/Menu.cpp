@@ -2,24 +2,24 @@
 
 // Create menu
 void Menu::init() {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::get_logical_size();
 
   // Load images
-  menu = asw::assets::loadTexture("assets/images/gui/menu.png");
-  menuselect = asw::assets::loadTexture("assets/images/gui/menuSelector.png");
-  help = asw::assets::loadTexture("assets/images/gui/help.png");
+  menu = asw::assets::load_texture("assets/images/gui/menu.png");
+  menuselect = asw::assets::load_texture("assets/images/gui/menuSelector.png");
+  help = asw::assets::load_texture("assets/images/gui/help.png");
   levelSelectNumber =
-      asw::assets::loadTexture("assets/images/gui/levelSelectNumber.png");
-  copyright = asw::assets::loadTexture("assets/images/gui/copyright.png");
-  credits = asw::assets::loadTexture("assets/images/gui/credits.png");
+      asw::assets::load_texture("assets/images/gui/levelSelectNumber.png");
+  copyright = asw::assets::load_texture("assets/images/gui/copyright.png");
+  credits = asw::assets::load_texture("assets/images/gui/credits.png");
 
   // Load sound
-  click = asw::assets::loadSample("assets/sounds/click.wav");
-  intro = asw::assets::loadSample("assets/sounds/intro.wav");
-  music = asw::assets::loadMusic("assets/sounds/music/MiniJim.ogg");
+  click = asw::assets::load_sample("assets/sounds/click.wav");
+  intro = asw::assets::load_sample("assets/sounds/intro.wav");
+  music = asw::assets::load_music("assets/sounds/music/MiniJim.ogg");
 
   // Sets Font
-  menuFont = asw::assets::loadFont("assets/fonts/ariblk.ttf", 24);
+  menuFont = asw::assets::load_font("assets/fonts/ariblk.ttf", 24);
 
   // Create map for live background
   levelOn = 0;
@@ -51,27 +51,27 @@ void Menu::init() {
 
   buttons[BUTTON_START].SetOnClick([this]() {
     single_player = true;
-    sceneManager.setNextScene(ProgramState::Game);
+    manager.set_next_scene(ProgramState::Game);
   });
 
   buttons[BUTTON_START_MP].SetOnClick([this]() {
     single_player = false;
-    sceneManager.setNextScene(ProgramState::Game);
+    manager.set_next_scene(ProgramState::Game);
   });
 
-  buttons[BUTTON_EXIT].SetOnClick([]() { asw::core::exit = true; });
+  buttons[BUTTON_EXIT].SetOnClick([]() { asw::core::exit(); });
 
   buttons[BUTTON_LEFT].SetOnClick([this]() { change_level(-1); });
 
   buttons[BUTTON_RIGHT].SetOnClick([this]() { change_level(1); });
 
   // Variables
-  asw::sound::playMusic(music, 255);
+  asw::sound::play_music(music);
   asw::sound::play(intro);
 }
 
 void Menu::change_level(int level) {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::get_logical_size();
 
   levelOn =
       (levelOn + level) < 0 ? (levelCount - 1) : (levelOn + level) % levelCount;
@@ -93,7 +93,10 @@ void Menu::change_level(int level) {
 }
 
 void Menu::update(float dt) {
-  auto screenSize = asw::display::getLogicalSize();
+  // asw passes seconds; game logic is tuned in milliseconds
+  dt *= 1000.0F;
+
+  auto screenSize = asw::display::get_logical_size();
 
   // Move around live background
   if (scroll.x + screenSize.x / 2 >= tile_map.getWidth() ||
@@ -120,7 +123,7 @@ void Menu::update(float dt) {
 }
 
 void Menu::draw() {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::get_logical_size();
 
   // Draw live background
   tile_map.draw(cam.getViewport(), 0, 0, 1);
@@ -142,7 +145,7 @@ void Menu::draw() {
                     asw::Vec2<float>(screenSize.x - 160, 80));
   asw::draw::text(menuFont, std::to_string(levelOn + 1),
                   asw::Vec2<float>(screenSize.x - 120, 80),
-                  asw::util::makeColor(0, 0, 0));
+                  asw::Color(0, 0, 0));
 
   // Help menu
   if (buttons[BUTTON_HELP].Hover()) {

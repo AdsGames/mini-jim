@@ -1,7 +1,7 @@
 #pragma once
 
 #include <asw/asw.h>
-#include <asw/util/Timer.h>
+#include "../Timer.h"
 
 #include "./State.h"
 

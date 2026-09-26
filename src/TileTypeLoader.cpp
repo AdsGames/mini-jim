@@ -43,7 +43,7 @@ void TileTypeLoader::loadTypes(const std::string& path) {
   for (auto const& cTile : doc["tiles"]) {
     const short id = cTile["id"];
     const std::string image = cTile["image"];
-    images[id] = asw::assets::loadTexture("assets/images/" + image);
+    images[id] = asw::assets::load_texture("assets/images/" + image);
   }
 
   // Get first node
@@ -104,7 +104,7 @@ void TileTypeLoader::loadTypes(const std::string& path) {
       auto it = images.find(image_id);
       if (it != images.end()) {
         tile->AddImage(it->second);
-        auto size = asw::util::getTextureSize(it->second);
+        auto size = asw::util::get_texture_size(it->second);
         tile->SetDimensions(asw::Quad<float>(0, 0, size.x, size.y));
       }
     }

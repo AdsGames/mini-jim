@@ -7,18 +7,18 @@
 #include "../TileTypeLoader.h"
 
 void Init::init() {
-  asw::display::setTitle("Setting up");
+  asw::display::set_title("Setting up");
 
   TileTypeLoader::loadTypes("assets/levels/tiles.json");
-  asw::display::setIcon("assets/icon.ico");
+  asw::display::set_icon("assets/icon.ico");
 
-  asw::display::setTitle("Mini Jim");
+  asw::display::set_title("Mini Jim");
 }
 
 void Init::update(float dt) {
-  sceneManager.setNextScene(ProgramState::Intro);
+  manager.set_next_scene(ProgramState::Intro);
 }
 
 void Init::draw() {
-  asw::draw::clearColor(asw::util::makeColor(0, 0, 0));
+  asw::draw::clear_color(asw::Color(0, 0, 0));
 }

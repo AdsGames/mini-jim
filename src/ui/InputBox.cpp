@@ -26,24 +26,24 @@ auto InputBox::GetValue() const -> std::string {
 }
 
 auto InputBox::Hover() const -> bool {
-  return (signed)asw::input::mouse.x > x &&
-         (signed)asw::input::mouse.x < x + width &&
-         (signed)asw::input::mouse.y > y &&
-         (signed)asw::input::mouse.y < y + height;
+  return (signed)asw::input::get_mouse().position.x > x &&
+         (signed)asw::input::get_mouse().position.x < x + width &&
+         (signed)asw::input::get_mouse().position.y > y &&
+         (signed)asw::input::get_mouse().position.y < y + height;
 }
 
 void InputBox::Update() {
   // Focus
-  if (asw::input::mouse.pressed[1]) {
+  if (asw::input::get_mouse_button_down(asw::input::MouseButton::Left)) {
     focused = Hover();
 
     if (focused) {
       int closest = width;
 
       for (unsigned int i = 0; i <= text.length(); i++) {
-        int textSize = asw::util::getTextSize(font, text.substr(0, i)).x;
+        int textSize = asw::util::get_text_size(font, text.substr(0, i)).x;
 
-        int distance = abs(textSize + x + 6 - (signed)asw::input::mouse.x);
+        int distance = abs(textSize + x + 6 - (signed)asw::input::get_mouse().position.x);
 
         if (distance < closest) {
           text_iter = i;
@@ -53,7 +53,7 @@ void InputBox::Update() {
     }
   }
 
-  int const lastKey = asw::input::keyboard.lastPressed;
+  int const lastKey = asw::input::get_keyboard().last_pressed;
 
   if (!focused || lastKey == -1) {
     return;
@@ -75,8 +75,8 @@ void InputBox::Update() {
 
   if (type == "text") {
     if (lastKey >= 4 && lastKey <= 29) {
-      if (asw::input::isKeyDown(asw::input::Key::LSHIFT) ||
-          asw::input::isKeyDown(asw::input::Key::RSHIFT)) {
+      if (asw::input::get_key(asw::input::Key::LShift) ||
+          asw::input::get_key(asw::input::Key::RShift)) {
         text.insert(text.begin() + text_iter, 'A' - 4 + lastKey);
       } else {
         text.insert(text.begin() + text_iter, 'a' - 4 + lastKey);
@@ -87,20 +87,20 @@ void InputBox::Update() {
   }
 
   // some other, "special" key was pressed; handle it here
-  if (asw::input::wasKeyPressed(asw::input::Key::BACKSPACE)) {
+  if (asw::input::get_key_down(asw::input::Key::Backspace)) {
     if (text_iter != 0) {
       text_iter--;
       text.erase(text.begin() + text_iter);
     }
   }
 
-  if (asw::input::wasKeyPressed(asw::input::Key::RIGHT)) {
+  if (asw::input::get_key_down(asw::input::Key::Right)) {
     if (text_iter != text.size()) {
       text_iter++;
     }
   }
 
-  if (asw::input::wasKeyPressed(asw::input::Key::LEFT)) {
+  if (asw::input::get_key_down(asw::input::Key::Left)) {
     if (text_iter != 0) {
       text_iter--;
     }
@@ -109,31 +109,31 @@ void InputBox::Update() {
 
 // Draw box
 void InputBox::Draw() const {
-  asw::draw::rectFill(asw::Quad<float>(x, y, width, height),
-                      asw::util::makeColor(12, 12, 12));
+  asw::draw::rect_fill(asw::Quad<float>(x, y, width, height),
+                      asw::Color(12, 12, 12));
 
   asw::Color const col = (Hover() || focused)
-                             ? asw::util::makeColor(230, 230, 230)
-                             : asw::util::makeColor(245, 245, 245);
+                             ? asw::Color(230, 230, 230)
+                             : asw::Color(245, 245, 245);
 
   if (focused) {
-    asw::draw::rectFill(asw::Quad<float>(x + 2, y + 2, width - 2, height - 2),
+    asw::draw::rect_fill(asw::Quad<float>(x + 2, y + 2, width - 2, height - 2),
                         col);
   } else {
-    asw::draw::rectFill(asw::Quad<float>(x + 1, y + 1, width - 1, height - 1),
+    asw::draw::rect_fill(asw::Quad<float>(x + 1, y + 1, width - 1, height - 1),
                         col);
   }
 
   // Output the string to the screen
   asw::draw::text(font, text, asw::Vec2<float>(x + 6, y),
-                  asw::util::makeColor(22, 22, 22));
+                  asw::Color(22, 22, 22));
 
   // Draw the caret
   if (focused) {
-    int textSize = asw::util::getTextSize(font, text.substr(0, text_iter)).x;
+    int textSize = asw::util::get_text_size(font, text.substr(0, text_iter)).x;
 
-    asw::draw::rectFill(
+    asw::draw::rect_fill(
         asw::Quad<float>(textSize + x + 6, y + 8, 7, height - 8),
-        asw::util::makeColor(0, 0, 0));
+        asw::Color(0, 0, 0));
   }
 }

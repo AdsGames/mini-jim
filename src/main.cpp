@@ -13,11 +13,11 @@ int main() {
   asw::core::init(1280, 960);
 
   auto app = asw::scene::SceneManager<ProgramState>();
-  app.registerScene<Init>(ProgramState::Init, app);
-  app.registerScene<Intro>(ProgramState::Intro, app);
-  app.registerScene<Menu>(ProgramState::Menu, app);
-  app.registerScene<Game>(ProgramState::Game, app);
-  app.setNextScene(ProgramState::Init);
+  app.register_scene<Init>(ProgramState::Init, app);
+  app.register_scene<Intro>(ProgramState::Intro, app);
+  app.register_scene<Menu>(ProgramState::Menu, app);
+  app.register_scene<Game>(ProgramState::Game, app);
+  app.set_next_scene(ProgramState::Init);
 
   app.start();
 
