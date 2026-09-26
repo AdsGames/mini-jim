@@ -49,7 +49,7 @@ class Player {
                asw::input::Key right,
                asw::input::Key jump,
                int joy_number);
-  void setSpawn(const asw::Vec2& position);
+  void setSpawn(const asw::Vec2f& position);
 
   int getDeathcount() const;
 
@@ -58,7 +58,7 @@ class Player {
   bool getFinished() const;
 
   void update(TileMap& fullMap, float dt);
-  void draw(const asw::Vec2& offset);
+  void draw(const asw::Vec2f& offset);
 
  private:
   void killSelf();
@@ -71,7 +71,7 @@ class Player {
   };
 
   // Pixels per MS
-  asw::Vec2 velocity{0.0F, 0.0F};
+  asw::Vec2f velocity{0.0F, 0.0F};
 
   CharacterState player_state{CharacterState::Standing};
   CharacterDirection direction{CharacterDirection::Right};
@@ -80,7 +80,7 @@ class Player {
 
   int death_count{0};
 
-  asw::Vec2 last_checkpoint{0, 0};
+  asw::Vec2f last_checkpoint{0, 0};
   bool finished{false};
 
   // Keys

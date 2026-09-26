@@ -2,7 +2,7 @@
 
 #include <utility>
 
-Button::Button(const asw::Vec2& position) : onClick(nullptr) {
+Button::Button(const asw::Vec2f& position) : onClick(nullptr) {
   transform.position = position;
 
   images[0] = nullptr;

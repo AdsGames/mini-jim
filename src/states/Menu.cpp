@@ -28,12 +28,12 @@ void Menu::init() {
   next_state = ProgramState::Null;
 
   // Buttons
-  buttons[BUTTON_START] = Button(asw::Vec2(60, 630));
-  buttons[BUTTON_START_MP] = Button(asw::Vec2(60, 690));
-  buttons[BUTTON_HELP] = Button(asw::Vec2(60, 810));
-  buttons[BUTTON_EXIT] = Button(asw::Vec2(60, 870));
-  buttons[BUTTON_LEFT] = Button(asw::Vec2(screenSize.x - 180, 80));
-  buttons[BUTTON_RIGHT] = Button(asw::Vec2(screenSize.x - 80, 80));
+  buttons[BUTTON_START] = Button(asw::Vec2f(60, 630));
+  buttons[BUTTON_START_MP] = Button(asw::Vec2f(60, 690));
+  buttons[BUTTON_HELP] = Button(asw::Vec2f(60, 810));
+  buttons[BUTTON_EXIT] = Button(asw::Vec2f(60, 870));
+  buttons[BUTTON_LEFT] = Button(asw::Vec2f(screenSize.x - 180, 80));
+  buttons[BUTTON_RIGHT] = Button(asw::Vec2f(screenSize.x - 80, 80));
 
   buttons[BUTTON_START].SetImages("assets/images/gui/button_start.png",
                                   "assets/images/gui/button_start_hover.png");
@@ -132,8 +132,8 @@ void Menu::draw() {
   tile_map.drawLights(cam.getViewport(), 0, 0);
 
   // Overlay
-  asw::draw::sprite(credits, asw::Vec2(0, 0));
-  asw::draw::sprite(menu, asw::Vec2(40, 480));
+  asw::draw::sprite(credits, asw::Vec2f(0, 0));
+  asw::draw::sprite(menu, asw::Vec2f(40, 480));
 
   // Buttons
   for (int i = 0; i < NUM_BUTTONS; i++) {
@@ -141,15 +141,15 @@ void Menu::draw() {
   }
 
   // Level selection
-  asw::draw::sprite(levelSelectNumber, asw::Vec2(screenSize.x - 160, 80));
+  asw::draw::sprite(levelSelectNumber, asw::Vec2f(screenSize.x - 160, 80));
   asw::draw::text(menuFont, std::to_string(levelOn + 1),
-                  asw::Vec2(screenSize.x - 120, 80), asw::Color(0, 0, 0));
+                  asw::Vec2f(screenSize.x - 120, 80), asw::Color(0, 0, 0));
 
   // Help menu
   if (buttons[BUTTON_HELP].Hover()) {
-    asw::draw::sprite(help, asw::Vec2(0, 0));
+    asw::draw::sprite(help, asw::Vec2f(0, 0));
   }
 
   asw::draw::sprite(copyright,
-                    asw::Vec2(screenSize.x - 350, screenSize.y - 40));
+                    asw::Vec2f(screenSize.x - 350, screenSize.y - 40));
 }

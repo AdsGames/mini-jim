@@ -7,7 +7,7 @@
 class Button {
  public:
   Button() = default;
-  explicit Button(const asw::Vec2& position);
+  explicit Button(const asw::Vec2f& position);
 
   void Update();
 

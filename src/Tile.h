@@ -26,7 +26,7 @@ class Tile {
   void draw(int xOffset, int yOffset, int frame);
 
  private:
-  asw::Vec2 position{0.0F, 0.0F};
+  asw::Vec2f position{0.0F, 0.0F};
   std::vector<int> attribute{};
 
   TileType* t_type{};

@@ -170,9 +170,9 @@ void Game::draw() {
     tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 1);
 
     player1.draw(cam_2.getViewport().position +
-                 asw::Vec2(0, -screenSize.y / 2));
+                 asw::Vec2f(0, -screenSize.y / 2));
     player2.draw(cam_2.getViewport().position +
-                 asw::Vec2(0, -screenSize.y / 2));
+                 asw::Vec2f(0, -screenSize.y / 2));
 
     tile_map.drawShadows(cam_2.getViewport(), 0, screenSize.y / 2);
     tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 2);
@@ -205,19 +205,19 @@ void Game::draw() {
   const auto timer2 =
       std::roundf(tm_p2.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
 
-  asw::draw::text(cooper, "Time: " + format_time(timer1), asw::Vec2(40, 55),
+  asw::draw::text(cooper, "Time: " + format_time(timer1), asw::Vec2f(40, 55),
                   asw::Color(255, 255, 255, 255));
 
   asw::draw::text(cooper, "Deaths:" + std::to_string(player1.getDeathcount()),
-                  asw::Vec2(40, 20), asw::Color(255, 255, 255, 255));
+                  asw::Vec2f(40, 20), asw::Color(255, 255, 255, 255));
 
   if (!single_player) {
     asw::draw::text(cooper, "Time: " + format_time(timer2),
-                    asw::Vec2(40, (screenSize.y / 2) + 20 + 35),
+                    asw::Vec2f(40, (screenSize.y / 2) + 20 + 35),
                     asw::Color(255, 255, 255, 255));
 
     asw::draw::text(cooper, "Deaths:" + std::to_string(player2.getDeathcount()),
-                    asw::Vec2(40, (screenSize.y / 2) + 20),
+                    asw::Vec2f(40, (screenSize.y / 2) + 20),
                     asw::Color(255, 255, 255, 255));
   }
 
@@ -248,40 +248,40 @@ void Game::draw() {
     if (single_player) {
       asw::draw::sprite(
           results_singleplayer,
-          asw::Vec2((screenSize.x / 2) - 364, (screenSize.y / 2) - 200));
+          asw::Vec2f((screenSize.x / 2) - 364, (screenSize.y / 2) - 200));
     } else {
-      asw::draw::sprite(results, asw::Vec2((screenSize.x / 2) - 364,
-                                           (screenSize.y / 2) - 200));
+      asw::draw::sprite(results, asw::Vec2f((screenSize.x / 2) - 364,
+                                            (screenSize.y / 2) - 200));
     }
 
     asw::draw::text(
         cooper, format_time(timer1),
-        asw::Vec2((screenSize.x / 2) - 60, (screenSize.y / 2) - 110),
+        asw::Vec2f((screenSize.x / 2) - 60, (screenSize.y / 2) - 110),
         asw::Color(255, 255, 255, 255));
 
     if (!single_player) {
       asw::draw::text(
           cooper, format_time(timer2),
-          asw::Vec2((screenSize.x / 2) - 60, (screenSize.y / 2) - 55),
+          asw::Vec2f((screenSize.x / 2) - 60, (screenSize.y / 2) - 55),
           asw::Color(255, 255, 255, 255));
 
       if (timer1 < timer2) {
         asw::draw::text(
             cooper, "1",
-            asw::Vec2((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
+            asw::Vec2f((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
         asw::draw::text(
             cooper, format_time(timer2 - timer1),
-            asw::Vec2((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
+            asw::Vec2f((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
       } else if (timer1 > timer2) {
         asw::draw::text(
             cooper, "2",
-            asw::Vec2((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
+            asw::Vec2f((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
         asw::draw::text(
             cooper, format_time(timer1 - timer2),
-            asw::Vec2((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
+            asw::Vec2f((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
       }
     }

@@ -1,5 +1,7 @@
 #include "TileMap.h"
 
+#include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <sstream>
@@ -242,16 +244,30 @@ void TileMap::draw(const asw::Quadf& camera,
 }
 
 void TileMap::drawShadows(const asw::Quadf& camera, float destX, float destY) {
-  // Draw shadow map
-  for (unsigned int i = 0; i < shadowMap.size(); i++) {
-    const auto kernelIdx = shadowMap[i];
-    if (kernelIdx == 0) {
-      continue;
-    }
+  // Only visit cells inside the camera
+  const int x_start =
+      std::max(0, static_cast<int>(std::floor(camera.position.x / 64.0F)));
+  const int y_start =
+      std::max(0, static_cast<int>(std::floor(camera.position.y / 64.0F)));
+  const int x_end = std::min(
+      width,
+      static_cast<int>(std::ceil((camera.position.x + camera.size.x) / 64.0F)));
+  const int y_end = std::min(
+      height,
+      static_cast<int>(std::ceil((camera.position.y + camera.size.y) / 64.0F)));
 
-    auto position = asw::Vec2((i % width) * 64.0F - camera.position.x + destX,
-                              (i / width) * 64.0F - camera.position.y + destY);
-    asw::draw::sprite(shadowTextures[kernelIdx], position);
+  // Draw shadow map
+  for (int y = y_start; y < y_end; y++) {
+    for (int x = x_start; x < x_end; x++) {
+      const auto kernelIdx = shadowMap[(y * width) + x];
+      if (kernelIdx == 0) {
+        continue;
+      }
+
+      auto position = asw::Vec2f(x * 64.0F - camera.position.x + destX,
+                                 y * 64.0F - camera.position.y + destY);
+      asw::draw::sprite(shadowTextures[kernelIdx], position);
+    }
   }
 }
 

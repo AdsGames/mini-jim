@@ -36,9 +36,9 @@ void Intro::update(float dt) {
 void Intro::draw() {
   // Intro stuffs
   if (timer.getElapsedTime<std::chrono::seconds>() < 1) {
-    asw::draw::sprite(intro, asw::Vec2(0, 0));
+    asw::draw::sprite(intro, asw::Vec2f(0, 0));
   } else if (timer.getElapsedTime<std::chrono::seconds>() < 2) {
-    asw::draw::sprite(title, asw::Vec2(0, 0));
+    asw::draw::sprite(title, asw::Vec2f(0, 0));
   } else {
     asw::draw::clear_color(asw::Color(0, 0, 0));
     asw::draw::stretch_sprite(background, asw::Quadf(105, 140, 1070, 680));

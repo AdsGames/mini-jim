@@ -122,7 +122,7 @@ void InputBox::Draw() const {
   }
 
   // Output the string to the screen
-  asw::draw::text(font, text, asw::Vec2(x + 6, y), asw::Color(22, 22, 22));
+  asw::draw::text(font, text, asw::Vec2f(x + 6, y), asw::Color(22, 22, 22));
 
   // Draw the caret
   if (focused) {

@@ -18,7 +18,7 @@ void Camera::setBounds(float x, float y) {
   bounds.y = y;
 }
 
-void Camera::follow(const asw::Vec2& pos, float dt) {
+void Camera::follow(const asw::Vec2f& pos, float dt) {
   const auto diff = pos - viewport.position;
   const float speed_dt = (speed / 16.0F) * dt;
 

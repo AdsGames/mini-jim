@@ -17,7 +17,7 @@ void LightLayer::clear() {
   points.clear();
 }
 
-void LightLayer::addPoint(const asw::Vec2& point, float level) {
+void LightLayer::addPoint(const asw::Vec2f& point, float level) {
   points.emplace_back(point, level);
 }
 
@@ -44,5 +44,5 @@ void LightLayer::draw(const asw::Quadf& camera, float destX, float destY) {
 
   asw::display::reset_render_target();
 
-  asw::draw::sprite(lightLayer, asw::Vec2(0, 0));
+  asw::draw::sprite(lightLayer, asw::Vec2f(0, 0));
 }

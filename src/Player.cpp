@@ -60,7 +60,7 @@ void Player::setKeys(asw::input::Key up,
 }
 
 // Set spawn
-void Player::setSpawn(const asw::Vec2& position) {
+void Player::setSpawn(const asw::Vec2f& position) {
   last_checkpoint = position;
   transform.position = position;
 }
@@ -81,7 +81,7 @@ void Player::killSelf() {
   player_state = CharacterState::Standing;
   death_count++;
   transform.position = last_checkpoint;
-  velocity = asw::Vec2(0.0f, 0.0f);
+  velocity = asw::Vec2f(0.0f, 0.0f);
 }
 
 // Movement
@@ -297,14 +297,14 @@ void Player::update(TileMap& fullMap, float dt) {
 }
 
 // Draw character
-void Player::draw(const asw::Vec2& offset) {
+void Player::draw(const asw::Vec2f& offset) {
   const int ani_ticker =
       static_cast<int>(
           tm_animation.getElapsedTime<std::chrono::milliseconds>()) /
       100;
 
   // Tile map position and sprite offset
-  auto position_offset = transform.position - offset - asw::Vec2(16.0f, 0);
+  auto position_offset = transform.position - offset - asw::Vec2f(16.0f, 0);
 
   if (player_state == CharacterState::Jumping) {
     if (direction == CharacterDirection::Right) {

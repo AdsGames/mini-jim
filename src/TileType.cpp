@@ -60,5 +60,5 @@ void TileType::Draw(float x, float y, int frame) {
     return;
   }
 
-  asw::draw::sprite(images.at(frame % images.size()), asw::Vec2(x, y));
+  asw::draw::sprite(images.at(frame % images.size()), asw::Vec2f(x, y));
 }
