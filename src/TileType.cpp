@@ -9,7 +9,7 @@ auto TileType::GetID() const -> short {
   return id;
 }
 
-std::string TileType::GetIDStr() const {
+const std::string& TileType::GetIDStr() const {
   return id_str;
 }
 

@@ -15,7 +15,7 @@ class TileType {
 
   short GetID() const;
   std::string GetName() const;
-  std::string GetIDStr() const;
+  const std::string& GetIDStr() const;
   int GetLightLevel() const;
 
   const asw::Quadf& GetBoundingBox() const;
