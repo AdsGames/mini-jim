@@ -141,7 +141,7 @@ void TileMap::generate_shadow_map() {
             continue;  // Skip if out of bounds
           }
 
-          shadowMap[(y * width + j) + (x + i)] = 7;
+          shadowMap[((y + j) * width) + (x + i)] = 7;
         }
       }
     }
@@ -203,7 +203,7 @@ Tile* TileMap::find_tile_type(short type, int layer) {
 }
 
 // Get tile at
-std::vector<Tile*> TileMap::get_tiles_in_range(const asw::Quad<float>& range) {
+std::vector<Tile*> TileMap::get_tiles_in_range(const asw::Quadf& range) {
   std::vector<Tile*> ranged_map;
 
   for (auto& t : mapTiles) {
@@ -220,7 +220,7 @@ void TileMap::update(float deltaTime) {
 }
 
 // Draw at position
-void TileMap::draw(const asw::Quad<float>& camera,
+void TileMap::draw(const asw::Quadf& camera,
                    float destX,
                    float destY,
                    int layer) {
@@ -228,10 +228,12 @@ void TileMap::draw(const asw::Quad<float>& camera,
     draw_layer(mapTilesBack, camera, destX, destY);
 
     // Draw semi-transparent buffer
-    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(), SDL_BLENDMODE_BLEND);
-    asw::draw::rect_fill(asw::Quad<float>(0, 0, getWidth(), getHeight()),
-                        asw::Color(0, 0, 0, 64));
-    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(), SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(),
+                               SDL_BLENDMODE_BLEND);
+    asw::draw::rect_fill(asw::Quadf(0, 0, getWidth(), getHeight()),
+                         asw::Color(0, 0, 0, 64));
+    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(),
+                               SDL_BLENDMODE_NONE);
   }
 
   if (layer == 2) {
@@ -239,9 +241,7 @@ void TileMap::draw(const asw::Quad<float>& camera,
   }
 }
 
-void TileMap::drawShadows(const asw::Quad<float>& camera,
-                          float destX,
-                          float destY) {
+void TileMap::drawShadows(const asw::Quadf& camera, float destX, float destY) {
   // Draw shadow map
   for (unsigned int i = 0; i < shadowMap.size(); i++) {
     const auto kernelIdx = shadowMap[i];
@@ -249,16 +249,13 @@ void TileMap::drawShadows(const asw::Quad<float>& camera,
       continue;
     }
 
-    auto position =
-        asw::Vec2<float>((i % width) * 64.0F - camera.position.x - destX,
-                         (i / width) * 64.0F - camera.position.y - destY);
+    auto position = asw::Vec2((i % width) * 64.0F - camera.position.x + destX,
+                              (i / width) * 64.0F - camera.position.y + destY);
     asw::draw::sprite(shadowTextures[kernelIdx], position);
   }
 }
 
-void TileMap::drawLights(const asw::Quad<float>& camera,
-                         float destX,
-                         float destY) {
+void TileMap::drawLights(const asw::Quadf& camera, float destX, float destY) {
   // Add lights
   if (!lighting) {
     return;
@@ -269,7 +266,7 @@ void TileMap::drawLights(const asw::Quad<float>& camera,
 
 // Draw a layer
 void TileMap::draw_layer(std::vector<Tile>& t_map,
-                         const asw::Quad<float>& camera,
+                         const asw::Quadf& camera,
                          float destX,
                          float destY) {
   int const frame = getFrame();

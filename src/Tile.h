@@ -15,7 +15,7 @@ class Tile {
   void setX(int x);
   void setY(int y);
 
-  asw::Quad<float> getTransform() const;
+  asw::Quadf getTransform() const;
 
   TileType* getType() const;
   bool containsAttribute(int newAttribute);
@@ -26,7 +26,7 @@ class Tile {
   void draw(int xOffset, int yOffset, int frame);
 
  private:
-  asw::Vec2<float> position{0.0F, 0.0F};
+  asw::Vec2 position{0.0F, 0.0F};
   std::vector<int> attribute{};
 
   TileType* t_type{};

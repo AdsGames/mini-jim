@@ -105,7 +105,7 @@ void TileTypeLoader::loadTypes(const std::string& path) {
       if (it != images.end()) {
         tile->AddImage(it->second);
         auto size = asw::util::get_texture_size(it->second);
-        tile->SetDimensions(asw::Quad<float>(0, 0, size.x, size.y));
+        tile->SetDimensions(asw::Quadf(0, 0, size.x, size.y));
       }
     }
 
@@ -123,7 +123,7 @@ void TileTypeLoader::loadTypes(const std::string& path) {
       const int y = bounding_box["y"];
       const int height = bounding_box["height"];
 
-      tile->SetDimensions(asw::Quad<float>(x, y, width, height));
+      tile->SetDimensions(asw::Quadf(x, y, width, height));
     }
 
     // Add special feature

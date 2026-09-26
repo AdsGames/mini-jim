@@ -60,7 +60,7 @@ void Player::setKeys(asw::input::Key up,
 }
 
 // Set spawn
-void Player::setSpawn(const asw::Vec2<float>& position) {
+void Player::setSpawn(const asw::Vec2& position) {
   last_checkpoint = position;
   transform.position = position;
 }
@@ -81,14 +81,14 @@ void Player::killSelf() {
   player_state = CharacterState::Standing;
   death_count++;
   transform.position = last_checkpoint;
-  velocity = asw::Vec2<float>(0.0f, 0.0f);
+  velocity = asw::Vec2(0.0f, 0.0f);
 }
 
 // Movement
 void Player::update(TileMap& fullMap, float dt) {
   // Get map around player
   const std::vector<Tile*> ranged_map = fullMap.get_tiles_in_range(
-      transform + asw::Quad<float>(-256.0F, -256.0F, 512.0F, 512.0F));
+      transform + asw::Quadf(-256.0F, -256.0F, 512.0F, 512.0F));
 
   // Gravity
   velocity.y += GRAVITY * dt;
@@ -99,8 +99,8 @@ void Player::update(TileMap& fullMap, float dt) {
   // Snap falling
   bool can_fall = true;
   const auto offset_transform = transform +
-                                asw::Quad<float>(0, velocity.y * dt, 0, 0) +
-                                asw::Quad<float>(8, 0, -16, 1);
+                                asw::Quadf(0, velocity.y * dt, 0, 0) +
+                                asw::Quadf(8, 0, -16, 1);
 
   for (auto* t : ranged_map) {
     const auto& bb = t->getTransform();
@@ -150,8 +150,7 @@ void Player::update(TileMap& fullMap, float dt) {
         player_state = CharacterState::Sliding;
       }
 
-      if (!(asw::input::get_key(key_left) ||
-            asw::input::get_key(key_right))) {
+      if (!(asw::input::get_key(key_left) || asw::input::get_key(key_right))) {
         player_state = CharacterState::Standing;
       }
 
@@ -189,8 +188,7 @@ void Player::update(TileMap& fullMap, float dt) {
         velocity.x -= WALK_ACCELERATION * dt;
       }
 
-      if (!asw::input::get_key(key_right) &&
-          !asw::input::get_key(key_left)) {
+      if (!asw::input::get_key(key_right) && !asw::input::get_key(key_left)) {
         velocity.x += (velocity.x > 0 ? -1 : 1) * JUMP_X_ACCELERATION * dt;
       }
 
@@ -227,8 +225,8 @@ void Player::update(TileMap& fullMap, float dt) {
   }
 
   // Calculate new position
-  const auto x_cmp = transform + asw::Quad<float>(velocity.x * dt, 0, 0, 0);
-  const auto y_cmp = transform + asw::Quad<float>(0, velocity.y * dt, 0, 0);
+  const auto x_cmp = transform + asw::Quadf(velocity.x * dt, 0, 0, 0);
+  const auto y_cmp = transform + asw::Quadf(0, velocity.y * dt, 0, 0);
 
   // Check for collision
   for (auto* t : ranged_map) {
@@ -299,15 +297,14 @@ void Player::update(TileMap& fullMap, float dt) {
 }
 
 // Draw character
-void Player::draw(const asw::Vec2<float>& offset) {
+void Player::draw(const asw::Vec2& offset) {
   const int ani_ticker =
       static_cast<int>(
           tm_animation.getElapsedTime<std::chrono::milliseconds>()) /
       100;
 
   // Tile map position and sprite offset
-  auto position_offset =
-      transform.position - offset - asw::Vec2<float>(16.0f, 0);
+  auto position_offset = transform.position - offset - asw::Vec2(16.0f, 0);
 
   if (player_state == CharacterState::Jumping) {
     if (direction == CharacterDirection::Right) {
@@ -320,7 +317,7 @@ void Player::draw(const asw::Vec2<float>& offset) {
       asw::draw::sprite(tex_player[ani_ticker % 4], position_offset);
     } else {
       asw::draw::sprite_flip(tex_player[ani_ticker % 4], position_offset, true,
-                            false);
+                             false);
     }
 
   } else if (player_state == CharacterState::Standing) {

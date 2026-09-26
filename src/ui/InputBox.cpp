@@ -43,7 +43,8 @@ void InputBox::Update() {
       for (unsigned int i = 0; i <= text.length(); i++) {
         int textSize = asw::util::get_text_size(font, text.substr(0, i)).x;
 
-        int distance = abs(textSize + x + 6 - (signed)asw::input::get_mouse().position.x);
+        int distance =
+            abs(textSize + x + 6 - (signed)asw::input::get_mouse().position.x);
 
         if (distance < closest) {
           text_iter = i;
@@ -109,31 +110,25 @@ void InputBox::Update() {
 
 // Draw box
 void InputBox::Draw() const {
-  asw::draw::rect_fill(asw::Quad<float>(x, y, width, height),
-                      asw::Color(12, 12, 12));
+  asw::draw::rect_fill(asw::Quadf(x, y, width, height), asw::Color(12, 12, 12));
 
-  asw::Color const col = (Hover() || focused)
-                             ? asw::Color(230, 230, 230)
-                             : asw::Color(245, 245, 245);
+  asw::Color const col = (Hover() || focused) ? asw::Color(230, 230, 230)
+                                              : asw::Color(245, 245, 245);
 
   if (focused) {
-    asw::draw::rect_fill(asw::Quad<float>(x + 2, y + 2, width - 2, height - 2),
-                        col);
+    asw::draw::rect_fill(asw::Quadf(x + 2, y + 2, width - 2, height - 2), col);
   } else {
-    asw::draw::rect_fill(asw::Quad<float>(x + 1, y + 1, width - 1, height - 1),
-                        col);
+    asw::draw::rect_fill(asw::Quadf(x + 1, y + 1, width - 1, height - 1), col);
   }
 
   // Output the string to the screen
-  asw::draw::text(font, text, asw::Vec2<float>(x + 6, y),
-                  asw::Color(22, 22, 22));
+  asw::draw::text(font, text, asw::Vec2(x + 6, y), asw::Color(22, 22, 22));
 
   // Draw the caret
   if (focused) {
     int textSize = asw::util::get_text_size(font, text.substr(0, text_iter)).x;
 
-    asw::draw::rect_fill(
-        asw::Quad<float>(textSize + x + 6, y + 8, 7, height - 8),
-        asw::Color(0, 0, 0));
+    asw::draw::rect_fill(asw::Quadf(textSize + x + 6, y + 8, 7, height - 8),
+                         asw::Color(0, 0, 0));
   }
 }

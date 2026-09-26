@@ -21,7 +21,7 @@ std::string TileType::GetName() const {
   return name;
 }
 
-const asw::Quad<float>& TileType::GetBoundingBox() const {
+const asw::Quadf& TileType::GetBoundingBox() const {
   return bounds;
 }
 
@@ -47,7 +47,7 @@ void TileType::AddAttribute(int attribute) {
   attributes.set(attribute);
 }
 
-void TileType::SetDimensions(const asw::Quad<float>& bounds) {
+void TileType::SetDimensions(const asw::Quadf& bounds) {
   this->bounds = bounds;
 }
 
@@ -60,5 +60,5 @@ void TileType::Draw(float x, float y, int frame) {
     return;
   }
 
-  asw::draw::sprite(images.at(frame % images.size()), asw::Vec2<float>(x, y));
+  asw::draw::sprite(images.at(frame % images.size()), asw::Vec2(x, y));
 }

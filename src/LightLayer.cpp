@@ -17,13 +17,11 @@ void LightLayer::clear() {
   points.clear();
 }
 
-void LightLayer::addPoint(const asw::Vec2<float>& point, float level) {
+void LightLayer::addPoint(const asw::Vec2& point, float level) {
   points.emplace_back(point, level);
 }
 
-void LightLayer::draw(const asw::Quad<float>& camera,
-                      float destX,
-                      float destY) {
+void LightLayer::draw(const asw::Quadf& camera, float destX, float destY) {
   asw::display::set_render_target(lightLayer);
   SDL_SetRenderDrawColor(asw::display::get_renderer(), 64, 64, 64, 0);
   SDL_RenderFillRect(asw::display::get_renderer(), nullptr);
@@ -31,21 +29,20 @@ void LightLayer::draw(const asw::Quad<float>& camera,
   for (auto& p : points) {
     auto lightSize = 128.0F * p.level;
     const auto lightT =
-        asw::Quad<float>(p.position.x - (lightSize / 2),
-                         p.position.y - (lightSize / 2), lightSize, lightSize);
+        asw::Quadf(p.position.x - (lightSize / 2),
+                   p.position.y - (lightSize / 2), lightSize, lightSize);
 
     if (!camera.collides(lightT)) {
       continue;
     }
 
-    const auto drawT =
-        lightT + asw::Quad<float>(destX - camera.position.x,
-                                  destY - camera.position.y, 0, 0);
+    const auto drawT = lightT + asw::Quadf(destX - camera.position.x,
+                                           destY - camera.position.y, 0, 0);
 
     asw::draw::stretch_sprite(lightTexture, drawT);
   }
 
   asw::display::reset_render_target();
 
-  asw::draw::sprite(lightLayer, asw::Vec2<float>(0, 0));
+  asw::draw::sprite(lightLayer, asw::Vec2(0, 0));
 }

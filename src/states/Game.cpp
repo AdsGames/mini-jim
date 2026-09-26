@@ -1,8 +1,16 @@
 #include "./Game.h"
 
+#include <format>
 #include <string>
 
 #include "../globals.h"
+
+namespace {
+// Format seconds to the nearest tenth
+std::string format_time(double seconds) {
+  return std::format("{:.1f}", seconds);
+}
+}  // namespace
 
 void Game::init() {
   // Player
@@ -162,9 +170,9 @@ void Game::draw() {
     tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 1);
 
     player1.draw(cam_2.getViewport().position +
-                 asw::Vec2<float>(0, -screenSize.y / 2));
+                 asw::Vec2(0, -screenSize.y / 2));
     player2.draw(cam_2.getViewport().position +
-                 asw::Vec2<float>(0, -screenSize.y / 2));
+                 asw::Vec2(0, -screenSize.y / 2));
 
     tile_map.drawShadows(cam_2.getViewport(), 0, screenSize.y / 2);
     tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 2);
@@ -174,24 +182,21 @@ void Game::draw() {
   }
 
   // Frame
-  asw::draw::rect_fill(asw::Quad<float>(0, 0, screenSize.x, 16),
-                      asw::Color(0, 0, 0));
-  asw::draw::rect_fill(asw::Quad<float>(0, 0, 16, screenSize.y),
-                      asw::Color(0, 0, 0));
+  asw::draw::rect_fill(asw::Quadf(0, 0, screenSize.x, 16), asw::Color(0, 0, 0));
+  asw::draw::rect_fill(asw::Quadf(0, 0, 16, screenSize.y), asw::Color(0, 0, 0));
   asw::draw::rect_fill(
-      asw::Quad<float>(screenSize.x - 16, 0, screenSize.x, screenSize.y),
+      asw::Quadf(screenSize.x - 16, 0, screenSize.x, screenSize.y),
       asw::Color(0, 0, 0));
   asw::draw::rect_fill(
-      asw::Quad<float>(0, screenSize.y - 16, screenSize.x, screenSize.y),
+      asw::Quadf(0, screenSize.y - 16, screenSize.x, screenSize.y),
       asw::Color(0, 0, 0));
 
   // Timers
-  asw::draw::rect_fill(asw::Quad<float>(20, 20, 320, 90),
-                      asw::Color(0, 0, 0));
+  asw::draw::rect_fill(asw::Quadf(20, 20, 320, 90), asw::Color(0, 0, 0));
 
   if (!single_player) {
-    asw::draw::rect_fill(asw::Quad<float>(20, (screenSize.y / 2) + 20, 320, 90),
-                        asw::Color(0, 0, 0));
+    asw::draw::rect_fill(asw::Quadf(20, (screenSize.y / 2) + 20, 320, 90),
+                         asw::Color(0, 0, 0));
   }
 
   // Draw timer to screen
@@ -200,21 +205,19 @@ void Game::draw() {
   const auto timer2 =
       std::roundf(tm_p2.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
 
-  asw::draw::text(cooper, "Time: " + std::to_string(timer1),
-                  asw::Vec2<float>(40, 55),
+  asw::draw::text(cooper, "Time: " + format_time(timer1), asw::Vec2(40, 55),
                   asw::Color(255, 255, 255, 255));
 
   asw::draw::text(cooper, "Deaths:" + std::to_string(player1.getDeathcount()),
-                  asw::Vec2<float>(40, 20),
-                  asw::Color(255, 255, 255, 255));
+                  asw::Vec2(40, 20), asw::Color(255, 255, 255, 255));
 
   if (!single_player) {
-    asw::draw::text(cooper, "Time: " + std::to_string(timer2),
-                    asw::Vec2<float>(40, (screenSize.y / 2) + 20 + 35),
+    asw::draw::text(cooper, "Time: " + format_time(timer2),
+                    asw::Vec2(40, (screenSize.y / 2) + 20 + 35),
                     asw::Color(255, 255, 255, 255));
 
     asw::draw::text(cooper, "Deaths:" + std::to_string(player2.getDeathcount()),
-                    asw::Vec2<float>(40, (screenSize.y / 2) + 20),
+                    asw::Vec2(40, (screenSize.y / 2) + 20),
                     asw::Color(255, 255, 255, 255));
   }
 
@@ -223,24 +226,20 @@ void Game::draw() {
     // Timer 3..2..1..GO!
     if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 330) {
       asw::draw::stretch_sprite_blit(
-          countdownImage, asw::Quad<float>(0, 0, 14, 18),
-          asw::Quad<float>(screenSize.x / 2 - 100, screenSize.y / 2 - 100, 140,
-                           180));
+          countdownImage, asw::Quadf(0, 0, 14, 18),
+          asw::Quadf(screenSize.x / 2 - 100, screenSize.y / 2 - 100, 140, 180));
     } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 660) {
       asw::draw::stretch_sprite_blit(
-          countdownImage, asw::Quad<float>(19, 0, 14, 18),
-          asw::Quad<float>(screenSize.x / 2 - 100, screenSize.y / 2 - 100, 140,
-                           180));
+          countdownImage, asw::Quadf(19, 0, 14, 18),
+          asw::Quadf(screenSize.x / 2 - 100, screenSize.y / 2 - 100, 140, 180));
     } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 990) {
       asw::draw::stretch_sprite_blit(
-          countdownImage, asw::Quad<float>(39, 0, 14, 18),
-          asw::Quad<float>(screenSize.x / 2 - 100, screenSize.y / 2 - 100, 140,
-                           180));
+          countdownImage, asw::Quadf(39, 0, 14, 18),
+          asw::Quadf(screenSize.x / 2 - 100, screenSize.y / 2 - 100, 140, 180));
     } else if (tm_begin.getElapsedTime<std::chrono::milliseconds>() < 1200) {
       asw::draw::stretch_sprite_blit(
-          countdownImage, asw::Quad<float>(57, 0, 40, 18),
-          asw::Quad<float>(screenSize.x / 2 - 200, screenSize.y / 2 - 100, 400,
-                           180));
+          countdownImage, asw::Quadf(57, 0, 40, 18),
+          asw::Quadf(screenSize.x / 2 - 200, screenSize.y / 2 - 100, 400, 180));
     }
   }
 
@@ -249,40 +248,40 @@ void Game::draw() {
     if (single_player) {
       asw::draw::sprite(
           results_singleplayer,
-          asw::Vec2<float>((screenSize.x / 2) - 364, (screenSize.y / 2) - 200));
+          asw::Vec2((screenSize.x / 2) - 364, (screenSize.y / 2) - 200));
     } else {
-      asw::draw::sprite(results, asw::Vec2<float>((screenSize.x / 2) - 364,
-                                                  (screenSize.y / 2) - 200));
+      asw::draw::sprite(results, asw::Vec2((screenSize.x / 2) - 364,
+                                           (screenSize.y / 2) - 200));
     }
 
     asw::draw::text(
-        cooper, std::to_string(timer1),
-        asw::Vec2<float>((screenSize.x / 2) - 60, (screenSize.y / 2) - 110),
+        cooper, format_time(timer1),
+        asw::Vec2((screenSize.x / 2) - 60, (screenSize.y / 2) - 110),
         asw::Color(255, 255, 255, 255));
 
     if (!single_player) {
       asw::draw::text(
-          cooper, std::to_string(timer2),
-          asw::Vec2<float>((screenSize.x / 2) - 60, (screenSize.y / 2) - 55),
+          cooper, format_time(timer2),
+          asw::Vec2((screenSize.x / 2) - 60, (screenSize.y / 2) - 55),
           asw::Color(255, 255, 255, 255));
 
       if (timer1 < timer2) {
         asw::draw::text(
             cooper, "1",
-            asw::Vec2<float>((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
+            asw::Vec2((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
         asw::draw::text(
-            cooper, std::to_string(timer2 - timer1),
-            asw::Vec2<float>((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
+            cooper, format_time(timer2 - timer1),
+            asw::Vec2((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
       } else if (timer1 > timer2) {
         asw::draw::text(
             cooper, "2",
-            asw::Vec2<float>((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
+            asw::Vec2((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
         asw::draw::text(
-            cooper, std::to_string(timer1 - timer2),
-            asw::Vec2<float>((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
+            cooper, format_time(timer1 - timer2),
+            asw::Vec2((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
             asw::Color(255, 255, 255, 255));
       }
     }

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-Button::Button(const asw::Vec2<float>& position) : onClick(nullptr) {
+Button::Button(const asw::Vec2& position) : onClick(nullptr) {
   transform.position = position;
 
   images[0] = nullptr;
@@ -23,11 +23,14 @@ void Button::SetImages(const char* image1, const char* image2) {
 }
 
 auto Button::Hover() const -> bool {
-  return transform.contains(asw::input::get_mouse().position.x, asw::input::get_mouse().position.y);
+  return transform.contains(asw::input::get_mouse().position.x,
+                            asw::input::get_mouse().position.y);
 }
 
 void Button::Update() {
-  if (Hover() && asw::input::get_mouse_button_down(asw::input::MouseButton::Left) && onClick != nullptr) {
+  if (Hover() &&
+      asw::input::get_mouse_button_down(asw::input::MouseButton::Left) &&
+      onClick != nullptr) {
     onClick();
   }
 }

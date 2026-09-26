@@ -1,9 +1,9 @@
 #pragma once
 
 #include <asw/asw.h>
-#include "Timer.h"
 #include <string>
 #include <vector>
+#include "Timer.h"
 
 #include "./LightLayer.h"
 #include "./Tile.h"
@@ -20,19 +20,16 @@ class TileMap {
 
   void update(float deltaTime);
 
-  void draw(const asw::Quad<float>& camera,
-            float destX,
-            float destY,
-            int layer);
+  void draw(const asw::Quadf& camera, float destX, float destY, int layer);
 
-  void drawShadows(const asw::Quad<float>& camera, float destX, float destY);
+  void drawShadows(const asw::Quadf& camera, float destX, float destY);
 
-  void drawLights(const asw::Quad<float>& camera, float destX, float destY);
+  void drawLights(const asw::Quadf& camera, float destX, float destY);
 
   bool load(const std::string& path);
 
   Tile* find_tile_type(short type, int layer);
-  std::vector<Tile*> get_tiles_in_range(const asw::Quad<float>& range);
+  std::vector<Tile*> get_tiles_in_range(const asw::Quadf& range);
 
  private:
   void load_layer(const std::vector<int>& data, std::vector<Tile>& t_map);
@@ -42,7 +39,7 @@ class TileMap {
   void generate_light_map();
 
   void draw_layer(std::vector<Tile>& t_map,
-                  const asw::Quad<float>& camera,
+                  const asw::Quadf& camera,
                   float destX = 0,
                   float destY = 0);
 

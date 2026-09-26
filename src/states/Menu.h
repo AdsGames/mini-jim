@@ -39,8 +39,8 @@ class Menu : public asw::scene::Scene<ProgramState> {
 
   // Live background
   TileMap tile_map;
-  asw::Vec2<float> scroll;
-  asw::Vec2<float> scroll_dir;
+  asw::Vec2 scroll;
+  asw::Vec2 scroll_dir;
 
   ProgramState next_state;
 
