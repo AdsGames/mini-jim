@@ -265,7 +265,9 @@ void Player::update(TileMap& fullMap, float dt) {
           asw::sound::play(smp_chicken);
         }
 
+        // Respawned at checkpoint, skip remaining collisions this tick
         killSelf();
+        return;
       }
 
       // Checkpoint
