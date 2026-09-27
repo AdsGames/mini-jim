@@ -178,10 +178,10 @@ void TileMap::generate_shadow_map() {
   for (auto& t : mapTiles) {
     if (t.containsAttribute(shadow)) {
       const auto st = t.getTransform() / 64;
-      const int x = static_cast<int>(std::floorf(st.position.x));
-      const int y = static_cast<int>(std::floorf(st.position.y));
-      const int w = static_cast<int>(std::ceilf(st.size.x));
-      const int h = static_cast<int>(std::ceilf(st.size.y));
+      const int x = static_cast<int>(std::floor(st.position.x));
+      const int y = static_cast<int>(std::floor(st.position.y));
+      const int w = static_cast<int>(std::ceil(st.size.x));
+      const int h = static_cast<int>(std::ceil(st.size.y));
 
       for (int i = 0; i < w; i++) {
         for (int j = 0; j < h; j++) {
