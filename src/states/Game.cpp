@@ -1,6 +1,7 @@
 #include "./Game.h"
 
 #include <algorithm>
+#include <cmath>
 #include <format>
 #include <string>
 #include <vector>
@@ -219,9 +220,9 @@ void Game::draw() {
 
   // Draw timer to screen
   const auto timer1 =
-      std::roundf(tm_p1.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
+      std::round(tm_p1.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
   const auto timer2 =
-      std::roundf(tm_p2.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
+      std::round(tm_p2.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
 
   asw::draw::text(cooper, "Time: " + format_time(timer1), asw::Vec2f(40, 55),
                   asw::Color(255, 255, 255, 255));
