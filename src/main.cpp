@@ -1,5 +1,7 @@
 #include <asw/asw.h>
 
+#include "./Controls.h"
+
 // For state engine
 #include "./states/Game.h"
 #include "./states/Init.h"
@@ -11,6 +13,7 @@
 int main() {
   // Load allegro library
   asw::core::init(1280, 960);
+  controls::bind_ui();
 
   auto app = asw::scene::SceneManager<ProgramState>();
   app.register_scene<Init>(ProgramState::Init, app);

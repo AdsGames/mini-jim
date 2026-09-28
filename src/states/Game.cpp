@@ -6,19 +6,51 @@
 #include <string>
 #include <vector>
 
+#include "../Controls.h"
 #include "../globals.h"
 
 namespace {
+// How quickly cameras catch up with their player, higher is faster
+constexpr float CAMERA_FOLLOW_SPEED = 36.0F;
+
+// Screen shake in pixels when a player dies
+constexpr float DEATH_SHAKE = 12.0F;
+
+// HUD text and its backing
+const asw::Color HUD_TEXT(255, 255, 255);
+const asw::Color HUD_BACKING(0, 0, 0, 140);
+
 // Format seconds to the nearest tenth
 std::string format_time(double seconds) {
   return std::format("{:.1f}", seconds);
+}
+
+// HUD text with a shadow so it reads over any tile
+void hud_text(const asw::Font& font,
+              const std::string& text,
+              const asw::Vec2f& position) {
+  asw::draw::text_shadow(font, text, position, HUD_TEXT);
+}
+
+// Update a player and shake its camera if it died
+void update_player(Player& player,
+                   TileMap& tile_map,
+                   asw::Camera& camera,
+                   float dt_ms) {
+  const int deaths = player.getDeathcount();
+  player.update(tile_map, camera, dt_ms);
+
+  if (player.getDeathcount() != deaths) {
+    camera.shake(DEATH_SHAKE);
+  }
 }
 }  // namespace
 
 void Game::init() {
   // Player
-  player1 = Player(1);
-  player2 = Player(2);
+  // Alone, any controller drives player 1. Together, each takes a controller.
+  player1 = Player(1, single_player ? asw::input::ANY_CONTROLLER : 0);
+  player2 = Player(2, 1);
 
   // Sets Font
   cooper = asw::assets::load_font("assets/fonts/cooper.ttf", 24);
@@ -53,20 +85,18 @@ void Game::setup() {
 
   auto screenSize = asw::display::get_logical_size();
 
-  if (single_player) {
-    cam_1 = Camera(screenSize.x, screenSize.y, tile_map.getWidth(),
-                   tile_map.getHeight());
-    cam_2 = Camera(screenSize.x, screenSize.y, tile_map.getWidth(),
-                   tile_map.getHeight());
-  } else {
-    cam_1 = Camera(screenSize.x, screenSize.y / 2, tile_map.getWidth(),
-                   tile_map.getHeight());
-    cam_2 = Camera(screenSize.x, screenSize.y / 2, tile_map.getWidth(),
-                   tile_map.getHeight());
-  }
+  // Split screen gives each camera half the height
+  const asw::Vec2f view_size(
+      static_cast<float>(screenSize.x),
+      static_cast<float>(single_player ? screenSize.y : screenSize.y / 2));
+  const asw::Quadf world(0.0F, 0.0F, static_cast<float>(tile_map.getWidth()),
+                         static_cast<float>(tile_map.getHeight()));
 
-  cam_1.setSpeed(8.0F);
-  cam_2.setSpeed(8.0F);
+  for (auto* cam : {&cam_1, &cam_2}) {
+    *cam = asw::Camera(view_size);
+    cam->set_bounds(world);
+    cam->set_follow_speed(CAMERA_FOLLOW_SPEED);
+  }
 
   // Find spawn
   Tile* spawnTile = tile_map.find_tile_type(199, 1);
@@ -76,24 +106,41 @@ void Game::setup() {
     player2.setSpawn(spawnTile->getTransform().position);
   }
 
+  cam_1.snap_to(player1.getTransform().get_center());
+  cam_2.snap_to(player2.getTransform().get_center());
+
   // Play music
   asw::sound::play(countdown);
   asw::sound::play_music(mainMusic);
 
   // Start game
   tm_begin.start();
-  lag_ms = 0.0F;
 }
 
 void Game::update(float dt) {
-  // asw passes seconds; game logic is tuned in milliseconds. Emscripten passes
-  // the real frame time, so run physics in fixed steps and cap the backlog so
-  // a slow frame or a resumed tab cannot tunnel players through floors.
-  lag_ms = std::min(lag_ms + (dt * 1000.0F), MAX_LAG_MS);
+  // asw runs a fixed timestep and passes seconds; game logic is tuned in
+  // milliseconds
+  const float dt_ms = dt * 1000.0F;
 
-  while (lag_ms >= FIXED_STEP_MS - STEP_EPSILON_MS) {
-    step(FIXED_STEP_MS);
-    lag_ms -= FIXED_STEP_MS;
+  // Camera follow
+  cam_1.follow(player1.getTransform().get_center(), dt);
+  cam_2.follow(player2.getTransform().get_center(), dt);
+  cam_1.update(dt);
+  cam_2.update(dt);
+
+  // Tile
+  tile_map.update(dt_ms);
+
+  // Starting countdown
+  if (!tm_begin.isRunning()) {
+    // Stop from moving once done
+    if (!player1.getFinished()) {
+      update_player(player1, tile_map, cam_1, dt_ms);
+    }
+
+    if (!player2.getFinished() && !single_player) {
+      update_player(player2, tile_map, cam_2, dt_ms);
+    }
   }
 
   // Timers
@@ -113,35 +160,14 @@ void Game::update(float dt) {
   }
 
   // Change level when both are done
-  if (asw::input::get_key_down(asw::input::Key::Return) &&
+  if (asw::input::get_action_down(controls::UI_CONFIRM) &&
       player1.getFinished() && (player2.getFinished() || single_player)) {
     manager.set_next_scene(ProgramState::Menu);
   }
 
   // Back to menu
-  if (asw::input::get_key_down(asw::input::Key::Escape)) {
+  if (asw::input::get_action_down(controls::UI_BACK)) {
     manager.set_next_scene(ProgramState::Menu);
-  }
-}
-
-void Game::step(float dt) {
-  // Camera follow
-  cam_1.follow(player1.getTransform().position, dt);
-  cam_2.follow(player2.getTransform().position, dt);
-
-  // Tile
-  tile_map.update(dt);
-
-  // Starting countdown
-  if (!tm_begin.isRunning()) {
-    // Stop from moving once done
-    if (!player1.getFinished()) {
-      player1.update(tile_map, dt);
-    }
-
-    if (!player2.getFinished() && !single_player) {
-      player2.update(tile_map, dt);
-    }
   }
 }
 
@@ -156,11 +182,11 @@ void Game::draw() {
 
   // Draw tiles and characters
   if (single_player) {
-    tile_map.draw(cam_1.getViewport(), 0, 0, 1);
-    player1.draw(cam_1.getViewport().position);
-    tile_map.drawShadows(cam_1.getViewport(), 0, 0);
-    tile_map.draw(cam_1.getViewport(), 0, 0, 2);
-    tile_map.drawLights(cam_1.getViewport(), 0, 0, halos);
+    tile_map.draw(cam_1.get_view(), 0, 0, 1);
+    player1.draw(cam_1.get_view().position);
+    tile_map.drawShadows(cam_1.get_view(), 0, 0);
+    tile_map.draw(cam_1.get_view(), 0, 0, 2);
+    tile_map.drawLights(cam_1.get_view(), 0, 0, halos);
   } else {
     // Clip to remove interference
     SDL_Rect clip;
@@ -172,30 +198,28 @@ void Game::draw() {
     clip.h = screenSize.y / 2;
 
     SDL_SetRenderClipRect(asw::display::get_renderer(), &clip);
-    tile_map.draw(cam_1.getViewport(), 0, 0, 1);
+    tile_map.draw(cam_1.get_view(), 0, 0, 1);
 
-    player1.draw(cam_1.getViewport().position);
-    player2.draw(cam_1.getViewport().position);
+    player1.draw(cam_1.get_view().position);
+    player2.draw(cam_1.get_view().position);
 
-    tile_map.drawShadows(cam_1.getViewport(), 0, 0);
-    tile_map.draw(cam_1.getViewport(), 0, 0, 2);
-    tile_map.drawLights(cam_1.getViewport(), 0, 0, halos);
+    tile_map.drawShadows(cam_1.get_view(), 0, 0);
+    tile_map.draw(cam_1.get_view(), 0, 0, 2);
+    tile_map.drawLights(cam_1.get_view(), 0, 0, halos);
 
     // Bottom
     clip.y = screenSize.y / 2;
     clip.h = screenSize.y / 2;
 
     SDL_SetRenderClipRect(asw::display::get_renderer(), &clip);
-    tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 1);
+    tile_map.draw(cam_2.get_view(), 0, screenSize.y / 2, 1);
 
-    player1.draw(cam_2.getViewport().position +
-                 asw::Vec2f(0, -screenSize.y / 2));
-    player2.draw(cam_2.getViewport().position +
-                 asw::Vec2f(0, -screenSize.y / 2));
+    player1.draw(cam_2.get_view().position + asw::Vec2f(0, -screenSize.y / 2));
+    player2.draw(cam_2.get_view().position + asw::Vec2f(0, -screenSize.y / 2));
 
-    tile_map.drawShadows(cam_2.getViewport(), 0, screenSize.y / 2);
-    tile_map.draw(cam_2.getViewport(), 0, screenSize.y / 2, 2);
-    tile_map.drawLights(cam_2.getViewport(), 0, screenSize.y / 2, halos);
+    tile_map.drawShadows(cam_2.get_view(), 0, screenSize.y / 2);
+    tile_map.draw(cam_2.get_view(), 0, screenSize.y / 2, 2);
+    tile_map.drawLights(cam_2.get_view(), 0, screenSize.y / 2, halos);
 
     SDL_SetRenderClipRect(asw::display::get_renderer(), nullptr);
   }
@@ -211,11 +235,11 @@ void Game::draw() {
       asw::Color(0, 0, 0));
 
   // Timers
-  asw::draw::rect_fill(asw::Quadf(20, 20, 320, 90), asw::Color(0, 0, 0));
+  asw::draw::rect_fill(asw::Quadf(20, 20, 320, 90), HUD_BACKING);
 
   if (!single_player) {
     asw::draw::rect_fill(asw::Quadf(20, (screenSize.y / 2) + 20, 320, 90),
-                         asw::Color(0, 0, 0));
+                         HUD_BACKING);
   }
 
   // Draw timer to screen
@@ -224,20 +248,17 @@ void Game::draw() {
   const auto timer2 =
       std::round(tm_p2.getElapsedTime<std::chrono::milliseconds>() / 100) / 10;
 
-  asw::draw::text(cooper, "Time: " + format_time(timer1), asw::Vec2f(40, 55),
-                  asw::Color(255, 255, 255, 255));
+  hud_text(cooper, "Time: " + format_time(timer1), asw::Vec2f(40, 55));
 
-  asw::draw::text(cooper, "Deaths:" + std::to_string(player1.getDeathcount()),
-                  asw::Vec2f(40, 20), asw::Color(255, 255, 255, 255));
+  hud_text(cooper, "Deaths:" + std::to_string(player1.getDeathcount()),
+           asw::Vec2f(40, 20));
 
   if (!single_player) {
-    asw::draw::text(cooper, "Time: " + format_time(timer2),
-                    asw::Vec2f(40, (screenSize.y / 2) + 20 + 35),
-                    asw::Color(255, 255, 255, 255));
+    hud_text(cooper, "Time: " + format_time(timer2),
+             asw::Vec2f(40, (screenSize.y / 2) + 20 + 35));
 
-    asw::draw::text(cooper, "Deaths:" + std::to_string(player2.getDeathcount()),
-                    asw::Vec2f(40, (screenSize.y / 2) + 20),
-                    asw::Color(255, 255, 255, 255));
+    hud_text(cooper, "Deaths:" + std::to_string(player2.getDeathcount()),
+             asw::Vec2f(40, (screenSize.y / 2) + 20));
   }
 
   // Starting countdown
@@ -273,35 +294,23 @@ void Game::draw() {
                                             (screenSize.y / 2) - 200));
     }
 
-    asw::draw::text(
-        cooper, format_time(timer1),
-        asw::Vec2f((screenSize.x / 2) - 60, (screenSize.y / 2) - 110),
-        asw::Color(255, 255, 255, 255));
+    hud_text(cooper, format_time(timer1),
+             asw::Vec2f((screenSize.x / 2) - 60, (screenSize.y / 2) - 110));
 
     if (!single_player) {
-      asw::draw::text(
-          cooper, format_time(timer2),
-          asw::Vec2f((screenSize.x / 2) - 60, (screenSize.y / 2) - 55),
-          asw::Color(255, 255, 255, 255));
+      hud_text(cooper, format_time(timer2),
+               asw::Vec2f((screenSize.x / 2) - 60, (screenSize.y / 2) - 55));
 
       if (timer1 < timer2) {
-        asw::draw::text(
-            cooper, "1",
-            asw::Vec2f((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
-            asw::Color(255, 255, 255, 255));
-        asw::draw::text(
-            cooper, format_time(timer2 - timer1),
-            asw::Vec2f((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
-            asw::Color(255, 255, 255, 255));
+        hud_text(cooper, "1",
+                 asw::Vec2f((screenSize.x / 2) - 175, (screenSize.y / 2) + 2));
+        hud_text(cooper, format_time(timer2 - timer1),
+                 asw::Vec2f((screenSize.x / 2) - 5, (screenSize.y / 2) + 2));
       } else if (timer1 > timer2) {
-        asw::draw::text(
-            cooper, "2",
-            asw::Vec2f((screenSize.x / 2) - 175, (screenSize.y / 2) + 2),
-            asw::Color(255, 255, 255, 255));
-        asw::draw::text(
-            cooper, format_time(timer1 - timer2),
-            asw::Vec2f((screenSize.x / 2) - 5, (screenSize.y / 2) + 2),
-            asw::Color(255, 255, 255, 255));
+        hud_text(cooper, "2",
+                 asw::Vec2f((screenSize.x / 2) - 175, (screenSize.y / 2) + 2));
+        hud_text(cooper, format_time(timer1 - timer2),
+                 asw::Vec2f((screenSize.x / 2) - 5, (screenSize.y / 2) + 2));
       }
     }
   }

@@ -3,6 +3,13 @@
 #include <algorithm>
 #include <cmath>
 
+#include "../Controls.h"
+
+namespace {
+// How quickly the background camera catches up with the scroll point
+constexpr float CAMERA_FOLLOW_SPEED = 64.0F;
+}  // namespace
+
 // Create menu
 void Menu::init() {
   auto screenSize = asw::display::get_logical_size();
@@ -26,7 +33,7 @@ void Menu::init() {
 
   // Create map for live background
   levelOn = 0;
-  lag_ms = 0.0F;
+  focus = BUTTON_START;
   tile_map = TileMap();
   change_level(0);
   next_state = ProgramState::Null;
@@ -91,28 +98,18 @@ void Menu::change_level(int level) {
 
   asw::sound::play(click);
 
-  cam = Camera(screenSize.x, screenSize.y, tile_map.getWidth(),
-               tile_map.getHeight());
-  cam.setSpeed(5);
+  cam = asw::Camera(asw::Vec2f(static_cast<float>(screenSize.x),
+                               static_cast<float>(screenSize.y)));
+  cam.set_bounds(asw::Quadf(0.0F, 0.0F, static_cast<float>(tile_map.getWidth()),
+                            static_cast<float>(tile_map.getHeight())));
+  cam.set_follow_speed(CAMERA_FOLLOW_SPEED);
+  cam.snap_to(scroll);
 }
 
 void Menu::update(float dt) {
-  // asw passes seconds; game logic is tuned in milliseconds. Run the live
-  // background in fixed steps, same as Game.
-  lag_ms = std::min(lag_ms + (dt * 1000.0F), MAX_LAG_MS);
-
-  while (lag_ms >= FIXED_STEP_MS - STEP_EPSILON_MS) {
-    step(FIXED_STEP_MS);
-    lag_ms -= FIXED_STEP_MS;
-  }
-
-  // Buttons
-  for (int i = 0; i < NUM_BUTTONS; i++) {
-    buttons[i].Update();
-  }
-}
-
-void Menu::step(float dt) {
+  // asw runs a fixed timestep and passes seconds; the live background is tuned
+  // in milliseconds
+  const float dt_ms = dt * 1000.0F;
   auto screenSize = asw::display::get_logical_size();
 
   // Move around live background, always bounce back inward so a scroll that
@@ -129,22 +126,63 @@ void Menu::step(float dt) {
     scroll_dir.y = std::abs(scroll_dir.y);
   }
 
-  scroll += (scroll_dir / 16.0F) * dt;
+  scroll += (scroll_dir / 16.0F) * dt_ms;
 
   cam.follow(scroll, dt);
 
   // Tile
-  tile_map.update(dt);
+  tile_map.update(dt_ms);
+
+  // Buttons
+  update_focus();
+
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    buttons[i].Update();
+  }
+}
+
+void Menu::update_focus() {
+  const bool controller =
+      asw::input::get_last_device() == asw::input::InputDevice::Controller;
+
+  // Controller players get a focused button instead of the mouse cursor
+  asw::input::set_cursor_visible(!controller);
+
+  if (controller) {
+    if (asw::input::get_action_down(controls::UI_DOWN)) {
+      focus = (focus + 1) % MENU_ITEMS;
+    }
+
+    if (asw::input::get_action_down(controls::UI_UP)) {
+      focus = (focus + MENU_ITEMS - 1) % MENU_ITEMS;
+    }
+
+    if (asw::input::get_action_down(controls::UI_LEFT)) {
+      change_level(-1);
+    }
+
+    if (asw::input::get_action_down(controls::UI_RIGHT)) {
+      change_level(1);
+    }
+  }
+
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    buttons[i].SetFocus(controller, i == focus);
+  }
+
+  if (controller && asw::input::get_action_down(controls::UI_CONFIRM)) {
+    buttons[focus].Activate();
+  }
 }
 
 void Menu::draw() {
   auto screenSize = asw::display::get_logical_size();
 
   // Draw live background
-  tile_map.draw(cam.getViewport(), 0, 0, 1);
-  tile_map.drawShadows(cam.getViewport(), 0, 0);
-  tile_map.draw(cam.getViewport(), 0, 0, 2);
-  tile_map.drawLights(cam.getViewport(), 0, 0);
+  tile_map.draw(cam.get_view(), 0, 0, 1);
+  tile_map.drawShadows(cam.get_view(), 0, 0);
+  tile_map.draw(cam.get_view(), 0, 0, 2);
+  tile_map.drawLights(cam.get_view(), 0, 0);
 
   // Overlay
   asw::draw::sprite(credits, asw::Vec2f(0, 0));
@@ -161,7 +199,7 @@ void Menu::draw() {
                   asw::Vec2f(screenSize.x - 120, 80), asw::Color(0, 0, 0));
 
   // Help menu
-  if (buttons[BUTTON_HELP].Hover()) {
+  if (buttons[BUTTON_HELP].Highlighted()) {
     asw::draw::sprite(help, asw::Vec2f(0, 0));
   }
 

@@ -18,12 +18,24 @@ class Button {
 
   void SetOnClick(std::function<void()> func);
 
+  // Run the click action, for keyboard or controller selection
+  void Activate();
+
+  // In focus mode the button highlights when focused instead of on mouse hover
+  void SetFocus(bool focus_mode, bool focused);
+
   void Draw();
 
   bool Hover() const;
 
+  // Hovered by the mouse, or focused in focus mode
+  bool Highlighted() const;
+
  private:
   std::function<void(void)> onClick;
+
+  bool focus_mode{false};
+  bool focused{false};
 
   asw::Quadf transform{0, 0, 0, 0};
 

@@ -4,7 +4,10 @@
 #include <utility>
 
 #include <asw/asw.h>
+#include <cstdint>
 #include "Timer.h"
+
+#include "Controls.h"
 
 #include "globals.h"
 
@@ -39,16 +42,10 @@ class Player {
  public:
   Player() = default;
 
-  explicit Player(int number);
+  Player(int number, uint32_t controller_index);
 
   void loadImages(int type);
   void loadSounds();
-  void setKeys(asw::input::Key up,
-               asw::input::Key down,
-               asw::input::Key left,
-               asw::input::Key right,
-               asw::input::Key jump,
-               int joy_number);
   void setSpawn(const asw::Vec2f& position);
 
   int getDeathcount() const;
@@ -57,11 +54,13 @@ class Player {
 
   bool getFinished() const;
 
-  void update(TileMap& fullMap, float dt);
+  // The camera is only used to pan this player's sounds
+  void update(TileMap& fullMap, const asw::Camera& camera, float dt);
   void draw(const asw::Vec2f& offset);
 
  private:
   void killSelf();
+  void playSound(const asw::Sample& sample, float volume = 1.0F) const;
 
   asw::Quadf transform{
       0.0F,
@@ -76,19 +75,16 @@ class Player {
   CharacterState player_state{CharacterState::Standing};
   CharacterDirection direction{CharacterDirection::Right};
 
-  int joy_number{0};
-
   int death_count{0};
 
   asw::Vec2f last_checkpoint{0, 0};
   bool finished{false};
 
-  // Keys
-  asw::input::Key key_up{};
-  asw::input::Key key_down{};
-  asw::input::Key key_left{};
-  asw::input::Key key_right{};
-  asw::input::Key key_jump{};
+  // Keyboard and controller actions
+  controls::PlayerActions actions{};
+
+  // Stereo pan for sounds, from where the player is on screen
+  float sound_pan{0.0F};
 
   Timer tm_animation{};
 

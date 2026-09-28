@@ -1,21 +1,24 @@
 #include "Player.h"
 
+#include <algorithm>
 #include <climits>
 #include "TileTypeLoader.h"
 
-Player::Player(int number) {
+namespace {
+// Largest stereo pan for player sounds, full pan is harsh on headphones
+constexpr float MAX_SOUND_PAN = 0.6F;
+
+// Random pitch change per play so repeated sounds are not robotic
+constexpr float SOUND_PITCH_VARIATION = 0.06F;
+}  // namespace
+
+Player::Player(int number, uint32_t controller_index) {
   tm_animation.start();
 
   loadImages(number);
   loadSounds();
 
-  if (number == 1) {
-    setKeys(asw::input::Key::Up, asw::input::Key::Down, asw::input::Key::Left,
-            asw::input::Key::Right, asw::input::Key::Return, 0);
-  } else {
-    setKeys(asw::input::Key::W, asw::input::Key::S, asw::input::Key::A,
-            asw::input::Key::D, asw::input::Key::Space, 1);
-  }
+  actions = controls::bind_player(number, controller_index);
 }
 
 // 0-3 left, 4-7 right, 8-11 up
@@ -44,19 +47,13 @@ void Player::loadSounds() {
   smp_checkpoint = asw::assets::load_sample("assets/sounds/checkpoint.wav");
 }
 
-// Set keys
-void Player::setKeys(asw::input::Key up,
-                     asw::input::Key down,
-                     asw::input::Key left,
-                     asw::input::Key right,
-                     asw::input::Key jump,
-                     int joy_number) {
-  key_up = up;
-  key_down = down;
-  key_left = left;
-  key_right = right;
-  key_jump = jump;
-  this->joy_number = joy_number;
+// Play a sound panned to this player's side of the screen
+void Player::playSound(const asw::Sample& sample, float volume) const {
+  asw::sound::PlayOptions options;
+  options.volume = volume;
+  options.pan = sound_pan;
+  options.pitch_variation = SOUND_PITCH_VARIATION;
+  asw::sound::play(sample, options);
 }
 
 // Set spawn
@@ -77,7 +74,8 @@ auto Player::getFinished() const -> bool {
 
 // Dead?
 void Player::killSelf() {
-  asw::sound::play(smp_die);
+  playSound(smp_die);
+  asw::sound::duck(asw::sound::Bus::Music, 0.4F, 0.4F);
   player_state = CharacterState::Standing;
   death_count++;
   transform.position = last_checkpoint;
@@ -85,7 +83,15 @@ void Player::killSelf() {
 }
 
 // Movement
-void Player::update(TileMap& fullMap, float dt) {
+void Player::update(TileMap& fullMap, const asw::Camera& camera, float dt) {
+  const auto view_width = camera.get_view().size.x;
+  if (view_width > 0.0F) {
+    const float screen_x = camera.world_to_screen(transform.get_center()).x;
+    sound_pan =
+        std::clamp(((screen_x / view_width) * 2.0F) - 1.0F, -1.0F, 1.0F) *
+        MAX_SOUND_PAN;
+  }
+
   // Get map around player
   const std::vector<Tile*> ranged_map = fullMap.get_tiles_in_range(
       transform + asw::Quadf(-256.0F, -256.0F, 512.0F, 512.0F));
@@ -118,11 +124,11 @@ void Player::update(TileMap& fullMap, float dt) {
     player_state = CharacterState::Jumping;
   }
 
-  if (asw::input::get_key(key_right)) {
+  if (asw::input::get_action(actions.right)) {
     direction = CharacterDirection::Right;
   }
 
-  if (asw::input::get_key(key_left)) {
+  if (asw::input::get_action(actions.left)) {
     direction = CharacterDirection::Left;
   }
 
@@ -130,13 +136,13 @@ void Player::update(TileMap& fullMap, float dt) {
   switch (player_state) {
     case CharacterState::Standing: {
       // Jump
-      if (asw::input::get_key_down(key_jump) ||
-          asw::input::get_key_down(key_up)) {
+      if (asw::input::get_action_down(actions.jump) ||
+          asw::input::get_action_down(actions.up)) {
         velocity.y = JUMP_VELOCITY;
-        asw::sound::play(smp_jump);
+        playSound(smp_jump);
         player_state = CharacterState::Jumping;
-      } else if (asw::input::get_key(key_left) ||
-                 asw::input::get_key(key_right)) {
+      } else if (asw::input::get_action(actions.left) ||
+                 asw::input::get_action(actions.right)) {
         player_state = CharacterState::Walking;
       } else {
         velocity.x = 0;
@@ -146,19 +152,20 @@ void Player::update(TileMap& fullMap, float dt) {
     }
 
     case CharacterState::Walking: {
-      if (asw::input::get_key(key_down)) {
+      if (asw::input::get_action(actions.down)) {
         player_state = CharacterState::Sliding;
       }
 
-      if (!(asw::input::get_key(key_left) || asw::input::get_key(key_right))) {
+      if (!(asw::input::get_action(actions.left) ||
+            asw::input::get_action(actions.right))) {
         player_state = CharacterState::Standing;
       }
 
       // Jump
-      if (asw::input::get_key_down(key_jump) ||
-          asw::input::get_key_down(key_up)) {
+      if (asw::input::get_action_down(actions.jump) ||
+          asw::input::get_action_down(actions.up)) {
         velocity.y = JUMP_VELOCITY;
-        asw::sound::play(smp_jump);
+        playSound(smp_jump);
         player_state = CharacterState::Jumping;
         velocity.x *= JUMP_X_MULTIPLER;
       }
@@ -181,14 +188,16 @@ void Player::update(TileMap& fullMap, float dt) {
     }
 
     case CharacterState::Jumping: {
-      if (asw::input::get_key(key_right) && velocity.x < WALK_MAX_SPEED) {
+      if (asw::input::get_action(actions.right) &&
+          velocity.x < WALK_MAX_SPEED) {
         velocity.x += WALK_ACCELERATION * dt;
-      } else if (asw::input::get_key(key_left) &&
+      } else if (asw::input::get_action(actions.left) &&
                  velocity.x > -WALK_MAX_SPEED) {
         velocity.x -= WALK_ACCELERATION * dt;
       }
 
-      if (!asw::input::get_key(key_right) && !asw::input::get_key(key_left)) {
+      if (!asw::input::get_action(actions.right) &&
+          !asw::input::get_action(actions.left)) {
         velocity.x += (velocity.x > 0 ? -1 : 1) * JUMP_X_ACCELERATION * dt;
       }
 
@@ -200,7 +209,7 @@ void Player::update(TileMap& fullMap, float dt) {
     }
 
     case CharacterState::Sliding: {
-      if (!asw::input::get_key(key_down)) {
+      if (!asw::input::get_action(actions.down)) {
         player_state = CharacterState::Standing;
       }
 
@@ -210,10 +219,10 @@ void Player::update(TileMap& fullMap, float dt) {
       }
 
       // Jump
-      if (asw::input::get_key_down(key_jump) ||
-          asw::input::get_key_down(key_up)) {
+      if (asw::input::get_action_down(actions.jump) ||
+          asw::input::get_action_down(actions.up)) {
         velocity.y = JUMP_VELOCITY;
-        asw::sound::play(smp_jump);
+        playSound(smp_jump);
         player_state = CharacterState::Jumping;
       }
 
@@ -260,9 +269,9 @@ void Player::update(TileMap& fullMap, float dt) {
       if (t->containsAttribute(harmful)) {
         if (t_type->GetIDStr() == "mouse_trap") {
           t->setType("mouse_trap_snapped");
-          asw::sound::play(smp_trap_snap);
+          playSound(smp_trap_snap);
         } else if (t_type->GetIDStr() == "beak") {
-          asw::sound::play(smp_chicken);
+          playSound(smp_chicken);
         }
 
         // Respawned at checkpoint, skip remaining collisions this tick
@@ -275,13 +284,16 @@ void Player::update(TileMap& fullMap, float dt) {
         if (last_checkpoint.x != bb.position.x ||
             last_checkpoint.y != bb.position.y) {
           last_checkpoint = bb.position;
-          asw::sound::play(smp_checkpoint, 50.0F / 255.0F);
+          playSound(smp_checkpoint, 50.0F / 255.0F);
         }
       }
 
       // Finish
       if (t_type->GetIDStr() == "finish") {
-        asw::sound::play(smp_win);
+        if (!finished) {
+          playSound(smp_win);
+          asw::sound::duck(asw::sound::Bus::Music, 0.3F, 1.5F, 0.3F);
+        }
         finished = true;
       }
     }
@@ -289,6 +301,24 @@ void Player::update(TileMap& fullMap, float dt) {
 
   // Apply velocity
   transform.position += velocity * dt;
+
+  // Push back out of any solid tile the move still ended inside
+  for (auto* t : ranged_map) {
+    if (!t->containsAttribute(solid)) {
+      continue;
+    }
+
+    const auto push = transform.get_push_out(t->getTransform());
+    transform.position += push;
+
+    if (push.x != 0.0F) {
+      velocity.x = 0.0F;
+    }
+
+    if (push.y != 0.0F) {
+      velocity.y = 0.0F;
+    }
+  }
 
   // Die
   if (transform.position.x > fullMap.getWidth() ||
