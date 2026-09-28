@@ -1,7 +1,9 @@
 #include "./Menu.h"
 
-#include <algorithm>
 #include <cmath>
+#include <functional>
+#include <string>
+#include <utility>
 
 #include "../Controls.h"
 
@@ -33,48 +35,71 @@ void Menu::init() {
 
   // Create map for live background
   levelOn = 0;
-  focus = BUTTON_START;
   tile_map = TileMap();
   change_level(0);
   next_state = ProgramState::Null;
 
-  // Buttons
-  buttons[BUTTON_START] = Button(asw::Vec2f(60, 630));
-  buttons[BUTTON_START_MP] = Button(asw::Vec2f(60, 690));
-  buttons[BUTTON_HELP] = Button(asw::Vec2f(60, 810));
-  buttons[BUTTON_EXIT] = Button(asw::Vec2f(60, 870));
-  buttons[BUTTON_LEFT] = Button(asw::Vec2f(screenSize.x - 180, 80));
-  buttons[BUTTON_RIGHT] = Button(asw::Vec2f(screenSize.x - 80, 80));
+  // Buttons, init runs again each time the menu is entered
+  ui.root.clear_children();
+  ui.clear_focus();
 
-  buttons[BUTTON_START].SetImages("assets/images/gui/button_start.png",
-                                  "assets/images/gui/button_start_hover.png");
-  buttons[BUTTON_START_MP].SetImages(
-      "assets/images/gui/button_start_mp.png",
-      "assets/images/gui/button_start_mp_hover.png");
-  buttons[BUTTON_HELP].SetImages("assets/images/gui/button_help.png",
-                                 "assets/images/gui/button_help_hover.png");
-  buttons[BUTTON_EXIT].SetImages("assets/images/gui/button_quit.png",
-                                 "assets/images/gui/button_quit_hover.png");
-  buttons[BUTTON_LEFT].SetImages("assets/images/gui/button_left.png",
-                                 "assets/images/gui/button_left_hover.png");
-  buttons[BUTTON_RIGHT].SetImages("assets/images/gui/button_right.png",
-                                  "assets/images/gui/button_right_hover.png");
+  // Controller navigation uses the game's menu actions. Left and right change
+  // the level, so they never move focus off the menu list.
+  ui.ctx.navigation.up = controls::UI_UP;
+  ui.ctx.navigation.down = controls::UI_DOWN;
+  ui.ctx.navigation.left = controls::UI_LEFT;
+  ui.ctx.navigation.right = controls::UI_RIGHT;
+  ui.ctx.navigation.activate = controls::UI_CONFIRM;
+  ui.ctx.navigation.back = controls::UI_BACK;
 
-  buttons[BUTTON_START].SetOnClick([this]() {
+  const auto add_button = [this](const std::string& name, asw::Vec2f position,
+                                 std::function<void()> on_click) {
+    auto& button = ui.root.add_child<asw::ui::Button>();
+    const std::string path = "assets/images/gui/button_" + name;
+    button.set_images(asw::assets::load_texture(path + ".png"),
+                      asw::assets::load_texture(path + "_hover.png"));
+    button.transform.position = position;
+    button.focus_ring = false;
+    button.on_click = std::move(on_click);
+    return &button;
+  };
+
+  auto* start = add_button("start", asw::Vec2f(60, 630), [this]() {
     single_player = true;
     manager.set_next_scene(ProgramState::Game);
   });
 
-  buttons[BUTTON_START_MP].SetOnClick([this]() {
+  auto* start_mp = add_button("start_mp", asw::Vec2f(60, 690), [this]() {
     single_player = false;
     manager.set_next_scene(ProgramState::Game);
   });
 
-  buttons[BUTTON_EXIT].SetOnClick([]() { asw::core::exit(); });
+  // Shows the help overlay while highlighted
+  help_button = add_button("help", asw::Vec2f(60, 810), nullptr);
 
-  buttons[BUTTON_LEFT].SetOnClick([this]() { change_level(-1); });
+  auto* exit = add_button("quit", asw::Vec2f(60, 870),
+                          []() { asw::core::exit(); });
 
-  buttons[BUTTON_RIGHT].SetOnClick([this]() { change_level(1); });
+  // Level arrows, clear focus after a click so the controller starts on the
+  // menu list again
+  add_button("left", asw::Vec2f(screenSize.x - 180, 80), [this]() {
+    change_level(-1);
+    ui.clear_focus();
+  });
+  add_button("right", asw::Vec2f(screenSize.x - 80, 80), [this]() {
+    change_level(1);
+    ui.clear_focus();
+  });
+
+  // The menu list wraps, and left or right keeps focus in place
+  start->nav_up = exit;
+  exit->nav_down = start;
+  for (auto* button : {start, start_mp, help_button, exit}) {
+    button->nav_left = button;
+    button->nav_right = button;
+  }
+
+  ui.ctx.focus.default_focus = start;
 
   // Variables
   asw::sound::play_music(music);
@@ -133,45 +158,18 @@ void Menu::update(float dt) {
   // Tile
   tile_map.update(dt_ms);
 
-  // Buttons
-  update_focus();
-
-  for (int i = 0; i < NUM_BUTTONS; i++) {
-    buttons[i].Update();
-  }
-}
-
-void Menu::update_focus() {
-  const bool controller =
-      asw::input::get_last_device() == asw::input::InputDevice::Controller;
-
   // Controller players get a focused button instead of the mouse cursor
-  asw::input::set_cursor_visible(!controller);
+  asw::input::set_cursor_visible(asw::input::get_last_device() !=
+                                 asw::input::InputDevice::Controller);
 
-  if (controller) {
-    if (asw::input::get_action_down(controls::UI_DOWN)) {
-      focus = (focus + 1) % MENU_ITEMS;
-    }
+  ui.update();
 
-    if (asw::input::get_action_down(controls::UI_UP)) {
-      focus = (focus + MENU_ITEMS - 1) % MENU_ITEMS;
-    }
-
-    if (asw::input::get_action_down(controls::UI_LEFT)) {
-      change_level(-1);
-    }
-
-    if (asw::input::get_action_down(controls::UI_RIGHT)) {
-      change_level(1);
-    }
+  if (asw::input::get_action_down(controls::UI_LEFT)) {
+    change_level(-1);
   }
 
-  for (int i = 0; i < NUM_BUTTONS; i++) {
-    buttons[i].SetFocus(controller, i == focus);
-  }
-
-  if (controller && asw::input::get_action_down(controls::UI_CONFIRM)) {
-    buttons[focus].Activate();
+  if (asw::input::get_action_down(controls::UI_RIGHT)) {
+    change_level(1);
   }
 }
 
@@ -189,9 +187,7 @@ void Menu::draw() {
   asw::draw::sprite(menu, asw::Vec2f(40, 480));
 
   // Buttons
-  for (int i = 0; i < NUM_BUTTONS; i++) {
-    buttons[i].Draw();
-  }
+  ui.draw();
 
   // Level selection
   asw::draw::sprite(levelSelectNumber, asw::Vec2f(screenSize.x - 160, 80));
@@ -199,7 +195,7 @@ void Menu::draw() {
                   asw::Vec2f(screenSize.x - 120, 80), asw::Color(0, 0, 0));
 
   // Help menu
-  if (buttons[BUTTON_HELP].Highlighted()) {
+  if (help_button != nullptr && help_button->is_highlighted(ui.ctx)) {
     asw::draw::sprite(help, asw::Vec2f(0, 0));
   }
 

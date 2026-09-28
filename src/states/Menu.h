@@ -9,7 +9,6 @@
 #include "../LightLayer.h"
 #include "../TileMap.h"
 #include "../globals.h"
-#include "../ui/Button.h"
 
 class Menu : public asw::scene::Scene<ProgramState> {
  public:
@@ -22,9 +21,6 @@ class Menu : public asw::scene::Scene<ProgramState> {
  private:
   // Change level (background)
   void change_level(int level);
-
-  // Move focus with a controller
-  void update_focus();
 
   // Menu/GUI
   asw::Texture levelSelectNumber;
@@ -48,22 +44,9 @@ class Menu : public asw::scene::Scene<ProgramState> {
 
   asw::Font menuFont;
 
-  enum button_names {
-    BUTTON_START,
-    BUTTON_START_MP,
-    BUTTON_HELP,
-    BUTTON_EXIT,
-    BUTTON_LEFT,
-    BUTTON_RIGHT,
-    NUM_BUTTONS
-  };
-
-  // Buttons in the menu list, in order from the top
-  static constexpr int MENU_ITEMS = BUTTON_EXIT + 1;
-
-  Button buttons[7];
   asw::Camera cam;
 
-  // Focused button when using a controller, one of the first MENU_ITEMS
-  int focus{BUTTON_START};
+  // Menu buttons, focus shows as the hover image
+  asw::ui::Root ui;
+  asw::ui::Button* help_button{nullptr};
 };
