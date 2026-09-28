@@ -1,0 +1,32 @@
+name: Sync Manifest
+
+# Releases sync adsgames.json on their own. Run this to try changes early,
+# e.g. new achievements on dev.
+on:
+  workflow_dispatch:
+    inputs:
+      environments:
+        description: "Play environments"
+        type: choice
+        options:
+          - dev
+          - prod
+          - dev prod
+        default: dev
+      dry-run:
+        description: "Only check the manifest and report what would change"
+        type: boolean
+        default: false
+
+jobs:
+  manifest:
+    uses: adsgames/deploy-to-adsgames/.github/workflows/sync-manifest.yml@v1
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      project-id: mini-jim
+      environments: ${{ inputs.environments }}
+      dry-run: ${{ inputs.dry-run }}
+    secrets:
+      ADSGAMES_API_KEY: ${{ secrets.ADSGAMES_API_KEY }}
