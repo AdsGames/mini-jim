@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "../Controls.h"
 #include "../globals.h"
 
 void Intro::init() {
@@ -27,15 +28,16 @@ void Intro::update(float dt) {
     sound_played = true;
   }
 
-  if (frame >= INTRO_FRAMES || asw::input::get_keyboard().any_pressed) {
+  if (frame >= INTRO_FRAMES || asw::input::get_keyboard().any_pressed ||
+      controls::any_controller_skip()) {
     manager.set_next_scene(ProgramState::Menu);
     return;
   }
 
   // Load the new frame, the old one is released with it
   if (frame >= 0 && frame != loaded_frame) {
-    current_frame = asw::assets::load_texture(
-        "assets/images/opening/opening" + std::to_string(frame) + ".png");
+    current_frame = asw::assets::load_texture("assets/images/opening/opening" +
+                                              std::to_string(frame) + ".png");
     loaded_frame = frame;
   }
 }
@@ -65,8 +67,7 @@ void Intro::draw() {
     asw::draw::stretch_sprite(background, asw::Quadf(105, 140, 1070, 680));
 
     if (current_frame) {
-      asw::draw::stretch_sprite(current_frame,
-                                asw::Quadf(105, 120, 1070, 660));
+      asw::draw::stretch_sprite(current_frame, asw::Quadf(105, 120, 1070, 660));
     }
   }
 }

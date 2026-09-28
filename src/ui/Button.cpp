@@ -27,6 +27,21 @@ auto Button::Hover() const -> bool {
                             asw::input::get_mouse().position.y);
 }
 
+auto Button::Highlighted() const -> bool {
+  return focus_mode ? focused : Hover();
+}
+
+void Button::SetFocus(bool focus_mode, bool focused) {
+  this->focus_mode = focus_mode;
+  this->focused = focused;
+}
+
+void Button::Activate() {
+  if (onClick != nullptr) {
+    onClick();
+  }
+}
+
 void Button::Update() {
   if (Hover() &&
       asw::input::get_mouse_button_down(asw::input::MouseButton::Left) &&
@@ -44,8 +59,8 @@ auto Button::GetY() const -> int {
 }
 
 void Button::Draw() {
-  if (images[Hover()]) {
-    asw::draw::sprite(images[Hover()], transform.position);
+  if (images[Highlighted()]) {
+    asw::draw::sprite(images[Highlighted()], transform.position);
   } else {
     asw::draw::rect_fill(transform, asw::Color(60, 60, 60));
   }

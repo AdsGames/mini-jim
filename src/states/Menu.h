@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "../Camera.h"
 #include "../LightLayer.h"
 #include "../TileMap.h"
 #include "../globals.h"
@@ -24,8 +23,8 @@ class Menu : public asw::scene::Scene<ProgramState> {
   // Change level (background)
   void change_level(int level);
 
-  // Advance live background by one fixed step
-  void step(float dt);
+  // Move focus with a controller
+  void update_focus();
 
   // Menu/GUI
   asw::Texture levelSelectNumber;
@@ -59,9 +58,12 @@ class Menu : public asw::scene::Scene<ProgramState> {
     NUM_BUTTONS
   };
 
-  Button buttons[7];
-  Camera cam;
+  // Buttons in the menu list, in order from the top
+  static constexpr int MENU_ITEMS = BUTTON_EXIT + 1;
 
-  // Unsimulated time in milliseconds
-  float lag_ms{0.0F};
+  Button buttons[7];
+  asw::Camera cam;
+
+  // Focused button when using a controller, one of the first MENU_ITEMS
+  int focus{BUTTON_START};
 };
