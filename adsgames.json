@@ -1,0 +1,99 @@
+{
+  "$schema": "https://raw.githubusercontent.com/AdsGames/deploy-to-adsgames/v1/manifest/schema.json",
+  "leaderboards": [
+    {
+      "key": "level-1",
+      "title": "Level 1",
+      "order": "asc",
+      "format": "time_ms",
+      "minValue": 1000,
+      "maxValue": 3600000
+    },
+    {
+      "key": "level-2",
+      "title": "Level 2",
+      "order": "asc",
+      "format": "time_ms",
+      "minValue": 1000,
+      "maxValue": 3600000
+    },
+    {
+      "key": "level-3",
+      "title": "Level 3",
+      "order": "asc",
+      "format": "time_ms",
+      "minValue": 1000,
+      "maxValue": 3600000
+    },
+    {
+      "key": "level-4",
+      "title": "Level 4",
+      "order": "asc",
+      "format": "time_ms",
+      "minValue": 1000,
+      "maxValue": 3600000
+    },
+    {
+      "key": "level-5",
+      "title": "Level 5",
+      "order": "asc",
+      "format": "time_ms",
+      "minValue": 1000,
+      "maxValue": 3600000
+    },
+    {
+      "key": "level-6",
+      "title": "Level 6",
+      "order": "asc",
+      "format": "time_ms",
+      "minValue": 1000,
+      "maxValue": 3600000
+    }
+  ],
+  "achievements": [
+    {
+      "key": "first-steps",
+      "title": "First Steps",
+      "description": "Finish level 1",
+      "points": 10
+    },
+    {
+      "key": "full-size",
+      "title": "Full Size Again",
+      "description": "Finish all 6 levels",
+      "points": 50
+    },
+    {
+      "key": "untouchable",
+      "title": "Untouchable",
+      "description": "Finish a level without dying",
+      "points": 25
+    },
+    {
+      "key": "rivals",
+      "title": "Rivals",
+      "description": "Win a 2 player race",
+      "points": 10
+    },
+    {
+      "key": "persistent",
+      "title": "Persistent",
+      "description": "Die 100 times",
+      "points": 10
+    },
+    {
+      "key": "pecked",
+      "title": "Pecked",
+      "description": "Get pecked by a chicken",
+      "hidden": true,
+      "points": 5
+    },
+    {
+      "key": "snapped",
+      "title": "Snapped",
+      "description": "Get caught in a mouse trap",
+      "hidden": true,
+      "points": 5
+    }
+  ]
+}
