@@ -285,13 +285,14 @@ void TileMap::draw(const asw::Quadf& camera,
   if (layer == 1) {
     draw_layer(mapTilesBack, mapIndexBack, camera, destX, destY);
 
-    // Draw semi-transparent buffer
-    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(),
-                               SDL_BLENDMODE_BLEND);
+    // Draw semi-transparent buffer, then put back the caller's blend mode
+    auto* renderer = asw::display::get_renderer();
+    SDL_BlendMode previous = SDL_BLENDMODE_BLEND;
+    SDL_GetRenderDrawBlendMode(renderer, &previous);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     asw::draw::rect_fill(asw::Quadf(0, 0, getWidth(), getHeight()),
                          asw::Color(0, 0, 0, 64));
-    SDL_SetRenderDrawBlendMode(asw::display::get_renderer(),
-                               SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(renderer, previous);
   }
 
   if (layer == 2) {

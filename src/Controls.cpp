@@ -75,6 +75,10 @@ controls::PlayerActions controls::bind_player(int number,
       ControllerButtonBinding{ControllerButton::DPadUp, controller_index});
   bind_direction(actions.down, ControllerButton::DPadDown,
                  ControllerAxis::LeftY, true, controller_index);
+  // B also slides
+  asw::input::bind_action(
+      actions.down,
+      ControllerButtonBinding{ControllerButton::B, controller_index});
   bind_direction(actions.left, ControllerButton::DPadLeft,
                  ControllerAxis::LeftX, false, controller_index);
   bind_direction(actions.right, ControllerButton::DPadRight,
